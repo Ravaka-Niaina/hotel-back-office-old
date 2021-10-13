@@ -9,7 +9,7 @@ class Subscribe extends React.Component{
             message: '',
             error: ''
         };
-        this.setMessageRetour = this.setMessageRetour.bind(this)
+
     }
 
     setMessageRetour(res){
