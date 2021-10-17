@@ -1,73 +1,71 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
+const axios = require('axios').default;
 
 class Home extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            status: 200,
             message: '',
-            users: []
+            menu: []
         };
     }
 
-    setUsers(res){
+    logout(e){
+        e.preventDefault();
+        axios({
+            method: 'get',
+            url: process.env.REACT_APP_BACK_URL + "/user/logout",
+            withCredentials: true
+        })
+        .then(res => this.props.history.push('/'));
+
+        console.log(document.cookie);
+    }
+
+    setMenu(res){
         console.log(res);
-        let currentState = JSON.parse(JSON.stringify(this.state));
-        currentState = res;
-        this.setState(currentState);
+        if(res.status === 200){
+            if(res.menu.length > 0){
+                let currentState = JSON.parse(JSON.stringify(this.state));
+                currentState.menu = res.menu;
+                this.setState(currentState);
+            }
+        }
+        
     }
 
     componentDidMount(){
-        fetch(process.env.REACT_APP_BACK_URL + "/user/list")
-            .then(res => res.json())
-            .then(res => this.setUsers(res))
-            .catch(err => {
-                let currentState = JSON.parse(JSON.stringify(this.state));
-                currentState.status = 300;
-                currentState.message = 'Un problème est survenu lors de la connexion au serveur';
-                this.setState(currentState);
-            });
-            
+        /*
+        axios({
+            method: 'get',
+            url: process.env.REACT_APP_BACK_URL + "/user/list",
+            withCredentials: true
+        })
+        .then(res => console.log(res));
+        */
+        
+        axios({
+            method: 'get',
+            url: process.env.REACT_APP_BACK_URL + "/menu",
+            withCredentials: true
+        })
+        .then(res => this.setMenu(res.data));
     }
 
     render(){
-        let users = null;
-        let title = "Liste utilisateurs";
-        if(this.state.users.length > 0){
-            users = this.state.users.map(user => {
-                return <tr>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
-                    <td>{user.password}</td>
-                </tr>
+        let menu = null;
+        if(this.state.menu.length > 0){
+            menu = this.state.menu.map(m => {
+                return( <li><Link to={m.link}>{m.name}</Link></li> );
             });
         }
-        if(this.state.users.length === 0){
-            return(
-                <div>
-                    <h1>{ title }</h1>
-                    <p><strong>{ this.state.message }</strong></p>
-                </div>
-            );
-        }else{
-            return(
-                <div>
-                    <h1>{ title }</h1>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nom</th>
-                                <th>Email</th>
-                                <th>Mot de passe</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            { users }
-                        </tbody>
-                    </table>
-                </div>
-            );
-        }
+        return(
+            <div>
+                <ul>{menu}</ul>
+                <button type="button" className="btn" onClick={(e) => this.logout(e)}>Logout</button>
+            </div>
+        );
         
     }
 }
