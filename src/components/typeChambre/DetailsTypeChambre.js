@@ -16,7 +16,7 @@ class DetailsTypeCHambre extends React.Component{
                 nbEnfant: '',
                 photo: ''
             }
-            
+            , tarifs: []
         }
     }
 
@@ -39,14 +39,32 @@ class DetailsTypeCHambre extends React.Component{
         }
     }
 
+    setTarifs(res){
+        console.log(res);
+        if(res.status === 200){
+            let currentState = JSON.parse(JSON.stringify(this.state));
+            currentState.tarifs = res.list;
+            this.setState(currentState);
+        }
+    }
+
     componentDidMount(){
         axios({
             method: 'get',
             url: process.env.REACT_APP_BACK_URL + 
-                "/typeChambre/details/" + this.props.match.params._id,
+                "/typeChambre/details/" + this.props.match.params._id + '?id',
             withCredentials: true
         })
         .then(res => this.setDetailsTypeChambre(res.data))
+        .catch(err => console.log(err));
+
+        axios({
+            method: 'get',
+            url: process.env.REACT_APP_BACK_URL + 
+                "/tarif?idTypeChambre=" + this.props.match.params._id,
+            withCredentials: true
+        })
+        .then(res => this.setTarifs(res.data))
         .catch(err => console.log(err));
     }
 
@@ -74,6 +92,14 @@ class DetailsTypeCHambre extends React.Component{
     }
 
     render(){
+        let list = null;
+        list = this.state.tarifs.map(tarif => {
+            return <tr>
+                <td>{tarif.prixParJour}</td>
+                <td>{tarif.services}</td>
+                <td>{tarif.conditionsAnnulation}</td>
+            </tr>
+        });
         return(
             <div>
                 <h1>Détails type chambre</h1>
@@ -109,11 +135,28 @@ class DetailsTypeCHambre extends React.Component{
                         <Link to='/typeChambre'>
                             <button>Retour</button>
                         </Link>
+                        <Link to={'/tarif/insert/' + this.props.match.params._id 
+                            + '/' + this.state.typeChambre.nom}>
+                            <button>Ajouter tarifs</button>
+                        </Link>
                         <button onClick={(e) => this.update(e)}>
                             Modifier
                         </button>
                     </div>
                 </form>
+                <h2>Liste tarifs</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Prix par jour</th>
+                            <th>Services</th>
+                            <th>Conditions d'annulation</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {list}
+                    </tbody>
+                </table>
             </div>
         );
     }
