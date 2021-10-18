@@ -6,6 +6,7 @@ import InsertTypeChambre from './components/typeChambre/InsertTypeChambre';
 import ListTypeChambre from './components/typeChambre/ListTypeChambre';
 import DetailsTypeChambre from './components/typeChambre/DetailsTypeChambre';
 import InsertTarif from './components/tarif/InsertTarif';
+import DetailsTarif from './components/tarif/DetailsTarif';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
       <Route path="/TypeChambre/insert" exact component={InsertTypeChambre} />
       <Route path="/TypeChambre/details/:_id" exact component={DetailsTypeChambre} />
       <Route path="/tarif/insert/:idTypeChambre/:nomTypeChambre" exact component={InsertTarif}/>
+      <Route path="/tarif/details/:_id" exact component={DetailsTarif} />
 
       </Router>
     </div>

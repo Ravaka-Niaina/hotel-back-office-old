@@ -3,7 +3,7 @@ import axios from 'axios';
 import React from 'react';
 import {Link} from 'react-router-dom';
 
-class InsertTarif extends React.Component{
+class DetailsTarif extends React.Component{
     constructor(props){
         super(props);
         this.state = {
@@ -19,11 +19,26 @@ class InsertTarif extends React.Component{
         };
     }
 
-    componentDidMount(){
+    setTarif(data){
+        console.log(data);
         let currentState = JSON.parse(JSON.stringify(this.state));
-        currentState.tarif.idTypeChambre = 
-            this.props.match.params.idTypeChambre;
+        currentState.errors = data.errors;
+        if(data.tarif != null){
+            currentState.tarif = data.tarif;
+        }
         this.setState(currentState);
+    }
+
+    componentDidMount(){
+        console.log(this.props.match.params._id);
+        axios({
+            method: 'get',
+            url: process.env.REACT_APP_BACK_URL + 
+                "/tarif/details/" + this.props.match.params._id,
+            withCredentials: true
+        })
+        .then(res => this.setTarif(res.data))
+        .catch(err => console.log(err));
     }
 
     tryRedirect(res){
@@ -41,12 +56,12 @@ class InsertTarif extends React.Component{
         }
     }
 
-    insert(e){
+    modifier(e){
         e.preventDefault();
         console.log('Insertion en cours');
         axios({
             method: 'post',
-            url: process.env.REACT_APP_BACK_URL + "/tarif/insert",
+            url: process.env.REACT_APP_BACK_URL + "/tarif/update",
             withCredentials: true,
             data: this.state.tarif
         })
@@ -63,7 +78,7 @@ class InsertTarif extends React.Component{
     render(){
         return(
             <div>
-                <h1>Créer tarif</h1>
+                <h1>Détails tarif</h1>
                 <CustomError errors={this.state.errors}/>
                 <form>
                     <p>Type chambre: {this.props.match.params.nomTypeChambre}</p>
@@ -97,7 +112,7 @@ class InsertTarif extends React.Component{
                         <button>Retour</button>
                     </Link>
                     <div>
-                        <button onClick={(e) => this.insert(e)}>Créer</button>
+                        <button onClick={(e) => this.modifier(e)}>Modifier</button>
                     </div>
                 </form>
             </div>
@@ -105,4 +120,4 @@ class InsertTarif extends React.Component{
     }
 }
 
-export default InsertTarif;
+export default DetailsTarif;

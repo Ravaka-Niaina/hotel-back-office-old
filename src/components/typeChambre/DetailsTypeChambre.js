@@ -95,9 +95,11 @@ class DetailsTypeCHambre extends React.Component{
         let list = null;
         list = this.state.tarifs.map(tarif => {
             return <tr>
+                <td>{tarif.nom}</td>
                 <td>{tarif.prixParJour}</td>
                 <td>{tarif.services}</td>
                 <td>{tarif.conditionsAnnulation}</td>
+                <td><Link to={"/tarif/details/" + tarif._id}>Modifier</Link></td>
             </tr>
         });
         return(
@@ -148,9 +150,11 @@ class DetailsTypeCHambre extends React.Component{
                 <table>
                     <thead>
                         <tr>
+                            <th>Nom</th>
                             <th>Prix par jour</th>
                             <th>Services</th>
                             <th>Conditions d'annulation</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
