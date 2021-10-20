@@ -38,7 +38,7 @@ class ListTypeChambre extends React.Component{
             </tr>
         });
         return(
-            <div>
+            <div style={{marginTop :'12%'}}>
                 <table>
                     <thead>
                         <tr>

@@ -2,6 +2,7 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 const axios = require('axios').default;
 
+
 class Home extends React.Component{
     constructor(props){
         super(props);
@@ -61,7 +62,9 @@ class Home extends React.Component{
             });
         }
         return(
-            <div>
+            
+            <div style={{marginTop:'12%'}}>
+                
                 <ul>{menu}</ul>
                 <button type="button" className="btn" onClick={(e) => this.logout(e)}>Logout</button>
             </div>
