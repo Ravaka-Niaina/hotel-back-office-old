@@ -5,6 +5,10 @@ import {Link} from 'react-router-dom';
 import  Sidebar  from "../Sidebar/Sidebar";
 import  Navbar  from "../Navbar/Navbar";
 
+import TextField from '@mui/material/TextField';
+
+import Button from '@mui/material/Button';
+
 class DetailsTarif extends React.Component{
     constructor(props){
         super(props);
@@ -16,7 +20,10 @@ class DetailsTarif extends React.Component{
                 idTypeChambre: '',
                 prixParJour: '',
                 services: [], 
-                conditionsAnnulation: ''
+                conditionsAnnulation: '',
+                
+                sejourMinimum:'',
+                description:''
             }
         };
     }
@@ -82,16 +89,18 @@ class DetailsTarif extends React.Component{
             <div> 
                 <Navbar/>
                 <Sidebar/>
-            <div className="container" style={{marginLeft:'400px',marginTop:'80px',width:'800px'}}>
+            <div className="container" style={{}}>
+             <div className="row" style={{}}>
+              <div className="col-md-12">
                 <div className="jumbotron" 
-                    style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)'}}>
+                 style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)',marginLeft:'315px',marginTop:'-60px'}}>
                     <h1 className="text-center" id='title1'>Détails tarif</h1>
                     <hr></hr>
                     <CustomError errors={this.state.errors}/>
                     <form className="needs-validation">
                         <p style={{fontFamily:'Arial',fontSize:'18px'}}
                         >Type chambre: {this.props.match.params.nomTypeChambre}</p>
-                        <div>
+                        {/* <div>
                             <label  className="form-label mt-2">Nom: </label>
                             <input 
                                 className="form-control"
@@ -120,18 +129,100 @@ class DetailsTarif extends React.Component{
                                 className="form-control"
                                 value={this.state.tarif.conditionsAnnulation}
                                 onChange={(e) => this.handleInputChange(e, "conditionsAnnulation")}></textarea>
-                        </div>
-                        <div>
+                        </div> */}
+
+<div style={{marginTop:'20px'}}>
+<TextField id="standard-basic" label="Nom" variant="standard" style={{width:'40%'}}
+type="text"
+value={this.state.tarif.nom}
+onChange={(e) => this.handleInputChange(e, "nom")}/>
+
+<TextField id="standard-basic" label="Prix journalier" variant="standard" style={{width:'40%',marginLeft:'140px'}}
+type="text"
+type="number" 
+value={this.state.tarif.prixParJour}
+onChange={(e) => this.handleInputChange(e, "prixParJour")}/>
+</div>
+
+<div style={{marginTop:'20px'}}>
+<TextField id="standard-basic" label="Séjours minium" variant="standard" style={{width:'40%'}}
+type="text"
+value={this.state.tarif.sejourMinimum}
+onChange={(e) => this.handleInputChange(e, "sejourMinimum")}/>
+</div>
+
+<div style={{marginTop:'20px'}}>
+<div style={{}}>
+<label className="form-label mt-4" style={{textDecoration:'underline'}}>Description: </label>
+</div>
+<TextField id="outlined-basic" variant="outlined" type='text'
+  placeholder=""
+  multiline
+  rows={2}
+  rowsMax={4}
+  style={{width:'100%',height:'50px'}}
+  value={this.state.tarif.description}
+onChange={(e) => this.handleInputChange(e, "description")}
+/>
+</div>
+
+<div style={{marginTop:'20px'}}>
+<div style={{}}>
+<label className="form-label mt-4" style={{textDecoration:'underline'}}>Services: </label>
+</div>
+<TextField id="outlined-basic" variant="outlined"
+  placeholder=""
+  multiline
+  rows={2}
+  rowsMax={4}
+  style={{width:'100%',height:'50px'}}
+  type='text'
+  value={this.state.tarif.services}
+  onChange={(e) => this.handleInputChange(e, "services")}
+/>
+</div>
+
+<div style={{marginTop:'20px'}}>
+<div style={{}}>
+<label className="form-label mt-4" style={{textDecoration:'underline'}}>Conditions d'annulation: </label>
+</div>
+<TextField id="outlined-basic" variant="outlined"
+  placeholder=""
+  multiline
+  rows={2}
+  rowsMax={4}
+  style={{width:'100%',height:'50px'}}
+  value={this.state.tarif.conditionsAnnulation}
+  onChange={(e) => this.handleInputChange(e, "conditionsAnnulation")}
+/>
+</div>
+
+<div style={{marginTop:'60px'}}>
+<Button variant="contained"  style={{backgroundColor:'#FA8072'}} onClick={(e) => this.modifier(e)}>
+Modifier
+</Button>
+</div>
+<div style={{marginTop:'20px'}}>
+<Link to={'/typeChambre/details/' + this.props.match.idTypeChambre} style={{textDecoration:'none'}}>
+<Button variant="contained" style={{backgroundColor:'#293846',color:'white'}}>
+Retour
+</Button>
+</Link>
+</div>
+
+                        {/* <div>
                             <button className="btn mt-4" 
                             style={{backgroundColor:'#FF7F50'}} onClick={(e) => this.modifier(e)}>Modifier</button>
                         </div>
                         <Link to={'/typeChambre/details/' + this.props.match.idTypeChambre}>
                             <button className="btn mt-4" 
                             style={{backgroundColor:'#293846',color:'white'}}>Retour</button>
-                        </Link>
+                        </Link> */}
                     </form>
 
                 </div>
+                </div>
+              </div>
             </div>
             </div>
         );

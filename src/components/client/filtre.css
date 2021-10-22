@@ -1,0 +1,53 @@
+
+.form-content{
+    width: 750px;
+    margin: 0 auto;
+  }
+  
+  .top-group{
+    margin: 15px 0;
+  }
+  
+  .float-container{
+    display: flex;
+    padding: 20px;
+  }
+  
+  .float-child{
+    float: right;
+    margin: 0 10px;
+  }
+  
+  .matching-rooms{
+    width: 80%;
+    text-align: right;
+  }
+  
+  
+  .container-shortInfo{
+    width: 100%;
+    display: flex;
+    padding: 22px;
+  }
+  
+  .shortInfo{
+    width: 25%;
+    display: flex;
+  }
+  
+  .group-info{
+    display: flex;
+    margin: 10px 0;
+  }
+  
+  .info{
+    width: 50%;
+    float: left;
+    
+  }
+
+  .apply{
+    margin-top: 10px;
+    width: fit-content;
+    float: right;
+  }

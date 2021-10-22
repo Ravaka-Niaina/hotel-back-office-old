@@ -3,6 +3,7 @@ import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Link} from 'react-router-dom'
 import { NorthWest } from '@mui/icons-material';
+import Filtre from './Filtre';
 
 class DChambre extends React.Component{
     constructor(props){
@@ -80,48 +81,51 @@ class DChambre extends React.Component{
             .catch(err => console.log(err));
                 }
                      return (
-                            <div class="row">
-                                <div class="col"></div>
-                                <div class="col" style={{marginTop:'-30px'}} >
-                                    <ul style={{marginLeft:'25%'}}>
-                                        <li style={ {  listStyle : 'none' , width : '500px',
-                                                        padding :"1px" ,background : 'gainsboro'} }>
-                                            <div className="row mb-4" style={{margin:"10px"}}>
-                                            <div class="col"> 
-                                                <strong style={{fontSize:'13px'}}>
-                                                    <u>{tarif.nom}</u>
-                                                </strong><br/>
+                            <div>
+                                
+                                <div class="row">
+                                    <div class="col"></div>
+                                    <div class="col" style={{marginTop:'-30px'}} >
+                                        <ul style={{marginLeft:'25%'}}>
+                                            <li style={ {  listStyle : 'none' , width : '500px',
+                                                            padding :"1px" ,background : 'gainsboro'} }>
+                                                <div className="row mb-4" style={{margin:"10px"}}>
+                                                <div class="col"> 
+                                                    <strong style={{fontSize:'13px'}}>
+                                                        <u>{tarif.nom}</u>
+                                                    </strong><br/>
 
-                                                {tarif.conditionsAnnulation !== "" 
-                                                    ?   <span style={{fontSize:'12px' , color : 'green'}}>
-                                                            <i class="fa fa-check" aria-hidden="true">
-                                                                &nbsp;&nbsp;{tarif.conditionsAnnulation} 
-                                                            </i>
-                                                        </span> : ""
-                                                } <br/>
+                                                    {tarif.conditionsAnnulation !== "" 
+                                                        ?   <span style={{fontSize:'12px' , color : 'green'}}>
+                                                                <i class="fa fa-check" aria-hidden="true">
+                                                                    &nbsp;&nbsp;{tarif.conditionsAnnulation} 
+                                                                </i>
+                                                            </span> : ""
+                                                    } <br/>
 
-                                                <ListServiceTarif services={tarif.services} />
-                                            </div>
-                                            
-                                            <div class="col"> 
-                                                <strong style={{fontSize:'20px'}}>&nbsp;{tarif.prixParJour} 
-                                                </strong><span style={{fontSize:'14px'}}>Per Night</span><br/>
-                                                <span style={{fontSize:'10px'}} >including Taxes & Fees</span>
-                                            </div>
-                                            <div class="col"> 
-                                                <button className="btn btn-primary btn-sm" 
-                                                    style={{marginTop:'7px' , marginLeft:'10px'}} 
-                                                    onClick = {(e) => addReservation(e,tarif._id)}>BOOK NOW
-                                                </button>
-                                            </div>
-                                            </div>
-                                        </li><br/>
-                                    
-                                    </ul> 
-                                </div>
-                            <div class="col">
-                                    
-                            </div>
+                                                    <ListServiceTarif services={tarif.services} />
+                                                </div>
+
+                                                </div>
+                                                
+                                                <div class="col"> 
+                                                    <strong style={{fontSize:'20px'}}>&nbsp;{tarif.prixParJour} 
+                                                    </strong><span style={{fontSize:'14px'}}>Per Night</span><br/>
+                                                    <span style={{fontSize:'10px'}} >including Taxes & Fees</span>
+                                                </div>
+                                                <div class="col"> 
+                                                    <button className="btn btn-primary btn-sm" 
+                                                        style={{marginTop:'7px' , marginLeft:'10px'}} 
+                                                        onClick = {(e) => addReservation(e,tarif._id)}>BOOK NOW
+                                                    </button>
+                                                </div>
+                                            </li><br/>
+                                        
+                                        </ul> 
+                                    </div>
+                                <div class="col">
+                            </div> 
+                        </div>
                     </div> 
                 ) ;
             });
@@ -180,6 +184,8 @@ class DChambre extends React.Component{
         }); 
         return (
             <div>
+                <Filtre />
+                <hr></hr>
                  {listChambre}
             </div>
         );

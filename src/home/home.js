@@ -8,10 +8,9 @@ function home() {
         <div>
         <Navbar/>
         <Sidebar/>
-        <p 
-style={{marginLeft:'650px',marginTop:'300px',fontSize:'30px',fontFamily:'arial'}}>
-Bienvenue Mr Ravaka
-        </p>
+        <h1 style={{margin: '0 auto'}}>Bienvenue!</h1>
+
+
         </div>
               );
   }

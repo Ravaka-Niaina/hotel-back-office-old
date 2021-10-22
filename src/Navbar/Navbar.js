@@ -9,7 +9,7 @@ function Navbar() {
 style={{color:'white',marginLeft: '30px',fontFamily:'Arial, Helvetica, sans-serif',fontSize:'12px'}}>
     HOTEL COLBERT
     </span>
-<span className="" style={{color:'white',marginLeft:'1000px'}}>Bienvenue Ravaka</span>
+<span className="" style={{color:'white',marginLeft:'1400px'}}>Bienvenue Ravaka</span>
 </nav>
               );
   }

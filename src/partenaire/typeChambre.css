@@ -1,8 +1,9 @@
 .jumbotron{
 padding: 20px 70px 20px 70px;
+width: 900px;
 }
 .jumbotron1{
-    width: 900px;
+    width: 1200px;
     padding: 20px 70px 20px 70px;
     }
 #title1{
