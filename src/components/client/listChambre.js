@@ -17,7 +17,6 @@ class DChambre extends React.Component{
     }
 
     setListTypeChambre(data){
-        console.log("list="+JSON.stringify(data));
         let currentState = JSON.parse(JSON.stringify(this.state));   //mamadika donne ho lasa json 
         currentState = data;                                         // lasa currentState ilai data (this.state) ilai data
         this.setState(currentState);                                  //modifier ilai state ho lasa donnee json

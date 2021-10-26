@@ -1,7 +1,7 @@
 // import { TextField } from "@mui/material";
 import CustomError from '../CustomError';
 import axios from "axios";
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import  Sidebar  from "../Sidebar/Sidebar";
 import  Navbar  from "../Navbar/Navbar";
 import { Checkbox } from "@mui/material";
@@ -20,9 +20,20 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 
 
-const Input = styled('input')({
-  display: 'none',
-});
+const FileInput = ({value, handlePhotoChange}) => {
+  return(
+    <div>
+      <label>
+        Click to select some files...
+        <input 
+          style={{display: 'none'}}
+          type="file"
+          onChange={handlePhotoChange}
+        />
+      </label>
+    </div>
+  );
+}
 
 class InsertTypeCHambre extends React.Component{
   constructor(props){
@@ -40,44 +51,58 @@ class InsertTypeCHambre extends React.Component{
         superficie:'',
         description:''
     }
-}
-
-tryRedirect(res){
-  console.log(this.state);
-  console.log(res);
-  if(res.status === 200){
-    this.props.history.push('/typeChambre');
-  }else if(res.status === 401){//Unauthorized
-      this.props.history.push('/login');
-  }else{
-    let currentState = JSON.parse(JSON.stringify(this.state));
-    currentState.errors = res.errors;
-    this.setState(currentState);
+    this.handlePhotoChange = this.handlePhotoChange.bind(this);
   }
-}
 
-insert(e){
-    e.preventDefault();
-    axios({
-        method: 'post',
-        url: process.env.REACT_APP_BACK_URL + "/typeChambre/insert",
-        withCredentials: true,
-        data: this.state
-    })
-    .then(res => this.tryRedirect(res.data))
-    .catch(err => console.log(err));
-}
+  tryRedirect(res){
+    console.log(this.state);
+    console.log(res);
+    if(res.status === 200){
+      this.props.history.push('/typeChambre');
+    }else if(res.status === 401){//Unauthorized
+        this.props.history.push('/login');
+    }else{
+      let currentState = JSON.parse(JSON.stringify(this.state));
+      currentState.errors = res.errors;
+      this.setState(currentState);
+    }
+  }
 
-handleInputChange(event, inputName){
-    const currentState = JSON.parse(JSON.stringify(this.state));
-    currentState[inputName] = event.target.value;
-    this.setState(currentState);
-}
-handlePhotoChange(event){
+  insert(e){
+      e.preventDefault();
+      console.log('Envoie en attente...');
+      console.log(this.state);
+      axios({
+          method: 'post',
+          url: process.env.REACT_APP_BACK_URL + "/typeChambre/insert",
+          withCredentials: true,
+          data: this.state
+      })
+      .then(res => this.tryRedirect(res.data))
+      .catch(err => console.log(err));
+  }
+
+  handleInputChange(event, inputName){
+      const currentState = JSON.parse(JSON.stringify(this.state));
+      currentState[inputName] = event.target.value;
+      this.setState(currentState);
+  }
+
+  handlePhotoChange(event){
     let currentState = JSON.parse(JSON.stringify(this.state));
-    currentState.photo = event.target.files[0];
-    this.setState(currentState);
-}
+    if(event.target.files[0]){
+      let img = event.target.files[0];
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        currentState.photo = evt.target.result;
+        this.setState(currentState);
+        console.log('Photo changed...');
+        console.log(this.state);
+      }
+      reader.readAsDataURL(img);
+    }
+  }
+
   render(){
     return (
       <div> 
@@ -115,10 +140,18 @@ handlePhotoChange(event){
                   </div>
 
                   <div style={{marginTop:'70px'}}>
-      <input type="file" className='form-control' value={this.state.photo} onChange={(e) => this.handleInputChange(e, "photo")} style={{width:'45%'}}/>
+                    <FileInput 
+                      value=""
+                      handlePhotoChange={this.handlePhotoChange} />
+                    {/* 
+                      <Field 
+                        name="photo" 
+                        component="input" type="file" 
+                        value={this.state.photo} 
+                        onChange={(e)=> this.handlePhotoChange(e)} 
+                        style={{width:'45%'}} />
+                    */}
                   </div>
-
-
 
                   <div style={{marginTop:'20px'}}>
                     <div style={{}}>

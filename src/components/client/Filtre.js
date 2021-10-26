@@ -48,8 +48,7 @@ function ListOptRadio(props){
                 style={{padding: 0}}
                 value={option.value}
                 label={option.value}
-                onChange={(e) => props.handleChange(e, props.indexFiltre, indexOption)}
-                control={<Radio />}
+                control={<Radio onClick={(e) => props.handleRadioChange(e, props.indexFiltre, indexOption)}/>}
             />
         );
     });
@@ -70,11 +69,14 @@ function ListOptions(props){
     }else{
         return(
             <div>
-                <RadioGroup name={props.nameFiltre}>
+                <RadioGroup 
+                    name={props.nameFiltre}
+                    value={props.filtreValue}>
                     <ListOptRadio
                         indexFiltre={props.indexFiltre} 
                         nameFiltre={props.nameFiltre}
-                        handleChange={props.handleChange} 
+                        handleChange={props.handleChange}
+                        handleRadioChange={props.handleRadioChange} 
                         options={props.options}
                         multipleChoice={props.multipleChoice} />
                 </RadioGroup>
@@ -102,10 +104,12 @@ function ListFiltres(props){
                                     </FormLabel>
                                     <ListOptions 
                                         indexFiltre={indexFiltre} 
-                                        multipleChoice={props.filtre}
+                                        multipleChoice={props.filtre[i].multipleChoice}
                                         handleChange={props.handleChange} 
+                                        handleRadioChange={props.handleRadioChange} 
                                         options={props.filtre[i].options}
-                                        nameFiltre={props.filtre[i].name} />
+                                        nameFiltre={props.filtre[i].name}
+                                        filtreValue={props.filtre[i].value} />
                                 </FormControl>
                             </Box>
                         </div>
@@ -120,9 +124,12 @@ function ListFiltres(props){
                                     </FormLabel>
                                     <ListOptions 
                                         indexFiltre={indexFiltre + 1}  
+                                        multipleChoice={props.filtre[i + 1].multipleChoice}
                                         handleChange={props.handleChange}  
+                                        handleRadioChange={props.handleRadioChange} 
                                         options={props.filtre[i + 1].options}
-                                        nameFiltre={props.filtre[i + 1].name} />
+                                        nameFiltre={props.filtre[i + 1].name}
+                                        filtreValue={props.filtre[i + 1].value} />
                                 </FormControl>
                             </Box>
                         </div>
@@ -144,10 +151,12 @@ function ListFiltres(props){
                                     </FormLabel>
                                     <ListOptions 
                                         indexFiltre={indexFiltre} 
-                                        multipleChoice={props.filtre}
+                                        multipleChoice={props.filtre[i].multipleChoice}
                                         handleChange={props.handleChange} 
+                                        handleRadioChange={props.handleRadioChange} 
                                         options={props.filtre[i].options}
-                                        nameFiltre={props.filtre[i].name} />
+                                        nameFiltre={props.filtre[i].name}
+                                        filtreValue={props.filtre[i].value} />
                                 </FormControl>
                             </Box>
                         </div>
@@ -166,6 +175,7 @@ class Filtre extends React.Component{
     constructor(props){
         super(props);
         this.handleChange = this.handleChange.bind(this);
+        this.handleRadioChange = this.handleRadioChange.bind(this);
         this.setListFiltre = this.setListFiltre.bind(this);
         this.filtreOpt = [
             {
@@ -207,21 +217,49 @@ class Filtre extends React.Component{
         currentState.filtres[indexFiltre].options[indexOption].checked = event.target.checked;
         this.setState(currentState);
     }
-
-    setListFiltre(res){
-        console.log(res);
-        console.log('state = ' + this.state);
+    handleRadioChange(event, indexFiltre, indexOption){
         let currentState = JSON.parse(JSON.stringify(this.state));
-        currentState.filtres = res.filters;
+        if(event.target.value == currentState.filtres[indexFiltre].value){
+            currentState.filtres[indexFiltre].value = '';
+        }else{
+            currentState.filtres[indexFiltre].value = event.target.value;
+        }
+        currentState.filtres[indexFiltre].options[indexOption].checked = 
+            !currentState.filtres[indexFiltre].options[indexOption].checked;
         this.setState(currentState);
     }
 
-    printError(err){
-        console.log(err);
-    };
+    setFiltreDefaultValue(filtres, filtreName, optValue){
+        for(let i = 0; i < filtres.length; i++){
+            if(filtres[i].name == filtreName){
+                for(let u = 0; u < filtres[i].options.length; u++){
+                    if(filtres[i].options[u].value == optValue){
+                        filtres[i].options[u].checked = true;
+                        if(!filtres[i].multipleChoice){
+                            filtres[i].value = filtres[i].options[u].value;
+                        }
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+        return filtres;
+    }
+
+    setListFiltre(res){
+        let currentState = JSON.parse(JSON.stringify(this.state));
+        res.filters = this.setFiltreDefaultValue(res.filters, "affichage", "afficher par chambres");
+        res.filters = this.setFiltreDefaultValue(res.filters, "trierpar", "Recommandé");
+
+        currentState.filtres = res.filters;
+        this.setState(currentState);
+        console.log('current state of things');
+        console.log(res.filters);
+    }
 
     componentDidMount(){
-        callAPI('get', '/typeChambre/filter', {}, this.setListFiltre, this.printError);
+        callAPI('get', '/typeChambre/filter', {}, this.setListFiltre);
     }
 
     render(){
@@ -269,7 +307,7 @@ class Filtre extends React.Component{
                             <Divider />
                             {this.state.filtre.show ? 
                                 <div>
-                                    <ListFiltres filtre={this.state.filtres} handleChange={this.handleChange} />
+                                    <ListFiltres filtre={this.state.filtres} handleChange={this.handleChange} handleRadioChange={this.handleRadioChange} />
                                     <div className="apply">
                                         <strong>32</strong> matching rooms
                                         <Button style={{marginLeft: '10px'}} onClick={(e) =>  console.log(e)} variant="contained">APPLY</Button>

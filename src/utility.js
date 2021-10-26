@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export default function callAPI(method, url, data, callback, errCallback){
+export default function callAPI(method, url, data, callback){
     axios({
         method: method,      
         url: process.env.REACT_APP_BACK_URL + url,
