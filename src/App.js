@@ -11,6 +11,7 @@ import Paiement from "./paiement";
 import  DCHambre  from "./components/client/listChambre";
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import  AppClient  from "./components/client/scroll";
+import Calendrier from "./partenaire/Calendrier/Calendrier";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/TypeChambre/details/:_id" exact component={DetailsTypeChambre} />
         <Route path="/tarif/insert/:idTypeChambre/:nomTypeChambre" exact component={InsertTarif}/>
         <Route path="/tarif/details/:_id/:idTypeChambre" exact component={DetailsTarif} />
+        <Route path="/calendrier" exact component={Calendrier} />
 
       </Router>
     </div>

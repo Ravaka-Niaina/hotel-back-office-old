@@ -45,6 +45,12 @@ class Sidebar extends React.Component {
               <div id="title" to='/login'>Login</div>
               </li>
             </Link>
+            <Link to='/calendrier' style={{textDecoration:'none'}}>
+              <li className="row">
+              <div id="icon"></div>
+              <div id="title" to='/calendrier'>Calendrier</div>
+              </li>
+            </Link>
           </ul>
         </div>
       );
