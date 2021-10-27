@@ -58,7 +58,7 @@ class Login extends React.Component{
     return (
       <div>
         <Navbar/>
-        <Sidebar/>
+        
         <div className="container">
           <div className="base-container">
           <img src="user.png" style={{width : '12%',marginLeft:''}} ></img>

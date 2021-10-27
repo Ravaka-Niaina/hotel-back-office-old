@@ -3,7 +3,7 @@ import CustomError from '../CustomError';
 import axios from "axios";
 import React from "react";
 import {Link} from 'react-router-dom';
-import  Sidebar  from "../Sidebar/Sidebar";
+
 import  Navbar  from "../Navbar/Navbar"
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './typeChambre.css';
@@ -151,7 +151,7 @@ class DetailsTypeCHambre extends React.Component{
         return(
             <div> 
                 <Navbar/>
-                <Sidebar/>
+                
             <div className="container">
              <div className="row">
             {/* <div className="col-md-1"></div> */}

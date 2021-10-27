@@ -2,7 +2,7 @@
 import CustomError from '../CustomError';
 import axios from "axios";
 import React from "react";
-import  Sidebar  from "../Sidebar/Sidebar";
+
 import  Navbar  from "../Navbar/Navbar";
 import { Checkbox } from "@mui/material";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -82,7 +82,7 @@ handlePhotoChange(event){
     return (
       <div> 
       <Navbar/>
-      <Sidebar/>
+      
       <div className="container">
         <div className="row">
           <div className="col-md-3"></div>

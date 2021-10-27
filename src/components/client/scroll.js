@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import DChambre from './listChambre'
 import Fact from './fact'
 import Home from './home'
+import  Navbar  from "../../Navbar/Navbar";
 
 import './Css.css'
 
@@ -18,7 +19,7 @@ class Scroll extends React.Component{
     render(){
         return(
             <div>
-                <Home/>
+                <Navbar/>
                 <div className="scroll-bg">
                     <div class="row">
                         <div className="col">

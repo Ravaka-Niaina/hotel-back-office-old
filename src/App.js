@@ -16,10 +16,10 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <Route path="/client" exact component={AppClient} />
+        <Route path="/" exact component={AppClient} />
         <Route path="/login" exact component={Login} />
         <Route path="/Register" exact component={Register} />
-        <Route path="/" exact component={home} />
+        {/* <Route path="/" exact component={home} /> */}
         <Route path="/Paiement" exact component={Paiement} />
         <Route path="/typeChambre" exact component={ListTypeChambre} />
         <Route path="/TypeChambre/insert" exact component={InsertTypeChambre} />

@@ -3,7 +3,7 @@ import axios from 'axios';
 import React from 'react';
 import {Link} from 'react-router-dom';
 import './insertTarif.css';
-import  Sidebar  from "../Sidebar/Sidebar";
+
 import  Navbar  from "../Navbar/Navbar";
 
 import TextField from '@mui/material/TextField';
@@ -76,7 +76,7 @@ class InsertTarif extends React.Component{
         return(
             <div> 
                 <Navbar/>
-                <Sidebar/>
+                
             <div className="container" style={{}}> 
              <div className="row">
               <div className="col-md-12">

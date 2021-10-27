@@ -1,7 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { Link } from 'react-router-dom';
-import  Sidebar  from "../Sidebar/Sidebar";
+
 import  Navbar  from "../Navbar/Navbar";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './typeChambre.css';
@@ -75,7 +75,7 @@ class ListTypeChambre extends React.Component{
         return(
             <div>
                 <Navbar/>
-                <Sidebar/>
+                
                 <div className='container' style={{marginTop:'120px'}}>
                     <div className='row'>
                         <div className='col-md-2'></div>
