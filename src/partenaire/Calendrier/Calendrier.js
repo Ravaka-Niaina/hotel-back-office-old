@@ -3,19 +3,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 
-import RadioGroup from '@mui/material/RadioGroup'
+
 import FormLabel from '@mui/material/FormLabel'
-import FormControl from '@mui/material/FormControl'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Radio from '@mui/material/Radio'
-import Box from '@mui/material/Box'
-import AccountCircle from '@mui/icons-material/AccountCircle';
-import TextField from '@mui/material/TextField'
-import Input from '@mui/material/Input'
-import FormHelperText from '@mui/material/FormHelperText'
-import InputLabel from '@mui/material/InputLabel'
-import AlternateEmailOutlinedIcon from '@mui/icons-material/AlternateEmailOutlined'; 
-import MarkEmailReadOutlinedIcon from '@mui/icons-material/MarkEmailReadOutlined';
+import DateRangePicker from '@mui/lab/DateRangePicker';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 import Navbar from '../../Navbar/Navbar';
 import Sidebar from '../../Sidebar/Sidebar';
 
@@ -23,8 +17,10 @@ class Calendrier extends React.Component{
     constructor(props){
         super(props)
        this.state = {
-            label : "anja"
+            label : "anja",
+            value: [null,null],
        }
+       
     }
 
 render(){
@@ -37,6 +33,23 @@ render(){
                           Ceci est le calendrier
                       </FormLabel>
                     </div>   
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DateRangePicker
+                            startText="Check-in"
+                            endText="Check-out"
+                            value={this.state.value}
+                            onChange={(newValue) => {
+                                this.setState({value:newValue})
+                            }}
+                            renderInput={(startProps, endProps) => (
+                            <React.Fragment>
+                                <TextField {...startProps} />
+                                <Box sx={{ mx: 2 }}> to </Box>
+                                <TextField {...endProps} />
+                            </React.Fragment>
+                            )}
+                        />
+                     </LocalizationProvider>
                 </div>
         ); 
     }
