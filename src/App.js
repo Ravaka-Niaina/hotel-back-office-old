@@ -2,6 +2,7 @@
 import  Login  from "./components/login/login";
 import  Register  from "./components/login/register";
 import  InsertTypeChambre  from "./partenaire/InsertTypeChambre.js";
+import InsertChambre from './partenaire/chambre/InsertChambre.js';
 import  DetailsTypeChambre  from "./partenaire/DetailsTypeChambre.js";
 import  ListTypeChambre  from "./partenaire/ListTypeChambre.js";
 import  InsertTarif  from "./tarif/InsertTarif.js";
@@ -21,11 +22,14 @@ function App() {
         <Route path="/Register" exact component={Register} />
         <Route path="/" exact component={home} />
         <Route path="/Paiement" exact component={Paiement} />
+
         <Route path="/typeChambre" exact component={ListTypeChambre} />
         <Route path="/TypeChambre/insert" exact component={InsertTypeChambre} />
         <Route path="/TypeChambre/details/:_id" exact component={DetailsTypeChambre} />
         <Route path="/tarif/insert/:idTypeChambre/:nomTypeChambre" exact component={InsertTarif}/>
         <Route path="/tarif/details/:_id/:idTypeChambre" exact component={DetailsTarif} />
+
+        <Route path="/chambre" exact component={InsertChambre} />
 
       </Router>
     </div>
