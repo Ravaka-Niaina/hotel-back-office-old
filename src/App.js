@@ -17,10 +17,15 @@ import UpdatePlanTarifaire from './partenaire/planTarifaire/UpdatePlanTarifaire.
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import  AppClient  from "./components/client/scroll";
 
+import  PromotionList  from "./promotion/promotionList.js";
+import  InsertPromotion  from "./promotion/insertPromotion.js";
+
 function App() {
   return (
     <div className="App">
       <Router>
+      <Route path="/promotion" exact component={PromotionList} />
+        <Route path="/promotion/create" exact component={InsertPromotion} />
         <Route path="/client" exact component={AppClient} />
         <Route path="/login" exact component={Login} />
         <Route path="/Register" exact component={Register} />

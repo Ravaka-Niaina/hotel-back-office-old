@@ -212,11 +212,6 @@ value={this.state.typeChambre.nbEnfant} onChange={(e) => this.handleInputChange(
 <Button variant="contained"  style={{backgroundColor:'#FA8072'}} onClick={(e) => this.update(e)}>
 Modifier
 </Button>
-<Link to={'/tarif/insert/' + this.props.match.params._id + '/' + this.state.typeChambre.nom} style={{textDecoration:'none'}}>
-<Button variant="contained" style={{width:'200px',textDecoration:'none',backgroundColor:'#3CB371',marginLeft:'20px'}}>
-Ajouter tarifs
-</Button>
-</Link>
 <Link to='/typeChambre' style={{textDecoration:'none'}}>
 <Button variant="contained" style={{backgroundColor:'#293846',color:'white',marginLeft:'20px'}}>
 Retour
@@ -224,6 +219,7 @@ Retour
 </Link>
                         </div>
                     </form>
+                    {/*
                     <h2 className="mt-5" style={{textDecoration:'underline',textAlign:'center'}}>Liste tarifs</h2>
 
 <TableContainer component={Paper} style={{marginTop:'40px'}}>
@@ -242,6 +238,7 @@ Retour
         </TableBody>
       </Table>
     </TableContainer>
+    */}
 
                 </div>
                 </div>

@@ -19,7 +19,8 @@ class DChambre extends React.Component{
     setListTypeChambre(data){
         let currentState = JSON.parse(JSON.stringify(this.state));   //mamadika donne ho lasa json 
         currentState = data;                                         // lasa currentState ilai data (this.state) ilai data
-        this.setState(currentState);                                  //modifier ilai state ho lasa donnee json
+        this.setState(currentState);  
+        console.log(currentState);                 //modifier ilai state ho lasa donnee json
     }
 
     componentDidMount(){
@@ -55,6 +56,21 @@ class DChambre extends React.Component{
                 );
             }) ;
             return services;
+        }
+
+        function Equipements(props){
+            let list = [];
+            try{
+                for(let i = 0; i < props.equipements.length; i++){
+                    list.push(
+                        <li style={ {marginLeft : 10 , listStyle : 'none', width: '150px'} }>
+                        <i class="fa fa-wifi"></i>&nbsp;{props.equipements[i]}
+                        </li>
+                    );
+                }
+            }catch(err){}
+            
+            return list;
         }
 
         function ListTarif(props){
@@ -137,8 +153,8 @@ class DChambre extends React.Component{
             <div className="DChambre1">
                 <div class="Chambre1">
                 <div class="row mb-4">
-                    <div class="col">
-                        <img src="im2.jpg" />
+                    <div className="col">
+                        <img style={{width:'300px', height: '150px'}} src={'http://localhost:3000/' + typeChambre.photo} />
                     </div>
                     <div class="col">
                       <span style={{fontSize:'30px'}}> {typeChambre.nom} </span><br/>
@@ -159,16 +175,7 @@ class DChambre extends React.Component{
                 <div class="row">
                     <div class="col">
                         <ul>
-                            <li style={ {marginLeft : 10 , listStyle : 'none'} }>
-                                <i class="fa fa-wifi"></i>&nbsp;wifi
-                            </li>
-                            <li style={ {marginLeft : 10 , listStyle : 'none'} }>
-                                <i class="fa fa-bath"></i>&nbsp;Bathtub
-                            </li>
-                            <li style={ {marginLeft : 10 , listStyle : 'none'} }>
-                                <i class="fa fa-shower"></i>&nbsp;Shower
-                            </li>
-                            <li style={ {marginLeft : 10 , listStyle : 'none'} }><i class="fa fa-thermometer-half"></i>&nbsp;Air</li>
+                            <Equipements equipements={typeChambre.equipements}/>
                         </ul>
                     </div>
                     <div class="col">
