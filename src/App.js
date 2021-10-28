@@ -2,7 +2,6 @@
 import  Login  from "./components/login/login";
 import  Register  from "./components/login/register";
 import  InsertTypeChambre  from "./partenaire/InsertTypeChambre.js";
-import InsertChambre from './partenaire/chambre/InsertChambre.js';
 import  DetailsTypeChambre  from "./partenaire/DetailsTypeChambre.js";
 import  ListTypeChambre  from "./partenaire/ListTypeChambre.js";
 import  InsertTarif  from "./tarif/InsertTarif.js";
@@ -10,6 +9,11 @@ import  DetailsTarif  from "./tarif/DetailsTarif.js";
 import  home  from "./home/home";
 import Paiement from "./paiement";
 import  DCHambre  from "./components/client/listChambre";
+
+import InsertChambre from './partenaire/chambre/InsertChambre.js';
+import InsertPlanTarifaire from './partenaire/planTarifaire/InsertPlanTarifaire.js';
+import UpdatePlanTarifaire from './partenaire/planTarifaire/UpdatePlanTarifaire.js';
+
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import  AppClient  from "./components/client/scroll";
 
@@ -30,6 +34,9 @@ function App() {
         <Route path="/tarif/details/:_id/:idTypeChambre" exact component={DetailsTarif} />
 
         <Route path="/chambre" exact component={InsertChambre} />
+
+        <Route path="/planTarifaire/insert" exact component={InsertPlanTarifaire} />
+        <Route path="/planTarifaire/update" exact component={UpdatePlanTarifaire} />
 
       </Router>
     </div>

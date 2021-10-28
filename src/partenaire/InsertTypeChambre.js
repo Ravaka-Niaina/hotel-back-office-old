@@ -13,11 +13,10 @@ import Box from '@mui/material/Box';
 
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import IconButton from '@mui/material/IconButton';
-import PhotoCamera from '@mui/icons-material/PhotoCamera';
 
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import callAPI from '../utility';
 
 
 const FileInput = ({value, handlePhotoChange}) => {
@@ -41,7 +40,6 @@ class InsertTypeCHambre extends React.Component{
     this.state = {
         errors: [],
         nom: '',
-        equipements: '',
         nbAdulte: '',
         nbEnfant: '',
         photo: '',
@@ -49,10 +47,28 @@ class InsertTypeCHambre extends React.Component{
         chambreTotal:'',
         etage:'',
         superficie:'',
-        description:''
-    }
+        description:'',
+        planTarifaire: []
+    };
     this.handlePhotoChange = this.handlePhotoChange.bind(this);
+    this.setPlanTarifaire = this.setPlanTarifaire.bind(this);
+    this.handleCheckBoxChange = this.handleCheckBoxChange.bind(this);
   }
+  setPlanTarifaire(res){
+    let current = JSON.parse(JSON.stringify(this.state));
+    current.planTarifaire = res.list;
+    //this.setState(current);
+  }
+
+  componentDidMount(){
+    callAPI('get', '/planTarifaire', {}, this.setPlanTarifaire);
+  }
+
+  handleCheckBoxChange(e, name1, name2, name3){
+    let current = JSON.parse(JSON.stringify(this.state));
+    current[name1][name2][name3] = e.target.checked;
+    this.setPlanTarifaire(current);
+}
 
   tryRedirect(res){
     console.log(this.state);
@@ -104,6 +120,21 @@ class InsertTypeCHambre extends React.Component{
   }
 
   render(){
+    let i = -1;
+    let list = this.state.planTarifaire.map(tarif => {
+        i++;
+        let u = i;
+        console.log(this.state.planTarifaire);
+        return(
+          <FormControlLabel 
+              checked={tarif.checked}
+              control={<Checkbox/>}
+              onChange={(e) => this.handleCheckBoxChange(e, "planTarifaire", u, "checked")}
+              label={tarif.nom}
+              style={{marginLeft:"20px"}}
+          />
+        );
+    })
     return (
       <div> 
       <Navbar/>
@@ -153,21 +184,6 @@ class InsertTypeCHambre extends React.Component{
                     */}
                   </div>
 
-                  <div style={{marginTop:'20px'}}>
-                    <div style={{}}>
-                      <label className="form-label mt-4" style={{textDecoration:'underline'}}>Equipements: </label>
-                    </div>
-                    <div>
-                      <FormControlLabel control={<Checkbox/>} label="Free Wifi"/>
-                      <FormControlLabel control={<Checkbox/>} label="Air Conditioning" style={{marginLeft:"20px"}}/>
-                      <FormControlLabel control={<Checkbox/>} label="Separate Shower" style={{marginLeft:"20px"}}/>
-                    </div>
-                    <div>
-                      <FormControlLabel control={<Checkbox/>} label="Hair Dryer" />
-                      <FormControlLabel control={<Checkbox/>} label="Desk or Workplace" style={{marginLeft:"10px"}} />
-                    </div>
-                  </div>
-
                   <div style={{marginTop:'10px'}}>
                     <label className="form-label mt-4" style={{textDecoration:'underline'}}>Occupation : </label>
                   </div>
@@ -194,6 +210,12 @@ class InsertTypeCHambre extends React.Component{
                     style={{width:'100%',height:'50px'}}
                     value={this.state.description}
                     onChange={(e) => this.handleInputChange(e, "description")} />
+                  </div>
+                  <div style={{marginTop:'30px'}}>
+                      <div>
+                          <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Plan tarifaire attribué: </label>
+                      </div>
+                      {list}
                   </div>
                 </Box>
                 <div style={{marginTop:'50px'}}>

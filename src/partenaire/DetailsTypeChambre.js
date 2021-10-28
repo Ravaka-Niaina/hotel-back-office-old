@@ -42,7 +42,6 @@ class DetailsTypeCHambre extends React.Component{
             typeChambre: {
                 _id: '',
                 nom: '',
-                equipements: '',
                 nbAdulte: '',
                 nbEnfant: '',
                 photo: '',
@@ -183,20 +182,6 @@ style={{width:'40%',marginLeft:'152px'}} value={this.state.typeChambre.superfici
 </div>
 
 </div>
-<div style={{marginTop:'20px'}}>
-<div style={{}}>
-<label className="form-label mt-4" style={{textDecoration:'underline'}}>Equipements: </label>
-</div>
-<div>
-  <FormControlLabel control={<Checkbox/>} label="Free Wifi"/>
-  <FormControlLabel control={<Checkbox/>} label="Air Conditioning" style={{marginLeft:"20px"}}/>
-  <FormControlLabel control={<Checkbox/>} label="Separate Shower" style={{marginLeft:"20px"}}/>
-</div>
-<div>
-  <FormControlLabel control={<Checkbox/>} label="Hair Dryer" />
-  <FormControlLabel control={<Checkbox/>} label="Desk or Workplace" style={{marginLeft:"10px"}} />
-</div>
-</div>
 
 <div style={{marginTop:'20px'}}>
 <label className="form-label mt-4" style={{textDecoration:'underline'}}>Occupation : </label>
@@ -223,19 +208,6 @@ value={this.state.typeChambre.nbEnfant} onChange={(e) => this.handleInputChange(
     </Box>
 
         <div style={{marginTop:'50px'}}>
-            {/* <button className="btn mt-4" 
-            style={{backgroundColor:'#FF7F50'}} onClick={(e) => this.update(e)}>
-                Modifier
-            </button>
-            <Link to={'/tarif/insert/' + this.props.match.params._id 
-                + '/' + this.state.typeChambre.nom}>
-                <button className="btn mt-4 mx-2" 
-            style={{width:'200px',textDecoration:'none',backgroundColor:'#7FFFD4'}}>Ajouter tarifs</button>
-            </Link>
-            <Link to='/typeChambre'>
-                <button className="btn mt-4" 
-            style={{backgroundColor:'#293846',color:'white'}}>Retour</button>
-            </Link> */}
 
 <Button variant="contained"  style={{backgroundColor:'#FA8072'}} onClick={(e) => this.update(e)}>
 Modifier
@@ -253,20 +225,6 @@ Retour
                         </div>
                     </form>
                     <h2 className="mt-5" style={{textDecoration:'underline',textAlign:'center'}}>Liste tarifs</h2>
-                {/* <table className="table mt-4">
-                    <thead className="thead-dark">
-                        <tr>
-                            <th>Nom</th>
-                            <th>Prix par jour</th>
-                            <th>Services</th>
-                            <th>Conditions d'annulation</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {list}
-                    </tbody>
-                </table> */}
 
 <TableContainer component={Paper} style={{marginTop:'40px'}}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
