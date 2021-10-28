@@ -7,6 +7,7 @@ import  ListTypeChambre  from "./partenaire/ListTypeChambre.js";
 import  InsertTarif  from "./tarif/InsertTarif.js";
 import  DetailsTarif  from "./tarif/DetailsTarif.js";
 import  home  from "./home/home";
+import Tarif from "./tarif/Tarif.js";
 import Paiement from "./paiement";
 import  DCHambre  from "./components/client/listChambre";
 import {BrowserRouter as Router, Route} from 'react-router-dom';
@@ -16,7 +17,9 @@ function App() {
   return (
     <div className="App">
       <Router>
-        <Route path="/" exact component={AppClient} />
+        <Route path="/" exact component={home} />
+        <Route path="/tarif" exact component={Tarif} />
+        <Route path="/client" exact component={AppClient} />
         <Route path="/login" exact component={Login} />
         <Route path="/Register" exact component={Register} />
         {/* <Route path="/" exact component={home} /> */}

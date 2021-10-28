@@ -57,8 +57,7 @@ class Login extends React.Component{
   render(){
     return (
       <div>
-        <Navbar/>
-        
+        <Navbar currentPage={1}/>
         <div className="container">
           <div className="base-container">
           <img src="user.png" style={{width : '12%',marginLeft:''}} ></img>

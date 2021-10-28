@@ -74,8 +74,7 @@ class ListTypeChambre extends React.Component{
         });
         return(
             <div>
-                <Navbar/>
-                
+                <Navbar currentPage={2}/>
                 <div className='container' style={{marginTop:'120px'}}>
                     <div className='row'>
                         <div className='col-md-2'></div>
