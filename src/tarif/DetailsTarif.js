@@ -2,7 +2,7 @@ import CustomError from '../CustomError';
 import axios from 'axios';
 import React from 'react';
 import {Link} from 'react-router-dom';
-import  Sidebar  from "../Sidebar/Sidebar";
+
 import  Navbar  from "../Navbar/Navbar";
 
 import TextField from '@mui/material/TextField';
@@ -88,7 +88,7 @@ class DetailsTarif extends React.Component{
         return(
             <div> 
                 <Navbar/>
-                <Sidebar/>
+                
             <div className="container" style={{}}>
              <div className="row" style={{}}>
               <div className="col-md-12">
