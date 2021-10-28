@@ -18,11 +18,28 @@ class Calendrier extends React.Component{
         super(props)
        this.state = {
             label : "anja",
-            value: [null,null],
+            range: [null,null],
+            hotel:{id:1,name:'Maisonnette'},
+            tarif:[{},{}],
+            statusJours:[],
+            
+            tarifsJours:[],
        }
        
     }
-
+renderTextfield(startProps, endProps){
+    startProps.label = ""
+        startProps.inputProps.value=(startProps.inputProps.value+"-"+endProps.inputProps.value)
+        return (
+                            <React.Fragment>
+                               
+                                <TextField {...startProps}  />
+                               
+                              
+                               
+                            </React.Fragment>
+        )
+}
 render(){
         return(
             <div>
@@ -32,24 +49,24 @@ render(){
                       <FormLabel>
                           Ceci est le calendrier
                       </FormLabel>
-                    </div>   
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DateRangePicker
                             startText="Check-in"
                             endText="Check-out"
-                            value={this.state.value}
+                            value={this.state.range}
+                            inputFormat={"dd/MM/yyyy"}
                             onChange={(newValue) => {
-                                this.setState({value:newValue})
+                                this.setState({range:newValue})
                             }}
                             renderInput={(startProps, endProps) => (
-                            <React.Fragment>
-                                <TextField {...startProps} />
-                                <Box sx={{ mx: 2 }}> to </Box>
-                                <TextField {...endProps} />
-                            </React.Fragment>
+                                this.renderTextfield(startProps,endProps)
+                            
                             )}
                         />
                      </LocalizationProvider>
+                    </div>   
+                 
                 </div>
         ); 
     }
