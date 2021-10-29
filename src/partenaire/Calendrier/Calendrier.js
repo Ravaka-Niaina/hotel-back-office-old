@@ -72,9 +72,7 @@ render(){
                 <Navbar/>
                 <Sidebar/>
                     <div className="container"><br/>
-                      <FormLabel>
-                          Ceci est le calendrier
-                      </FormLabel>
+                   
 
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DateRangePicker
@@ -92,7 +90,7 @@ render(){
                             )}
                         />
                      </LocalizationProvider>
-                        <table>
+                        <table style={{marginTop:20}}>
                             
 
                             {this.renderCalendar()}
