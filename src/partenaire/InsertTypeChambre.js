@@ -38,17 +38,17 @@ class InsertTypeCHambre extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-        errors: [],
-        nom: '',
-        nbAdulte: '',
-        nbEnfant: '',
-        photo: '',
-        
-        chambreTotal:'',
-        etage:'',
-        superficie:'',
-        description:'',
-        planTarifaire: []
+      errors: [],
+      nom: '',
+      nbAdulte: '',
+      nbEnfant: '',
+      photo: '',
+      
+      chambreTotal:'',
+      etage:'',
+      superficie:'',
+      description:'',
+      planTarifaire: []
     };
     this.handlePhotoChange = this.handlePhotoChange.bind(this);
     this.setPlanTarifaire = this.setPlanTarifaire.bind(this);
@@ -57,6 +57,7 @@ class InsertTypeCHambre extends React.Component{
   setPlanTarifaire(res){
     let current = JSON.parse(JSON.stringify(this.state));
     current.planTarifaire = res.list;
+    this.state.planTarifaire = res.list;
     //this.setState(current);
   }
 
@@ -124,7 +125,6 @@ class InsertTypeCHambre extends React.Component{
     let list = this.state.planTarifaire.map(tarif => {
         i++;
         let u = i;
-        console.log(this.state.planTarifaire);
         return(
           <FormControlLabel 
               checked={tarif.checked}
@@ -162,9 +162,9 @@ class InsertTypeCHambre extends React.Component{
                   </div>
 
                   <div style={{marginTop:'30px'}}>
-                    <TextField id="standard-basic" label="Etage" variant="standard" type="text"
-                    style={{width:'40%'}}
-                    value={this.state.etage} onChange={(e) => this.handleInputChange(e, "etage")}/>
+                    <TextField id="standard-basic" label="Etage" variant="standard" type="number"
+                      style={{width:'40%'}}
+                      value={this.state.etage} onChange={(e) => this.handleInputChange(e, "etage")}/>
                     <TextField id="standard-basic" label="Superficie" variant="standard" type="number" 
                     style={{width:'40%',marginLeft:'152px'}}
                     value={this.state.superficie} onChange={(e) => this.handleInputChange(e, "superficie")}/>
@@ -174,14 +174,6 @@ class InsertTypeCHambre extends React.Component{
                     <FileInput 
                       value=""
                       handlePhotoChange={this.handlePhotoChange} />
-                    {/* 
-                      <Field 
-                        name="photo" 
-                        component="input" type="file" 
-                        value={this.state.photo} 
-                        onChange={(e)=> this.handlePhotoChange(e)} 
-                        style={{width:'45%'}} />
-                    */}
                   </div>
 
                   <div style={{marginTop:'10px'}}>
@@ -215,7 +207,9 @@ class InsertTypeCHambre extends React.Component{
                       <div>
                           <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Plan tarifaire attribué: </label>
                       </div>
-                      {list}
+                      <FormGroup>
+                        {list}
+                      </FormGroup>
                   </div>
                 </Box>
                 <div style={{marginTop:'50px'}}>

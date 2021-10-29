@@ -33,10 +33,26 @@ const Input = styled('input')({
   display: 'none',
 });
 
+const FileInput = ({value, handlePhotoChange}) => {
+    return(
+      <div>
+        <label>
+          Cliquez pour choisir une photo...
+          <input 
+            style={{display: 'none'}}
+            type="file"
+            accept="image/*"
+            onChange={handlePhotoChange}
+          />
+        </label>
+      </div>
+    );
+  }
 
 class DetailsTypeCHambre extends React.Component{
     constructor(props){
         super(props);
+        this.noImage = '/no-image.jpg';
         this.state = {
             errors: [],
             typeChambre: {
@@ -52,13 +68,21 @@ class DetailsTypeCHambre extends React.Component{
                 description:''
             }
             , tarifs: []
+            , previewPhoto: this.noImage
         }
+        
+        this.handlePhotoChange = this.handlePhotoChange.bind(this);
     }
 
     setDetailsTypeChambre(data){
         console.log(data);
         let currentState = JSON.parse(JSON.stringify(this.state));
         currentState = data;
+        if(currentState.typeChambre.photo != '' || 
+            currentState.typeChambre.photo != undefined ||
+            currentState.typeChambre.photo != null){
+                currentState.previewPhoto = process.env.REACT_APP_BACK_URL + "/" + currentState.typeChambre.photo;
+            }
         this.setState(currentState);
     }
 
@@ -87,20 +111,11 @@ class DetailsTypeCHambre extends React.Component{
     componentDidMount(){
         axios({
             method: 'get',
-            url: process.env.REACT_APP_BACK_URL + 
+            url: process.env.REACT_APP_BACK_URL +
                 "/typeChambre/details/" + this.props.match.params._id + '?id',
             withCredentials: true
         })
         .then(res => this.setDetailsTypeChambre(res.data))
-        .catch(err => console.log(err));
-
-        axios({
-            method: 'get',
-            url: process.env.REACT_APP_BACK_URL + 
-                "/tarif?idTypeChambre=" + this.props.match.params._id,
-            withCredentials: true
-        })
-        .then(res => this.setTarifs(res.data))
         .catch(err => console.log(err));
     }
 
@@ -122,10 +137,25 @@ class DetailsTypeCHambre extends React.Component{
         currentState.typeChambre[inputName] = event.target.value;
         this.setState(currentState);
     }
+
     handlePhotoChange(event){
         let currentState = JSON.parse(JSON.stringify(this.state));
-        currentState.photo = event.target.files[0];
-        this.setState(currentState);
+        if(event.target.files[0]){
+            let img = event.target.files[0];
+            const r = /^image/;
+            if(r.test(img.type)){
+                const reader = new FileReader();
+                reader.onload = (evt) => {
+                    currentState.typeChambre.photo = evt.target.result;
+                    currentState.previewPhoto = evt.target.result;
+                    this.setState(currentState);
+                }
+                reader.readAsDataURL(img);
+            }else{
+                currentState.previewPhoto = this.noImage;
+                this.setState(currentState);
+            }
+        }
     }
 
     render(){
@@ -153,97 +183,108 @@ class DetailsTypeCHambre extends React.Component{
                 <Sidebar/>
             <div className="container">
              <div className="row">
-            {/* <div className="col-md-1"></div> */}
               <div className="col-md-12">
                 <div className="jumbotron1" 
-                style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)',marginLeft:'180px',marginTop:'-60px'}}>
+                    style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)',marginLeft:'180px',marginTop:'-60px'}}>
                     <h1 className="text-center" id='title1'>Détails type chambre</h1>
                     <hr></hr>
                     <CustomError errors={this.state.errors} />
                     <form className="needs-validation">
+                        <Box>
+                            <div style={{marginTop:'40px'}}>
+                                
+                                <TextField id="standard-basic" label="Nom" variant="standard" style={{width:'40%'}} 
+                                    value={this.state.typeChambre.nom} onChange={(e) => this.handleInputChange(e, "nom")}/>
+                                {
+                                    //console.log('yes')
+                                }
+                                <div style={{marginTop:'30px'}}>
+                                    <div className="row">
+                                        <div id="img-preview"><img style={{width:'300px', height: '150px'}} src={this.state.previewPhoto} /></div>
+                                    </div>
+                                    <div className="row">
+                                        <FileInput 
+                                            style={{marginTop: '5px'}}
+                                            value=""
+                                            handlePhotoChange={this.handlePhotoChange} />
+                                    </div>
+                                </div>
 
-<Box>
-<div style={{marginTop:'40px'}}>
-<TextField id="standard-basic" label="Nom" variant="standard" style={{width:'40%'}} 
-value={this.state.typeChambre.nom} onChange={(e) => this.handleInputChange(e, "nom")}/>
+                                <div style={{marginTop:'30px'}}>
+                                    <TextField id="standard-basic" label="chambre totale" variant="standard" type="number"
+                                        style={{width:'40%'}} value={this.state.typeChambre.chambreTotal} onChange={(e) => this.handleInputChange(e, "chambreTotal")}/>
+                                </div>
 
-<input type="file" value={this.state.photo} onChange={(e) => this.handleInputChange(e, "photo")} />
+                                <div style={{marginTop:'30px'}}>
+                                    <TextField id="standard-basic" label="Etage" variant="standard" type="text"
+                                        style={{width:'40%'}} value={this.state.typeChambre.etage} onChange={(e) => this.handleInputChange(e, "etage")}/>
+                                    <TextField id="standard-basic" label="Superficie" variant="standard" type="number" 
+                                        style={{width:'40%',marginLeft:'152px'}} value={this.state.typeChambre.superficie} onChange={(e) => this.handleInputChange(e, "superficie")}/>
+                                </div>
 
-<div style={{marginTop:'30px'}}>
-<TextField id="standard-basic" label="chambre totale" variant="standard" type="number"
-style={{width:'40%'}} value={this.state.typeChambre.chambreTotal} onChange={(e) => this.handleInputChange(e, "chambreTotal")}/>
-</div>
+                            </div>
 
-<div style={{marginTop:'30px'}}>
-<TextField id="standard-basic" label="Etage" variant="standard" type="text"
-style={{width:'40%'}} value={this.state.typeChambre.etage} onChange={(e) => this.handleInputChange(e, "etage")}/>
-<TextField id="standard-basic" label="Superficie" variant="standard" type="number" 
-style={{width:'40%',marginLeft:'152px'}} value={this.state.typeChambre.superficie} onChange={(e) => this.handleInputChange(e, "superficie")}/>
-</div>
+                            <div style={{marginTop:'20px'}}>
+                                <label className="form-label mt-4" style={{textDecoration:'underline'}}>Occupation : </label>
+                            </div>
+                            <div style={{marginTop:'5px'}}>
+                                <TextField id="standard-basic" label="Adulte" variant="standard" type="number" style={{width:'40%'}}
+                                    value={this.state.typeChambre.nbAdulte} onChange={(e) => this.handleInputChange(e, "nbAdulte")}/>
+                                <TextField id="standard-basic" label="Enfant" variant="standard" type="number" style={{width:'40%',marginLeft:'152px'}}
+                                    value={this.state.typeChambre.nbEnfant} onChange={(e) => this.handleInputChange(e, "nbEnfant")}/>
+                            </div>
+                            <div style={{marginTop:'20px'}}>
+                                <div style={{}}>
+                                    <label className="form-label mt-4" style={{textDecoration:'underline'}}>Description: </label>
+                                </div>
+                                <TextField id="outlined-basic" variant="outlined" type='text'
+                                    placeholder=""
+                                    multiline
+                                    rows={2}
+                                    rowsMax={4}
+                                    style={{width:'100%',height:'50px'}}
+                                    value={this.state.typeChambre.description} onChange={(e) => this.handleInputChange(e, "description")}
+                                />
+                            </div>
+                        </Box>
 
-</div>
+                    <div style={{marginTop:'50px'}}>
 
-<div style={{marginTop:'20px'}}>
-<label className="form-label mt-4" style={{textDecoration:'underline'}}>Occupation : </label>
-</div>
-<div style={{marginTop:'5px'}}>
-<TextField id="standard-basic" label="Adulte" variant="standard" type="number" style={{width:'40%'}}
-value={this.state.typeChambre.nbAdulte} onChange={(e) => this.handleInputChange(e, "nbAdulte")}/>
-<TextField id="standard-basic" label="Enfant" variant="standard" type="number" style={{width:'40%',marginLeft:'152px'}}
-value={this.state.typeChambre.nbEnfant} onChange={(e) => this.handleInputChange(e, "nbEnfant")}/>
-</div>
-<div style={{marginTop:'20px'}}>
-<div style={{}}>
-<label className="form-label mt-4" style={{textDecoration:'underline'}}>Description: </label>
-</div>
-<TextField id="outlined-basic" variant="outlined" type='text'
-  placeholder=""
-  multiline
-  rows={2}
-  rowsMax={4}
-  style={{width:'100%',height:'50px'}}
-  value={this.state.typeChambre.description} onChange={(e) => this.handleInputChange(e, "description")}
-/>
-</div>
-    </Box>
-
-        <div style={{marginTop:'50px'}}>
-
-<Button variant="contained"  style={{backgroundColor:'#FA8072'}} onClick={(e) => this.update(e)}>
-Modifier
-</Button>
-<Link to='/typeChambre' style={{textDecoration:'none'}}>
-<Button variant="contained" style={{backgroundColor:'#293846',color:'white',marginLeft:'20px'}}>
-Retour
-</Button>
-</Link>
-                        </div>
-                    </form>
-                    {/*
+                    <Button variant="contained"  style={{backgroundColor:'#FA8072'}} onClick={(e) => this.update(e)}>
+                        Modifier
+                    </Button>
+                    <Link to='/typeChambre' style={{textDecoration:'none'}}>
+                        <Button variant="contained" style={{backgroundColor:'#293846',color:'white',marginLeft:'20px'}}>
+                            Retour
+                        </Button>
+                    </Link>
+                </div>
+            </form>
+            {/*
                     <h2 className="mt-5" style={{textDecoration:'underline',textAlign:'center'}}>Liste tarifs</h2>
 
-<TableContainer component={Paper} style={{marginTop:'40px'}}>
-      <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell align="center"><strong>Nom</strong></TableCell>
-            <TableCell align="center"><strong>Prix par jour</strong></TableCell>
-            <TableCell align="center"><strong>Services</strong></TableCell>
-            <TableCell align="center"><strong>Conditions d'annulation</strong></TableCell>
-            <TableCell align="center"><strong>Actions</strong></TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-        { list }
-        </TableBody>
-      </Table>
-    </TableContainer>
-    */}
+                <TableContainer component={Paper} style={{marginTop:'40px'}}>
+                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                        <TableHead>
+                        <TableRow>
+                            <TableCell align="center"><strong>Nom</strong></TableCell>
+                            <TableCell align="center"><strong>Prix par jour</strong></TableCell>
+                            <TableCell align="center"><strong>Services</strong></TableCell>
+                            <TableCell align="center"><strong>Conditions d'annulation</strong></TableCell>
+                            <TableCell align="center"><strong>Actions</strong></TableCell>
+                        </TableRow>
+                        </TableHead>
+                        <TableBody>
+                        { list }
+                        </TableBody>
+                    </Table>
+                    </TableContainer>
+            */}
 
-                </div>
-                </div>
+            </div>
+            </div>
                 {/* <div className="col-md-2"></div> */}
-             </div>
+            </div>
             </div>
             </div>
         );

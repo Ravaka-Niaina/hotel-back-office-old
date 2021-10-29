@@ -42,17 +42,13 @@ function InsertPlanTarifaire(){
             {_id: 5, nom: 'Chambre 5', checked: false},
         ],
         politiqueAnnulAtrb: [
-            {_id: 1, label: 'Politique 1', checked: false},
-            {_id: 2, label: 'Politique 2', checked: false},
-            {_id: 3, label: 'Politique 3', checked: false},
-            {_id: 4, label: 'Politique 4', checked: false},
-            {_id: 5, label: 'Politique 5', checked: false}
+
         ]
     });
 
     function tryRedirect(res){
         if(res.status === 200){
-            //this.props.history.push('/');
+            this.props.history.push('/');
         }else{
             setErrors(res.errors);
         }

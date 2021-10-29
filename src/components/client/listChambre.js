@@ -154,7 +154,7 @@ class DChambre extends React.Component{
                 <div class="Chambre1">
                 <div class="row mb-4">
                     <div className="col">
-                        <img style={{width:'300px', height: '150px'}} src={'http://localhost:3000/' + typeChambre.photo} />
+                        <img style={{width:'300px', height: '150px'}} src={ process.env.REACT_APP_BACK_URL + "/" + typeChambre.photo} />
                     </div>
                     <div class="col">
                       <span style={{fontSize:'30px'}}> {typeChambre.nom} </span><br/>
