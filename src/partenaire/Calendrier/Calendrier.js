@@ -12,7 +12,8 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Navbar from '../../Navbar/Navbar';
 import Sidebar from '../../Sidebar/Sidebar';
-import CalendrierTimeline from '../../components/calendrier/CalendrierTimeline';
+import CalendrierTimeline from '../../components/calendrier/CalendrierTimeline/CalendrierTimeline';
+
 
 class Calendrier extends React.Component{
     constructor(props){
@@ -21,9 +22,10 @@ class Calendrier extends React.Component{
             label : "anja",
             range: [null,null],
             hotel:{id:1,name:'Maisonnette'},
-            tarif:[{},{}],
+            tarifs:[{name:'Standard Rate'}],
             statusJours:[],
             listeJours:[],
+            hebergementJours:[],
             tarifsJours:[],
        }
        
@@ -48,9 +50,37 @@ renderCalendar(){
             )
     }
 }
-generateDatas(){
+getStatus(daysOfYear){
+    let array =[];
+    daysOfYear.forEach(element=>{
+        array.push("fermé")
+    })
+    return array;
 
 }
+getHebergementJours(daysOfYear){
+    let array =[];
+    daysOfYear.forEach(element=>{
+        array.push(0)
+    })
+    return array;
+
+}
+getTarifsJours(daysOfYear){
+    let array =[];
+    let arrayTarifs=[];
+    daysOfYear.forEach(element=>{
+        arrayTarifs.push(65)
+    })
+    this.state.tarifs.forEach(element=>{
+       array.push({name:element.name,data:arrayTarifs}) 
+    })
+   
+    return array;
+
+}
+
+
 getDatas(newValue){
     if(newValue!=null && newValue[0]!=null && newValue[1]!=null){
         const dateDebut = newValue[0];
@@ -59,12 +89,23 @@ getDatas(newValue){
         for (var d = new Date(dateDebut); d <= dateFin; d.setDate(d.getDate() + 1)) {
             daysOfYear.push(new Date(d));
         }
-        this.generateDatas();
-        this.setState({range:newValue,listeJours:daysOfYear});
+        const statusArray = this.getStatus(daysOfYear);
+        const hebergergementArray = this.getHebergementJours(daysOfYear);
+        const tarifArrays = this.getTarifsJours(daysOfYear);
+        this.setState({range:newValue,listeJours:daysOfYear,statusJours:statusArray,hebergementJours:hebergergementArray,tarifsJours:tarifArrays});
     }else{
         this.setState({range:newValue});
     }
     
+}
+renderStatus(){
+
+}
+renderTarifs(){
+
+}
+renderHebergemets(){
+
 }
 render(){
         return(
