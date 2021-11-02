@@ -25,19 +25,10 @@ class InsertTypeCHambre extends React.Component{
           currentState.errors = res.errors;
           this.setState(currentState);
         }
-      }
+    }
 
     insert(e){
         e.preventDefault();
-        /*
-        let formData = new FormData();
-        formData.set('nom', this.state.nom);
-        formData.set('equipements', this.state.equipements);
-        formData.set('nbAdulte', this.state.nbAdulte);
-        formData.set('nbEnfant', this.state.nbEnfant);
-        formData.set('photo', this.state.photo);
-        console.log(formData);
-        */
        console.log(this.state);
         axios({
             method: 'post',

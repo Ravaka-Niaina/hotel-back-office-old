@@ -6,7 +6,7 @@ class Home extends React.Component{
             
         <nav class="navbar navbar-light fixed-top " style={{background:'#2f4050'}}> 
                 <div class="container-fluid">
-                    <Link to="/home">
+                    <Link to="/">
                         <h2 class="navbar-brand display-6" 
                             style={{marginLeft: '45%' , color :'white'}} >Home
                         </h2>
@@ -14,9 +14,7 @@ class Home extends React.Component{
                     <Link to="/list">
                         <h2  class="navbar-brand display-6" style={{ color :'white'}}>List</h2>
                     </Link>
-                    <Link to="/list">
-                        <h2  class="navbar-brand display-6" style={{ color :'white'}}>signin</h2>
-                    </Link>
+                   
                 </div>
 
            </nav> 

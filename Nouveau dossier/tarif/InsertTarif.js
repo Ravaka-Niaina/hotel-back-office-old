@@ -1,8 +1,8 @@
-import CustomError from '../CustomError';
+// import CustomError from '../CustomError';
 import axios from 'axios';
 import React from 'react';
 import {Link} from 'react-router-dom';
-
+import './insertTarif.css';
 class InsertTarif extends React.Component{
     constructor(props){
         super(props);
@@ -61,38 +61,54 @@ class InsertTarif extends React.Component{
 
     render(){
         return(
-            <div>
-                <h1>Créer tarif</h1>
-                <CustomError errors={this.state.errors}/>
-                <form>
-                    <p>Type chambre: {this.props.match.params.nomTypeChambre}</p>
+<div className="container" style={{marginLeft:'450px',marginTop:'-770px'}}>
+<div className="jumbotron" 
+style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)'}}>
+<h1 className="text-center" id='title1'>Créer tarif</h1>
+<hr></hr>
+{/* <CustomError errors={this.state.errors}/> */}
+<form className="needs-validation">
+<p style={{fontFamily:'Arial',fontSize:'18px'}}>
+    Type chambre: {this.props.match.params.nomTypeChambre}
+</p>
                     <div>
-                        <label>Prix journier: </label>
-                        <input 
+                        <label className="form-label mt-2">Prix journier: </label>
+                        <input className="form-control"
                             type="number" 
                             value={this.state.tarif.prixParJour}
                             onChange={(e) => this.handleInputChange(e, "prixParJour")}/>
                     </div>
                     <div>
-                        <label>Services: </label>
-                        <textarea 
+                        <label className="form-label mt-3">Services: </label>
+                        <textarea className="form-control"
+style={{height:'100px'}}
                             value={this.state.tarif.services}
                             onChange={(e) => this.handleInputChange(e, "services")}></textarea>
                     </div>
                     <div>
-                        <label>Conditions d'annulation: </label>
-                        <textarea 
+                        <label className="form-label mt-3">Conditions d'annulation: </label>
+                        <textarea className="form-control"
+style={{height:'100px'}}
                             value={this.state.tarif.conditionsAnnulation}
                             onChange={(e) => this.handleInputChange(e, "conditionsAnnulation")}></textarea>
                     </div>
-                    <Link to={'/typeChambre/details/' + this.props.match.params.idTypeChambre}>
-                        <button>Retour</button>
-                    </Link>
                     <div>
-                        <button onClick={(e) => this.insert(e)}>Créer</button>
+                        <button type="button" className="btn btn-success mt-4"
+                        style={{backgroundColor:'#32CD32'}}
+                        onClick={(e) => this.insert(e)}>
+                            Créer
+                        </button>
                     </div>
+                    <Link to={'/typeChambre/details/' + this.props.match.params.idTypeChambre}>
+                        <button type="button"
+                         className="btn mt-4" 
+                         style={{backgroundColor:'#293846'}}
+                        >Retour</button>
+                    </Link>
                 </form>
-            </div>
+
+</div>
+</div>
         );
     }
 }

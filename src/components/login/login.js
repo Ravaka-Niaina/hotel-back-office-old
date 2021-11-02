@@ -1,11 +1,11 @@
-import CustomError from '../CustomError';
-
+import CustomError from '../../CustomError';
 import "./style.css";
 import {Link} from 'react-router-dom';
 import React from "react";
 const axios = require('axios').default;
 
 class Login extends React.Component{
+
   constructor(props){
     super(props);
     this.state = {
@@ -14,11 +14,10 @@ class Login extends React.Component{
       errors: []
     };
   }
-
   tryRedirectToHome(res){
     console.log(res);
     if(res.status === 200){
-      this.props.history.push('/home');
+      this.props.history.push('/');
     }else{
       let currentState = JSON.parse(JSON.stringify(this.state));
       currentState.errors = res.errors;
@@ -49,51 +48,47 @@ class Login extends React.Component{
     })
     .then(res => this.tryRedirectToHome(res.data))
     .catch(err => console.log(err))
-  
-        /*
-    fetch("http://localhost:3000/user/list")
-    .then(res => res.json())
-    .then(res => console.log(JSON.stringify(res)));
-    */
   }
 
   render(){
-    return(
+    return (
       <div className="container">
-    <div className="base-container">
-    <img src="user.png" alt="" style={{width : '12%',marginLeft:''}} ></img>
-      <div className="content">
-      <CustomError errors={this.state.errors} />
-        <div className="form">
-          <div className="form-group">
-            <label htmlFor='email'>Email :</label>
-            <input type="email" 
-              name="email" placeholder="Email" 
-              value={this.state.email}
-              onChange={(e) => this.handleEmailChange(e)} ></input>
+        <div className="base-container">
+        <img src="user.png" style={{width : '12%',marginLeft:''}} ></img>
+          <div className="content">
+            <CustomError errors={this.state.errors} />
+            <div className="form">
+              <div className="form-group">
+                <label htmlFor='email'>Email :</label>
+                <input 
+                  type="email" 
+                  name="email" 
+                  value={this.state.email} placeholder="Email"
+                  onChange={(e) => this.handleEmailChange(e)}></input>
+              </div>
+              <div className="form-group">
+                <label htmlFor='motPasse'>Mot de passe :</label>
+                <input 
+                  type="password" 
+                  name="mdp" 
+                  placeholder="Mot de passe"
+                  value={this.state.mdp}
+                  onChange={(e) => this.handleMdpChange(e)}></input>
+              </div>
+            </div>
           </div>
-          <div className="form-group">
-            <label htmlFor='motPasse'>Mot de passe :</label>
-            <input type="password" 
-            name="mdp" placeholder="Mot de passe" 
-            value={this.state.mdp}
-            onChange={(e) => this.handleMdpChange(e)}></input>
+        
+          <div className="footer">
+            <button type="button" className="btn" id="btn" onClick={(e) => this.login(e)}>Login</button>
+            <Link to='/Register'>
+            <p style={{fontFamily:"",fontSize:"16px",color:"black"}}>S'inscrire</p>
+              </Link>
           </div>
         </div>
       </div>
-    
-      <div className="footer">
-        <button type="button" className="btn" onClick={(e) => this.login(e)}>Login</button>
-        <Link to='/Register'>
-        <p style={{fontFamily:"",fontSize:"16px",color:"black"}}>S'inscrire</p>
-          </Link>
-      </div>
-    </div>
-    </div>
     );
   }
+  
 }
-
-
 
 export default Login;

@@ -2,11 +2,15 @@ import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class Fact extends React.Component{
-    render(){
+    constructor(props){
+        super(props);
+    }
 
-        let reservation = this.props.reservation.map(reserve => {
+    render(){
+        let reservation = [];
+        reservation = this.props.context.state.reservation.map(reserve => {
             return (
-                <p> {reserve.idTarif}</p>
+                <p> {reserve.nom} : {reserve.nombre}</p>
                 );
             }
         )
@@ -16,15 +20,18 @@ class Fact extends React.Component{
                 <div class="row mb-4">
                     <div class="col">
                         <strong> Check in :  </strong>
-                       {reservation}
-                        </div>
+                       
+                    </div>
                     
                     <div class="col" id="locA">
                         <strong>Check out :</strong>
                            
                     </div>
+                    {reservation}
                 </div>
-                <p>TOTAL :</p>    
+                <p>TOTAL :</p>  
+                
+                <input type="submit" className="btn btn-primary" value="APPLY"  />  
             </div>
         );
     }

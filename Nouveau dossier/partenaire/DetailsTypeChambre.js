@@ -1,4 +1,4 @@
-import CustomError from '../CustomError';
+// import CustomError from '../CustomError';
 import axios from "axios";
 import React from "react";
 import {Link} from 'react-router-dom';
@@ -101,63 +101,58 @@ class DetailsTypeCHambre extends React.Component{
             </tr>
         });
         return(
-            <div>
-                <h1>Détails type chambre</h1>
-                <CustomError errors={this.state.errors} />
-                <form>
-                    <div>
-                        <label>Nom: </label>
-                        <input type="text" value={this.state.typeChambre.nom}
+<div className="container" style={{marginLeft:'450px',marginTop:'-770px'}}>
+<div className="jumbotron" 
+style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)'}}>
+<h1 className="text-center" id='title1'>Détails type chambre</h1>
+<hr></hr>
+{/* <CustomError errors={this.state.errors} /> */}
+<form className="needs-validation">
+<div>
+                        <label className="form-label mt-2">Nom: </label>
+                        <input className="form-control" type="text" value={this.state.typeChambre.nom}
                             onChange={(e) => this.handleInputChange(e, "nom")}/>
                     </div>
                     <div>
-                        <label>Equipements: </label>
-                        <textarea value={this.state.typeChambre.equipements}
+                        <label className="form-label mt-2">Equipements: </label>
+                        <textarea className="form-control" value={this.state.typeChambre.equipements}
                             onChange={(e) => this.handleInputChange(e, "equipements")}></textarea>
                     </div>
                     <div>
                         <div>
-                            <label>Capacité: </label>
+                            <label className="form-label mt-4" style={{textDecoration:'underline'}}>Capacité: </label>
                         </div>
-                        <label>Adulte: </label>
-                        <input type="number" value={this.state.typeChambre.nbAdulte}
+                        <label className="form-label mt-2">Adulte: </label>
+                        <input className="form-control" type="number" value={this.state.typeChambre.nbAdulte}
                             onChange={(e) => this.handleInputChange(e, "nbAdulte")}/>
-                        <label>Enfant: </label>
-                        <input type="number" value={this.state.typeChambre.nbEnfant}
+                        <label className="form-label mt-2">Enfant: </label>
+                        <input className="form-control" type="number" value={this.state.typeChambre.nbEnfant}
                             onChange={(e) => this.handleInputChange(e, "nbEnfant")}/>
                     </div>
                     <div>
-                        <label>Photo: </label>
-                        <input type="file"
+                        <label className="form-label mt-2">Photo: </label>
+                        <input className="form-control" type="file"
                             onChange={(e) => this.handleInputChange(e, "photo")}/>
                     </div>
                     <div>
                         <Link to='/typeChambre'>
-                            <button>Retour</button>
+                            <button className="btn mt-4" 
+                         style={{backgroundColor:'#293846'}}>Retour</button>
                         </Link>
                         <Link to={'/tarif/insert/' + this.props.match.params._id 
                             + '/' + this.state.typeChambre.nom}>
-                            <button>Ajouter tarifs</button>
+                            <button className="btn mt-4 mx-2" 
+                         style={{width:'200px'}}>Ajouter tarifs</button>
                         </Link>
-                        <button onClick={(e) => this.update(e)}>
+                        <button className="btn mt-4" 
+                         style={{backgroundColor:'#FF7F50'}} onClick={(e) => this.update(e)}>
                             Modifier
                         </button>
                     </div>
                 </form>
-                <h2>Liste tarifs</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Prix par jour</th>
-                            <th>Services</th>
-                            <th>Conditions d'annulation</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {list}
-                    </tbody>
-                </table>
-            </div>
+
+</div>
+</div>
         );
     }
 }
