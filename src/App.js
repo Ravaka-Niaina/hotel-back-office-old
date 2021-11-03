@@ -11,6 +11,7 @@ import Paiement from "./paiement";
 import  DCHambre  from "./components/client/listChambre";
 
 import InsertChambre from './partenaire/chambre/InsertChambre.js';
+import ListPlanTarifaire from './partenaire/planTarifaire/ListPlanTarifaire';
 import InsertPlanTarifaire from './partenaire/planTarifaire/InsertPlanTarifaire.js';
 import UpdatePlanTarifaire from './partenaire/planTarifaire/UpdatePlanTarifaire.js';
 
@@ -40,8 +41,9 @@ function App() {
 
         <Route path="/chambre" exact component={InsertChambre} />
 
+        <Route path="/planTarifaire" exact component={ListPlanTarifaire} />
         <Route path="/planTarifaire/insert" exact component={InsertPlanTarifaire} />
-        <Route path="/planTarifaire/update" exact component={UpdatePlanTarifaire} />
+        <Route path="/planTarifaire/details/:_id" exact component={UpdatePlanTarifaire} />
 
       </Router>
     </div>

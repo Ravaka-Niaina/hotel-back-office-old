@@ -1,3 +1,5 @@
+import { useHistory } from "react-router-dom";
+import { useParams } from 'react-router-dom'
 import TextField from '@mui/material/TextField';
 //import TimePicker from '@mui/lab/TimePicker';
 //import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
@@ -5,6 +7,7 @@ import CustomError from '../../CustomError';
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../typeChambre.css';
+import {useEffect, useRef} from "react";
 
 import Box from '@mui/material/Box';
 
@@ -14,15 +17,14 @@ import callAPI from '../../utility';
 const utility = require('./utility.js');
 
 
-
 function UpdatePlanTarifaire(){
     const [errors, setErrors] = useState([]);
     const [planTarifaire, setPlanTarifaire] = useState({
-        _id: '6179ec4759ce0330a80016d3',
-        nom: 'Mergez',
-        description: 'Saucisse',
-        dateReservation: {debut: '2021-10-13', fin: '2022-03-20'},
-        dateSejour: {debut: '2021-10-13', fin: '2022-03-20'},
+        _id: '',
+        nom: '',
+        description: '',
+        dateReservation: {debut: '', fin: ''},
+        dateSejour: {debut: '', fin: ''},
         LeadDay: [
             {_id: 1, label: 'Lundi', checked: true},
             {_id: 2, label: 'Mardi', checked: false},
@@ -32,26 +34,16 @@ function UpdatePlanTarifaire(){
             {_id: 6, label: 'Samedi', checked: false},
             {_id: 7, label: 'Dimanche', checked: false}
         ],
-        LeadHour: {min: '08:00', max: '22:00'},
-        chambresAtrb: [
-            {_id: 1, nom: 'Chambre 1', checked: false},
-            {_id: 2, nom: 'Chambre 2', checked: true},
-            {_id: 3, nom: 'Chambre 3', checked: false},
-            {_id: 4, nom: 'Chambre 4', checked: true},
-            {_id: 5, nom: 'Chambre 5', checked: false},
-        ],
-        politiqueAnnulAtrb: [
-            {_id: 1, label: 'Politique 1', checked: false},
-            {_id: 2, label: 'Politique 2', checked: true},
-            {_id: 3, label: 'Politique 3', checked: false},
-            {_id: 4, label: 'Politique 4', checked: false},
-            {_id: 5, label: 'Politique 5', checked: false}
-        ]
+        LeadHour: {min: '', max: ''},
+        chambresAtrb: [],
+        politiqueAnnulAtrb: []
     });
+    const { _id } = useParams();
+    const history = useHistory();
 
     function tryRedirect(res){
         if(res.status === 200){
-            //this.props.history.push('/');
+            history.push('/planTarifaire');
         }else{
             setErrors(res.errors);
         }
@@ -63,6 +55,18 @@ function UpdatePlanTarifaire(){
         console.log(current);
         callAPI('post', '/planTarifaire/update', current, tryRedirect);
     }
+
+    function setPlan(res){
+        let current = JSON.parse(JSON.stringify(planTarifaire));
+        current = res.planTarifaire;
+        console.log(res);
+        setPlanTarifaire(current);
+    }
+
+    useEffect(() => {
+        console.log(planTarifaire.dateReservation.debut);
+        callAPI('get', "/planTarifaire/details/" + _id, {}, setPlan);
+      }, [_id]);
 
     return(
         <div className="container">
@@ -218,6 +222,7 @@ function UpdatePlanTarifaire(){
                                             planTarifaire={planTarifaire}
                                             setPlanTarifaire={setPlanTarifaire}
                                             handleCheckBoxChange={utility.handleCheckBoxChange} />
+                                        
                                     </div>
                                 </Box>
                                 <div style={{marginTop:'50px'}}>
@@ -230,6 +235,7 @@ function UpdatePlanTarifaire(){
                     </div>
                 </div>
             </div>
+            
     );
 }
 export default UpdatePlanTarifaire;

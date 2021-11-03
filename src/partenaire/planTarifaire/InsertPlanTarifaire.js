@@ -2,6 +2,7 @@ import TextField from '@mui/material/TextField';
 //import TimePicker from '@mui/lab/TimePicker';
 //import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import CustomError from '../../CustomError';
+import {useEffect, useRef} from "react";
 import { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../typeChambre.css';
@@ -12,6 +13,7 @@ import Button from '@mui/material/Button';
 import React from 'react'
 import callAPI from '../../utility';
 import FormGroup from '@mui/material/FormGroup';
+
 
 const utility = require('./utility.js');
 
@@ -34,17 +36,33 @@ function InsertPlanTarifaire(){
             {_id: 7, label: 'Dimanche', checked: false}
         ],
         LeadHour: {min: '', max: ''}, // [{min: number, max: number}]
-        chambresAtrb: [
-            {_id: 1, nom: 'Chambre 1', checked: false},
-            {_id: 2, nom: 'Chambre 2', checked: false},
-            {_id: 3, nom: 'Chambre 3', checked: false},
-            {_id: 4, nom: 'Chambre 4', checked: false},
-            {_id: 5, nom: 'Chambre 5', checked: false},
-        ],
+        chambresAtrb: [],
         politiqueAnnulAtrb: [
 
         ]
     });
+    const [politique, setPolitique] = useState([]);
+
+    function setPolitiqueAnnulation(res){
+        let current = JSON.parse(JSON.stringify(politique));
+        current = res.politiqueAnnulation;
+        setPolitique(current);
+        
+    }
+
+    function setListTypeChambre(res){
+        console.log(res);
+        let current = JSON.parse(JSON.stringify(planTarifaire));
+        current.chambresAtrb = res.list;
+        current.politiqueAnnulAtrb = politique;
+        setPlanTarifaire(current);
+        console.log(current);
+    }
+
+    useEffect(() => {
+        callAPI('get', '/politiqueAnnulation', {}, setPolitiqueAnnulation);
+        callAPI('get', '/typeChambre', {}, setListTypeChambre);
+      }, []);
 
     function tryRedirect(res){
         if(res.status === 200){

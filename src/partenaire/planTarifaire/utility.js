@@ -51,7 +51,7 @@ export function PolitiqueAnnulAtrb(props){
                 checked={politique.checked}
                 control={<Checkbox/>}
                 onChange={(e) => props.handleCheckBoxChange(props.planTarifaire, props.setPlanTarifaire, e, "politiqueAnnulAtrb", u, "checked")}
-                label={politique.label}
+                label={politique.nom}
                 style={{marginLeft:"20px"}}
             />
         );

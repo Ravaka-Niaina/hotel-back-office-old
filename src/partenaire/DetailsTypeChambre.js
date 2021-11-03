@@ -49,6 +49,44 @@ const FileInput = ({value, handlePhotoChange}) => {
     );
   }
 
+function Equipements(props){
+    console.log(props.equipements);
+    let i = -1;
+    let equipements = props.equipements.map(equipement => {
+        i++;
+        let u = i;
+        return(
+        <FormControlLabel
+            checked={equipement.checked}
+            control={<Checkbox/>}
+            onChange={(e) => props.handleCheckBoxEquipement(e, u)}
+            label={equipement.nom}
+            style={{marginLeft:"20px"}}
+        />
+        );
+    })
+    return equipements;
+}
+
+function PlanTarifaire(props){
+    let i = -1;
+    console.log(props.planTarifaire);
+    let list = props.planTarifaire.map(tarif => {
+        i++;
+        let u = i;
+        return(
+          <FormControlLabel 
+            checked={tarif.checked}
+            control={<Checkbox/>}
+            onChange={(e) => props.handleCheckBoxPlanTarifaire(e, u)}
+            label={tarif.nom}
+            style={{marginLeft:"20px"}}
+          />
+        );
+    })
+    return list;
+  }
+
 class DetailsTypeCHambre extends React.Component{
     constructor(props){
         super(props);
@@ -65,13 +103,18 @@ class DetailsTypeCHambre extends React.Component{
                 chambreTotal:'',
                 etage:'',
                 superficie:'',
-                description:''
+                description:'',
+                equipements: [],
+                planTarifaire: []
             }
             , tarifs: []
             , previewPhoto: this.noImage
         }
-        
+        this.handleCheckBoxPlanTarifaire = this.handleCheckBoxPlanTarifaire.bind(this);
+        this.handleCheckBoxEquipement = this.handleCheckBoxEquipement.bind(this);
         this.handlePhotoChange = this.handlePhotoChange.bind(this);
+        this.handlePhotoChange = this.handlePhotoChange.bind(this);
+        this.setDetailsTypeChambre = this.setDetailsTypeChambre.bind(this);
     }
 
     setDetailsTypeChambre(data){
@@ -122,12 +165,29 @@ class DetailsTypeCHambre extends React.Component{
     update(e){
         e.preventDefault();
         console.log(this.state.typeChambre);
+        let toSend = JSON.parse(JSON.stringify(this.state.typeChambre));
+        let equipements = [];
+        for(let i = 0; i < this.state.typeChambre.equipements.length; i++){
+            if(this.state.typeChambre.equipements[i].checked){
+                equipements.push(this.state.typeChambre.equipements[i]._id);
+            }
+        }
+        toSend.equipements = equipements;
+        let planTarifaire = [];
+        for(let i = 0; i < this.state.typeChambre.planTarifaire.length; i++){
+            if(this.state.typeChambre.planTarifaire[i].checked){
+                planTarifaire.push(this.state.typeChambre.planTarifaire[i]._id);
+            }
+        }
+        toSend.planTarifaire = planTarifaire;
+        console.log(toSend);
         axios({
             method: 'post',
             url: process.env.REACT_APP_BACK_URL + "/typeChambre/update",
             withCredentials: true,
-            data: this.state.typeChambre
+            data: toSend
         })
+
         .then(res => this.tryRedirect(res.data))
         .catch(err => console.log(err));
     }
@@ -156,6 +216,18 @@ class DetailsTypeCHambre extends React.Component{
                 this.setState(currentState);
             }
         }
+    }
+
+    handleCheckBoxPlanTarifaire(e, index){
+        let current = JSON.parse(JSON.stringify(this.state));
+        current.typeChambre.planTarifaire[index].checked = e.target.checked;
+        this.setState(current);
+    }
+    
+    handleCheckBoxEquipement(e, index){
+        let current = JSON.parse(JSON.stringify(this.state));
+        current.typeChambre.equipements[index].checked = e.target.checked;
+        this.setState(current);
     }
 
     render(){
@@ -245,6 +317,22 @@ class DetailsTypeCHambre extends React.Component{
                                     style={{width:'100%',height:'50px'}}
                                     value={this.state.typeChambre.description} onChange={(e) => this.handleInputChange(e, "description")}
                                 />
+                            </div>
+                            <div style={{marginTop:'30px'}}>
+                                <div>
+                                    <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Equipements: </label>
+                                </div>
+                                <FormGroup>
+                                    <Equipements  equipements={this.state.typeChambre.equipements} handleCheckBoxEquipement={this.handleCheckBoxEquipement} />
+                                </FormGroup>
+                            </div>
+                            <div style={{marginTop:'30px'}}>
+                                <div>
+                                    <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Plan tarifaire attribué: </label>
+                                </div>
+                                <FormGroup>
+                                    <PlanTarifaire planTarifaire={this.state.typeChambre.planTarifaire} handleCheckBoxPlanTarifaire={this.handleCheckBoxPlanTarifaire}/>
+                                </FormGroup>
                             </div>
                         </Box>
 
