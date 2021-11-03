@@ -30,7 +30,7 @@ render(){
         return(
             <div>
                 <Navbar/>
-                <Sidebar/>
+                
                     <div className="container"><br/>
                         <div className ="row">
                             <div className ="col-md-2"></div>

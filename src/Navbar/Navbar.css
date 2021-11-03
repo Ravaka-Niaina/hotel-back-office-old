@@ -1,8 +1,66 @@
 #navbar{
   width: 100%;
-    height: 70px;
-    background-color: #2F4050;
-    position: fixed;
-      top: 0; 
-      left: 0; 
-  }
+  height: auto;
+  background-color: rgb(246, 248, 252);
+  position: fixed;
+  top: 0; 
+  left: 0;
+  display: block; 
+  z-index: 1;
+  padding: 0 !important;
+}
+
+.MuiSvgIcon-root{
+  font-size: 18px !important;;
+}
+
+.MuiTabs-root{
+  width: 60%;
+  margin: 0 auto;
+}
+
+.MuiTabs-flexContainer{
+  justify-content: space-between;
+}
+
+.MuiButtonBase-root{
+  color: #0d6efd !important;
+  min-height: auto !important;
+  text-transform: initial !important;
+  font-weight: 400 !important;
+}
+
+.Mui-selected {
+    background-color: #e9ecef !important;
+}
+
+.MuiTabs-indicator {
+    height: 2px !important;
+    bottom: auto !important;
+    background-color: #0a58ca !important;
+}
+
+.MuiTabs-flexContainer {
+    height: calc(100% - 2px) !important;
+}
+
+.nav-right-el{
+      position: absolute;
+      right: 16px;
+      top: 8px;
+      cursor: pointer;
+}
+
+.mail-button{
+  margin: 8px;
+}
+
+.MuiDivider-vertical{
+  margin: 8px !important;
+  border-color: #0b6efd !important;
+  height: auto !important;
+}
+
+.MuiContainer-root{
+  margin-top: 55px;
+}

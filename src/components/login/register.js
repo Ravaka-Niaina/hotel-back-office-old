@@ -1,40 +1,3 @@
-// import React from "react";
-
-// export class Register extends React.Component{
-
-//     constructor(props){
-//         super(props);
-//     }
-
-//     render(){
-//         return (
-// <div className="base-container">
-//   <div className="header">Register</div>
-//   <div className="content">
-//     <div className="form">
-//       <div className="form-group">
-//         <label htmlFor='username'>Username</label>
-//         <input type="text" name="username" placeholder="Username"></input>
-//       </div>
-//       <div className="form-group">
-//         <label htmlFor='email'>Email</label>
-//         <input type="email" name="email" placeholder="Email"></input>
-//       </div>
-//       <div className="form-group">
-//         <label htmlFor='password'>Password</label>
-//         <input type="password" name="password" placeholder="Password"></input>
-//       </div>
-//     </div>
-//   </div>
-
-//   <div className="footer">
-//     <button type="button" className="btn">Register</button>
-//   </div>
-// </div>
-//         );
-//     }
-// }
-
 import "./register.css";
 import {Link} from 'react-router-dom';
 import React from "react";
@@ -194,7 +157,7 @@ onChange={(e) =>this.handleConfirmMdpChange(e)}/>
         </div>
       
         <Link to='/login' style={{textDecoration:'none',marginLeft:'305px',marginTop:'30px'}}>
-            <p style={{color:"#87CEEB",fontSize:"17px",color:'#2F4050',textDecoration:'underline'}}>Se connecter</p>
+            <p style={{fontSize:"17px",color:'#2F4050',textDecoration:'underline'}}>Se connecter</p>
           </Link>
         <div className="footer">
           {/* <button type="button" className="btn" id="btn"
