@@ -2,8 +2,7 @@
 import CustomError from '../CustomError';
 import axios from "axios";
 import React, {useEffect, useRef} from "react";
-import  Sidebar  from "../Sidebar/Sidebar";
-import  Navbar  from "../Navbar/Navbar";
+import Navbar  from "../Navbar/Navbar";
 import { Checkbox } from "@mui/material";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './typeChambre.css';
@@ -202,7 +201,6 @@ function InsertTypeCHambre(){
           <div className="row">
             <div className="col-md-3"></div>
               <div className="col-md-9">
-
               <div className="jumbotron" 
                 style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)',marginTop:'-60px'}}>
                 <h1 className="text-center" id='title1'>Ajouter Type chambre</h1>
@@ -218,7 +216,6 @@ function InsertTypeCHambre(){
                                             <TextField id="standard-basic" label="chambre totale" variant="standard" type="number"
                       style={{width:'40%',marginLeft:'152px'}}
                       value={state.chambreTotal} onChange={(e) => handleInputChange(e, "chambreTotal")}/>
-                    </div>
 
                     <div style={{marginTop:'30px'}}>
                       <TextField id="standard-basic" label="Etage" variant="standard" type="number"
