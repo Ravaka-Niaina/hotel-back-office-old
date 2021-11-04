@@ -1,6 +1,6 @@
 // import './App.css';
 import  Login  from "./components/login/login";
-import  Register  from "./components/login/register";
+import  register  from "./components/login/register";
 import  InsertTypeChambre  from "./partenaire/InsertTypeChambre.js";
 import  DetailsTypeChambre  from "./partenaire/DetailsTypeChambre.js";
 import  ListTypeChambre  from "./partenaire/ListTypeChambre.js";
@@ -18,6 +18,7 @@ import  AppClient  from "./components/client/scroll";
 
 import  PromotionList  from "./promotion/promotionList.js";
 import  InsertPromotion  from "./promotion/insertPromotion.js";
+import  tarifList  from "./promotion/getTarifs.js";
 
 function App() {
   return (
@@ -28,7 +29,7 @@ function App() {
         <Route path="/" exact component={home} />
         <Route path="/client" exact component={AppClient} />
         <Route path="/login" exact component={Login} />
-        <Route path="/Register" exact component={Register} />
+        <Route path="/register" exact component={register} />
         <Route path="/Paiement" exact component={Paiement} />
 
         <Route path="/typeChambre" exact component={ListTypeChambre} />
@@ -38,7 +39,7 @@ function App() {
         <Route path="/tarif" exact component={Tarif} />
         <Route path="/tarif/insert" exact component={InsertTarif}/>
         <Route path="/tarif/details/:_id/" exact component={DetailsTarif} />
-
+        
         <Route path="/chambre" exact component={InsertChambre} />
 
       </Router>
