@@ -63,7 +63,7 @@ export default class PromotionList extends React.Component {
                                             <TableCell align="center">{promotion.nom}</TableCell>
                                             <TableCell align="center">{promotion.tarif}</TableCell>
                                             <TableCell align="center">{promotion.typeChambre}</TableCell>
-                                            <TableCell align="center">{promotion.remise}</TableCell>
+                                            <TableCell align="center">{promotion.remiseEuro}</TableCell>
                                             <TableCell align="center">{promotion.dateDebutS}-{promotion.dateFinS}</TableCell>
                                             
                                         </TableRow>

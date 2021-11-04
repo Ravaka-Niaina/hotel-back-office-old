@@ -7,7 +7,10 @@ import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
-import "../components/login/register.css";
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import "./promotion.css";
+import InputAdornment from '@mui/material/InputAdornment';
 
 
 export default class InsertPromotion extends React.Component {
@@ -18,16 +21,31 @@ export default class InsertPromotion extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      selectTypeChambres : [],
-      _id: "",
-      nom: '',
+      typeChambres: [],
+      tarifs: [],
         promotion: {
             nom: '',
             tarif: '',
             typeChambre: '',
-            remise: '',
+            remisePourcentage: '',
+            remiseEuro: '',
             dateDebutS: '',
-            dateFinS: ''
+            dateFinS: '',
+            lundi: '',
+            mardi: '',
+            mercredi: '',
+            jeudi: '',
+            vendredi: '',
+            samedi: '',
+            dimanche: '',
+            novembre: '',
+            decembre: '',
+            janvier: '',
+            fevrier: '',
+            mars: '',
+            avril: '',
+
+
         },
     };
 }
@@ -37,15 +55,23 @@ export default class InsertPromotion extends React.Component {
   // }
 
   async getTypeChambres(){
-    const res = await axios.get('http://localhost:3000/typechambre')
-    const data = res.data.list
+    axios.get('http://localhost:3000/typechambre')
+    .then(res => {
+      const typeChambres ={typeChambres: res.data.list} ;
+      
+      this.setState( typeChambres );
+      console.log(this.state);
+    })
+  }
 
-    const typeChambres = data.map(d => ({
-      "value" : d._id,
-      "label" : d.nom
-    }))
-    this.setState({selectTypeChambres: typeChambres})
-    console.log(this.state.selectTypeChambres)
+    async getTarifs(){
+    axios.get('http://localhost:3000/planTarifaire')
+    .then(res => {
+      const tarifs ={tarifs: res.data.list} ;
+      
+      this.setState( tarifs );
+      console.log(this.state);
+    })
   }
 
   handleInputChange(event, inputName){
@@ -55,11 +81,11 @@ export default class InsertPromotion extends React.Component {
 }
 
 //Une fonction qui gérera notre valeur sélectionnée
-handleSelectChange(event, selectName){
-  const currentState = JSON.parse(JSON.stringify(this.state));
-  currentState.promotion[selectName] = {_id:event.value};
-  this.setState(currentState)
- }
+// handleSelectChange(event, selectName){
+//   const currentState = JSON.parse(JSON.stringify(this.state));
+//   currentState.promotion[selectName] = {_id:event.value};
+//   this.setState(currentState)
+//  }
 
   handleSubmit = event => {
     event.preventDefault();
@@ -71,76 +97,287 @@ handleSelectChange(event, selectName){
   }
 
   componentDidMount(){
+    this.getTarifs()
     this.getTypeChambres()
 }
 
   render() {
     return (
-      <div className="base-container">
-        <div className="header">promotion</div>
-        <form onSubmit={this.handleSubmit}>
-        <div className="content">
-          <div className="form">
-<div className="form-group" style={{paddingTop:"15px"}}>
-<TextField id="standard-basic" className="form-control" label="Nom" variant="standard" style={{width:"400px"}}
-type="text" name="nom" 
-onChange={(e) => this.handleInputChange(e, "nom")}/>
-</div>
+<div className="block">
+ <form onSubmit={this.handleSubmit}>
+<h4 className='entete'>Ajouter une nouvelle promotion</h4>
+  <div className="block1">
+<h5>Détails de la promotion</h5>
+   <div className="form-group" style={{marginTop:"20px"}}>
+<label>Nom de la promotion : </label>
 
-<div className="form-group" style={{paddingTop:"15px"}}>
+<TextField 
+id="outlined-basic" 
+label=""
+variant="outlined"
+className="form-control" 
+style={{width:"400px",height:'20px'}}
+size="small"
+type="text" 
+name="nom" 
+onChange={(e) => this.handleInputChange(e, "nom")} 
+style={{marginTop:"15px"}}
+/>
+   </div>
+
+   <div className="form-group" style={{marginTop:"15px"}}>
 <label>
-  Tarif:
-<select className="form-select" name="tarif" 
-onChange={(e) => this.handleInputChange(e, "tarif")}>
-<option value="0">Veuillez choisir un tarif...</option>
-<option value="tarif1">tarif1</option>
-<option value="tarif2">tarif2</option>
-<option value="tarif3">tarif3</option>
-</select>
+À quels plans tarifaires cette promotion s'appliquera-t-elle ?
 </label>
-</div>
+<p>Sélectionnez au moins 1 plan tarifaire</p>
+<div className="form-group"  style={{marginTop:"1px"}}>
+{this.state.tarifs.map((tarif) => (  
+<p>
+  <Checkbox   
+  value={tarif.nom}
+  name="tarif"  
+  onChange={(e) => this.handleInputChange(e, "tarif")}
+  />
+  {tarif.nom}
+  </p>  
+              ))}  
+  </div>
+   </div>
 
-<div className="form-group" style={{paddingTop:"15px"}}>
 <label>
-  Type Chambre:
-  {/* <input type="text" name="typeChambre" 
-  onChange={(e) => this.handleInputChange(e, "typeChambre")} /> */}
-<Select options={this.state.selectTypeChambres} name="typeChambre"  onChange={(e) => this.handleSelectChange(e, "typeChambre")} />
+Quelles chambres ?
 </label>
-</div>
+<p>Sélectionnez au moins 1 type de chambre</p>
+  <div className="form-group"  style={{marginTop:"5px"}}>
+{this.state.typeChambres.map((typeChambre) => (  
+<p>
+  <Checkbox   
+  value={typeChambre.nom}
+  name="typeChambre"  
+  onChange={(e) => this.handleInputChange(e, "typeChambre")}
+  />
+  {typeChambre.nom}
+  </p>  
+              ))}
+     
+  </div>
 
-<div className="form-group" style={{paddingTop:"15px"}}>
-<TextField id="standard-basic" className="form-control" label="Remise" variant="standard" style={{width:"400px"}}
-type="number" name="remise" 
-onChange={(e) => this.handleInputChange(e, "remise")}/>
-</div>
+<hr style={{width:'92%'}}></hr>
 
-<div className="form-group" style={{paddingTop:"15px"}}>
-<TextField id="standard-basic" className="form-control" label="" variant="standard" style={{width:"400px"}}
-type="date" name="dateDebutS" 
-onChange={(e) => this.handleInputChange(e, "dateDebutS")} />
-</div>
-<div className="form-group" style={{paddingTop:"15px"}}>
-<TextField id="standard-basic" className="form-control" label="" variant="standard" style={{width:"400px"}}
-type="date" name="dateFinS" 
-onChange={(e) => this.handleInputChange(e, "dateFinS")} />
-</div>
+  <div className="form-group" style={{marginTop:"15px"}}>
+<label>
+Quelle remise voulez-vous offrir ?
+</label>
+<TextField 
+id="outlined-basic" 
+label="" 
+variant="outlined" 
+className="form-control" 
+InputProps={{
+startAdornment: <InputAdornment position="start">
+    <strong>%</strong>
+</InputAdornment>,
+}}
+style={{width:"100px",marginTop:"15px"}}
+size="small"
+type="number" 
+name="remisePourcentage" 
+onChange={(e) => this.handleInputChange(e, "remisePourcentage")}
+/>
 
-          </div>
-        </div>
+<p style={{marginTop:'13px',marginLeft:'30px'}}><strong>OU</strong></p>
+
+<TextField 
+id="outlined-basic" 
+label="" 
+variant="outlined" 
+className="form-control" 
+InputProps={{
+startAdornment: <InputAdornment position="start">
+    <strong>£</strong>
+</InputAdornment>,
+}}
+style={{width:"130px"}}
+size="small"
+type="number" 
+name="remiseEuro" 
+onChange={(e) => this.handleInputChange(e, "remiseEuro")}
+/>
+  </div>
+  </div>
+  <div className='block2' style={{marginTop:"30px"}}>
+<h5>Dates de séjour</h5>
+<label style={{marginTop:"5px"}}>
+Quand les clients peuvent-ils profiter de cette promotion ?
+</label>
+<p>Sélectionnez au moins 1 date</p>
+  <div className="form-group" style={{marginTop:"25px"}}>
+   <p>
+<TextField id="outlined-basic" 
+label="" 
+variant="outlined" 
+className="form-control"  
+style={{width:"200px"}}
+type="date" 
+name="dateDebutS" 
+onChange={(e) => this.handleInputChange(e, "dateDebutS")}
+size="small"
+/>
+
+  <TextField id="outlined-basic" 
+label="" 
+variant="outlined" 
+className="form-control"  
+style={{width:"200px",marginLeft:'20px'}}
+type="date" 
+name="dateFinS" 
+onChange={(e) => this.handleInputChange(e, "dateFinS")}
+size="small"
+/>
+   </p>
+  </div>
+  
+  <div className="form-group" style={{marginTop:"40px"}}>
+<label>
+Cochez les jours de la semaine pour appliquer du calendrier de cette promotion
+</label>
+   <p>
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Lun</p>} 
+value="1"
+name=""  
+onChange={(e) => this.handleInputChange(e, "lundi")}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Mar</p>} 
+value="1"
+name="mardi"  
+onChange={(e) => this.handleInputChange(e, "mardi")}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Mer</p>} 
+value="1"
+name="mercredi"  
+onChange={(e) => this.handleInputChange(e, "mercredi")}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Jeu</p>}
+value="1"
+name="jeudi"  
+onChange={(e) => this.handleInputChange(e, "jeudi")}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Ven</p>} 
+value="1"
+name="vendredi"  
+onChange={(e) => this.handleInputChange(e, "vendredi")}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Sam</p>} 
+value="1"
+name="samedi"  
+onChange={(e) => this.handleInputChange(e, "samedi")}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Dim</p>} 
+value="1"
+name="dimanche"  
+onChange={(e) => this.handleInputChange(e, "dimanche")}
+/>
+   </p> 
+  </div>
+
+  <div className="form-group" style={{marginTop:"15px"}}>
+<label>
+Tarif réduit disponible uniquement pendant :
+</label>
+   <p>
+<FormControlLabel 
+control={<Checkbox />} 
+label={<p id='label'>Novembre</p>}
+value="1"
+name="novembre"  
+onChange={(e) => this.handleInputChange(e, "novembre")}
+/> 
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Decembre</p>}
+value="1"
+name="decembre"  
+onChange={(e) => this.handleInputChange(e, "decembre")}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Janvier</p>}
+value="1"
+name="janvier"  
+onChange={(e) => this.handleInputChange(e, "janvier")}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Fevrier</p>}
+value="1"
+name="fevrier"  
+onChange={(e) => this.handleInputChange(e, "fevrier")}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Mars</p>}
+value="1"
+name="mars"  
+onChange={(e) => this.handleInputChange(e, "mars")}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Avril</p>} 
+value="1"
+name="avril"  
+onChange={(e) => this.handleInputChange(e, "avril")}
+/>
+   </p> 
+  </div>
+
+  </div>
+          
     
-        <div className="footer" style={{marginTop:'25px'}}> 
-<Button variant="contained" color="success" type='submit'>
-Ajouter
-</Button><br/>
-<Link to={'/promotion'}>
-<Button variant="contained" style={{marginTop:'20px'}}>
-Retour
+  <div className="pied" style={{marginTop:'25px'}}>   
+   <div class="bouton-aligne">  
+<Button  
+variant="contained" 
+type='submit' 
+style={{textDecoration:'none',color:'black'}}>
+<span style={{color:'white'}}>Ajouter</span>
 </Button>
-</Link>
-        </div>
-        </form>
-      </div>
+   </div>
+   <div class="bouton-aligne">
+    <Link to={'/promotion'} style={{textDecoration:'none'}}>
+       <Button variant="outlined" 
+       id="btn2">
+<span style={{color:'#1976d2'}}>Retour</span>
+       </Button>
+    </Link>
+   </div>
+  </div>
+ </form>
+</div>
     )
   }
 }
