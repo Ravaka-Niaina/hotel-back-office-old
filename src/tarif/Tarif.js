@@ -9,6 +9,11 @@ import  Navbar  from "../Navbar/Navbar";
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../partenaire/typeChambre.css';
+
+import ListTarif from './ListTarif.js';
+
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -47,6 +52,7 @@ function Tarif() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
     return (
             <>
             <Navbar currentPage={1}/>
@@ -58,7 +64,7 @@ function Tarif() {
                     </Tabs>
                 </Box>
                 <TabPanel value={value} index={0}>
-                    Item One
+                  <ListTarif />
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                     Item Two

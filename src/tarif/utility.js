@@ -1,6 +1,5 @@
 import { Checkbox } from "@mui/material";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../typeChambre.css';
 
 import FormControlLabel from '@mui/material/FormControlLabel';
 
@@ -51,7 +50,7 @@ export function PolitiqueAnnulAtrb(props){
                 checked={politique.checked}
                 control={<Checkbox/>}
                 onChange={(e) => props.handleCheckBoxChange(props.planTarifaire, props.setPlanTarifaire, e, "politiqueAnnulAtrb", u, "checked")}
-                label={politique.label}
+                label={politique.nom}
                 style={{marginLeft:"20px"}}
             />
         );

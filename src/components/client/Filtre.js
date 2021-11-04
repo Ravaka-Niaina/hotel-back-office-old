@@ -67,6 +67,7 @@ function ListOptions(props){
             </FormGroup>
         );
     }else{
+        console.log(props.filtreValue);
         return(
             <div>
                 <RadioGroup 
@@ -89,6 +90,7 @@ function ListOptions(props){
 function ListFiltres(props){
     let indexFiltre = 0;
     let list = [];
+    
     for(let i = 0; i < props.filtre.length; i = i + 2){
         try{
             list.push(
@@ -196,9 +198,20 @@ class Filtre extends React.Component{
         ];
         this.state = {
             filtre: this.filtreOpt[0],
-            filtres: []
+            filtres: [],
+            result: []
         };
-        
+        this.setResult = this.setResult.bind(this);
+    }
+    setResult(res){
+        let currentState = JSON.parse(JSON.stringify(this.state));
+        currentState.result = res.list;
+        console.log(currentState);
+        this.setState(currentState);
+    }
+    applyFilter(){
+        console.log('filtre en cours...');
+        callAPI('post', '/typeChambre/filtre/resultat', {filtres: this.state.filtres}, this.setResult);
     }
 
     handleFiltreChange(event){
@@ -310,7 +323,7 @@ class Filtre extends React.Component{
                                     <ListFiltres filtre={this.state.filtres} handleChange={this.handleChange} handleRadioChange={this.handleRadioChange} />
                                     <div className="apply">
                                         <strong>32</strong> matching rooms
-                                        <Button style={{marginLeft: '10px'}} onClick={(e) =>  console.log(e)} variant="contained">APPLY</Button>
+                                        <Button style={{marginLeft: '10px'}} onClick={(e) =>  this.applyFilter()} variant="contained">APPLY</Button>
                                     </div>
                                 </div> : null}
                         </FormGroup>

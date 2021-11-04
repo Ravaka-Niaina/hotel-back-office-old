@@ -2,11 +2,15 @@ import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 class Fact extends React.Component{
-    render(){
+    constructor(props){
+        super(props);
+    }
 
-        let reservation = this.props.reservation.map(reserve => {
+    render(){
+        let reservation = [];
+        reservation = this.props.context.state.reservation.map(reserve => {
             return (
-                <p> {reserve.idTarif}</p>
+                <p> {reserve.nom} : {reserve.nombre}</p>
                 );
             }
         )
