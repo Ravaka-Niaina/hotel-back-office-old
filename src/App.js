@@ -15,6 +15,7 @@ import InsertChambre from './partenaire/chambre/InsertChambre.js';
 
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import  AppClient  from "./components/client/scroll";
+import Calendrier from "./partenaire/Calendrier/Calendrier";
 
 import  PromotionList  from "./promotion/promotionList.js";
 import  InsertPromotion  from "./promotion/insertPromotion.js";
