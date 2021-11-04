@@ -1,8 +1,9 @@
 // import { TextField } from "@mui/material";
 import CustomError from '../CustomError';
 import axios from "axios";
-import React, {useEffect, useRef} from "react";
-import Navbar  from "../Navbar/Navbar";
+import React, {useEffect} from "react";
+import Navbar from "../Navbar/Navbar";
+import Sidebar from "../Sidebar/Sidebar";
 import { Checkbox } from "@mui/material";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './typeChambre.css';
@@ -12,32 +13,17 @@ import Box from '@mui/material/Box';
 
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import { useHistory } from 'react-router-dom'
 
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import callAPI from '../utility';
 
 import { useState } from 'react';
-
-
-const FileInput = ({value, handlePhotoChange}) => {
-  return(
-    <div>
-      <label>
-        Click to select some files...
-        <input 
-          style={{display: 'none'}}
-          type="file"
-          onChange={handlePhotoChange}
-        />
-      </label>
-    </div>
-  );
-}
+import {FileInput, Preview} from './utilityTypeChambre.js';
 
 function PlanTarifaire(props){
   let i = -1;
-  console.log(props.planTarifaire);
   let list = props.planTarifaire.map(tarif => {
       i++;
       let u = i;
@@ -72,23 +58,29 @@ function Equipements(props){
   return equipements;
 }
 
+
+
 function InsertTypeCHambre(){
+  const noImage = '/no-image.jpg';
+  let[val, setVal] = useState(1);
   let [state, setState] = useState(
     {
       errors: [],
       nom: '',
       nbAdulte: '',
       nbEnfant: '',
-      photo: '',
+      photo: [],
       
       chambreTotal:'',
       etage:'',
       superficie:'',
       description:'',
       planTarifaire: [],
-      equipements: []
+      equipements: [],
+      preview: [noImage]
     }
   );
+  const history = useHistory();
   
   function setPlanTarifaire(res){
     let current = JSON.parse(JSON.stringify(state));
@@ -110,7 +102,7 @@ function InsertTypeCHambre(){
   useEffect(() => {
     callAPI('get', '/planTarifaire', {}, setPlanTarifaire);
     callAPI('get', '/equipement', {}, setListEquipement);
-  }, []);
+  }, []); 
 
   function handleCheckBoxPlanTarifaire(e, index){
     let current = JSON.parse(JSON.stringify(state));
@@ -129,11 +121,9 @@ function InsertTypeCHambre(){
     console.log(state);
     console.log(res);
     if(res.status === 200){
-      console.log('TOKONY MANAO REDIRECT OK');
-      //this.props.history.push('/typeChambre');
+      history.push('/typeChambre');
     }else if(res.status === 401){//Unauthorized
-      console.log('TOKONY MANAO REDIRECT LOGIN');
-        //this.props.history.push('/login');
+      history.push('/login');
     }else{
       let currentState = JSON.parse(JSON.stringify(state));
       currentState.errors = res.errors;
@@ -179,24 +169,36 @@ function InsertTypeCHambre(){
       setState(currentState);
   }
 
-  function handlePhotoChange(event){
+  function handlePhotoChange(e){
     let currentState = JSON.parse(JSON.stringify(state));
-    if(event.target.files[0]){
-      let img = event.target.files[0];
-      const reader = new FileReader();
-      reader.onload = (evt) => {
-        currentState.photo = evt.target.result;
+    currentState.photo = [];
+    currentState.preview = [];
+    let finished = 0;
+    for(let i = 0; i < e.target.files.length; i++){
+      const u = i;
+      const img = e.target.files[i];
+      const r = /^image/;
+      if(r.test(img.type)){
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          currentState.photo[u] = evt.target.result;
+          currentState.preview[u] = evt.target.result;
+          finished++;
+          if(finished === e.target.files.length){
+            setState(currentState);
+          }
+        }
+        reader.readAsDataURL(img);
+      }else{
+        currentState.preview = [noImage];
         setState(currentState);
-        console.log('Photo changed...');
-        console.log(state);
       }
-      reader.readAsDataURL(img);
     }
   }
+
   return (
     <div> 
         <Navbar/>
-        <Sidebar/>
         <div className="container">
           <div className="row">
             <div className="col-md-3"></div>
@@ -207,7 +209,6 @@ function InsertTypeCHambre(){
                 <hr></hr>
                 <CustomError errors={state.errors} />
                 <form className="needs-validation">
-                  
                   <Box>
                     <div style={{marginTop:'40px',display:'inline'}}>
                       <TextField id="standard-basic" label="Nom" variant="standard" style={{width:'40%'}}
@@ -216,6 +217,7 @@ function InsertTypeCHambre(){
                                             <TextField id="standard-basic" label="chambre totale" variant="standard" type="number"
                       style={{width:'40%',marginLeft:'152px'}}
                       value={state.chambreTotal} onChange={(e) => handleInputChange(e, "chambreTotal")}/>
+                    </div>
 
                     <div style={{marginTop:'30px'}}>
                       <TextField id="standard-basic" label="Etage" variant="standard" type="number"
@@ -226,10 +228,16 @@ function InsertTypeCHambre(){
                       value={state.superficie} onChange={(e) => handleInputChange(e, "superficie")}/>
                     </div>
 
-                    <div style={{marginTop:'70px'}}>
-                      <FileInput 
-                        value=""
-                        handlePhotoChange={handlePhotoChange} />
+                    <div style={{marginTop:'30px'}}>
+                      <div className="row">
+                          <Preview preview={state.preview} />
+                      </div>
+                      <div className="row">
+                          <FileInput 
+                            style={{marginTop: '5px'}}
+                            value=""
+                            handlePhotoChange={handlePhotoChange} />
+                      </div>
                     </div>
 
                     <div style={{marginTop:'10px'}}>
@@ -258,22 +266,22 @@ function InsertTypeCHambre(){
                       style={{width:'100%',height:'50px'}}
                       value={state.description}
                       onChange={(e) => handleInputChange(e, "description")} />
-                    </div>
                     <div style={{marginTop:'30px'}}>
                         <div>
                             <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Equipements: </label>
-                        </div>
-                        <FormGroup>
-                          <Equipements  equipements={state.equipements} handleCheckBoxEquipement={handleCheckBoxEquipement} />
-                        </FormGroup>
+                      </div>
+                      <FormGroup>
+                        <Equipements  equipements={state.equipements} handleCheckBoxEquipement={handleCheckBoxEquipement} />
+                      </FormGroup>
                     </div>
                     <div style={{marginTop:'30px'}}>
-                        <div>
-                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Plan tarifaire attribué: </label>
-                        </div>
-                        <FormGroup>
-                          <PlanTarifaire planTarifaire={state.planTarifaire} handleCheckBoxPlanTarifaire={handleCheckBoxPlanTarifaire}/>
-                        </FormGroup>
+                      <div>
+                          <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Plan tarifaire attribué: </label>
+                      </div>
+                      <FormGroup>
+                        <PlanTarifaire planTarifaire={state.planTarifaire} handleCheckBoxPlanTarifaire={handleCheckBoxPlanTarifaire}/>
+                      </FormGroup>
+                    </div>
                     </div>
                   </Box>
                   <div style={{marginTop:'50px'}}>

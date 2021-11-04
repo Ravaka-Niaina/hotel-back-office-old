@@ -12,9 +12,6 @@ import Paiement from "./paiement";
 import  DCHambre  from "./components/client/listChambre";
 
 import InsertChambre from './partenaire/chambre/InsertChambre.js';
-import ListPlanTarifaire from './partenaire/planTarifaire/ListPlanTarifaire';
-import InsertPlanTarifaire from './partenaire/planTarifaire/InsertPlanTarifaire.js';
-import UpdatePlanTarifaire from './partenaire/planTarifaire/UpdatePlanTarifaire.js';
 
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import  AppClient  from "./components/client/scroll";
@@ -29,7 +26,6 @@ function App() {
         <Route path="/promotion" exact component={PromotionList} />
         <Route path="/promotion/create" exact component={InsertPromotion} />
         <Route path="/" exact component={home} />
-        <Route path="/tarif" exact component={Tarif} />
         <Route path="/client" exact component={AppClient} />
         <Route path="/login" exact component={Login} />
         <Route path="/Register" exact component={Register} />
@@ -38,14 +34,12 @@ function App() {
         <Route path="/typeChambre" exact component={ListTypeChambre} />
         <Route path="/TypeChambre/insert" exact component={InsertTypeChambre} />
         <Route path="/TypeChambre/details/:_id" exact component={DetailsTypeChambre} />
-        <Route path="/tarif/insert/:idTypeChambre/:nomTypeChambre" exact component={InsertTarif}/>
-        <Route path="/tarif/details/:_id/:idTypeChambre" exact component={DetailsTarif} />
+
+        <Route path="/tarif" exact component={Tarif} />
+        <Route path="/tarif/insert" exact component={InsertTarif}/>
+        <Route path="/tarif/details/:_id/" exact component={DetailsTarif} />
 
         <Route path="/chambre" exact component={InsertChambre} />
-
-        <Route path="/planTarifaire" exact component={ListPlanTarifaire} />
-        <Route path="/planTarifaire/insert" exact component={InsertPlanTarifaire} />
-        <Route path="/planTarifaire/details/:_id" exact component={UpdatePlanTarifaire} />
 
       </Router>
     </div>

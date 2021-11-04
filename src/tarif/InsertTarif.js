@@ -1,224 +1,246 @@
+import TextField from '@mui/material/TextField';
+//import TimePicker from '@mui/lab/TimePicker';
+//import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import CustomError from '../CustomError';
-import axios from 'axios';
-import React from 'react';
-import {Link} from 'react-router-dom';
+import {useEffect, useRef} from "react";
+import { useState } from 'react';
+import { useHistory } from 'react-router-dom'
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './insertTarif.css';
 
-import  Navbar  from "../Navbar/Navbar";
-
-import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 
 import Button from '@mui/material/Button';
+import React from 'react'
+import callAPI from '../utility';
+import FormGroup from '@mui/material/FormGroup';
+import  Navbar  from "../Navbar/Navbar";
 
-class InsertTarif extends React.Component{
-    constructor(props){
-        super(props);
-        this.state = {
-            errors: [],
-            tarif: {
-                _id: '',
-                nom: '',
-                idTypeChambre: '',
-                prixParJour: '',
-                services: [], 
-                conditionsAnnulation: '',
+const utility = require('./utility.js');
 
-                sejourMinimum:'',
-                description:''
-            }
-        };
+
+
+function InsertTarif(){
+    const [errors, setErrors] = useState([]);
+    const [planTarifaire, setPlanTarifaire] = useState({
+        nom: '',
+        description: '',
+        dateReservation: {debut: '', fin: ''},
+        dateSejour: {debut: '', fin: ''},
+        LeadDay: [
+            {_id: 1, label: 'Lundi', checked: false},
+            {_id: 2, label: 'Mardi', checked: false},
+            {_id: 3, label: 'Mercredi', checked: false},
+            {_id: 4, label: 'Jeudi', checked: false},
+            {_id: 5, label: 'Vendredi', checked: false},
+            {_id: 6, label: 'Samedi', checked: false},
+            {_id: 7, label: 'Dimanche', checked: false}
+        ],
+        LeadHour: {min: '', max: ''}, // [{min: number, max: number}]
+        chambresAtrb: [],
+        politiqueAnnulAtrb: [
+
+        ]
+    });
+    const history = useHistory();
+
+    function setListTypeChambre(res){
+        let current = JSON.parse(JSON.stringify(planTarifaire));
+        current.chambresAtrb = res.listType;
+        current.politiqueAnnulAtrb = res.listPolitique;
+        setPlanTarifaire(current);
     }
 
-    componentDidMount(){
-        let currentState = JSON.parse(JSON.stringify(this.state));
-        currentState.tarif.idTypeChambre = 
-            this.props.match.params.idTypeChambre;
-        this.setState(currentState);
-    }
+    useEffect(() => {
+        callAPI('get', '/typeChambre/TPAvecPA', {}, setListTypeChambre);
+      }, []);
 
-    tryRedirect(res){
-        console.log(this.state.tarif);
-        console.log('resultat recu');
+    function tryRedirect(res){
         console.log(res);
         if(res.status === 200){
-            this.props.history.push('/typeChambre/details/' 
-                + this.props.match.params.idTypeChambre);
-        }else if(res.status === 401){//Unauthorized
-            this.props.history.push('/login');
+            history.push('/tarif');
         }else{
-            let currentState = JSON.parse(JSON.stringify(this.state));
-            currentState.errors = res.errors;
-            this.setState(currentState);
+            setErrors(res.errors);
         }
+        console.log(res);
     }
 
-    insert(e){
-        e.preventDefault();
-        console.log('Insertion en cours');
-        axios({
-            method: 'post',
-            url: process.env.REACT_APP_BACK_URL + "/tarif/insert",
-            withCredentials: true,
-            data: this.state.tarif
-        })
-        .then(res => this.tryRedirect(res.data))
-        .catch(err => console.log(err));
+    function insert(e){
+        const current = utility.getPlan(planTarifaire);
+        console.log(current);
+        callAPI('post', '/planTarifaire/insert', current, tryRedirect);
     }
 
-    handleInputChange(event, inputName){
-        const currentState = JSON.parse(JSON.stringify(this.state));
-        currentState.tarif[inputName] = event.target.value;
-        this.setState(currentState);
-    }
-
-    render(){
-        return(
-            <div> 
-                <Navbar/>
-                
-            <div className="container" style={{}}> 
-             <div className="row">
-              <div className="col-md-12">
-                <div className="jumbotron" 
-                style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)',marginLeft:'310px',marginTop:'-60px'}}>
-                    <h1 className="text-center" id='title1'>Créer tarif</h1>
-                    <hr></hr>
-                    <CustomError errors={this.state.errors}/>
-                    <form className="needs-validation">
-                        <p style={{fontFamily:'Arial',fontSize:'18px'}}>
-                            Type chambre: {this.props.match.params.nomTypeChambre}
-                        </p>
-                        {/*
-                        <div>
-                             <label className="form-label mt-2">Nom: </label>
-                            <input className="form-control" 
-                                type="text" 
-                                value={this.state.tarif.nom}
-                                onChange={(e) => this.handleInputChange(e, "nom")}/>
+    return(
+        <div className="container">
+            <Navbar currentPage={1}/>
+            <div className="row">
+                <div className="col-md-3"></div>
+                    <div className="col-md-9">
+                        <div className="jumbotron" 
+                            style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)',marginTop:'-60px'}}>
+                            <h1 className="text-center" id='title1'>Ajouter plan tarifaire</h1>
+                            <hr></hr>
+                            <CustomError errors={errors} />
+                            <form className="needs-validation">
+                                <Box>
+                                    <div style={{marginTop:'40px',display:'inline'}}>
+                                        <label style={{marginRight: '10px'}}>Nom: </label>
+                                        <TextField 
+                                            id="standard-basic"
+                                            variant="standard"
+                                            style={{width: '300px'}}
+                                            type="text"
+                                            value={planTarifaire.nom}
+                                            onChange={(e) => utility.handleInputChange1(planTarifaire, setPlanTarifaire, e, "nom")}
+                                        />
+                                    </div>
+                                    <div style={{marginTop:'30px'}}>
+                                        <label style={{marginRight: '10px'}}>Déscription: </label>
+                                        <TextField 
+                                            id="standard-basic"
+                                            variant="standard"
+                                            style={{width: '300px'}}
+                                            type="text"
+                                            value={planTarifaire.description}
+                                            onChange={(e) => utility.handleInputChange1(planTarifaire, setPlanTarifaire, e, "description")}
+                                        />
+                                    </div>
+                                    <div style={{marginTop:'30px'}}>
+                                        <div>
+                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Date de réservation: </label>
+                                        </div>
+                                            <div className="row">
+                                                <div className="col">
+                                                    <label style={{marginRight: '10px'}}>Début: </label>
+                                                    <TextField 
+                                                        id="standard-basic"
+                                                        variant="standard"
+                                                        style={{width: '200px'}}
+                                                        type="date"
+                                                        value={planTarifaire.dateReservation.debut}
+                                                        onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "dateReservation", "debut")}
+                                                    />
+                                                </div>
+                                                <div className="col">
+                                                    <label style={{marginRight: '10px'}}>Fin: </label>
+                                                    <TextField 
+                                                        id="standard-basic"
+                                                        variant="standard"
+                                                        style={{width: '200px'}}
+                                                        type="date"
+                                                        value={planTarifaire.dateReservation.fin}
+                                                        onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "dateReservation", "fin")}
+                                                    />
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div style={{marginTop:'30px'}}>
+                                        <div>
+                                            <label className="row form-label-mt4" style={{textDecoration: 'underline'}} >Date de séjour: </label>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col">
+                                                <label style={{marginRight: '10px'}}>Début: </label>
+                                                <TextField 
+                                                    id="standard-basic"
+                                                    variant="standard"
+                                                    style={{width: '200px'}}
+                                                    type="date"
+                                                    value={planTarifaire.dateSejour.debut}
+                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "dateSejour", "debut")}
+                                                />
+                                            </div>
+                                            <div className="col">
+                                                <label style={{marginRight: '10px'}}>Fin: </label>
+                                                <TextField 
+                                                    id="standard-basic"
+                                                    variant="standard"
+                                                    style={{width: '200px'}}
+                                                    type="date"
+                                                    value={planTarifaire.dateSejour.fin}
+                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "dateSejour", "fin")}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style={{marginTop:'30px'}}>
+                                        <div>
+                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Lead day: </label>
+                                        </div>
+                                        <div>
+                                            <FormGroup>
+                                                <utility.LeadDay 
+                                                    days={planTarifaire.LeadDay} 
+                                                    planTarifaire={planTarifaire}
+                                                    setPlanTarifaire={setPlanTarifaire}
+                                                    handleCheckBoxChange={utility.handleCheckBoxChange} />
+                                            </FormGroup>
+                                        </div>
+                                    </div>
+                                    <div style={{marginTop:'30px'}}>
+                                        <div>
+                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Chambres attribuées: </label>
+                                        </div>
+                                        <div>
+                                            <utility.ChambresAtrb 
+                                                chambresAtrb={planTarifaire.chambresAtrb} 
+                                                planTarifaire={planTarifaire}
+                                                setPlanTarifaire={setPlanTarifaire}
+                                                handleCheckBoxChange={utility.handleCheckBoxChange} />
+                                        </div>
+                                    </div>
+                                    <div style={{marginTop:'30px'}}>
+                                        <div>
+                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Lead hour: </label>
+                                        </div>
+                                        <div className="row">
+                                            <div className="col">
+                                                <label style={{marginRight: '10px'}}>Début: </label>
+                                                <TextField
+                                                    id="standard-basic"
+                                                    variant="standard"
+                                                    style={{width: '200px'}}
+                                                    type="time"
+                                                    value={planTarifaire.LeadHour.min}
+                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "LeadHour", "min")}
+                                                />
+                                            </div>
+                                            <div className="col">
+                                                <label style={{marginRight: '10px'}}>Fin: </label>
+                                                <TextField
+                                                    id="standard-basic"
+                                                    variant="standard"
+                                                    style={{width: '200px'}}
+                                                    type="time"
+                                                    value={planTarifaire.LeadHour.max}
+                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "LeadHour", "max")}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style={{marginTop:'30px'}}>
+                                        <div>
+                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Politiques d'annulation: </label>
+                                        </div>
+                                        <utility.PolitiqueAnnulAtrb  
+                                            politiqueAnnulAtrb={planTarifaire.politiqueAnnulAtrb}
+                                            planTarifaire={planTarifaire}
+                                            setPlanTarifaire={setPlanTarifaire}
+                                            handleCheckBoxChange={utility.handleCheckBoxChange} />
+                                    </div>
+                                </Box>
+                                <div style={{marginTop:'50px'}}>
+                                    <Button variant="contained" color="success" onClick={(e) => insert(e)}>
+                                        Créer
+                                    </Button>
+                                </div>
+                            </form>
                         </div>
-                        <div>
-                            <label className="form-label mt-2">Prix journalier: </label>
-                            <input className="form-control"
-                                type="number" 
-                                value={this.state.tarif.prixParJour}
-                                onChange={(e) => this.handleInputChange(e, "prixParJour")}/>
-                        </div>
-                        <div>
-                            <label className="form-label mt-3">Services: </label>
-                            <textarea className="form-control"
-                                style={{height:'100px'}}
-                                value={this.state.tarif.services}
-                                onChange={(e) => this.handleInputChange(e, "services")}></textarea>
-                        </div>
-                        <div>
-                            <label className="form-label mt-3">Conditions d'annulation: </label>
-                            <textarea className="form-control"
-                                style={{height:'100px'}}
-                                value={this.state.tarif.conditionsAnnulation}
-                                onChange={(e) => this.handleInputChange(e, "conditionsAnnulation")}></textarea>
-                        </div>
-                        <div>
-                            <button type="button" className="btn btn-success mt-4"
-                            style={{backgroundColor:'#32CD32'}}
-                            onClick={(e) => this.insert(e)}>
-                                Créer
-                            </button>
-                        </div> */}
-
-<div style={{marginTop:'20px'}}>
-<TextField id="standard-basic" label="Nom" variant="standard" style={{width:'40%'}}
-type="text" 
-value={this.state.tarif.nom}
-onChange={(e) => this.handleInputChange(e, "nom")}/>
-
-<TextField id="standard-basic" label="Prix journalier" variant="standard" style={{width:'40%',marginLeft:'140px'}}
-type="text"
-value={this.state.tarif.prixParJour}
-onChange={(e) => this.handleInputChange(e, "prixParJour")}/>
-</div>
-
-<div style={{marginTop:'20px'}}>
-<TextField id="standard-basic" label="Séjours minium" variant="standard" style={{width:'40%'}}
-type="text"
-value={this.state.tarif.sejourMinimum}
-onChange={(e) => this.handleInputChange(e, "sejourMinimum")}/>
-</div>
-
-<div style={{marginTop:'20px'}}>
-<div style={{}}>
-<label className="form-label mt-4" style={{textDecoration:'underline'}}>Description: </label>
-</div>
-<TextField id="outlined-basic" variant="outlined" type='text'
-  placeholder=""
-  multiline
-  rows={2}
-  rowsMax={4}
-  style={{width:'100%',height:'50px'}}
-  value={this.state.tarif.description}
-onChange={(e) => this.handleInputChange(e, "description")}
-/>
-</div>
-
-<div style={{marginTop:'20px'}}>
-<div style={{}}>
-<label className="form-label mt-4" style={{textDecoration:'underline'}}>Services: </label>
-</div>
-<TextField id="outlined-basic" variant="outlined"
-  placeholder=""
-  multiline
-  rows={2}
-  rowsMax={4}
-  style={{width:'100%',height:'50px'}}
-  value={this.state.tarif.services}
-  onChange={(e) => this.handleInputChange(e, "services")}
-/>
-</div>
-
-<div style={{marginTop:'20px'}}>
-<div style={{}}>
-<label className="form-label mt-4" style={{textDecoration:'underline'}}>Conditions d'annulation: </label>
-</div>
-<TextField id="outlined-basic" variant="outlined"
-  placeholder=""
-  multiline
-  rows={2}
-  rowsMax={4}
-  style={{width:'100%',height:'50px'}}
-  value={this.state.tarif.conditionsAnnulation}
-  onChange={(e) => this.handleInputChange(e, "conditionsAnnulation")}
-/>
-</div>
-
-<div style={{marginTop:'60px'}} onClick={(e) => this.insert(e)}>
-<Button variant="contained" color="success">
-Créer
-</Button>
-</div>
-<div style={{marginTop:'20px'}}>
-<Link to={'/typeChambre/details/' + this.props.match.params.idTypeChambre} style={{textDecoration:'none'}}>
-<Button variant="contained" style={{backgroundColor:'#293846',color:'white'}}>
-Retour
-</Button>
-</Link>
-</div>
-
-
-                        {/* <Link to={'/typeChambre/details/' + this.props.match.params.idTypeChambre}>
-                            <button type="button"
-                            className="btn mt-4" 
-                            style={{backgroundColor:'#293846',color:'white'}}
-                            >Retour</button>
-                        </Link> */}
-                    </form>
-
+                    </div>
                 </div>
-                </div>
-               </div>
-</div>
-</div>
-        );
-    }
+            </div>
+    );
 }
-
 export default InsertTarif;

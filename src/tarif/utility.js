@@ -1,6 +1,5 @@
 import { Checkbox } from "@mui/material";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../typeChambre.css';
 
 import FormControlLabel from '@mui/material/FormControlLabel';
 

@@ -17,37 +17,11 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
+import {useEffect, useState, useRef} from "react";
 
-class ListPlanTarifaire extends React.Component{
-    constructor(props){
-        super(props);
-        this.state = {
-            status: '',
-            message: '',
-            list: []
-        };
-    }
-
-    setListPlanTarifaire(data){
-        console.log(data);
-        let currentState = JSON.parse(JSON.stringify(this.state));
-        currentState.list = data.list;
-        this.setState(currentState);
-    }
-
-    componentDidMount(){
-        axios({
-            method: 'get',
-            url: process.env.REACT_APP_BACK_URL + "/planTarifaire",
-            withCredentials: true
-        })
-        .then(res => this.setListPlanTarifaire(res.data))
-        .catch(err => console.log(err));
-    }
-
-    render(){
-        let list = null;
-        list = this.state.list.map(tarif => {
+function List(props){
+    let list = null;
+        list = props.list.map(tarif => {
             return <TableRow
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
@@ -62,39 +36,65 @@ class ListPlanTarifaire extends React.Component{
               </TableCell>
             </TableRow>
         });
-        return(
-            <div>
-                <Navbar/>
-                <Sidebar/>
-                <div className='container' style={{marginTop:'120px'}}>
-                    <div className='row'>
-                        <div className='col-md-2'></div>
-                            <div className='col-md-10'>
-                                <Link to={'/planTarifaire/insert'}>
-                                    <Button variant="contained" endIcon={<AddIcon />}>
-                                        Ajouter Plan tarifaire
-                                    </Button>
-                                </Link>
-                                <TableContainer component={Paper} style={{marginTop:'40px'}}>
-                                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                                        <TableHead>
-                                        <TableRow>
-                                            <TableCell align="center"><strong>Plan tarifaire</strong></TableCell>
-                                            <TableCell align="center"><strong>Actions</strong></TableCell>
-                                        </TableRow>
-                                        </TableHead>
-                                        <TableBody>
-                                        { list }
-                                        </TableBody>
-                                    </Table>
-                                </TableContainer>
-                            </div>
-                        {/* <div className='col-md-1'></div> */}
-                    </div>
+    return list;
+}
+
+function ListPlanTarifaire(){
+    const [state, setState] = useState({
+        status: '',
+        message: '',
+        list: []
+    });
+
+    function setListPlanTarifaire(data){
+        console.log(data);
+        let currentState = JSON.parse(JSON.stringify(state));
+        currentState.list = data.list;
+        setState(currentState);
+    }
+
+    useEffect(() => {
+        axios({
+            method: 'get',
+            url: process.env.REACT_APP_BACK_URL + "/planTarifaire",
+            withCredentials: true
+        })
+        .then(res => setListPlanTarifaire(res.data))
+        .catch(err => console.log(err));
+    }, []);
+
+    return(
+        <div>
+            <Navbar/>
+            <Sidebar/>
+            <div className='container' style={{marginTop:'120px'}}>
+                <div className='row'>
+                    <div className='col-md-2'></div>
+                        <div className='col-md-10'>
+                            <Link to={'/planTarifaire/insert'}>
+                                <Button variant="contained" endIcon={<AddIcon />}>
+                                    Ajouter Plan tarifaire
+                                </Button>
+                            </Link>
+                            <TableContainer component={Paper} style={{marginTop:'40px'}}>
+                                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                                    <TableHead>
+                                    <TableRow>
+                                        <TableCell align="center"><strong>Plan tarifaire</strong></TableCell>
+                                        <TableCell align="center"><strong>Actions</strong></TableCell>
+                                    </TableRow>
+                                    </TableHead>
+                                    <TableBody>
+                                    <List list={state.list}/>
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                        </div>
+                    {/* <div className='col-md-1'></div> */}
                 </div>
             </div>
-        );
-    }
+        </div>
+    );
 }
 
 export default ListPlanTarifaire;

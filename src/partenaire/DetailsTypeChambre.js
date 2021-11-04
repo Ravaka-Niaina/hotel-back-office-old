@@ -28,26 +28,12 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
+import {FileInput, Preview} from './utilityTypeChambre.js';
+
 
 const Input = styled('input')({
   display: 'none',
 });
-
-const FileInput = ({value, handlePhotoChange}) => {
-    return(
-      <div>
-        <label>
-          Cliquez pour choisir une photo...
-          <input 
-            style={{display: 'none'}}
-            type="file"
-            accept="image/*"
-            onChange={handlePhotoChange}
-          />
-        </label>
-      </div>
-    );
-  }
 
 function Equipements(props){
     console.log(props.equipements);
@@ -98,7 +84,7 @@ class DetailsTypeCHambre extends React.Component{
                 nom: '',
                 nbAdulte: '',
                 nbEnfant: '',
-                photo: '',
+                photo: [],
                 
                 chambreTotal:'',
                 etage:'',
@@ -108,11 +94,10 @@ class DetailsTypeCHambre extends React.Component{
                 planTarifaire: []
             }
             , tarifs: []
-            , previewPhoto: this.noImage
+            , previewPhoto: [this.noImage]
         }
         this.handleCheckBoxPlanTarifaire = this.handleCheckBoxPlanTarifaire.bind(this);
         this.handleCheckBoxEquipement = this.handleCheckBoxEquipement.bind(this);
-        this.handlePhotoChange = this.handlePhotoChange.bind(this);
         this.handlePhotoChange = this.handlePhotoChange.bind(this);
         this.setDetailsTypeChambre = this.setDetailsTypeChambre.bind(this);
     }
@@ -124,7 +109,10 @@ class DetailsTypeCHambre extends React.Component{
         if(currentState.typeChambre.photo != '' || 
             currentState.typeChambre.photo != undefined ||
             currentState.typeChambre.photo != null){
-                currentState.previewPhoto = process.env.REACT_APP_BACK_URL + "/" + currentState.typeChambre.photo;
+                currentState.previewPhoto = [];
+                for(let i = 0; i < currentState.typeChambre.photo.length; i++){
+                    currentState.previewPhoto[i] = process.env.REACT_APP_BACK_URL + "/" + currentState.typeChambre.photo[i];
+                }
             }
         this.setState(currentState);
     }
@@ -198,6 +186,35 @@ class DetailsTypeCHambre extends React.Component{
         this.setState(currentState);
     }
 
+    handlePhotoChange(e){
+        let currentState = JSON.parse(JSON.stringify(this.state));
+        currentState.typeChambre.photo = [];
+        currentState.previewPhoto = [];
+        let finished = 0;
+        console.log(e.target.files.length);
+        for(let i = 0; i < e.target.files.length; i++){
+          const u = i;
+          const img = e.target.files[i];
+          const r = /^image/;
+          if(r.test(img.type)){
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+              currentState.typeChambre.photo[u] = evt.target.result;
+              currentState.previewPhoto[u] = evt.target.result;
+              finished++;
+              if(finished === e.target.files.length){
+                this.setState(currentState);
+              }
+            }
+            reader.readAsDataURL(img);
+          }else{
+            currentState.previewPhoto = [this.noImage];
+            this.setState(currentState);
+          }
+        }
+      }
+
+    /*
     handlePhotoChange(event){
         let currentState = JSON.parse(JSON.stringify(this.state));
         if(event.target.files[0]){
@@ -217,6 +234,7 @@ class DetailsTypeCHambre extends React.Component{
             }
         }
     }
+    */
 
     handleCheckBoxPlanTarifaire(e, index){
         let current = JSON.parse(JSON.stringify(this.state));
@@ -272,7 +290,7 @@ class DetailsTypeCHambre extends React.Component{
                                 }
                                 <div style={{marginTop:'30px'}}>
                                     <div className="row">
-                                        <div id="img-preview"><img style={{width:'300px', height: '150px'}} src={this.state.previewPhoto} /></div>
+                                        <Preview preview={this.state.previewPhoto} />
                                     </div>
                                     <div className="row">
                                         <FileInput 
@@ -348,27 +366,6 @@ class DetailsTypeCHambre extends React.Component{
                     </Link>
                 </div>
             </form>
-            {/*
-                    <h2 className="mt-5" style={{textDecoration:'underline',textAlign:'center'}}>Liste tarifs</h2>
-
-                <TableContainer component={Paper} style={{marginTop:'40px'}}>
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
-                        <TableHead>
-                        <TableRow>
-                            <TableCell align="center"><strong>Nom</strong></TableCell>
-                            <TableCell align="center"><strong>Prix par jour</strong></TableCell>
-                            <TableCell align="center"><strong>Services</strong></TableCell>
-                            <TableCell align="center"><strong>Conditions d'annulation</strong></TableCell>
-                            <TableCell align="center"><strong>Actions</strong></TableCell>
-                        </TableRow>
-                        </TableHead>
-                        <TableBody>
-                        { list }
-                        </TableBody>
-                    </Table>
-                    </TableContainer>
-            */}
-
             </div>
             </div>
                 {/* <div className="col-md-2"></div> */}

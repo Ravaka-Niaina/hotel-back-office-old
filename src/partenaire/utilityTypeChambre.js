@@ -2,6 +2,17 @@ import { Checkbox } from "@mui/material";
 
 import FormControlLabel from '@mui/material/FormControlLabel';
 
+export function Preview(props){
+    let list = [];
+    console.log(props.preview.length);
+    for(let i = 0; i < props.preview.length; i++){
+      list.push(
+        <img style={{maxWidth:'300px', maxHeight: '200px', width: 'auto', height: 'auto', margin: '2px 2px', padding: '0 0'}} src={props.preview[i]} />
+      );
+    }
+    return list;
+  }
+
 export const FileInput = ({value, handlePhotoChange}) => {
     return(
         <div>
@@ -11,7 +22,8 @@ export const FileInput = ({value, handlePhotoChange}) => {
             style={{display: 'none'}}
             type="file"
             accept="image/*"
-            onChange={(e) => handlePhotoChange()}
+            multiple="multiple"
+            onChange={(e) => handlePhotoChange(e)}
             />
         </label>
         </div>
