@@ -107,24 +107,7 @@ export default class InsertPromotion extends React.Component {
  <form onSubmit={this.handleSubmit}>
 <h4 className='entete'>Ajouter une nouvelle promotion</h4>
   <div className="block1">
-<h5>Détails de la promotion</h5>
-   <div className="form-group" style={{marginTop:"20px"}}>
-<label>Nom de la promotion : </label>
-
-<TextField 
-id="outlined-basic" 
-label=""
-variant="outlined"
-className="form-control" 
-style={{width:"400px",height:'20px'}}
-size="small"
-type="text" 
-name="nom" 
-onChange={(e) => this.handleInputChange(e, "nom")} 
-style={{marginTop:"15px"}}
-/>
-   </div>
-
+  <h5>Détails de la promotion</h5>
    <div className="form-group" style={{marginTop:"15px"}}>
 <label>
 À quels plans tarifaires cette promotion s'appliquera-t-elle ?
@@ -162,7 +145,7 @@ Quelles chambres ?
      
   </div>
 
-<hr style={{width:'92%'}}></hr>
+<hr style={{width:'95%'}}></hr>
 
   <div className="form-group" style={{marginTop:"15px"}}>
 <label>
@@ -356,7 +339,27 @@ onChange={(e) => this.handleInputChange(e, "avril")}
   </div>
 
   </div>
-          
+
+  <div className="block3">
+   <div className="form-group" style={{}}>
+<h5>Nom de la promotion </h5>
+<label>
+Comment voulez-vous nommer cette promotion ?
+</label>
+<TextField 
+id="outlined-basic" 
+label=""
+variant="outlined"
+className="form-control" 
+style={{width:"400px",height:'20px'}}
+size="small"
+type="text" 
+name="nom" 
+onChange={(e) => this.handleInputChange(e, "nom")} 
+style={{marginTop:"15px"}}
+/>
+   </div>     
+   </div>     
     
   <div className="pied" style={{marginTop:'25px'}}>   
    <div class="bouton-aligne">  
