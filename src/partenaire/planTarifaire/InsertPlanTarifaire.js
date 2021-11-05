@@ -76,7 +76,7 @@ function InsertPlanTarifaire(){
     function insert(e){
         const current = utility.getPlan(planTarifaire);
         console.log(current);
-        callAPI('post', '/planTarifaire/insert', current, tryRedirect);
+        callAPI('post', '/tarif/insert', current, tryRedirect);
     }
 
     return(
