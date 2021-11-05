@@ -20,6 +20,7 @@ import Calendrier from "./partenaire/Calendrier/Calendrier";
 import  PromotionList  from "./promotion/promotionList.js";
 import  InsertPromotion  from "./promotion/insertPromotion.js";
 import  tarifList  from "./promotion/getTarifs.js";
+import Global from "./politique/global.js";
 
 function App() {
   return (
@@ -42,11 +43,12 @@ function App() {
         <Route path="/tarif/details/:_id/" exact component={DetailsTarif} />
         
         <Route path="/chambre" exact component={InsertChambre} />
+        <Route path="/politique" exact component={Global} />
 
       </Router>
     </div>
   );
 }
 
-
+//push heroku
 export default App;
