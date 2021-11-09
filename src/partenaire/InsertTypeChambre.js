@@ -200,11 +200,10 @@ function InsertTypeCHambre(){
     <div> 
         <Navbar/>
         <div className="container">
-          <div className="row">
-            <div className="col-md-3"></div>
-              <div className="col-md-9">
+          <div className="">
+              <div className="">
               <div className="jumbotron" 
-                style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)',marginTop:'-60px'}}>
+                style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)'}}>
                 <h1 className="text-center" id='title1'>Ajouter Type chambre</h1>
                 <hr></hr>
                 <CustomError errors={state.errors} />
@@ -292,7 +291,6 @@ function InsertTypeCHambre(){
                 </form>
               </div>
             </div>
-            {/* <div className="col-md-3"></div> */}
           </div>
       </div>
     </div>

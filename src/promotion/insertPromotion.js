@@ -12,6 +12,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import "./promotion.css";
 import InputAdornment from '@mui/material/InputAdornment';
 
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormLabel from '@mui/material/FormLabel';
+import { withStyles } from "@material-ui/core/styles";
+
 
 export default class InsertPromotion extends React.Component {
   // state = {
@@ -23,6 +28,8 @@ export default class InsertPromotion extends React.Component {
     this.state = {
       typeChambres: [],
       tarifs: [],
+      HideShowP: false,
+      HideShowE: false,
         promotion: {
             nom: '',
             tarif: '',
@@ -44,6 +51,7 @@ export default class InsertPromotion extends React.Component {
             fevrier: '',
             mars: '',
             avril: '',
+            sejourMin:''
 
 
         },
@@ -93,6 +101,7 @@ export default class InsertPromotion extends React.Component {
       .then(res => {
         console.log(res);
         console.log(res.data);
+          alert('success message ...');
       })
   }
 
@@ -151,6 +160,29 @@ Quelles chambres ?
 <label>
 Quelle remise voulez-vous offrir ?
 </label>
+
+<FormControl component="fieldset">
+  <FormLabel component="legend"></FormLabel>
+  <RadioGroup
+    aria-label=""
+    defaultValue=""
+    name="radio-buttons-group"
+  >
+    <FormControlLabel 
+    value="female" 
+    control={<Radio />} 
+    label={<p id='label'>Pourcentage</p>} 
+    onClick={() => this.setState({HideShowE :false,HideShowP :true})}/>
+    <FormControlLabel 
+    value="male" 
+    control={<Radio />} 
+    label={<p id='label'>Euro</p>} 
+    onClick={() => this.setState({HideShowP :false,HideShowE :true})}/>
+  </RadioGroup>
+</FormControl>
+
+{
+this.state.HideShowP ?
 <TextField 
 id="outlined-basic" 
 label="" 
@@ -167,9 +199,11 @@ type="number"
 name="remisePourcentage" 
 onChange={(e) => this.handleInputChange(e, "remisePourcentage")}
 />
+: null
+}
 
-<p style={{marginTop:'13px',marginLeft:'30px'}}><strong>OU</strong></p>
-
+{
+this.state.HideShowE ?
 <TextField 
 id="outlined-basic" 
 label="" 
@@ -186,6 +220,9 @@ type="number"
 name="remiseEuro" 
 onChange={(e) => this.handleInputChange(e, "remiseEuro")}
 />
+: null
+}
+
   </div>
   </div>
   <div className='block2' style={{marginTop:"30px"}}>
@@ -219,6 +256,24 @@ size="small"
 />
    </p>
   </div>
+
+   <div className="form-group" style={{marginTop:"30px"}}>
+<label>
+Sejour minimum
+</label>
+<TextField 
+id="outlined-basic" 
+label=""
+variant="outlined"
+className="form-control" 
+style={{width:"400px",height:'20px'}}
+size="small"
+type="text" 
+name="sejourMin" 
+onChange={(e) => this.handleInputChange(e, "sejourMin")} 
+style={{marginTop:"15px"}}
+/>
+   </div>
   
   <div className="form-group" style={{marginTop:"40px"}}>
 <label>
@@ -351,7 +406,7 @@ id="outlined-basic"
 label=""
 variant="outlined"
 className="form-control" 
-style={{width:"400px",height:'20px'}}
+style={{width:"400px"}}
 size="small"
 type="text" 
 name="nom" 

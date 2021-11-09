@@ -76,8 +76,7 @@ function InsertTarif(){
         <div className="container">
             <Navbar currentPage={1}/>
             <div className="row">
-                <div className="col-md-3"></div>
-                    <div className="col-md-9">
+                    <div className="col-lg-12">
                         <div className="jumbotron" 
                             style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)',marginTop:'-60px'}}>
                             <h1 className="text-center" id='title1'>Ajouter plan tarifaire</h1>
@@ -232,8 +231,13 @@ function InsertTarif(){
                                     </div>
                                 </Box>
                                 <div style={{marginTop:'50px'}}>
-                                    <Button variant="contained" color="success" onClick={(e) => insert(e)}>
-                                        Créer
+                                    <Button 
+                                    variant="contained" 
+                                    color="success" 
+                                    onClick={(e) => insert(e)}
+                                    style={{textDecoration:'none'}}
+                                    >
+                                <span style={{color:'white'}}>Créer</span>
                                     </Button>
                                 </div>
                             </form>

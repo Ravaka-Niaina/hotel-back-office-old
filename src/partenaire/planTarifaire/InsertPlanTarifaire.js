@@ -13,9 +13,15 @@ import Button from '@mui/material/Button';
 import React from 'react'
 import callAPI from '../../utility';
 import FormGroup from '@mui/material/FormGroup';
+import { withStyles } from "@material-ui/core/styles";
 
 
 const utility = require('./utility.js');
+const styles = {
+  someTextField: {
+    minHeight: 420
+  }
+};
 
 
 
@@ -85,7 +91,7 @@ function InsertPlanTarifaire(){
                 <div className="col-md-3"></div>
                     <div className="col-md-9">
                         <div className="jumbotron" 
-                            style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)',marginTop:'-60px'}}>
+                            style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)'}}>
                             <h1 className="text-center" id='title1'>Ajouter plan tarifaire</h1>
                             <hr></hr>
                             <CustomError errors={errors} />
@@ -238,8 +244,12 @@ function InsertPlanTarifaire(){
                                     </div>
                                 </Box>
                                 <div style={{marginTop:'50px'}}>
-                                    <Button variant="contained" color="success" onClick={(e) => insert(e)}>
-                                        Créer
+                                    <Button 
+                                    variant="contained" 
+                                    color="" 
+                                    onClick={(e) => insert(e)}
+                                    style={{textDecoration:'none'}}>
+                                    <span style={{color:'white'}}>Créer</span>     
                                     </Button>
                                 </div>
                             </form>

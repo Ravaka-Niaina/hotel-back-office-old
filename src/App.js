@@ -21,11 +21,18 @@ import  PromotionList  from "./promotion/promotionList.js";
 import  InsertPromotion  from "./promotion/insertPromotion.js";
 import  tarifList  from "./promotion/getTarifs.js";
 import Global from "./politique/global.js";
+import  searchTypeChambre  from "./partenaire/searchTypeChambre.js";
+import  guest  from "./partenaire/guest.js";
+import  hideShow  from "./hideShow.js";
+
 
 function App() {
   return (
     <div className="App">
       <Router>
+        <Route path="/TypeChambre/search" exact component={searchTypeChambre} />
+        <Route path="/guest" exact component={guest} />
+        <Route path="/hideShow" exact component={hideShow} />
         <Route path="/promotion" exact component={PromotionList} />
         <Route path="/promotion/create" exact component={InsertPromotion} />
         <Route path="/" exact component={home} />
