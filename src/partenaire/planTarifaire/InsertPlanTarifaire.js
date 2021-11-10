@@ -56,7 +56,6 @@ function InsertPlanTarifaire(){
         current.chambresAtrb = res.list;
         current.politiqueAnnulAtrb = politique;
         setPlanTarifaire(current);
-        console.log(current);
     }
 
     useEffect(() => {

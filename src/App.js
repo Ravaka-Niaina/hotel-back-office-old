@@ -44,6 +44,7 @@ function App() {
         
         <Route path="/chambre" exact component={InsertChambre} />
         <Route path="/politique" exact component={Global} />
+        <Route path="/calendrier" exact component={Calendrier} />
 
       </Router>
     </div>
