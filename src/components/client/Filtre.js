@@ -204,14 +204,14 @@ class Filtre extends React.Component{
         this.setResult = this.setResult.bind(this);
     }
     setResult(res){
-        let currentState = JSON.parse(JSON.stringify(this.state));
-        currentState.result = res.list;
-        console.log(currentState);
-        this.setState(currentState);
+        let currentState = JSON.parse(JSON.stringify(this.props.context.state));
+        currentState.listTypeChambre = res.list;
+        this.props.context.setState(currentState);
+        console.log(this.propos.context.state);
     }
     applyFilter(){
         console.log('filtre en cours...');
-        callAPI('post', '/typeChambre/filtre/resultat', {filtres: this.state.filtres}, this.setResult);
+        callAPI('post', '/typeChambre/', {filtres: this.state.filtres}, this.setResult);
     }
 
     handleFiltreChange(event){

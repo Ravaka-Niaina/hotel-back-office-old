@@ -5,6 +5,21 @@ import {Link} from 'react-router-dom'
 import { NorthWest } from '@mui/icons-material';
 import Filtre from './Filtre';
 
+function ListConditionAnnulation(props){
+    let services = props.politiqueAnnulAtrb.map(condition =>{
+        return (
+            <div class="row">
+                <span style={{fontSize:'12px' , color : 'green'}}>
+                    <i class="fa fa-check" aria-hidden="true">
+                        &nbsp;&nbsp;{condition.nom} 
+                    </i>
+                </span>
+            </div>
+        );
+    }) ;
+    return services;
+}
+
 function ListServiceTarif(props){
     let services = props.services.map(service =>{
         return (
@@ -24,7 +39,7 @@ function Equipements(props){
         for(let i = 0; i < props.equipements.length; i++){
             list.push(
                 <li style={ {marginLeft : 10 , listStyle : 'none', width: '150px'} }>
-                <i class="fa fa-wifi"></i>&nbsp;{props.equipements[i]}
+                <i class="fa fa-wifi"></i>&nbsp;{props.equipements[i].nom}
                 </li>
             );
         }
@@ -35,16 +50,6 @@ function Equipements(props){
 
 function ListTarif(props){
     function addReservation(e ,id, nom){
-        /*
-        axios({
-            method: 'post',
-            url: process.env.REACT_APP_BACK_URL + "/reservation/insert",
-            withCredentials: true,
-            data: {idTarif : id , dateDebut : "2021-11-23" , datefin : "2021-11-29" }
-        })
-        .then(res => {console.log("mety")})
-        .catch(err => console.log(err));
-        */
         let currentState = JSON.parse(JSON.stringify(props.context.state));
         let tarifExists = false;
         for(let i = 0; i < currentState.reservation.length; i++){
@@ -59,16 +64,6 @@ function ListTarif(props){
         }
         props.context.setState(currentState);
         console.log(props.context.state.reservation);
-        /*
-        axios({                                                     // webService
-            method: 'get',                                           //methode get       
-            url: process.env.REACT_APP_BACK_URL + "/reservation/encours",     //miants ilai url ani amin back
-            withCredentials: true                                      //type boolean 
-        })                  
-        .then(res => {                                                  
-            this.setListTypeChambre(res.data)})
-        .catch(err => console.log(err));
-        */
     }
     let tarifs = props.tarifs.map(tarif => {
              return (
@@ -86,21 +81,24 @@ function ListTarif(props){
                                                 <u>{tarif.nom}</u>
                                             </strong><br/>
 
-                                            {tarif.conditionsAnnulation !== "" 
+                                            {/*
+                                                {tarif.politiqueAnnulAtrb !== "" 
                                                 ?   <span style={{fontSize:'12px' , color : 'green'}}>
                                                         <i class="fa fa-check" aria-hidden="true">
-                                                            &nbsp;&nbsp;{tarif.conditionsAnnulation} 
+                                                            &nbsp;&nbsp;{tarif.politiqueAnnulAtrb} 
                                                         </i>
                                                     </span> : ""
-                                            } <br/>
-
-                                            <ListServiceTarif services={tarif.services} />
+                                                } <br/>
+                                            */}
+                                            
+                                            <ListConditionAnnulation politiqueAnnulAtrb={tarif.politiqueAnnulAtrb} />
+                                            {/*<ListServiceTarif services={tarif.services} />*/}
                                         </div>
 
                                         </div>
                                         
                                         <div class="col"> 
-                                            <strong style={{fontSize:'20px'}}>&nbsp;{tarif.prixParJour} 
+                                            <strong style={{fontSize:'20px'}}>&nbsp;{tarif.prix + " "}
                                             </strong><span style={{fontSize:'14px'}}>Per Night</span><br/>
                                             <span style={{fontSize:'10px'}} >including Taxes & Fees</span>
                                         </div>
@@ -129,17 +127,16 @@ class DChambre extends React.Component{
         super(props);
     }
 
-    setListTypeChambre(data){
+    setListTypeChambre(data){   
         let currentState = JSON.parse(JSON.stringify(this.props.context.state));  //mamadika donne ho lasa json
-        console.log(data);
         currentState.listTypeChambre = data.list;                                         // lasa currentState ilai data (this.state) ilai data
         this.props.context.setState(currentState);  
-        console.log(currentState);                 //modifier ilai state ho lasa donnee json
+        console.log(this.props.context.state);
     }
 
     componentDidMount(){
         axios({                                                     // webService
-            method: 'get',                                           //methode get       
+            method: 'post',                                           //methode get       
             url: process.env.REACT_APP_BACK_URL + "/typeChambre",     //miants ilai url ani amin back
             withCredentials: true                                      //type boolean 
         })                  
@@ -162,7 +159,7 @@ class DChambre extends React.Component{
                 <div class="Chambre1">
                 <div class="row mb-4">
                     <div className="col">
-                        <img style={{width:'300px', height: '150px'}} src={ process.env.REACT_APP_BACK_URL + "/" + typeChambre.photo} />
+                        <img style={{width:'300px', height: '150px'}} src={ process.env.REACT_APP_BACK_URL + "/" + typeChambre.photo[0]} />
                     </div>
                     <div class="col">
                       <span style={{fontSize:'30px'}}> {typeChambre.nom} </span><br/>
@@ -198,7 +195,7 @@ class DChambre extends React.Component{
         }); 
         return (
             <div>
-                <Filtre />
+                <Filtre context={this.props.context} />
                 <hr></hr>
                  {listChambre}
             </div>
