@@ -27,7 +27,7 @@ function List(props){
             >
               <TableCell align="center">{tarif.nom}</TableCell>
               <TableCell align="center">
-                <Link to={'/planTarifaire/details/' + tarif._id}>
+                <Link to={'/tarif/details/' + tarif._id}>
                     <button className="btn"
                         style={{textDecoration:'none',backgroundColor:'	#2F4050',color:'white'}}>
                         Voir détails
@@ -71,7 +71,7 @@ function ListPlanTarifaire(){
                 <div className='row'>
                     <div className='col-md-2'></div>
                         <div className='col-md-10'>
-                            <Link to={'/planTarifaire/insert'}>
+                            <Link to={'/tarif/insert'}>
                                 <Button variant="contained" endIcon={<AddIcon />}>
                                     Ajouter Plan tarifaire
                                 </Button>

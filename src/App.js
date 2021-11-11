@@ -55,6 +55,7 @@ function App() {
         
         <Route path="/chambre" exact component={InsertChambre} />
         <Route path="/politique" exact component={Global} />
+        <Route path="/calendrier" exact component={Calendrier} />
 
         <Route path="/front_client" exact component={front_client} />
         <Route path="/devis" exact component={Devis} />
