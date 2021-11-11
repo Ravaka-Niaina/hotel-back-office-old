@@ -24,6 +24,10 @@ import Global from "./politique/global.js";
 import  searchTypeChambre  from "./partenaire/searchTypeChambre.js";
 import  guest  from "./partenaire/guest.js";
 import  hideShow  from "./hideShow.js";
+import  front_client  from "./front_client/front_client.js";
+import  Devis  from "./front_client/devis";
+import { useTranslation } from "react-i18next";
+import Lang from "./front_client/Lang";
 
 
 function App() {
@@ -51,6 +55,10 @@ function App() {
         
         <Route path="/chambre" exact component={InsertChambre} />
         <Route path="/politique" exact component={Global} />
+
+        <Route path="/front_client" exact component={front_client} />
+        <Route path="/devis" exact component={Devis} />
+        <Route path="/lang" exact component={Lang} />
 
       </Router>
     </div>

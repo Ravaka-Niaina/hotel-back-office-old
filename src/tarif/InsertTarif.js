@@ -76,7 +76,7 @@ function InsertTarif(){
         <div className="container">
             <Navbar currentPage={1}/>
             <div className="row">
-                    <div className="col-lg-12">
+                    <div className="">
                         <div className="jumbotron" 
                             style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)',marginTop:'-60px'}}>
                             <h1 className="text-center" id='title1'>Ajouter plan tarifaire</h1>
@@ -85,34 +85,46 @@ function InsertTarif(){
                             <form className="needs-validation">
                                 <Box>
                                     <div style={{marginTop:'40px',display:'inline'}}>
-                                        <label style={{marginRight: '10px'}}>Nom: </label>
                                         <TextField 
                                             id="standard-basic"
                                             variant="standard"
                                             style={{width: '300px'}}
                                             type="text"
+                                            label={
+                                            <p style={{color:'black',fontWeight:'bold'}}>
+                                                Nom
+                                            </p>
+                                                 }
                                             value={planTarifaire.nom}
                                             onChange={(e) => utility.handleInputChange1(planTarifaire, setPlanTarifaire, e, "nom")}
                                         />
                                     </div>
                                     <div style={{marginTop:'30px'}}>
-                                        <label style={{marginRight: '10px'}}>Déscription: </label>
+                                        <label style={{textDecoration: 'underline'}} id='bigLabel'>Déscription: </label>
+                                        <br/>
                                         <TextField 
-                                            id="standard-basic"
-                                            variant="standard"
-                                            style={{width: '300px'}}
+                                            id="outlined-basic"
+                                            variant="outlined"
+                                            multiline
+                                            rows={2}
+                                            rowsMax={4}
+                                            style={{
+                                            width:'100%',
+                                            height:'50px',
+                                            marginTop:'15px'
+                                                  }}
                                             type="text"
                                             value={planTarifaire.description}
                                             onChange={(e) => utility.handleInputChange1(planTarifaire, setPlanTarifaire, e, "description")}
                                         />
                                     </div>
-                                    <div style={{marginTop:'30px'}}>
+                                    <div style={{marginTop:'50px'}}>
                                         <div>
-                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Date de réservation: </label>
+                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} id='bigLabel'>Date de réservation: </label>
                                         </div>
-                                            <div className="row">
+                                            <div className="row" style={{marginTop:'10px'}}>
                                                 <div className="col">
-                                                    <label style={{marginRight: '10px'}}>Début: </label>
+                                                    <label style={{marginRight: '10px'}} id='litleLabel'>Début: </label>
                                                     <TextField 
                                                         id="standard-basic"
                                                         variant="standard"
@@ -123,7 +135,7 @@ function InsertTarif(){
                                                     />
                                                 </div>
                                                 <div className="col">
-                                                    <label style={{marginRight: '10px'}}>Fin: </label>
+                                                    <label style={{marginRight: '10px'}} id='litleLabel'>Fin: </label>
                                                     <TextField 
                                                         id="standard-basic"
                                                         variant="standard"
@@ -137,11 +149,11 @@ function InsertTarif(){
                                     </div>
                                     <div style={{marginTop:'30px'}}>
                                         <div>
-                                            <label className="row form-label-mt4" style={{textDecoration: 'underline'}} >Date de séjour: </label>
+                                            <label className="row form-label-mt4" style={{textDecoration: 'underline'}} id='bigLabel'>Date de séjour: </label>
                                         </div>
-                                        <div className="row">
+                                        <div className="row" style={{marginTop:'10px'}}>
                                             <div className="col">
-                                                <label style={{marginRight: '10px'}}>Début: </label>
+                                                <label style={{marginRight: '10px'}} id='litleLabel'>Début: </label>
                                                 <TextField 
                                                     id="standard-basic"
                                                     variant="standard"
@@ -152,7 +164,7 @@ function InsertTarif(){
                                                 />
                                             </div>
                                             <div className="col">
-                                                <label style={{marginRight: '10px'}}>Fin: </label>
+                                                <label style={{marginRight: '10px'}} id='litleLabel'>Fin: </label>
                                                 <TextField 
                                                     id="standard-basic"
                                                     variant="standard"
@@ -166,7 +178,7 @@ function InsertTarif(){
                                     </div>
                                     <div style={{marginTop:'30px'}}>
                                         <div>
-                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Lead day: </label>
+                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} id='bigLabel'>Lead day: </label>
                                         </div>
                                         <div>
                                             <FormGroup>
@@ -180,7 +192,7 @@ function InsertTarif(){
                                     </div>
                                     <div style={{marginTop:'30px'}}>
                                         <div>
-                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Chambres attribuées: </label>
+                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} id='bigLabel'>Chambres attribuées: </label>
                                         </div>
                                         <div>
                                             <utility.ChambresAtrb 
@@ -192,26 +204,26 @@ function InsertTarif(){
                                     </div>
                                     <div style={{marginTop:'30px'}}>
                                         <div>
-                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Lead hour: </label>
+                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} id='bigLabel'>Lead hour: </label>
                                         </div>
-                                        <div className="row">
-                                            <div className="col">
-                                                <label style={{marginRight: '10px'}}>Début: </label>
+                                        <div className="" style={{marginTop:'10px'}}>
+                                            <div id="column">
+                                                <label style={{marginRight: '10px'}} id='litleLabel'>Début: </label>
                                                 <TextField
                                                     id="standard-basic"
                                                     variant="standard"
-                                                    style={{width: '200px'}}
+                                                    style={{width: '50px'}}
                                                     type="time"
                                                     value={planTarifaire.LeadHour.min}
                                                     onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "LeadHour", "min")}
                                                 />
                                             </div>
-                                            <div className="col">
-                                                <label style={{marginRight: '10px'}}>Fin: </label>
+                                            <div id="column" className='col2'>
+                                                <label style={{marginRight: '10px'}} id='litleLabel'>Fin: </label>
                                                 <TextField
                                                     id="standard-basic"
                                                     variant="standard"
-                                                    style={{width: '200px'}}
+                                                    style={{width: '50px'}}
                                                     type="time"
                                                     value={planTarifaire.LeadHour.max}
                                                     onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "LeadHour", "max")}
@@ -221,7 +233,7 @@ function InsertTarif(){
                                     </div>
                                     <div style={{marginTop:'30px'}}>
                                         <div>
-                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Politiques d'annulation: </label>
+                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} id='bigLabel'>Politiques d'annulation: </label>
                                         </div>
                                         <utility.PolitiqueAnnulAtrb  
                                             politiqueAnnulAtrb={planTarifaire.politiqueAnnulAtrb}

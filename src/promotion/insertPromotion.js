@@ -4,6 +4,7 @@ import Select from 'react-select'
 import {Link} from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -414,7 +415,7 @@ onChange={(e) => this.handleInputChange(e, "nom")}
 style={{marginTop:"15px"}}
 />
    </div>     
-   </div>     
+   </div>    
     
   <div className="pied" style={{marginTop:'25px'}}>   
    <div class="bouton-aligne">  
