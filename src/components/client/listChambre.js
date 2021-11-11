@@ -5,6 +5,7 @@ import {Link} from 'react-router-dom'
 import { NorthWest } from '@mui/icons-material';
 import Filtre from './Filtre';
 import TextField from '@mui/material/TextField';
+import callAPI from '../../utility';
 
 function ListConditionAnnulation(props){
     let services = props.politiqueAnnulAtrb.map(condition =>{
@@ -49,22 +50,41 @@ function Equipements(props){
     return list;
 }
 
+function getNDigits(number, digit){
+    digit = digit + '';
+    const remain = number - digit.length;
+    for(let i = 0; i < remain; i++){
+        digit = "0" + digit;
+    }
+    return digit;
+}
+
+function getDate(date){
+    date = new Date(date);
+    let year = date.getFullYear();
+    let month = getNDigits(2, date.getMonth() + 1);
+    let day = getNDigits(2, date.getDate());
+    date = year + '-' + month + '-' + day;
+    return date;
+}
+
 function ListTarif(props){
     function addReservation(e ,id, nom){
-        let currentState = JSON.parse(JSON.stringify(props.context.state));
-        let tarifExists = false;
-        for(let i = 0; i < currentState.reservation.length; i++){
-            if(currentState.reservation[i].idTarif == id){
-                currentState.reservation[i].nombre++;
-                tarifExists = true;
-                break;
+        axios({
+            method: 'post',      
+            url: process.env.REACT_APP_BACK_URL + '/reservation/insert',
+            withCredentials: true,
+            data: {
+                reservation: {
+                    idTarif: id, 
+                    dateSejour: props.context.state.dateSejour,
+                    dateReservation: getDate(Date.now())
+                }
             }
-        }
-        if(!tarifExists){
-            currentState.reservation.push({idTarif : id , nom: nom, dateDebut : "2021-11-23" , datefin : "2021-11-29", nombre: 1}); 
-        }
-        props.context.setState(currentState);
-        console.log(props.context.state.reservation);
+        })
+        .then(res => {                                                  
+            props.context.setReservationEnCours(res.data)})
+        .catch(err => console.log(err));
     }
     let tarifs = props.tarifs.map(tarif => {
              return (
@@ -185,7 +205,7 @@ class DChambre extends React.Component{
                         </ul>
                     </div>
                     <div class="col">
-                        <ListTarif context={this.props.context} tarifs={typeChambre.tarifs}/>
+                        <ListTarif context={this.props.context} tarifs={typeChambre.tarifs} />
                     </div>
                     <div class="col"></div>
                 </div>  

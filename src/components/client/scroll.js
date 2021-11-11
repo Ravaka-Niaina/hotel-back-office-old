@@ -5,6 +5,7 @@ import Fact from './fact'
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import { useCookies } from 'react-cookie';
+import callAPI from '../../utility';
 import './Css.css'
 
 function TestCookie(){
@@ -23,11 +24,25 @@ class Scroll extends React.Component{
         super(props);
         this.state = {
             guests: {nbEnfant: 0, nbAdulte: 0},
+            dateSejour: {debut: "", fin: ""},
             listTypeChambre: [],
-            reservation: []
+            reservation: [],
+            reservationEnCours: null
         }
-
+        this.setReservationEnCours = this.setReservationEnCours.bind(this);
     }
+
+    setReservationEnCours(res){
+        let currentState = JSON.parse(JSON.stringify(this.state));
+        currentState.reservationEnCours = res.reservation;
+        this.setState(currentState);
+        console.log(currentState);
+    }
+
+    validerReservation(){
+        callAPI('post', '/reservation/apply', {_id: this.state.reservationEnCours._id}, this.setReservationEnCours);
+    }
+
     incrementReservation(){
         console.log('STATE ITANY-------------');
         console.log(this.state);

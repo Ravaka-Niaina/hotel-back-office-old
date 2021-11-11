@@ -281,14 +281,28 @@ class Filtre extends React.Component{
         currentState.guests[fieldName] = e.target.value;
         this.props.context.setState(currentState);
     }
+    changeDateSejour(e, fieldName){
+        let currentState = JSON.parse(JSON.stringify(this.props.context.state));
+        currentState.dateSejour[fieldName] = e.target.value;
+        this.props.context.setState(currentState);
+    }
 
     render(){
         return (
             <div>
-                <TextField id="standard-basic" label="Adulte" variant="standard" type="number"
-                    style={{width:'40%'}} value={this.props.context.state.guests.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")}/>
-                <TextField id="standard-basic" label="Enfant" variant="standard" type="number"
-                    style={{width:'40%'}} value={this.props.context.state.guests.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")}/>
+                <p>
+                    <TextField id="standard-basic" label="Adulte" variant="standard" type="number"
+                        style={{width:'40%'}} value={this.props.context.state.guests.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")}/>
+                    <TextField id="standard-basic" label="Enfant" variant="standard" type="number"
+                        style={{width:'40%'}} value={this.props.context.state.guests.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")}/>
+                </p>
+                <p>
+                    <TextField id="standard-basic" label="Debut sejour" variant="standard" type="date"
+                        style={{width:'40%'}} value={this.props.context.state.dateSejour.debut} onChange={(e) => this.changeDateSejour(e, "debut")}/>
+                    <TextField id="standard-basic" label="Fin sejour" variant="standard" type="date"
+                        style={{width:'40%'}} value={this.props.context.state.dateSejour.fin} onChange={(e) => this.changeDateSejour(e, "fin")}/>
+                </p>
+                
                 <div className="form-content">
                     <form>
                         <FormGroup>
@@ -340,7 +354,7 @@ class Filtre extends React.Component{
                         </FormGroup>
                     </form>
                 </div>
-            </div>    
+            </div>
         );
     }
 }
