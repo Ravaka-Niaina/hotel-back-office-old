@@ -1,3 +1,4 @@
+
 // import './App.css';
 import  Login  from "./components/login/login";
 import  register  from "./components/login/register";
@@ -21,7 +22,6 @@ import  PromotionList  from "./promotion/promotionList.js";
 import  InsertPromotion  from "./promotion/insertPromotion.js";
 import  tarifList  from "./promotion/getTarifs.js";
 import Global from "./politique/global.js";
-import Cookie from './components/client/Cookies.js';
 
 function App() {
   return (
@@ -45,7 +45,7 @@ function App() {
         
         <Route path="/chambre" exact component={InsertChambre} />
         <Route path="/politique" exact component={Global} />
-        <Route path="/Cookie" exact component={Cookie} />
+        <Route path="/calendrier" exact component={Calendrier} />
 
       </Router>
     </div>

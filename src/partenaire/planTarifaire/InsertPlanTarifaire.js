@@ -1,3 +1,4 @@
+
 import TextField from '@mui/material/TextField';
 //import TimePicker from '@mui/lab/TimePicker';
 //import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
@@ -56,7 +57,6 @@ function InsertPlanTarifaire(){
         current.chambresAtrb = res.list;
         current.politiqueAnnulAtrb = politique;
         setPlanTarifaire(current);
-        console.log(current);
     }
 
     useEffect(() => {
@@ -76,7 +76,7 @@ function InsertPlanTarifaire(){
     function insert(e){
         const current = utility.getPlan(planTarifaire);
         console.log(current);
-        callAPI('post', '/planTarifaire/insert', current, tryRedirect);
+        callAPI('post', '/tarif/insert', current, tryRedirect);
     }
 
     return(

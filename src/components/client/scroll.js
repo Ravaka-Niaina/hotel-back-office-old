@@ -1,3 +1,4 @@
+
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DChambre from './listChambre'
@@ -5,12 +6,14 @@ import Fact from './fact'
 import { instanceOf } from 'prop-types';
 import { withCookies, Cookies } from 'react-cookie';
 import { useCookies } from 'react-cookie';
+import callAPI from '../../utility';
 import './Css.css'
 
 function TestCookie(){
     const [cookies, setCookie] = useCookies(['name']);
     let pp = JSON.stringify({user: 'Norck', play: 999, totalPP: 1000, topPlays:['ascension to heaven', 'big black', 'atama no taisou']});
     setCookie('pp', pp, '/');
+    console.log(cookies.pp);
     return(
         null
     );
@@ -21,27 +24,25 @@ class Scroll extends React.Component{
     constructor(props){
         super(props);
         this.state = {
+            guests: {nbEnfant: 0, nbAdulte: 0},
+            dateSejour: {debut: "", fin: ""},
             listTypeChambre: [],
             reservation: [],
-            reserver : {
-                    idAuth : "1",
-                    dateReservation : "",
-                    etat : 1,
-                    datePaiement : null,
-                    dateSejour : 
-                        {
-                            dateDebut : "",
-                            dateFin : ""
-                        }
-                    ,
-                    reservation : []
-                }
+            reservationEnCours: null
         }
-
+        this.setReservationEnCours = this.setReservationEnCours.bind(this);
     }
-    componentDidMount(){
-        
-    }   
+
+    setReservationEnCours(res){
+        let currentState = JSON.parse(JSON.stringify(this.state));
+        currentState.reservationEnCours = res.reservation;
+        this.setState(currentState);
+        console.log(currentState);
+    }
+
+    validerReservation(){
+        callAPI('post', '/reservation/apply', {_id: this.state.reservationEnCours._id}, this.setReservationEnCours);
+    }
 
     incrementReservation(){
         console.log('STATE ITANY-------------');
@@ -57,12 +58,11 @@ class Scroll extends React.Component{
             <div>
                 <TestCookie />
                 <div className="scroll-bg">
-                    <div className="row">
+                    <div class="row">
                         <div className="col">
                             <div className="scroll-div">
                                 <div className="scroll-object">
                                     <DChambre context = {this} />
-                                    
                                 </div>
                             </div>
                         </div>

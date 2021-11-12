@@ -1,3 +1,4 @@
+
 import React  from "react";
 import MenuItem from '@mui/material/MenuItem';
 
@@ -13,6 +14,7 @@ import Divider from '@mui/material/Divider';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 import callAPI from '../../utility';
 
@@ -204,14 +206,14 @@ class Filtre extends React.Component{
         this.setResult = this.setResult.bind(this);
     }
     setResult(res){
-        let currentState = JSON.parse(JSON.stringify(this.state));
-        currentState.result = res.list;
-        console.log(currentState);
-        this.setState(currentState);
+        let currentState = JSON.parse(JSON.stringify(this.props.context.state));
+        currentState.listTypeChambre = res.list;
+        this.props.context.setState(currentState);
+        console.log(this.props.context.state);
     }
     applyFilter(){
         console.log('filtre en cours...');
-        callAPI('post', '/typeChambre/filtre/resultat', {filtres: this.state.filtres}, this.setResult);
+        callAPI('post', '/typeChambre/', {filtres: this.state.filtres, guests: this.props.context.state.guests}, this.setResult);
     }
 
     handleFiltreChange(event){
@@ -275,9 +277,33 @@ class Filtre extends React.Component{
         callAPI('get', '/typeChambre/filter', {}, this.setListFiltre);
     }
 
+    changeGuests(e, fieldName){
+        let currentState = JSON.parse(JSON.stringify(this.props.context.state));
+        currentState.guests[fieldName] = e.target.value;
+        this.props.context.setState(currentState);
+    }
+    changeDateSejour(e, fieldName){
+        let currentState = JSON.parse(JSON.stringify(this.props.context.state));
+        currentState.dateSejour[fieldName] = e.target.value;
+        this.props.context.setState(currentState);
+    }
+
     render(){
         return (
             <div>
+                <p>
+                    <TextField id="standard-basic" label="Adulte" variant="standard" type="number"
+                        style={{width:'40%'}} value={this.props.context.state.guests.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")}/>
+                    <TextField id="standard-basic" label="Enfant" variant="standard" type="number"
+                        style={{width:'40%'}} value={this.props.context.state.guests.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")}/>
+                </p>
+                <p>
+                    <TextField id="standard-basic" label="Debut sejour" variant="standard" type="date"
+                        style={{width:'40%'}} value={this.props.context.state.dateSejour.debut} onChange={(e) => this.changeDateSejour(e, "debut")}/>
+                    <TextField id="standard-basic" label="Fin sejour" variant="standard" type="date"
+                        style={{width:'40%'}} value={this.props.context.state.dateSejour.fin} onChange={(e) => this.changeDateSejour(e, "fin")}/>
+                </p>
+                
                 <div className="form-content">
                     <form>
                         <FormGroup>
@@ -322,14 +348,14 @@ class Filtre extends React.Component{
                                 <div>
                                     <ListFiltres filtre={this.state.filtres} handleChange={this.handleChange} handleRadioChange={this.handleRadioChange} />
                                     <div className="apply">
-                                        <strong>32</strong> matching rooms
+                                        <strong>{ this.props.context.state.listTypeChambre.length }</strong> matching rooms
                                         <Button style={{marginLeft: '10px'}} onClick={(e) =>  this.applyFilter()} variant="contained">APPLY</Button>
                                     </div>
                                 </div> : null}
                         </FormGroup>
                     </form>
                 </div>
-            </div>    
+            </div>
         );
     }
 }

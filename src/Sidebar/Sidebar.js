@@ -1,3 +1,4 @@
+
 import './Sidebar.css';
 import React from 'react';
 import HomeIcon from '@mui/icons-material/Home';
@@ -25,11 +26,11 @@ class Sidebar extends React.Component {
               <div id="title" to='/typeChambre'>Chambre Type</div>
             </li>
             </Link>
-            <Link to='/PlanTarifaire' style={{textDecoration:'none'}}>
+            <Link to='/tarif' style={{textDecoration:'none'}}>
             <li className="row">
               {/* <div id="icon"></div> */}
               <div id="icon">{<BedroomParentIcon/>}</div>
-              <div id="title" to='/planTarifaire'>Plan Tarifaire</div>
+              <div id="title" to='/tarif'>Plan Tarifaire</div>
             </li>
             </Link>
             <Link to='/client' style={{textDecoration:'none'}}>
@@ -61,7 +62,7 @@ class Sidebar extends React.Component {
           </ul>
         </div>
       );
-    }
+    
   }
 
   export default Sidebar;
