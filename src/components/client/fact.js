@@ -15,19 +15,19 @@ class Fact extends React.Component{
             }
         )
         return(
-            <div class="row" style={{textAlign:'center'}}>
+            <div classname="row" style={{textAlign:'center'}}>
                 <h1>Your Stay</h1>
-                <div class="row mb-4">
-                    <div class="col">
+                <div className="row mb-4">
+                    <div className="col">
                         <strong> Check in :  </strong>
-                       {reservation}
                         </div>
                     
-                    <div class="col" id="locA">
+                    <div className="col" id="locA">
                         <strong>Check out :</strong>
                            
                     </div>
                 </div>
+                {reservation}
                 <p>TOTAL :</p>    
             </div>
         );

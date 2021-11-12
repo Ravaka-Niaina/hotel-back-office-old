@@ -21,6 +21,7 @@ import  PromotionList  from "./promotion/promotionList.js";
 import  InsertPromotion  from "./promotion/insertPromotion.js";
 import  tarifList  from "./promotion/getTarifs.js";
 import Global from "./politique/global.js";
+import Cookie from './components/client/Cookies.js';
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
         
         <Route path="/chambre" exact component={InsertChambre} />
         <Route path="/politique" exact component={Global} />
+        <Route path="/Cookie" exact component={Cookie} />
 
       </Router>
     </div>

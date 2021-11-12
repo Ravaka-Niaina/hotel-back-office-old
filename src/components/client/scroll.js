@@ -11,7 +11,6 @@ function TestCookie(){
     const [cookies, setCookie] = useCookies(['name']);
     let pp = JSON.stringify({user: 'Norck', play: 999, totalPP: 1000, topPlays:['ascension to heaven', 'big black', 'atama no taisou']});
     setCookie('pp', pp, '/');
-    console.log(cookies.pp);
     return(
         null
     );
@@ -23,10 +22,27 @@ class Scroll extends React.Component{
         super(props);
         this.state = {
             listTypeChambre: [],
-            reservation: []
+            reservation: [],
+            reserver : {
+                    idAuth : "1",
+                    dateReservation : "",
+                    etat : 1,
+                    datePaiement : null,
+                    dateSejour : 
+                        {
+                            dateDebut : "",
+                            dateFin : ""
+                        }
+                    ,
+                    reservation : []
+                }
         }
 
     }
+    componentDidMount(){
+        
+    }   
+
     incrementReservation(){
         console.log('STATE ITANY-------------');
         console.log(this.state);
@@ -41,11 +57,12 @@ class Scroll extends React.Component{
             <div>
                 <TestCookie />
                 <div className="scroll-bg">
-                    <div class="row">
+                    <div className="row">
                         <div className="col">
                             <div className="scroll-div">
                                 <div className="scroll-object">
                                     <DChambre context = {this} />
+                                    
                                 </div>
                             </div>
                         </div>

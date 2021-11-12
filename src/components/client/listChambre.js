@@ -3,13 +3,19 @@ import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Link} from 'react-router-dom'
 import { NorthWest } from '@mui/icons-material';
+import TextField from '@mui/material/TextField';
 import Filtre from './Filtre';
+import {useHistory} from 'react-router-dom';
+
+//importer ilai function rehetra ani anatin ilai utility.js
+const utility = require('./utility.js');   
+
 
 function ListServiceTarif(props){
     let services = props.services.map(service =>{
         return (
-            <div class="row">
-                <span style={{fontSize:'12px'}}><i class="fa fa-desktop" aria-hidden="true"></i>
+            <div classname="row">
+                <span style={{fontSize:'12px'}}><i classname="fa fa-desktop" aria-hidden="true"></i>
                     &nbsp;{service}
                 </span><br/>
             </div>
@@ -24,7 +30,7 @@ function Equipements(props){
         for(let i = 0; i < props.equipements.length; i++){
             list.push(
                 <li style={ {marginLeft : 10 , listStyle : 'none', width: '150px'} }>
-                <i class="fa fa-wifi"></i>&nbsp;{props.equipements[i]}
+                <i className="fa fa-wifi"></i>&nbsp;{props.equipements[i]}
                 </li>
             );
         }
@@ -34,17 +40,26 @@ function Equipements(props){
 }
 
 function ListTarif(props){
+   const history = useHistory();
+   function functionAppel(res){
+       
+       if(res !== null || res.status === 201){
+           console.log(res);
+           history.push("/client");
+       }else{
+        console.log("pas de reponse");
+       }
+        
+    }
+
+    function addReserv(e , idTarifaire , varProps){
+        let current = utility.getReservation(idTarifaire , varProps);
+        utility.callAPI('post', '/reservations/insert', props.context.state.reserver, functionAppel);
+        console.log("tonga");
+    }
+
+    //miincremente valeur 
     function addReservation(e ,id, nom){
-        /*
-        axios({
-            method: 'post',
-            url: process.env.REACT_APP_BACK_URL + "/reservation/insert",
-            withCredentials: true,
-            data: {idTarif : id , dateDebut : "2021-11-23" , datefin : "2021-11-29" }
-        })
-        .then(res => {console.log("mety")})
-        .catch(err => console.log(err));
-        */
         let currentState = JSON.parse(JSON.stringify(props.context.state));
         let tarifExists = false;
         for(let i = 0; i < currentState.reservation.length; i++){
@@ -59,65 +74,52 @@ function ListTarif(props){
         }
         props.context.setState(currentState);
         console.log(props.context.state.reservation);
-        /*
-        axios({                                                     // webService
-            method: 'get',                                           //methode get       
-            url: process.env.REACT_APP_BACK_URL + "/reservation/encours",     //miants ilai url ani amin back
-            withCredentials: true                                      //type boolean 
-        })                  
-        .then(res => {                                                  
-            this.setListTypeChambre(res.data)})
-        .catch(err => console.log(err));
-        */
+    
     }
     let tarifs = props.tarifs.map(tarif => {
              return (
                     <div>
-                        
-                        <div class="row">
-                            <div class="col"></div>
-                            <div class="col" style={{marginTop:'-30px'}} >
-                                <ul style={{marginLeft:'25%'}}>
+                        <div classname="row">
+                            <div className="col" style={{marginTop:'-10px'}} >
+                                <ul style={{marginLeft:'20%'}}>
                                     <li style={ {  listStyle : 'none' , width : '500px',
-                                                    padding :"1px" ,background : 'gainsboro'} }>
+                                                    padding :"1px" ,border : '2px solid gainsboro'} }>
                                         <div className="row mb-4" style={{margin:"10px"}}>
-                                        <div class="col"> 
-                                            <strong style={{fontSize:'13px'}}>
-                                                <u>{tarif.nom}</u>
-                                            </strong><br/>
+                                            <div className="col"> 
+                                                <strong style={{fontSize:'13px'}}>
+                                                    <u>{tarif.nom}</u>
+                                                </strong><br/>
 
-                                            {tarif.conditionsAnnulation !== "" 
-                                                ?   <span style={{fontSize:'12px' , color : 'green'}}>
-                                                        <i class="fa fa-check" aria-hidden="true">
-                                                            &nbsp;&nbsp;{tarif.conditionsAnnulation} 
-                                                        </i>
-                                                    </span> : ""
-                                            } <br/>
+                                                {tarif.conditionsAnnulation !== "" 
+                                                    ?   <span style={{fontSize:'12px' , color : 'green'}}>
+                                                            <i classname="fa fa-check" aria-hidden="true">
+                                                                &nbsp;&nbsp;{tarif.conditionsAnnulation} 
+                                                            </i>
+                                                        </span> : ""
+                                                } <br/>
 
-                                            <ListServiceTarif services={tarif.services} />
-                                        </div>
+                                                <ListServiceTarif services={tarif.services} />
+                                            </div>
 
-                                        </div>
-                                        
-                                        <div class="col"> 
-                                            <strong style={{fontSize:'20px'}}>&nbsp;{tarif.prixParJour} 
-                                            </strong><span style={{fontSize:'14px'}}>Per Night</span><br/>
-                                            <span style={{fontSize:'10px'}} >including Taxes & Fees</span>
-                                        </div>
-                                        <div class="col"> 
-                                            <button className="btn btn-primary btn-sm" 
-                                                style={{marginTop:'7px' , marginLeft:'10px'}} 
-                                                onClick = {(e) => addReservation(e,tarif._id, tarif.nom)}>BOOK NOW
-                                            </button>
+                                            <div className="col"> 
+                                                <strong style={{fontSize:'20px'}}>&nbsp;{tarif.prixParJour} 
+                                                </strong><span style={{fontSize:'14px'}}>Per Night</span><br/>
+                                                <span style={{fontSize:'10px'}} >including Taxes & Fees</span>
+                                            </div>
+                                            <div className="col"> 
+                                                <button className="btn btn-primary btn-sm" 
+                                                    style={{marginTop:'7px' , marginLeft:'10px'}} 
+                                                    onClick = {(e) => addReserv(e,tarif._id,props.context)}>BOOK NOW
+                                                </button>
+                                            </div>
                                         </div>
                                     </li><br/>
                                 
                                 </ul> 
                             </div>
-                        <div class="col">
+                            <div classNme="col"> </div> 
+                        </div>
                     </div> 
-                </div>
-            </div> 
         ) ;
     });
     return tarifs;
@@ -159,12 +161,12 @@ class DChambre extends React.Component{
         let listChambre = this.props.context.state.listTypeChambre.map(typeChambre => {
             return (
             <div className="DChambre1">
-                <div class="Chambre1">
-                <div class="row mb-4">
+                <div classaNme="Chambre1">
+                <div className="row mb-4">
                     <div className="col">
                         <img style={{width:'300px', height: '150px'}} src={ process.env.REACT_APP_BACK_URL + "/" + typeChambre.photo} />
                     </div>
-                    <div class="col">
+                    <div className="col">
                       <span style={{fontSize:'30px'}}> {typeChambre.nom} </span><br/>
                         <span style={{fontSize:'12px'}}>Sleeps 4 | 1 Double | 90 to 102m²</span><br/>
                         <span style={{fontSize:'12px'}}>Capacité max : 
@@ -178,18 +180,18 @@ class DChambre extends React.Component{
                     </Link>
                     
                     </div>
-                    <div class="col"></div>
+                    <div className="col"></div>
                 </div>
-                <div class="row">
-                    <div class="col">
+                <div className="row">
+                    <div className="col">
                         <ul>
                             <Equipements equipements={typeChambre.equipements}/>
                         </ul>
                     </div>
-                    <div class="col">
+                    <div className="col">
                         <ListTarif context={this.props.context} tarifs={typeChambre.tarifs}/>
                     </div>
-                    <div class="col"></div>
+                    <div className="col"></div>
                 </div>  
             </div>      
             <hr/>
@@ -200,6 +202,25 @@ class DChambre extends React.Component{
             <div>
                 <Filtre />
                 <hr></hr>
+                
+                
+                <div className="inputDate" style = {{ backgroundColor : "rgb(246, 248, 252)"}}>
+                <b>dateSejour :</b> 
+                    <TextField id="input-with-sx"  
+                        variant="standard" 
+                        name="dateDebut"
+                        type="date" style={{width : "150px"}}
+                        value={this.props.context.state.reserver.dateSejour.dateDebut}
+                        onChange={(e) => utility.haddleInputChange(e ,this.props.context, "dateDebut")}
+                    />  
+                    <TextField id="input-with-sx"  
+                        variant="standard" 
+                        name="dateFin"
+                        type="date" style={{width : "150px"}}
+                        value={this.props.context.state.dateFin}
+                        onChange={(e) => utility.haddleInputChange(e,this.props.context,"dateFin")}
+                    />
+                </div><br/>
                  {listChambre}
             </div>
         );
