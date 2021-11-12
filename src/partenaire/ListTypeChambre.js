@@ -37,7 +37,7 @@ class ListTypeChambre extends React.Component{
 
     componentDidMount(){
         axios({
-            method: 'post',
+            method: 'get',
             url: process.env.REACT_APP_BACK_URL + "/typeChambre",
             withCredentials: true
         })
