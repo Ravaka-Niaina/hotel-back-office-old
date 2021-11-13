@@ -240,7 +240,7 @@ function InsertTypeCHambre(){
       setState(current);
       setOpen(false);
     }else{
-      setErrInsertEq(res.errors[0].message);
+      setErrInsertEq(res.message);
     }
   }
 

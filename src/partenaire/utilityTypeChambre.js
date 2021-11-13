@@ -16,15 +16,19 @@ function handleVideoChange(state, setState, e, index, context){
     }
 }
 
-function addInputVideo(state, setState){
+function addInputVideo(state, setState, context){
     let currentState = JSON.parse(JSON.stringify(state));
     try{
         currentState.videos.push("");
     }catch(err){
         currentState.typeChambre.videos.push("");
     }
+    if(context == undefined){
+        setState(currentState);
+    }else{
+        context.setState(currentState);
+    }
     
-    setState(currentState);
 }
 
 function removeInputVideo(state, setState, index){
@@ -39,7 +43,7 @@ function removeInputVideo(state, setState, index){
 
 export function Videos(props){
     let inputs = [];
-    const btnAdd = <button onClick={(e) => addInputVideo(props.state, props.setState)}>+</button>
+    const btnAdd = <button onClick={(e) => addInputVideo(props.state, props.setState, props.context)}>+</button>
     let videos = props.state.videos == undefined ? props.state.typeChambre.videos : props.state.videos;
     for(let i = 0; i < videos.length; i++){
         let u = i;

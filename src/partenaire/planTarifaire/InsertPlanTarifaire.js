@@ -15,7 +15,7 @@ import callAPI from '../../utility';
 import FormGroup from '@mui/material/FormGroup';
 
 
-const utility = require('./utility.js');
+const utility = require('../../tarif/utility.js');
 
 
 
@@ -60,7 +60,7 @@ function InsertPlanTarifaire(){
 
     useEffect(() => {
         callAPI('get', '/politiqueAnnulation', {}, setPolitiqueAnnulation);
-        callAPI('get', '/typeChambre', {}, setListTypeChambre);
+        callAPI('post', '/typeChambre', {}, setListTypeChambre);
       }, []);
 
     function tryRedirect(res){

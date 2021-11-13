@@ -46,6 +46,7 @@ function InsertTarif(){
     const history = useHistory();
 
     function setListTypeChambre(res){
+        console.log(res);
         let current = JSON.parse(JSON.stringify(planTarifaire));
         current.chambresAtrb = res.listType;
         current.politiqueAnnulAtrb = res.listPolitique;
@@ -63,12 +64,10 @@ function InsertTarif(){
         }else{
             setErrors(res.errors);
         }
-        console.log(res);
     }
 
     function insert(e){
         const current = utility.getPlan(planTarifaire);
-        console.log(current);
         callAPI('post', '/planTarifaire/insert', current, tryRedirect);
     }
 

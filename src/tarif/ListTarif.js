@@ -61,7 +61,7 @@ function ListTarif() {
 
     useEffect(() => {
         axios({
-            method: 'get',
+            method: 'post',
             url: process.env.REACT_APP_BACK_URL + "/planTarifaire",
             withCredentials: true
         })

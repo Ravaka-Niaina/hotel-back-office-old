@@ -110,5 +110,6 @@ export function handleCheckBoxChange(planTarifaire, setPlanTarifaire, e, name1, 
     let current = JSON.parse(JSON.stringify(planTarifaire));
     current[name1][name2][name3] = e.target.checked;
     setPlanTarifaire(current);
+    console.log(planTarifaire);
 }
 

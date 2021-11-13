@@ -18,7 +18,6 @@ import  paiement  from "./components/client2/paiement";
 import  test  from "./test";
 
 import {BrowserRouter as Router, Route} from 'react-router-dom';
-import  AppClient  from "./components/client/scroll";
 import Calendrier from "./partenaire/Calendrier/Calendrier";
 
 import  PromotionList  from "./promotion/promotionList.js";
@@ -53,7 +52,6 @@ function App() {
         {/*route client */}
         <Route path="/paiement" exact component={paiement} />
         <Route path="/test" exact component={test} />
-        <Route path="/client" exact component={AppClient} />
 
         {/*route client */}
         <Route path="/login" exact component={Login} />

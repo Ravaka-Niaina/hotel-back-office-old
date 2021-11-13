@@ -53,28 +53,9 @@ class Fact extends React.Component{
                 <h1>Your Stay</h1>
                 <div class="row mb-4">
                     {reservation}
-                    {/*
-                    <div class="col">
-                        <strong> Check in :  </strong>
-                       {reservation}
-                        </div>
-                    <div class="col">
-                        <strong> Check in :  </strong>
-                       
-                    </div>
-                    
-                    <div class="col" id="locA">
-                        <strong>Check out :</strong>
-                           
-                    </div>
-                    */}
                 </div>
-                <p>TOTAL :</p>    
-                    {reservation}
-                </div>
-                <p>TOTAL :</p>  
-                
-                <input type="submit" className="btn btn-primary" value="APPLY"  />  
+                <p>TOTAL :</p> 
+                <input type="submit" className="btn btn-primary" value="APPLY"  />     
             </div>
         );
     }
