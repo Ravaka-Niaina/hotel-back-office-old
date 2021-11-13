@@ -120,11 +120,7 @@ function Tarif() {
                     </Tabs>
                 </Box>
                 <TabPanel value={value} index={0}>
-<<<<<<< HEAD
                   <ListTarif />
-=======
-                    <ListTarif/>
->>>>>>> a1e20565d9147f39e04b10bd2fecb7ad4e7d7107
                 </TabPanel>
                 <TabPanel value={value} index={1}>
                     <CalendarComponent/>
