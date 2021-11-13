@@ -42,6 +42,12 @@ class Fact extends React.Component{
         }
         reservation.unshift(<p style={{border: "2px solid red"}}>{this.props.context.state.dateSejour.debut} - {this.props.context.state.dateSejour.fin}</p>);
         
+        reservation = this.props.context.state.reservation.map(reserve => {
+            return (
+                <p> {reserve.nom} : {reserve.nombre}</p>
+                );
+            }
+        )
         return(
             <div class="row" style={{textAlign:'center'}}>
                 <h1>Your Stay</h1>
@@ -52,6 +58,10 @@ class Fact extends React.Component{
                         <strong> Check in :  </strong>
                        {reservation}
                         </div>
+                    <div class="col">
+                        <strong> Check in :  </strong>
+                       
+                    </div>
                     
                     <div class="col" id="locA">
                         <strong>Check out :</strong>
@@ -60,6 +70,11 @@ class Fact extends React.Component{
                     */}
                 </div>
                 <p>TOTAL :</p>    
+                    {reservation}
+                </div>
+                <p>TOTAL :</p>  
+                
+                <input type="submit" className="btn btn-primary" value="APPLY"  />  
             </div>
         );
     }

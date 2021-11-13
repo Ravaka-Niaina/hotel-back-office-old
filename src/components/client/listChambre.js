@@ -108,18 +108,15 @@ function ListTarif(props){
                                                 <u>{tarif.nom}</u>
                                             </strong><br/>
 
-                                            {/*
-                                                {tarif.politiqueAnnulAtrb !== "" 
+                                            {tarif.conditionsAnnulation !== "" 
                                                 ?   <span style={{fontSize:'12px' , color : 'green'}}>
                                                         <i class="fa fa-check" aria-hidden="true">
-                                                            &nbsp;&nbsp;{tarif.politiqueAnnulAtrb} 
+                                                            &nbsp;&nbsp;{tarif.conditionsAnnulation} 
                                                         </i>
                                                     </span> : ""
-                                                } <br/>
-                                            */}
-                                            
-                                            <ListConditionAnnulation politiqueAnnulAtrb={tarif.politiqueAnnulAtrb} />
-                                            {/*<ListServiceTarif services={tarif.services} />*/}
+                                            } <br/>
+
+                                            <ListServiceTarif services={tarif.services} />
                                         </div>
 
                                         </div>
@@ -159,6 +156,24 @@ class DChambre extends React.Component{
         currentState.listTypeChambre = data.list;                                         // lasa currentState ilai data (this.state) ilai data
         this.props.context.setState(currentState);  
         console.log(this.props.context.state);
+        this.state= {
+            listTypeChambre : []
+        }
+    }
+// ilai this ary scroll atsoin zan oe enfant ity page ity
+    setListTypeChambre(data){
+        let currentState = JSON.parse(JSON.stringify(this.props.context.state));  //this.state iani
+        console.log(data);
+        currentState.listTypeChambre = data.list;                                         // lasa currentState ilai data (this.state) ilai data
+        this.props.context.setState(currentState);  
+        console.log(currentState);                 //modifier ilai state ho lasa donnee json
+    }
+
+    setListTypeC(data){
+        let currentState = JSON.parse(JSON.stringify(this.state));  
+        console.log(data);
+        currentState.listTypeChambre = data.list;                                         
+        this.setState(currentState);               
     }
 
     componentDidMount(){

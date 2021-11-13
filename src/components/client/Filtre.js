@@ -68,7 +68,6 @@ function ListOptions(props){
             </FormGroup>
         );
     }else{
-        console.log(props.filtreValue);
         return(
             <div>
                 <RadioGroup 
@@ -91,7 +90,6 @@ function ListOptions(props){
 function ListFiltres(props){
     let indexFiltre = 0;
     let list = [];
-    
     for(let i = 0; i < props.filtre.length; i = i + 2){
         try{
             list.push(
