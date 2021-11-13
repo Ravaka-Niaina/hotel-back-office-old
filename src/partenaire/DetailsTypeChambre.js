@@ -1,7 +1,7 @@
 // import CustomError from '../CustomError';
 import CustomError from '../CustomError';
 import axios from "axios";
-import React from "react";
+import React, {useEffect} from "react";
 import {Link} from 'react-router-dom';
 
 import  Navbar  from "../Navbar/Navbar"
@@ -27,8 +27,13 @@ import Paper from '@mui/material/Paper';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { useState } from 'react';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import {setValue} from '../../src/utility2.js';
+import callAPI from '../utility';
 
-import {FileInput, Preview} from './utilityTypeChambre.js';
+import {FileInput, Preview, Videos, Font} from './utilityTypeChambre.js';
 
 
 const Input = styled('input')({
@@ -36,19 +41,21 @@ const Input = styled('input')({
 });
 
 function Equipements(props){
-    console.log(props.equipements);
     let i = -1;
     let equipements = props.equipements.map(equipement => {
         i++;
         let u = i;
         return(
-        <FormControlLabel
-            checked={equipement.checked}
-            control={<Checkbox/>}
-            onChange={(e) => props.handleCheckBoxEquipement(e, u)}
-            label={equipement.nom}
-            style={{marginLeft:"20px"}}
-        />
+            <div style={{height:"40px"}}>
+                <FormControlLabel
+                    checked={equipement.checked}
+                    control={<Checkbox/>}
+                    label=""
+                    onChange={(e) => props.handleCheckBoxEquipement(e, u)}
+                    style={{marginLeft:"20px"}}
+                />
+                <Font font={equipement.font} /> {equipement.nom}
+            </div>
         );
     })
     return equipements;
@@ -56,7 +63,6 @@ function Equipements(props){
 
 function PlanTarifaire(props){
     let i = -1;
-    console.log(props.planTarifaire);
     let list = props.planTarifaire.map(tarif => {
         i++;
         let u = i;
@@ -74,10 +80,21 @@ function PlanTarifaire(props){
   }
 
 class DetailsTypeCHambre extends React.Component{
+    changeState(tabFieldName, value){
+        let current = JSON.parse(JSON.stringify(this.state));
+        let temp = JSON.parse(JSON.stringify(this.state));
+        for(let i = 0; i < tabFieldName.length; i++){
+            temp = temp[tabFieldName[i]];
+        }
+    }
     constructor(props){
         super(props);
         this.noImage = '/no-image.jpg';
         this.state = {
+            val: 1,
+            newIcon: {fon: "", nom: ""},
+            errInsertEq: null,
+            open: false,
             errors: [],
             typeChambre: {
                 _id: '',
@@ -91,7 +108,8 @@ class DetailsTypeCHambre extends React.Component{
                 superficie:'',
                 description:'',
                 equipements: [],
-                planTarifaire: []
+                planTarifaire: [],
+                videos: []
             }
             , tarifs: []
             , previewPhoto: [this.noImage]
@@ -100,10 +118,10 @@ class DetailsTypeCHambre extends React.Component{
         this.handleCheckBoxEquipement = this.handleCheckBoxEquipement.bind(this);
         this.handlePhotoChange = this.handlePhotoChange.bind(this);
         this.setDetailsTypeChambre = this.setDetailsTypeChambre.bind(this);
+        this.setListEquipement2 = this.setListEquipement2.bind(this);
     }
 
     setDetailsTypeChambre(data){
-        console.log(data);
         let currentState = JSON.parse(JSON.stringify(this.state));
         currentState = data;
         if(currentState.typeChambre.photo != '' || 
@@ -115,6 +133,7 @@ class DetailsTypeCHambre extends React.Component{
                 }
             }
         this.setState(currentState);
+        console.log(this.state);
     }
 
     tryRedirect(res){
@@ -248,6 +267,32 @@ class DetailsTypeCHambre extends React.Component{
         this.setState(current);
     }
 
+    changeStateValue(tabFieldName, value){
+        let currentState = setValue(this.state, tabFieldName, value);
+        this.setState(currentState);
+    }
+
+    setListEquipement2(res){
+        if(res.status == 200){
+          this.changeStateValue(["newIcon"], {font: "", nom: ""});
+          this.changeStateValue(["errInsertEq"], null);
+          this.changeStateValue(["typeChambre", "equipements"], res.equipements);
+          this.changeStateValue(["open"], false);
+        }else{
+            this.changeStateValue(["errInsertEq"], res.message);
+        }
+      }
+
+    addEquipement(){
+        callAPI('post', '/equipement/insert', {icon: this.state.newIcon}, this.setListEquipement2);
+    }
+
+    handleNewEqChange(e, fieldName){
+        let currentState = JSON.parse(JSON.stringify(this.state));
+        currentState.newIcon[fieldName] = e.target.value;
+        this.setState(currentState);
+    }
+
     render(){
         let list = null;
         list = this.state.tarifs.map(tarif => {
@@ -267,6 +312,19 @@ class DetailsTypeCHambre extends React.Component{
               </TableCell>
             </TableRow>
         });
+
+        const style = {
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: 400,
+            bgcolor: 'background.paper',
+            border: '2px solid #000',
+            boxShadow: 24,
+            p: 4,
+          };
+
         return(
             <div> 
                 <Navbar/>
@@ -299,7 +357,16 @@ class DetailsTypeCHambre extends React.Component{
                                             handlePhotoChange={this.handlePhotoChange} />
                                     </div>
                                 </div>
-
+                                <div style={{marginTop:'30px'}}>
+                                    <div className="row">
+                                    <div style={{marginTop:'10px'}}>
+                                        <label className="form-label mt-4" style={{textDecoration:'underline'}}>Videos : </label>
+                                    </div>
+                                    </div>
+                                    <div className="row">
+                                        <Videos state={this.state} setState={this.setState} context={this} />
+                                    </div>
+                                </div>
                                 <div style={{marginTop:'30px'}}>
                                     <TextField id="standard-basic" label="chambre totale" variant="standard" type="number"
                                         style={{width:'40%'}} value={this.state.typeChambre.chambreTotal} onChange={(e) => this.handleInputChange(e, "chambreTotal")}/>
@@ -343,6 +410,40 @@ class DetailsTypeCHambre extends React.Component{
                                 <FormGroup>
                                     <Equipements  equipements={this.state.typeChambre.equipements} handleCheckBoxEquipement={this.handleCheckBoxEquipement} />
                                 </FormGroup>
+                                <Button onClick={(e) => this.changeStateValue(["open"], true)}>Ajouter equipement</Button>
+                                <Modal
+                                    open={this.state.open}
+                                    onClose={(e) => {console.log("tokony mikatona"); this.changeStateValue(["open"], false)}}
+                                    aria-labelledby="modal-modal-title"
+                                    aria-describedby="modal-modal-description"
+                                >
+                                    <Box sx={style}>
+                                    <Typography id="modal-modal-title" variant="h6" component="h2" align="center">
+                                        Ajouter nouveau equipement
+                                    </Typography>
+                                    {
+                                        this.state.errInsertEq != null ?
+                                        <p style={{backgroundColor: "red"}}>{this.state.errInsertEq}</p>
+                                        : null
+                                    }
+                                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                        <TextField id="standard-basic" className="form-control" label="Font" variant="standard" style={{width:"300px"}}
+                                        type="text" 
+                                        name="Font" 
+                                        value={this.state.newIcon.font}
+                                        onChange={(e) => this.handleNewEqChange(e, "font")}/>
+                                        <TextField id="standard-basic" className="form-control" label="Nom" variant="standard" style={{width:"300px"}}
+                                        type="text" 
+                                        name="Nom" 
+                                        value={this.state.newIcon.nom}
+                                        onChange={(e) => this.handleNewEqChange(e, "nom")}/>
+                                        <br/>
+                                        <div style={{margin:'0 auto', width:'fit-content', marginTop:'20px'}}>
+                                            <Button variant="contained" onClick={(e) => this.addEquipement()}>Ajouter equipement</Button>
+                                        </div>
+                                    </Typography>
+                                    </Box>
+                                </Modal>
                             </div>
                             <div style={{marginTop:'30px'}}>
                                 <div>
