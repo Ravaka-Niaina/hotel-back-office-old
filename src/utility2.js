@@ -2,9 +2,27 @@ export function setValue(obj, field, value){
     let save = [];
     for(let i = 0; i < field.length; i++){
         if(i === 0){
-            save.push(JSON.parse(JSON.stringify(obj[field[0]])));
+            try{
+                save.push(JSON.parse(JSON.stringify(obj[field[0]])));
+            }catch(err){
+                if(typeof(obj[field[0]] === 'string')){
+                    save.push(obj[field[0]] + '');
+                }else{
+                    save.push(obj[field[0]]);
+                }
+            }
+            
         }else{
-            save.push(JSON.parse(JSON.stringify(save[i - 1][field[i]])));
+            try{
+                save.push(JSON.parse(JSON.stringify(save[i - 1][field[i]])));
+            }catch(err){
+                if(typeof(obj[field[0]] === 'string')){
+                    save.push(save[i - 1][field[i]] + '');
+                }else{
+                    save.push(save[i - 1][field[i]]);
+                }
+            }
+            
         }
     }
     for(let i = field.length - 1; i > -1; i--){

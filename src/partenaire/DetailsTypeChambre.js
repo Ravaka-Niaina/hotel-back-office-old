@@ -273,13 +273,14 @@ class DetailsTypeCHambre extends React.Component{
     }
 
     setListEquipement2(res){
+        console.log(res);
         if(res.status == 200){
           this.changeStateValue(["newIcon"], {font: "", nom: ""});
           this.changeStateValue(["errInsertEq"], null);
           this.changeStateValue(["typeChambre", "equipements"], res.equipements);
           this.changeStateValue(["open"], false);
         }else{
-            this.changeStateValue(["errInsertEq"], res.message);
+            this.changeStateValue(["errInsertEq"], res.errors[0].message);
         }
       }
 
