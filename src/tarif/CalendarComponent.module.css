@@ -1,0 +1,28 @@
+.container{
+    margin-top: 50px;
+    width: 100%;
+    min-height: 100%;
+}
+.dayline{
+    position: relative;
+}
+.pin{
+    background-color: #1976d2 !important;
+    color: #fff !important;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px !important;
+    position: absolute !important;
+    z-index: 1;
+    top: 20px;
+    cursor:ew-resize !important;
+    padding: 0 !important;
+}
+.pin svg{
+    font-size: 16px !important;
+}
+
+.table tbody,
+.table td {
+    border-width: 4px !important;
+}
