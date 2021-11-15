@@ -15,6 +15,7 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 import Stack from '@mui/material/Stack';
+import  Navbar  from "../Navbar/Navbar";
 
 export default class PromotionList extends React.Component {
   constructor(props){
@@ -36,13 +37,18 @@ export default class PromotionList extends React.Component {
   render() {
     return (
       <div>  
-
+<Navbar currentPage={3}/>
 <div className='container' style={{marginTop:'120px'}}>
                     <div className='row'>
                             <div className='col-md-12'>
                                 <Link to={'/promotion/create'}>
-                                    <Button variant="contained" endIcon={<AddIcon />}>
+                                    <Button 
+                                    variant="contained" 
+                                    endIcon={<AddIcon style={{color:'white'}}/>}
+                                    style={{textDecoration:'none'}}>
+                                        <span style={{color:'white'}}>
                                         Ajouter un nouveau promotion
+                                        </span>
                                     </Button>
                                 </Link>
                                 <TableContainer component={Paper} style={{marginTop:'40px'}}>

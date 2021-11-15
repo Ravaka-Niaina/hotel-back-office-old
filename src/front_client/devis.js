@@ -1,7 +1,5 @@
-import './front_client.css';
 import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import  front_client  from "./front_client.js";
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 class Devis extends React.Component{ 

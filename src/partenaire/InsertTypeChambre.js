@@ -199,12 +199,17 @@ function InsertTypeCHambre(){
   return (
     <div> 
         <Navbar/>
-        <div className="container">
+        <div className="">
           <div className="">
               <div className="">
               <div className="jumbotron" 
-                style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)'}}>
-                <h1 className="text-center" id='title1'>Ajouter Type chambre</h1>
+                style=
+                {{backgroundColor:'white',
+                boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)',
+                marginTop:'80px',
+                marginLeft:'2%'
+                }}>
+                <h4 className="text-center" id='title1'>Ajouter Type chambre</h4>
                 <hr></hr>
                 <CustomError errors={state.errors} />
                 <form className="needs-validation">
@@ -213,7 +218,7 @@ function InsertTypeCHambre(){
                       <TextField 
                       id="standard-basic" 
                       label={
-                      <p style={{color:'black',fontWeight:'bold'}}>
+                      <p id='litleLabel'>
                       Nom
                       </p>
                             } 
@@ -225,13 +230,13 @@ function InsertTypeCHambre(){
                       <TextField 
                       id="standard-basic" 
                       label={
-                        <p style={{color:'black',fontWeight:'bold'}}>
+                        <p id='litleLabel'>
                             Chambre total
                         </p>
                              } 
                       variant="standard" 
                       type="number"
-                      style={{width:'40%',marginLeft:'152px'}}
+                      style={{width:'40%',marginLeft:'123px'}}
                       value={state.chambreTotal} onChange={(e) => handleInputChange(e, "chambreTotal")}
                       />
                     </div>
@@ -240,7 +245,7 @@ function InsertTypeCHambre(){
                       <TextField 
                       id="standard-basic" 
                       label={
-                        <p style={{color:'black',fontWeight:'bold'}}>
+                        <p id='litleLabel'>
                             Etage
                         </p>
                              } 
@@ -252,13 +257,13 @@ function InsertTypeCHambre(){
                       <TextField 
                       id="standard-basic" 
                       label={
-                        <p style={{color:'black',fontWeight:'bold'}}>
+                        <p id='litleLabel'>
                             Superficie
                         </p>
                              } 
                       variant="standard" 
                       type="number" 
-                      style={{width:'40%',marginLeft:'152px'}}
+                      style={{width:'40%',marginLeft:'123px'}}
                       value={state.superficie} onChange={(e) => handleInputChange(e, "superficie")}
                       />
                     </div>
@@ -286,7 +291,7 @@ function InsertTypeCHambre(){
                       <TextField 
                       id="standard-basic" 
                       label={
-                        <p style={{color:'black',fontWeight:'bold'}}>
+                        <p id='litleLabel'>
                             Adulte
                         </p>
                              }
@@ -299,7 +304,7 @@ function InsertTypeCHambre(){
                       <TextField 
                       id="standard-basic" 
                       label={
-                        <p style={{color:'black',fontWeight:'bold'}}>
+                        <p id='litleLabel'>
                             Enfant
                         </p>
                              } 
@@ -307,7 +312,7 @@ function InsertTypeCHambre(){
                       type="number" 
                       value={state.nbEnfant}
                       onChange={(e) => handleInputChange(e, "nbEnfant")}
-                      style={{width:'40%',marginLeft:'152px'}}
+                      style={{width:'40%',marginLeft:'123px'}}
                       />
                     </div>
 
@@ -354,8 +359,12 @@ function InsertTypeCHambre(){
                     </div>
                   </Box>
                   <div style={{marginTop:'50px'}}>
-                    <Button variant="contained" color="success" onClick={(e) => insert(e)}>
-                      Créer
+                    <Button 
+                    variant="contained" 
+                    color="success" 
+                    onClick={(e) => insert(e)}
+                    style={{textDecoration:'none'}}>
+                      <span style={{color:'white'}}>Créer</span>
                     </Button>
                   </div>
                 </form>

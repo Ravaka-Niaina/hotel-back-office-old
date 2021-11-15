@@ -6,8 +6,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import StarIcon from '@mui/icons-material/Star';
+import { Link } from "react-router-dom";
  
-const Lang = () => {
+const Front_client = () => {
     const { i18n } = useTranslation();
     const [lang, setLang] = useState<Language>(i18n.language as Language);
  
@@ -43,9 +44,13 @@ style={{width:'150px'}}
       <a className="nav-item nav-link " href="#" id='nav-item'>
       {t('common.link1')}
       </a>
+
+      <Link to={'/booking'} style={{textDecoration:'none'}}>
       <a className="nav-item nav-link" href="#" id='nav-item'>
       {t('common.link2')}
       </a>
+    </Link>
+
       <a className="nav-item nav-link" href="#" id='nav-item'>
         <LocalPhoneIcon/>261-20-2220202
       </a>
@@ -147,4 +152,4 @@ style={{width:'300px',height:'250px'}}
     )
 }
  
-export default Lang;
+export default Front_client;

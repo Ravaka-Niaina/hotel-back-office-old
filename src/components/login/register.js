@@ -70,7 +70,7 @@ class Register extends React.Component{
 
   render(){
     return (
-      <div className="base-container">
+      <div className="register-container">
         <div className="header">Register</div>
         <div className="content">
           <CustomError errors={this.state.errors}/>
@@ -115,21 +115,48 @@ class Register extends React.Component{
             </div> */}
 
 <div className="form-group" style={{paddingTop:"15px"}}>
-<TextField id="standard-basic" className="form-control" label="Email" variant="standard" style={{width:"400px"}}
+<TextField 
+id="standard-basic" 
+className="form-control" 
+label={
+<p style={{fontSize:'16px'}}>
+Email
+</p>
+} 
+variant="standard" 
+style={{width:"300px"}}
 type="email" 
 name="email" 
 value={this.state.email}
 onChange={(e) =>this.handleEmailChange(e)}/>
 </div>
 <div className="form-group" style={{paddingTop:"15px"}}>
-<TextField id="standard-basic" className="form-control" label="Mot de passe" variant="standard" style={{width:"400px"}}
+<TextField 
+id="standard-basic"
+ className="form-control" 
+ label={
+<p style={{fontSize:'16px'}}>
+Mot de passe
+</p>
+} 
+ variant="standard" 
+ style={{width:"300px"}}
 type="password" 
 name="mdp" 
 value={this.state.mdp}
 onChange={(e) =>this.handleMdpChange(e)}/>
 </div>
 <div className="form-group" style={{paddingTop:"15px"}}>
-<TextField id="standard-basic" className="form-control" label="Confirmation mot de passe" variant="standard" style={{width:"400px"}}
+<TextField 
+id="standard-basic" 
+className="form-control" 
+label={
+<p style={{fontSize:'16px'}}>
+Confirmation mot de passe
+</p>
+} 
+variant="standard" 
+style={{width:"300px"}}
 type="password"
 name="confirmMdp"
 placeholder="Confirmation du mot de passe"
@@ -143,7 +170,7 @@ onChange={(e) =>this.handleConfirmMdpChange(e)}/>
     labelId="demo-simple-select-label"
     id="demo-simple-select"
     label="Type utilisateur"
-    style={{width:"400px"}}
+    style={{width:"300px"}}
     name="type" 
     value={ this.state.type}
     onChange={(e) =>this.handleTypeChange(e)}
@@ -156,16 +183,29 @@ onChange={(e) =>this.handleConfirmMdpChange(e)}/>
           </div>
         </div>
       
-        <Link to='/login' style={{textDecoration:'none',marginLeft:'305px',marginTop:'30px'}}>
-            <p style={{fontSize:"17px",color:'#2F4050',textDecoration:'underline'}}>Se connecter</p>
+        <Link 
+        to='/login' 
+        style={{
+          textDecoration:'none',
+          marginLeft:'210px',
+          marginTop:'30px'}}>
+            <p style={{
+              color:'#2F4050',
+              textDecoration:'underline'}}>
+              Se connecter
+              </p>
           </Link>
         <div className="footer">
           {/* <button type="button" className="btn" id="btn"
             onClick={(e) => this.register(e)}>
             Register
             </button> */}
-<Button variant="contained" color="success" onClick={(e) => this.register(e)}>
-S'inscrire
+<Button 
+variant="contained" 
+color="primary" 
+onClick={(e) => this.register(e)}
+style={{textDecoration:'none'}}>
+<span style={{color:'white'}}>S'inscrire</span>
 </Button>
         </div>
       </div>

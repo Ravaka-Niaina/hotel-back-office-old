@@ -4,7 +4,7 @@ margin-left: auto;
 }
 .jumbotron{
 padding: 20px 70px 20px 70px;
-width: 900px;
+width: 75%;
 }
 .jumbotron1{
     width: 1200px;
@@ -20,3 +20,22 @@ width: 900px;
     font-family: 'Roboto', sans-serif;
     font-size: 15px;
     }
+
+#litleLabel{
+color: black;
+font-family: 'Roboto', sans-serif;
+font-size: 14px;
+}
+
+#guest{
+display:inline-block;
+}
+
+.plus{
+display:inline-block;    
+}
+
+#plus{
+    background-color: gainsboro;
+    margin-top:40px;
+}

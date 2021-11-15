@@ -11,6 +11,7 @@ import FormLabel from '@mui/material/FormLabel'
 import InputAdornment from '@mui/material/InputAdornment';
 import {useEffect} from 'react';
 import callAPI from '../utility.js';
+import  Navbar  from "../Navbar/Navbar";
 
 function Global(){
     const [datePrice , setDatePrice] =  useState([{ date: "", pourcentage: "" , type:"number" , jour : "jours" }]);
@@ -131,10 +132,15 @@ function Global(){
             })
 
         return (
+    <div>
+        <Navbar currentPage={4}/>
             <div className="container" ><br/>
                 <div className ="row">
                     <div className ="col-md-2"></div>
-                        <div className ="col-md-8" style ={{boxShadow : '0 0 20px 0 rgb(0 0 0 / 20%), 0 5px 5px 0 rgb(0 0 0 / 25%)'}} ><br/>
+                        <div className ="col-md-8" 
+                        style ={{
+                            boxShadow : '0 0 20px 0 rgb(0 0 0 / 20%), 0 5px 5px 0 rgb(0 0 0 / 25%)'
+                            }}><br/>
                             <h4 style={{textAlign : 'center'}}>Politique d'annulation</h4><hr/>
                             <strong>Concellation preference</strong><br/>
                             <span>Y a-t-il une période pendant laquelle le client peut annuler gratuitement?</span><br/>
@@ -156,10 +162,27 @@ function Global(){
                                     <table className="table table-striped">
                                         {date}
                                     </table> <br/>
-                                    <Button variant="contained" endIcon={<AddIcon />} onClick={handleAddClick}>Add</Button>
-                                    <br/><br/><br/>
-                                    <div style={{width:"fit-content",margin :"auto"}}>
-                                    <Button variant="contained" color="success" onClick={(e) => insert()}>Sauvegarder</Button>
+                                    <Button 
+                                    variant="contained" 
+                                    endIcon={<AddIcon style={{color:'white'}}/>} 
+                                    onClick={handleAddClick}
+                                    style={{textDecoration:'none'}}
+                                    >
+                                    <span style={{color:'white'}}>Add</span>
+                                    </Button>
+                                    <div 
+                                    style={{
+                                    width:"fit-content",
+                                    margin :"auto",
+                                    marginBottom:'15px'
+                                    }}>
+                                    <Button 
+                                    variant="contained" 
+                                    color="success" 
+                                    onClick={(e) => insert()}
+                                    style={{textDecoration:'none'}}>
+                                    <span style={{color:'white'}}>Sauvegarder</span>
+                                    </Button>
                                     </div>
                                 </div>
                                 : null
@@ -170,6 +193,7 @@ function Global(){
                     </div>
                 </div>
             </div>
+        </div>    
         );
     
 }

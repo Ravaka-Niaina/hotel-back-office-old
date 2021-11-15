@@ -1,8 +1,6 @@
-.container{
-margin-top: 140px;
-}
 .jumbotron{
     padding: 20px 70px 20px 70px;
+    width: 75%;
     }
     
     #title1{
@@ -13,13 +11,13 @@ margin-top: 140px;
 #litleLabel{
 color: black;
 font-family: 'Roboto', sans-serif;
-font-size: 15px;
+font-size: 14px;
 }
 
 #bigLabel{
     color: #616569;
     font-family: 'Roboto', sans-serif;
-    font-size: 16px;
+    font-size: 15px;
     }
 
 #column{

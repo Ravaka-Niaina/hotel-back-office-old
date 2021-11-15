@@ -73,12 +73,17 @@ function InsertTarif(){
     }
 
     return(
-        <div className="container">
+        <div className="">
             <Navbar currentPage={1}/>
-            <div className="row">
+            <div className="">
                     <div className="">
                         <div className="jumbotron" 
-                            style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)',marginTop:'-60px'}}>
+                            style=
+                            {{backgroundColor:'white',
+                            boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)',
+                            marginTop:'80px',
+                            marginLeft:'2%'
+                            }}>
                             <h1 className="text-center" id='title1'>Ajouter plan tarifaire</h1>
                             <hr></hr>
                             <CustomError errors={errors} />
@@ -91,7 +96,7 @@ function InsertTarif(){
                                             style={{width: '300px'}}
                                             type="text"
                                             label={
-                                            <p style={{color:'black',fontWeight:'bold'}}>
+                                            <p id='litleLabel'>
                                                 Nom
                                             </p>
                                                  }
@@ -212,7 +217,7 @@ function InsertTarif(){
                                                 <TextField
                                                     id="standard-basic"
                                                     variant="standard"
-                                                    style={{width: '50px'}}
+                                                    style={{width: '75px'}}
                                                     type="time"
                                                     value={planTarifaire.LeadHour.min}
                                                     onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "LeadHour", "min")}
@@ -223,7 +228,7 @@ function InsertTarif(){
                                                 <TextField
                                                     id="standard-basic"
                                                     variant="standard"
-                                                    style={{width: '50px'}}
+                                                    style={{width: '75px'}}
                                                     type="time"
                                                     value={planTarifaire.LeadHour.max}
                                                     onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "LeadHour", "max")}

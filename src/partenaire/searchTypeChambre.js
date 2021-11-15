@@ -8,6 +8,10 @@ import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import './typeChambre.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import AddIcon from '@mui/icons-material/Add';
+import InputAdornment from '@mui/material/InputAdornment';
 
 
 export default class searchTypeChambre extends React.Component {
@@ -51,15 +55,22 @@ export default class searchTypeChambre extends React.Component {
         <form onSubmit={this.handleSubmit}>
         <div className="contenue">
           <div className="formulaire">
-<div className="form-group" style={{paddingTop:"15px"}}>
-<TextField id="standard-basic" className="form-control" label="Nombre adulte" variant="standard" style={{width:"400px"}}
-type="text" name="nbAdulte" 
-onChange={(e) => this.handleInputChange(e, "nbAdulte")}/>
+<div className="form-group" style={{paddingTop:"15px"}} id='guest'>
+<TextField 
+id="standard-basic" 
+className="form-control" 
+label="Nombre adulte" 
+variant="standard" 
+style={{width:"400px"}}
+type="number" name="nbAdulte" 
+onChange={(e) => this.handleInputChange(e, "nbAdulte")}
+/>
+
 </div>
 
-<div className="form-group" style={{paddingTop:"15px"}}>
+<div className="form-group" style={{}} id='guest'>
 <TextField id="standard-basic" className="form-control" label="Nombre enfant" variant="standard" style={{width:"400px"}}
-type="text" name="nbEnfant" 
+type="number" name="nbEnfant" 
 onChange={(e) => this.handleInputChange(e, "nbEnfant")}/>
 </div>
           </div>

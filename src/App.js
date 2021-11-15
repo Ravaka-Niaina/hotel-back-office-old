@@ -24,10 +24,9 @@ import Global from "./politique/global.js";
 import  searchTypeChambre  from "./partenaire/searchTypeChambre.js";
 import  guest  from "./partenaire/guest.js";
 import  hideShow  from "./hideShow.js";
-import  front_client  from "./front_client/front_client.js";
+import  Front_client  from "./front_client/front_client";
 import  Devis  from "./front_client/devis";
 import { useTranslation } from "react-i18next";
-import Lang from "./front_client/Lang";
 
 
 function App() {
@@ -40,7 +39,7 @@ function App() {
         <Route path="/promotion" exact component={PromotionList} />
         <Route path="/promotion/create" exact component={InsertPromotion} />
         <Route path="/" exact component={home} />
-        <Route path="/client" exact component={AppClient} />
+        <Route path="/booking" exact component={AppClient} />
         <Route path="/login" exact component={Login} />
         <Route path="/register" exact component={register} />
         <Route path="/Paiement" exact component={Paiement} />
@@ -57,9 +56,8 @@ function App() {
         <Route path="/politique" exact component={Global} />
         <Route path="/calendrier" exact component={Calendrier} />
 
-        <Route path="/front_client" exact component={front_client} />
+        <Route path="/client" exact component={Front_client} />
         <Route path="/devis" exact component={Devis} />
-        <Route path="/lang" exact component={Lang} />
 
       </Router>
     </div>
