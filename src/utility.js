@@ -7,7 +7,8 @@ export default function callAPI(method, url, data, callback){
         withCredentials: true,
         data: data
     })
-    .then(res => {                                                  
+    .then(res => {  
+        console.log("avec success");                                                
         callback(res.data)})
-    .catch(err => console.log(err));
+    .catch(err =>{console.log(err); console.log("erreur");} );
 }

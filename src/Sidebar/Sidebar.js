@@ -1,3 +1,4 @@
+
 import './Sidebar.css';
 import React from 'react';
 import HomeIcon from '@mui/icons-material/Home';
@@ -61,7 +62,7 @@ class Sidebar extends React.Component {
           </ul>
         </div>
       );
-    }
+    
   }
-
+}
   export default Sidebar;

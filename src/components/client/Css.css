@@ -8,7 +8,7 @@
 
 
 .scroll-div{
-	width: 950px;
+	width: 920px;
 	background: rgb(250, 250, 250);
 	height: 510px;
 	overflow: hidden;
@@ -26,9 +26,8 @@
 }
 
 .divRight{
-    width: 325px;
+    width: 340px;
     height: 500px;
     background: rgb(250, 250, 250);
-	padding : 10px
 
 }

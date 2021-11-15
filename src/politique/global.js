@@ -11,18 +11,24 @@ import FormLabel from '@mui/material/FormLabel'
 import InputAdornment from '@mui/material/InputAdornment';
 import {useEffect} from 'react';
 import callAPI from '../utility.js';
+import {useHistory} from 'react-router-dom';    // mapiasa redirection
 
 function Global(){
-    const [datePrice , setDatePrice] =  useState([{ date: "", pourcentage: "" , type:"number" , jour : "jours" }]);
+    const [datePrice , setDatePrice] = useState([{ date: "", pourcentage: "" , type:"number" , jour : "jours"}]);
+
+    const [nom , setNom] = useState ("")
     const[show , setShow] = useState(false);
     const[jours  , setJour] = useState("");
-    //
-        useEffect( () => {
-            
-        }, []);
-
+    
+       
+    let history = useHistory();
     const functionAppel=(res)=>{
-        console.log(res);
+       if(res !== null){
+           console.log(res);
+            history.push("/");
+       }else{
+           console.log("pas de reponse");
+       }
     }
     // handle input change
     const handleInputChange = (e, index) => {
@@ -68,8 +74,12 @@ function Global(){
         setDatePrice(copie);
     };
 
+    const handleInputChangeInput = (e) =>{
+        setNom(e.target.value);
+    } 
+
     const insert = () => {
-        callAPI('post' , "/politique/insertionPolitique" ,datePrice,functionAppel)
+        callAPI('post' , "/politique/insertionPolitique" ,{nom : nom , datePrice : datePrice}, functionAppel)
     }
 
             //let v = -1;
@@ -153,12 +163,22 @@ function Global(){
                                 {
                                 show ? 
                                 <div>
+                                    nom :
+                                    <TextField
+                                        id="outlined-size-small"
+                                        size="small"
+                                        name="nom"
+                                        type="text"
+                                        placeholder="nom"
+                                        onChange={e => handleInputChangeInput(e)}
+                                    /><br/><hr/>
                                     <table className="table table-striped">
                                         {date}
                                     </table> <br/>
                                     <Button variant="contained" endIcon={<AddIcon />} onClick={handleAddClick}>Add</Button>
                                     <br/><br/><br/>
                                     <div style={{width:"fit-content",margin :"auto"}}>
+                                    
                                     <Button variant="contained" color="success" onClick={(e) => insert()}>Sauvegarder</Button>
                                     </div>
                                 </div>

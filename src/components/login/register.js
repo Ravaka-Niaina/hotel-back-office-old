@@ -160,15 +160,13 @@ onChange={(e) =>this.handleConfirmMdpChange(e)}/>
             <p style={{fontSize:"17px",color:'#2F4050',textDecoration:'underline'}}>Se connecter</p>
           </Link>
         <div className="footer">
-          <button type="button" className="btn" id="btn"
+          {/* <button type="button" className="btn" id="btn"
             onClick={(e) => this.register(e)}>
-            S'inscrire
-            </button>
-          <Link to='/login'>
-            <button type="button" className="btn1">
-              Retour
-              </button>
-            </Link>
+            Register
+            </button> */}
+<Button variant="contained" color="success" onClick={(e) => this.register(e)}>
+S'inscrire
+</Button>
         </div>
       </div>
     );

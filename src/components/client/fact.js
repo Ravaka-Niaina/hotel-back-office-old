@@ -1,3 +1,4 @@
+
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
@@ -53,5 +54,4 @@ class Fact extends React.Component{
         );
     }
 }
-
 export default Fact

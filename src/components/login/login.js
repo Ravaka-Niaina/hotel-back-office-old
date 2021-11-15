@@ -56,37 +56,41 @@ class Login extends React.Component{
 
   render(){
     return (
-      <div className="container">
-        <div className="base-container">
-        <img src="user.png" style={{width : '12%',marginLeft:''}} ></img>
-          <div className="content">
-            <CustomError errors={this.state.errors} />
-            <div className="form">
-              <div className="form-group">
-                <label htmlFor='email'>Email :</label>
-                <input 
+      <div>
+        <Navbar currentPage={1}/>
+        <div className="container">
+          <div className="base-container">
+          <img src="user.png" style={{width : '12%',marginLeft:''}} ></img>
+            <div className="content">
+              <CustomError errors={this.state.errors} />
+              <div className="form">
+                <div className="form-group" style={{paddingTop:"15px"}}>
+                  <TextField id="standard-basic" className="form-control" label="Email" variant="standard" style={{width:"350px"}}
                   type="email" 
                   name="email" 
                   value={this.state.email} placeholder="Email"
-                  onChange={(e) => this.handleEmailChange(e)}></input>
-              </div>
-              <div className="form-group">
-                <label htmlFor='motPasse'>Mot de passe :</label>
-                <input 
+                  onChange={(e) => this.handleEmailChange(e)}/>
+                  </div>
+                  <div className="form-group" style={{paddingTop:"15px"}}>
+                  <TextField id="standard-basic" className="form-control" label="Mot de passe" variant="standard" style={{width:"350px"}}
                   type="password" 
                   name="mdp" 
-                  placeholder="Mot de passe"
                   value={this.state.mdp}
-                  onChange={(e) => this.handleMdpChange(e)}></input>
+                  onChange={(e) => this.handleMdpChange(e)}/>
+                </div>
               </div>
             </div>
-          </div>
-        
-          <div className="footer">
-            <button type="button" className="btn" id="btn" onClick={(e) => this.login(e)}>Login</button>
-            <Link to='/Register'>
-            <p style={{fontFamily:"",fontSize:"16px",color:"black"}}>S'inscrire</p>
-              </Link>
+              
+
+            <Link to='/Register' style={{textDecoration:'none',marginLeft:'290px',marginTop:'30px'}}>
+              <p style={{color:"#87CEEB",fontSize:"17px",color:'#2F4050',textDecoration:'underline'}}>S'inscrire</p>
+            </Link>
+            <div className="footer">
+              {/* <button type="button" className="btn" id="btn" onClick={(e) => this.login(e)}>Login</button> */}
+              <Button variant="contained" style={{backgroundColor:'#1E90FF'}} onClick={(e) => this.login(e)}>
+              Se Connecter
+              </Button>
+            </div>
           </div>
         </div>
       </div>
