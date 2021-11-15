@@ -1,39 +1,4 @@
-<<<<<<< HEAD
-.tarif .MuiBox-root{
-    padding-top: 55px !important;
-}
 
-.tarif .MuiTabs-flexContainer{
-  justify-content: start !important;
-  height: 100% !important;
-}
-
-.tarif > .MuiBox-root{
-    background-color: #f6f8fc;
-}
-
-.tarif .MuiTabs-scroller,.tarif .MuiTabs-root{
-    overflow: visible !important;
-}
-
-.tarif .MuiButtonBase-root{
-  color: grey !important;
-}
-
-.tarif .Mui-selected {
-    background-color: #fff !important;
-    border-color: rgba(0, 0, 0, 0.12) !important;
-    border-top: 1px solid;
-    border-left: 1px solid;
-    border-right: 1px solid;
-    color: #0b6efd !important;
-}
-
-.tarif .MuiTabs-indicator {
-    height: 2px !important;
-    bottom: -1px !important;
-    background-color: #fff !important;
-=======
 .tarif .MuiBox-root{
     padding-top: 55px !important;
 }
@@ -72,5 +37,4 @@
     height: 2px !important;
     bottom: -1px !important;
     background-color: #fff !important;
->>>>>>> 0c0cb82731ec9c7087c017b900ed8d796616e053
 }

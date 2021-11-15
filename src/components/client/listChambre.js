@@ -226,4 +226,3 @@ class DChambre extends React.Component{
     }
 }
 export default DChambre
->>>>>>> 83972e344490857afa3b4280c50f1a5289141842
