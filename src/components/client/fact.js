@@ -40,11 +40,14 @@ class Fact extends React.Component{
         if(reservation.length > 0){
             reservation.push(<p><button onClick={(e) => this.props.context.validerReservation()}>Valider</button></p>);
         }
+        reservation.unshift(<p style={{border: "2px solid red"}}>{this.props.context.state.dateSejour.debut} - {this.props.context.state.dateSejour.fin}</p>);
         
         return(
             <div class="row" style={{textAlign:'center'}}>
                 <h1>Your Stay</h1>
                 <div class="row mb-4">
+                    {reservation}
+                    {/*
                     <div class="col">
                         <strong> Check in :  </strong>
                        {reservation}
@@ -54,6 +57,7 @@ class Fact extends React.Component{
                         <strong>Check out :</strong>
                            
                     </div>
+                    */}
                 </div>
                 <p>TOTAL :</p>    
             </div>

@@ -7,20 +7,21 @@ import Sidebar from "../Sidebar/Sidebar";
 import { Checkbox } from "@mui/material";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './typeChambre.css';
-
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { useHistory } from 'react-router-dom'
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+
 
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import callAPI from '../utility';
 
 import { useState } from 'react';
-import {FileInput, Preview} from './utilityTypeChambre.js';
+import {FileInput, Preview, Videos, Font} from './utilityTypeChambre.js';
 
 function PlanTarifaire(props){
   let i = -1;
@@ -46,13 +47,17 @@ function Equipements(props){
         i++;
         let u = i;
         return(
-          <FormControlLabel
-            checked={equipement.checked}
-            control={<Checkbox/>}
-            onChange={(e) => props.handleCheckBoxEquipement(e, u)}
-            label={equipement.nom}
-            style={{marginLeft:"20px"}}
-          />
+          <div style={{height:"40px"}}>
+            <FormControlLabel
+              checked={equipement.checked}
+              control={<Checkbox/>}
+              label=""
+              onChange={(e) => props.handleCheckBoxEquipement(e, u)}
+              style={{marginLeft:"20px"}}
+            />
+            <Font font={equipement.font} /> {equipement.nom}
+          </div>
+          
         );
     })
   return equipements;
@@ -62,7 +67,9 @@ function Equipements(props){
 
 function InsertTypeCHambre(){
   const noImage = '/no-image.jpg';
-  let[val, setVal] = useState(1);
+  let [val, setVal] = useState(1);
+  let [newIcon, setNewIcon] = useState({font: "", nom: ""});
+  let [errInsertEq, setErrInsertEq] = useState(null);
   let [state, setState] = useState(
     {
       errors: [],
@@ -77,12 +84,18 @@ function InsertTypeCHambre(){
       description:'',
       planTarifaire: [],
       equipements: [],
-      preview: [noImage]
+      preview: [noImage],
+      videos: []
     }
   );
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   const history = useHistory();
   
   function setPlanTarifaire(res){
+    console.log(res);
     let current = JSON.parse(JSON.stringify(state));
     for(let i = 0; i < res.list.length; i++){
       res.list[i].checked = false;
@@ -90,7 +103,6 @@ function InsertTypeCHambre(){
     current.planTarifaire = res.list;
     state = current;
     //setState(current);
-    console.log(current);
   }
 
   function setListEquipement(res){
@@ -100,7 +112,7 @@ function InsertTypeCHambre(){
   }
 
   useEffect(() => {
-    callAPI('get', '/planTarifaire', {}, setPlanTarifaire);
+    callAPI('post', '/planTarifaire', {}, setPlanTarifaire);
     callAPI('get', '/equipement', {}, setListEquipement);
   }, []); 
 
@@ -118,8 +130,6 @@ function InsertTypeCHambre(){
   }
 
   function tryRedirect(res){
-    console.log(state);
-    console.log(res);
     if(res.status === 200){
       history.push('/typeChambre');
     }else if(res.status === 401){//Unauthorized
@@ -151,8 +161,6 @@ function InsertTypeCHambre(){
         }
       }
       toSend.planTarifaire = selectedPlan;
-
-      console.log(toSend);
       axios({
           method: 'post',
           url: process.env.REACT_APP_BACK_URL + "/typeChambre/insert",
@@ -167,6 +175,15 @@ function InsertTypeCHambre(){
       const currentState = JSON.parse(JSON.stringify(state));
       currentState[inputName] = event.target.value;
       setState(currentState);
+  }
+
+  function handleVideoChange(e){
+    let currentState = JSON.parse(JSON.stringify(state));
+    currentState.videos = [];
+    for(let i = 0; i < e.target.files.length; i++){
+      currentState.videos.push({});
+    }
+    setState(currentState);
   }
 
   function handlePhotoChange(e){
@@ -194,6 +211,41 @@ function InsertTypeCHambre(){
         setState(currentState);
       }
     }
+  }
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
+
+  function handleNewIconChange(e, fieldName){
+    let currentState = JSON.parse(JSON.stringify(newIcon));
+    currentState[fieldName] = e.target.value;
+    setNewIcon(currentState);
+  }
+
+  function setListEquipement2(res){
+    if(res.status == 200){
+      setNewIcon({font: "", nom: ""});
+      setErrInsertEq(null);
+      let current = JSON.parse(JSON.stringify(state));
+      current.equipements = res.equipements;
+      setState(current);
+      setOpen(false);
+    }else{
+      setErrInsertEq(res.errors[0].message);
+    }
+  }
+
+  function addEquipement(){
+    callAPI('post', '/equipement/insert', {icon: newIcon}, setListEquipement2);
   }
 
   return (
@@ -269,6 +321,9 @@ function InsertTypeCHambre(){
                     </div>
 
                     <div style={{marginTop:'30px'}}>
+                    <div style={{marginTop:'10px'}}>
+                        <label className="form-label mt-4" style={{textDecoration:'underline'}}>Photos : </label>
+                      </div>
                       <div className="row">
                           <Preview preview={state.preview} />
                       </div>
@@ -277,6 +332,16 @@ function InsertTypeCHambre(){
                             style={{marginTop: '5px'}}
                             value=""
                             handlePhotoChange={handlePhotoChange} />
+                      </div>
+                    </div>
+                    <div style={{marginTop:'30px'}}>
+                      <div className="row">
+                      <div style={{marginTop:'10px'}}>
+                        <label className="form-label mt-4" style={{textDecoration:'underline'}}>Videos : </label>
+                      </div>
+                      </div>
+                      <div className="row">
+                        <Videos state={state} setState={setState} />
                       </div>
                     </div>
 
@@ -343,6 +408,40 @@ function InsertTypeCHambre(){
                       <FormGroup>
                         <Equipements  equipements={state.equipements} handleCheckBoxEquipement={handleCheckBoxEquipement} />
                       </FormGroup>
+                      <Button onClick={handleOpen}>Ajouter equipement</Button>
+                      <Modal
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="modal-modal-title"
+                        aria-describedby="modal-modal-description"
+                      >
+                        <Box sx={style}>
+                          <Typography id="modal-modal-title" variant="h6" component="h2" align="center">
+                            Ajouter nouveau equipement
+                          </Typography>
+                          {
+                            errInsertEq != null ?
+                            <p style={{backgroundColor: "red"}}>{errInsertEq}</p>
+                            : null
+                          }
+                          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                            <TextField id="standard-basic" className="form-control" label="Font" variant="standard" style={{width:"300px"}}
+                              type="text" 
+                              name="Font" 
+                              value={newIcon.font}
+                              onChange={(e) => handleNewIconChange(e, "font")}/>
+                              <TextField id="standard-basic" className="form-control" label="Nom" variant="standard" style={{width:"300px"}}
+                              type="text" 
+                              name="Nom" 
+                              value={newIcon.nom}
+                              onChange={(e) => handleNewIconChange(e, "nom")}/>
+                              <br/>
+                              <div style={{margin:'0 auto', width:'fit-content', marginTop:'20px'}}>
+                                <Button variant="contained" onClick={(e) => addEquipement()}>Ajouter equipement</Button>
+                              </div>
+                          </Typography>
+                        </Box>
+                      </Modal>
                     </div>
                     <div style={{marginTop:'30px'}}>
                       <div>
