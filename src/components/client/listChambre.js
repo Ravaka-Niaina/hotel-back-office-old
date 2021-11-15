@@ -116,7 +116,7 @@ function ListTarif(props){
                                                     </span> : ""
                                             } <br/>
 
-                                            <ListServiceTarif services={tarif.services} />
+                                            {/*<ListServiceTarif services={tarif.services} />*/}
                                         </div>
 
                                         </div>
@@ -129,7 +129,7 @@ function ListTarif(props){
                                         <div class="col"> 
                                             <button className="btn btn-primary btn-sm" 
                                                 style={{marginTop:'7px' , marginLeft:'10px'}} 
-                                                onClick = {(e) => addReservation(e,tarif._id, tarif.nom)}>BOOK NOW
+                                                onClick = {(e) => addReservation(e,tarif._id, tarif.nom)}>+
                                             </button>
                                         </div>
                                     </li><br/>

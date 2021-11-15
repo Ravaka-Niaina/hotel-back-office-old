@@ -8,28 +8,23 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Box from '@mui/material/Box';
 import { useParams, useHistory } from 'react-router-dom'
 import  Navbar  from "../Navbar/Navbar";
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Radio from '@mui/material/Radio'
 const utility = require('./utility.js');
 
 
 
 function DetailsTarif(){
     const [errors, setErrors] = useState([]);
+    const [isLeadHour, setIsLeadHour] = useState(true);
+    const [lead, setLead] = useState("");
     const [planTarifaire, setPlanTarifaire] = useState({
         _id: '',
         nom: '',
         description: '',
         dateReservation: {debut: '', fin: ''},
         dateSejour: {debut: '', fin: ''},
-        LeadDay: [
-            {_id: 1, label: 'Lundi', checked: true},
-            {_id: 2, label: 'Mardi', checked: false},
-            {_id: 3, label: 'Mercredi', checked: true},
-            {_id: 4, label: 'Jeudi', checked: false},
-            {_id: 5, label: 'Vendredi', checked: false},
-            {_id: 6, label: 'Samedi', checked: false},
-            {_id: 7, label: 'Dimanche', checked: false}
-        ],
-        LeadHour: {min: '', max: ''},
         chambresAtrb: [],
         politiqueAnnulAtrb: []
     });
@@ -46,7 +41,7 @@ function DetailsTarif(){
     }
 
     function update(e){
-        const current = utility.getPlan(planTarifaire);
+        const current = utility.getPlan(planTarifaire, isLeadHour, lead);
         console.log(current);
         callAPI('post', '/planTarifaire/update', current, tryRedirect);
     }
@@ -54,6 +49,8 @@ function DetailsTarif(){
     function setPlan(res){
         let current = JSON.parse(JSON.stringify(planTarifaire));
         current = res.planTarifaire;
+        setIsLeadHour(res.planTarifaire.lead.isLeadHour);
+        setLead(res.planTarifaire.lead.valeur);
         console.log(res);
         setPlanTarifaire(current);
     }
@@ -158,15 +155,32 @@ function DetailsTarif(){
                                     </div>
                                     <div style={{marginTop:'30px'}}>
                                         <div>
-                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Lead day: </label>
+                                            <label className="row form-label-mt4" style={{textDecoration: 'underline'}} >Lead { isLeadHour ? "hour" : "day"}: </label>
                                         </div>
-                                        <div>
-                                            <utility.LeadDay 
-                                                days={planTarifaire.LeadDay} 
-                                                planTarifaire={planTarifaire}
-                                                setPlanTarifaire={setPlanTarifaire}
-                                                handleCheckBoxChange={utility.handleCheckBoxChange} />
-                                        </div>
+                                        <RadioGroup
+                                            aria-label="Lead"
+                                            defaultValue="hour"
+                                            name="radio-buttons-group"
+                                        >
+                                            <div className ="row">
+                                                <div className ="col">
+                                                    <TextField 
+                                                        id="standard-basic"
+                                                        variant="standard"
+                                                        style={{width: "200px"}}
+                                                        type="number"
+                                                        value={lead}
+                                                        onChange={(e) => setLead(e.target.value)}
+                                                    />
+                                                </div>
+                                                <div className ="col">
+                                                    <FormControlLabel checked={isLeadHour ? true : false} value="hour" onClick={(e) => setIsLeadHour(true)} control={<Radio />} label="Hour" />
+                                                </div>
+                                                <div className ="col">
+                                                    <FormControlLabel checked={isLeadHour ? false : true} value="day" onClick={(e) => setIsLeadHour(false)} control={<Radio />} label="Day" />
+                                                </div>
+                                            </div>
+                                        </RadioGroup>
                                     </div>
                                     <div style={{marginTop:'30px'}}>
                                         <div>
@@ -178,35 +192,6 @@ function DetailsTarif(){
                                                 planTarifaire={planTarifaire}
                                                 setPlanTarifaire={setPlanTarifaire}
                                                 handleCheckBoxChange={utility.handleCheckBoxChange} />
-                                        </div>
-                                    </div>
-                                    <div style={{marginTop:'30px'}}>
-                                        <div>
-                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Lead hour: </label>
-                                        </div>
-                                        <div className="row">
-                                            <div className="col">
-                                                <label style={{marginRight: '10px'}}>Début: </label>
-                                                <TextField
-                                                    id="standard-basic"
-                                                    variant="standard"
-                                                    style={{width: '200px'}}
-                                                    type="time"
-                                                    value={planTarifaire.LeadHour.min}
-                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "LeadHour", "min")}
-                                                />
-                                            </div>
-                                            <div className="col">
-                                                <label style={{marginRight: '10px'}}>Fin: </label>
-                                                <TextField
-                                                    id="standard-basic"
-                                                    variant="standard"
-                                                    style={{width: '200px'}}
-                                                    type="time"
-                                                    value={planTarifaire.LeadHour.max}
-                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "LeadHour", "max")}
-                                                />
-                                            </div>
                                         </div>
                                     </div>
                                     <div style={{marginTop:'30px'}}>

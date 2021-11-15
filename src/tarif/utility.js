@@ -58,16 +58,9 @@ export function PolitiqueAnnulAtrb(props){
     return list;
 }
 
-export function getPlan(planTarifaire){
+export function getPlan(planTarifaire, isLeadHour, lead){
     let current = JSON.parse(JSON.stringify(planTarifaire));
-    let listLeadDay = [];
-    for(let i = 0; i < current.LeadDay.length; i++){
-        if(current.LeadDay[i].checked){
-            listLeadDay.push(current.LeadDay[i]._id);
-        }
-    }
-    current.LeadDay = listLeadDay;
-
+    current.lead = {isLeadHour: isLeadHour, valeur: lead};
     let listChambres = [];
     for(let i = 0; i < current.chambresAtrb.length; i++){
         if(current.chambresAtrb[i].checked){

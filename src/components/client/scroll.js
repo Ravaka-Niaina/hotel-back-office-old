@@ -36,7 +36,7 @@ class Scroll extends React.Component{
         let currentState = JSON.parse(JSON.stringify(this.state));
         currentState.reservationEnCours = res.reservation;
         this.setState(currentState);
-        console.log(currentState);
+        console.log(res);
     }
 
     validerReservation(){

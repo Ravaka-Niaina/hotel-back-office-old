@@ -27,7 +27,7 @@ class Fact extends React.Component{
             reservation = this.props.context.state.reservationEnCours.tarifReserves.map(tarif => {
                 return (
                     <p> 
-                        {tarif.nomTarif} : {tarif.idRooms.length} 
+                        {tarif.nomTarif}
                         <button onClick={(e) => 
                         this.annulerReservation(this.props.context.state.reservationEnCours._id, tarif.idTarif)}>
                             Annuler
@@ -41,13 +41,6 @@ class Fact extends React.Component{
             reservation.push(<p><button onClick={(e) => this.props.context.validerReservation()}>Valider</button></p>);
         }
         reservation.unshift(<p style={{border: "2px solid red"}}>{this.props.context.state.dateSejour.debut} - {this.props.context.state.dateSejour.fin}</p>);
-        
-        reservation = this.props.context.state.reservation.map(reserve => {
-            return (
-                <p> {reserve.nom} : {reserve.nombre}</p>
-                );
-            }
-        )
         return(
             <div class="row" style={{textAlign:'center'}}>
                 <h1>Your Stay</h1>

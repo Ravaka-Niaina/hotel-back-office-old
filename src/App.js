@@ -33,8 +33,6 @@ function App() {
         <Route path="/promotion/create" exact component={InsertPromotion} />
         <Route path="/" exact component={home} />
         <Route path="/client" exact component={AppClient} />
-        <Route path="/login" exact component={Login} />
-        <Route path="/register" exact component={register} />
         {/*<Route path="/Paiement" exact component={Paiement} />*/}
 
         <Route path="/typeChambre" exact component={ListTypeChambre} />
