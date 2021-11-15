@@ -57,22 +57,39 @@ class Login extends React.Component{
   render(){
     return (
       <div>
-        <Navbar currentPage={1}/>
         <div className="container">
-          <div className="base-container">
-          <img src="user.png" style={{width : '12%',marginLeft:''}} ></img>
+          <div className="login-container">
+          <img src="user.png" style={{width : '15%',marginLeft:''}} ></img>
             <div className="content">
               <CustomError errors={this.state.errors} />
               <div className="form">
                 <div className="form-group" style={{paddingTop:"15px"}}>
-                  <TextField id="standard-basic" className="form-control" label="Email" variant="standard" style={{width:"350px"}}
+                  <TextField 
+                  id="standard-basic" 
+                  className="form-control" 
+                  label={
+                    <p>
+                      Email
+                    </p>
+                        } 
+                  variant="standard" 
+                  style={{width:"280px"}}
                   type="email" 
                   name="email" 
-                  value={this.state.email} placeholder="Email"
+                  value={this.state.email}
                   onChange={(e) => this.handleEmailChange(e)}/>
                   </div>
                   <div className="form-group" style={{paddingTop:"15px"}}>
-                  <TextField id="standard-basic" className="form-control" label="Mot de passe" variant="standard" style={{width:"350px"}}
+                  <TextField 
+                  id="standard-basic" 
+                  className="form-control" 
+                  label={
+                    <p>
+                      Mot de passe
+                    </p>
+                        }
+                   variant="standard" 
+                   style={{width:"280px"}}
                   type="password" 
                   name="mdp" 
                   value={this.state.mdp}
@@ -82,13 +99,27 @@ class Login extends React.Component{
             </div>
               
 
-            <Link to='/Register' style={{textDecoration:'none',marginLeft:'290px',marginTop:'30px'}}>
-              <p style={{color:"#87CEEB",fontSize:"17px",color:'#2F4050',textDecoration:'underline'}}>S'inscrire</p>
+            <Link 
+            to='/Register' 
+            style={{
+              textDecoration:'none',
+              marginLeft:'210px',
+              marginTop:'30px'}}>
+              <p 
+              style={{
+                color:"#87CEEB",
+                color:'#2F4050',
+                textDecoration:'underline'}}>
+                S'inscrire
+                </p>
             </Link>
             <div className="footer">
               {/* <button type="button" className="btn" id="btn" onClick={(e) => this.login(e)}>Login</button> */}
-              <Button variant="contained" style={{backgroundColor:'#1E90FF'}} onClick={(e) => this.login(e)}>
-              Se Connecter
+              <Button 
+              variant="contained" 
+              style={{backgroundColor:'#1E90FF'}} 
+              onClick={(e) => this.login(e)}>
+              <span style={{color:'white'}}>Se Connecter</span>
               </Button>
             </div>
           </div>

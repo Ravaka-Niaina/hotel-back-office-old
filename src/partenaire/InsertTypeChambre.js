@@ -252,33 +252,73 @@ function InsertTypeCHambre(){
   return (
     <div> 
         <Navbar/>
-        <div className="container">
-          <div className="row">
-            <div className="col-md-3"></div>
-              <div className="col-md-9">
+        <div className="">
+          <div className="">
+              <div className="">
               <div className="jumbotron" 
-                style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)',marginTop:'-60px'}}>
-                <h1 className="text-center" id='title1'>Ajouter Type chambre</h1>
+                style=
+                {{backgroundColor:'white',
+                boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)',
+                marginTop:'80px',
+                marginLeft:'2%'
+                }}>
+                <h4 className="text-center" id='title1'>Ajouter Type chambre</h4>
                 <hr></hr>
                 <CustomError errors={state.errors} />
                 <form className="needs-validation">
                   <Box>
                     <div style={{marginTop:'40px',display:'inline'}}>
-                      <TextField id="standard-basic" label="Nom" variant="standard" style={{width:'40%'}}
+                      <TextField 
+                      id="standard-basic" 
+                      label={
+                      <p id='litleLabel'>
+                      Nom
+                      </p>
+                            } 
+                      variant="standard" 
+                      style={{width:'40%'}}
                       type="text" 
-                      value={state.nom} onChange={(e) => handleInputChange(e, "nom")}/>
-                                            <TextField id="standard-basic" label="chambre totale" variant="standard" type="number"
-                      style={{width:'40%',marginLeft:'152px'}}
-                      value={state.chambreTotal} onChange={(e) => handleInputChange(e, "chambreTotal")}/>
+                      value={state.nom} onChange={(e) => handleInputChange(e, "nom")}
+                      />
+                      <TextField 
+                      id="standard-basic" 
+                      label={
+                        <p id='litleLabel'>
+                            Chambre total
+                        </p>
+                             } 
+                      variant="standard" 
+                      type="number"
+                      style={{width:'40%',marginLeft:'123px'}}
+                      value={state.chambreTotal} onChange={(e) => handleInputChange(e, "chambreTotal")}
+                      />
                     </div>
 
                     <div style={{marginTop:'30px'}}>
-                      <TextField id="standard-basic" label="Etage" variant="standard" type="number"
-                        style={{width:'40%'}}
-                        value={state.etage} onChange={(e) => handleInputChange(e, "etage")}/>
-                      <TextField id="standard-basic" label="Superficie" variant="standard" type="number" 
-                      style={{width:'40%',marginLeft:'152px'}}
-                      value={state.superficie} onChange={(e) => handleInputChange(e, "superficie")}/>
+                      <TextField 
+                      id="standard-basic" 
+                      label={
+                        <p id='litleLabel'>
+                            Etage
+                        </p>
+                             } 
+                      variant="standard" 
+                      type="number"
+                      style={{width:'40%'}}
+                      value={state.etage} onChange={(e) => handleInputChange(e, "etage")}
+                      />
+                      <TextField 
+                      id="standard-basic" 
+                      label={
+                        <p id='litleLabel'>
+                            Superficie
+                        </p>
+                             } 
+                      variant="standard" 
+                      type="number" 
+                      style={{width:'40%',marginLeft:'123px'}}
+                      value={state.superficie} onChange={(e) => handleInputChange(e, "superficie")}
+                      />
                     </div>
 
                     <div style={{marginTop:'30px'}}>
@@ -307,22 +347,48 @@ function InsertTypeCHambre(){
                     </div>
 
                     <div style={{marginTop:'10px'}}>
-                      <label className="form-label mt-4" style={{textDecoration:'underline'}}>Occupation : </label>
+                      <label className="form-label mt-4" 
+                      style={{textDecoration:'underline'}}
+                      id='bigLabel'>
+                        Occupation : 
+                      </label>
                     </div>
                     <div style={{marginTop:'5px'}}>
-                      <TextField id="standard-basic" label="Adulte" variant="standard" type="number"
-                        value={state.nbAdulte}
-                        onChange={(e) => handleInputChange(e, "nbAdulte")}
-                        style={{width:'40%'}}/>
-                      <TextField id="standard-basic" label="Enfant" variant="standard" type="number" 
-                        value={state.nbEnfant}
-                        onChange={(e) => handleInputChange(e, "nbEnfant")}
-                        style={{width:'40%',marginLeft:'152px'}}/>
+                      <TextField 
+                      id="standard-basic" 
+                      label={
+                        <p id='litleLabel'>
+                            Adulte
+                        </p>
+                             }
+                      variant="standard" 
+                      type="number"
+                      value={state.nbAdulte}
+                      onChange={(e) => handleInputChange(e, "nbAdulte")}
+                      style={{width:'40%'}}
+                      />
+                      <TextField 
+                      id="standard-basic" 
+                      label={
+                        <p id='litleLabel'>
+                            Enfant
+                        </p>
+                             } 
+                      variant="standard" 
+                      type="number" 
+                      value={state.nbEnfant}
+                      onChange={(e) => handleInputChange(e, "nbEnfant")}
+                      style={{width:'40%',marginLeft:'123px'}}
+                      />
                     </div>
 
                     <div style={{marginTop:'20px'}}>
                       <div style={{}}>
-                      <label className="form-label mt-4" style={{textDecoration:'underline'}}>Description: </label>
+                      <label className="form-label mt-4" 
+                      style={{textDecoration:'underline'}}
+                      id='bigLabel'>
+                        Description: 
+                      </label>
                     </div>
                     <TextField id="outlined-basic" variant="outlined" type='text'
                       placeholder=""
@@ -332,9 +398,13 @@ function InsertTypeCHambre(){
                       style={{width:'100%',height:'50px'}}
                       value={state.description}
                       onChange={(e) => handleInputChange(e, "description")} />
-                    <div style={{marginTop:'30px'}}>
-                      <div>
-                        <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Equipements: </label>
+                    <div style={{marginTop:'40px'}}>
+                        <div>
+                            <label className="form-label-mt4" 
+                            style={{textDecoration: 'underline'}} 
+                            id='bigLabel'>
+                              Equipements: 
+                            </label>
                       </div>
                       <FormGroup>
                         <Equipements  equipements={state.equipements} handleCheckBoxEquipement={handleCheckBoxEquipement} />
@@ -376,7 +446,11 @@ function InsertTypeCHambre(){
                     </div>
                     <div style={{marginTop:'30px'}}>
                       <div>
-                          <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Plan tarifaire attribué: </label>
+                          <label className="form-label-mt4" 
+                          style={{textDecoration: 'underline'}} 
+                          id='bigLabel'>
+                            Plan tarifaire attribué: 
+                          </label>
                       </div>
                       <FormGroup>
                         <PlanTarifaire planTarifaire={state.planTarifaire} handleCheckBoxPlanTarifaire={handleCheckBoxPlanTarifaire}/>
@@ -385,14 +459,17 @@ function InsertTypeCHambre(){
                     </div>
                   </Box>
                   <div style={{marginTop:'50px'}}>
-                    <Button variant="contained" color="success" onClick={(e) => insert(e)}>
-                      Créer
+                    <Button 
+                    variant="contained" 
+                    color="success" 
+                    onClick={(e) => insert(e)}
+                    style={{textDecoration:'none'}}>
+                      <span style={{color:'white'}}>Créer</span>
                     </Button>
                   </div>
                 </form>
               </div>
             </div>
-            {/* <div className="col-md-3"></div> */}
           </div>
       </div>
     </div>

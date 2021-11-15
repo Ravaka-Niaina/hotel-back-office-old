@@ -1,8 +1,29 @@
 .jumbotron{
     padding: 20px 70px 20px 70px;
+    width: 75%;
     }
     
     #title1{
-        font-family: Arial, Helvetica, sans-serif;
-        color: #293846;
+        font-family: 'Roboto', sans-serif;
+        color: #1976d2;
     }
+
+#litleLabel{
+color: black;
+font-family: 'Roboto', sans-serif;
+font-size: 14px;
+}
+
+#bigLabel{
+    color: #616569;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    }
+
+#column{
+    display:inline-block;
+}
+
+.col2{
+margin-left: 40px;
+}

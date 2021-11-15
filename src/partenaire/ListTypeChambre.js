@@ -78,11 +78,13 @@ class ListTypeChambre extends React.Component{
                 <Navbar currentPage={2}/>
                 <div className='container' style={{marginTop:'120px'}}>
                     <div className='row'>
-                        <div className='col-md-2'></div>
-                            <div className='col-md-10'>
+                            <div className='col-md-12'>
                                 <Link to={'/TypeChambre/insert'}>
-                                    <Button variant="contained" endIcon={<AddIcon />}>
-                                        Ajouter Type chambre
+                                    <Button 
+                                    variant="contained" 
+                                    endIcon={<AddIcon style={{color:'white'}}/>}
+                                    style={{textDecoration:'none'}}>
+                                        <span style={{color:'white'}}>Ajouter Type chambre</span>
                                     </Button>
                                 </Link>
                                 <TableContainer component={Paper} style={{marginTop:'40px'}}>

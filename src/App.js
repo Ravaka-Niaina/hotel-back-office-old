@@ -15,7 +15,7 @@ import  DCHambre  from "./components/client/listChambre";
 
 import InsertChambre from './partenaire/chambre/InsertChambre.js';
 import  AppClient  from "./components/client/scroll";
-import  paiement  from "./components/client2/paiement";
+// import  paiement  from "./components/client2/paiement";
 import  test  from "./test";
 
 import {BrowserRouter as Router, Route} from 'react-router-dom';
@@ -25,16 +25,28 @@ import  PromotionList  from "./promotion/promotionList.js";
 import  InsertPromotion  from "./promotion/insertPromotion.js";
 import  tarifList  from "./promotion/getTarifs.js";
 import Global from "./politique/global.js";
+import  searchTypeChambre  from "./partenaire/searchTypeChambre.js";
+import  guest  from "./partenaire/guest.js";
+import  hideShow  from "./hideShow.js";
+import  Front_client  from "./front_client/front_client";
+import  Devis  from "./front_client/devis";
+import { useTranslation } from "react-i18next";
+
 
 function App() {
   return (
     <div className="App">
       <Router>
+        <Route path="/TypeChambre/search" exact component={searchTypeChambre} />
+        <Route path="/guest" exact component={guest} />
+        <Route path="/hideShow" exact component={hideShow} />
         <Route path="/promotion" exact component={PromotionList} />
         <Route path="/promotion/create" exact component={InsertPromotion} />
         <Route path="/" exact component={home} />
         <Route path="/client" exact component={AppClient} />
         {/*<Route path="/Paiement" exact component={Paiement} />*/}
+        <Route path="/booking" exact component={AppClient} />
+        <Route path="/Paiement" exact component={Paiement} />
 
         <Route path="/typeChambre" exact component={ListTypeChambre} />
         <Route path="/TypeChambre/insert" exact component={InsertTypeChambre} />
@@ -49,7 +61,6 @@ function App() {
         <Route path="/calendrier" exact component={Calendrier} />
 
         {/*route client */}
-        <Route path="/paiement" exact component={paiement} />
         <Route path="/test" exact component={test} />
 
         {/*route client */}
@@ -63,6 +74,8 @@ function App() {
         <Route path="/tarif/insert/:idTypeChambre/:nomTypeChambre" exact component={InsertTarif}/>
         <Route path="/tarif/details/:_id" exact component={DetailsTarif} />
        */} 
+        <Route path="/client" exact component={Front_client} />
+        <Route path="/devis" exact component={Devis} />
 
       </Router>
     </div>

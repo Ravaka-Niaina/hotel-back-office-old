@@ -295,12 +295,16 @@ class Filtre extends React.Component{
                     <TextField id="standard-basic" label="Enfant" variant="standard" type="number"
                         style={{width:'40%'}} value={this.props.context.state.guests.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")}/>
                 </p>
-                <p>
-                    <TextField id="standard-basic" label="Debut sejour" variant="standard" type="date"
-                        style={{width:'40%'}} value={this.props.context.state.dateSejour.debut} onChange={(e) => this.changeDateSejour(e, "debut")}/>
-                    <TextField id="standard-basic" label="Fin sejour" variant="standard" type="date"
-                        style={{width:'40%'}} value={this.props.context.state.dateSejour.fin} onChange={(e) => this.changeDateSejour(e, "fin")}/>
-                </p>
+                    <div id='date'>
+                    <p>Debut sejour</p>
+                    <TextField id="standard-basic" label="" variant="standard" type="date"
+                        style={{width:''}} value={this.props.context.state.dateSejour.debut} onChange={(e) => this.changeDateSejour(e, "debut")}/>
+                    </div>
+                    <div id='date'>
+                    <p>Fin sejour</p>
+                    <TextField id="standard-basic" label="" variant="standard" type="date"
+                        style={{marginLeft:'15px'}} value={this.props.context.state.dateSejour.fin} onChange={(e) => this.changeDateSejour(e, "fin")}/>
+                    </div>
                 
                 <div className="form-content">
                     <form>

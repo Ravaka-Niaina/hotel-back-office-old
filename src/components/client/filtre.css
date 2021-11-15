@@ -50,4 +50,9 @@
     margin-top: 10px;
     width: fit-content;
     float: right;
+
+  }
+
+  #date{
+    display:inline-block;  
   }

@@ -72,8 +72,11 @@ function ListTarif() {
     return (
         <div>
             <Link to={'/tarif/insert'}>
-                <Button variant="contained" endIcon={<AddIcon />}>
-                    Ajouter Plan tarifaire
+                <Button 
+                variant="contained" 
+                endIcon={<AddIcon style={{color:'white'}}/>}
+                style={{textDecoration:'none'}}>
+                    <span style={{color:'white'}}>Ajouter Plan tarifaire</span>
                 </Button>
             </Link>
             <TableContainer component={Paper} style={{marginTop:'40px'}}>
