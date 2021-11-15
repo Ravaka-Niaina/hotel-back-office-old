@@ -7,6 +7,7 @@ import { NorthWest } from '@mui/icons-material';
 import Filtre from './Filtre';
 import TextField from '@mui/material/TextField';
 import callAPI from '../../utility';
+import { ReactComponent as airConditioner } from '../../public/air-conditioner-svgrepo-com.svg';
 
 function ListConditionAnnulation(props){
     let services = props.politiqueAnnulAtrb.map(condition =>{
@@ -42,7 +43,12 @@ function Equipements(props){
         for(let i = 0; i < props.equipements.length; i++){
             list.push(
                 <li style={ {marginLeft : 10 , listStyle : 'none', width: '150px'} }>
-                <i class="fa fa-wifi"></i>&nbsp;{props.equipements[i].nom}
+                    {
+                        props.equipements[i].font.startsWith("https://") ?
+                        <img src={props.equipements[i].font} style={{maxWidth:'20px', maxHeight: '200px', width: 'auto', height: 'auto', padding: '0 0'}}/>
+                        : <i class={props.equipements[i].font}></i>
+                    }
+                    &nbsp;{props.equipements[i].nom}
                 </li>
             );
         }
