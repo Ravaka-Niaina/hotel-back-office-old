@@ -28,15 +28,29 @@ class Scroll extends React.Component{
             dateSejour: {debut: "", fin: ""},
             listTypeChambre: [],
             reservation: [],
-            reservationEnCours: null
-        }
+            reservationEnCours: null,
+            open: false,
+            err: null,
+            email: ""
+        };
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
     }
 
+    handleChange(fieldName, value){
+        let current = JSON.parse(JSON.stringify(this.state));
+        current[fieldName] = value;
+        this.setState(current);
+    }
+
     setReservationEnCours(res){
-        let currentState = JSON.parse(JSON.stringify(this.state));
-        currentState.reservationEnCours = res.reservation;
-        this.setState(currentState);
+        if(res.status == 401){// Acces non autorise
+            console.log("Access non autorise");
+            this.handleChange("open", true);
+        }else if(res.status == 200){
+            let currentState = JSON.parse(JSON.stringify(this.state));
+            currentState.reservationEnCours = res.reservation;
+            this.setState(currentState);
+        }
         console.log(res);
     }
 
