@@ -74,7 +74,7 @@ function App() {
         <Route path="/tarif/insert/:idTypeChambre/:nomTypeChambre" exact component={InsertTarif}/>
         <Route path="/tarif/details/:_id" exact component={DetailsTarif} />
        */} 
-        <Route path="/client" exact component={Front_client} />
+        <Route path="/frontClient" exact component={Front_client} />
         <Route path="/devis" exact component={Devis} />
 
       </Router>

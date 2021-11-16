@@ -75,7 +75,7 @@ export default class InsertPromotion extends React.Component {
   }
 
     async getTarifs(){
-    axios.get('http://localhost:3000/tarif')
+    axios.get('http://localhost:3000/planTarifaire')
     .then(res => {
       const tarifs ={tarifs: res.data.list} ;
       

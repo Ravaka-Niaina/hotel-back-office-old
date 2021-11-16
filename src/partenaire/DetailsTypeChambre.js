@@ -92,7 +92,7 @@ class DetailsTypeCHambre extends React.Component{
         this.noImage = '/no-image.jpg';
         this.state = {
             val: 1,
-            newIcon: {fon: "", nom: ""},
+            newIcon: {font: "", nom: ""},
             errInsertEq: null,
             open: false,
             errors: [],
@@ -279,6 +279,7 @@ class DetailsTypeCHambre extends React.Component{
           this.changeStateValue(["typeChambre", "equipements"], res.equipements);
           this.changeStateValue(["open"], false);
         }else{
+            console.log("nisy blem");
             this.changeStateValue(["errInsertEq"], res.message);
         }
       }

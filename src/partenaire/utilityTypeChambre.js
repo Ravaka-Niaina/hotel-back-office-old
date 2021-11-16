@@ -32,14 +32,25 @@ function addInputVideo(state, setState, context){
     
 }
 
-function removeInputVideo(state, setState, index){
-    let currentState = JSON.parse(JSON.stringify(state));
-    try{
-        currentState.videos.splice(index, 1);
-    }catch(err){
-        currentState.typeChambre.videos.splice(index, 1);
+function removeInputVideo(state, setState, index, context){
+    if(context != undefined){
+        let currentState = JSON.parse(JSON.stringify(context.state));
+        try{
+            currentState.videos.splice(index, 1);
+        }catch(err){
+            currentState.typeChambre.videos.splice(index, 1);
+        }
+        context.setState(currentState);
+    }else{
+        let currentState = JSON.parse(JSON.stringify(state));
+        try{
+            currentState.videos.splice(index, 1);
+        }catch(err){
+            currentState.typeChambre.videos.splice(index, 1);
+        }
+        setState(currentState);
     }
-    setState(currentState);
+    
 }
 
 export function Videos(props){
@@ -50,7 +61,7 @@ export function Videos(props){
         let u = i;
         const add = u == videos.length - 1 ? btnAdd : null;
         const remove = videos.length > 1 ? 
-            <button onClick={(e) => removeInputVideo(props.state, props.setState, u)}>-</button>
+            <button onClick={(e) => removeInputVideo(props.state, props.setState, u, props.context)}>-</button>
             : null;
         let input = 
         <div>

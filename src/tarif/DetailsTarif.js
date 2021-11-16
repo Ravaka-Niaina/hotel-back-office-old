@@ -37,7 +37,6 @@ function DetailsTarif(){
         }else{
             setErrors(res.errors);
         }
-        console.log(res);
     }
 
     function update(e){
