@@ -77,6 +77,7 @@ function getDate(date){
 
 function ListTarif(props){
     function addReservation(e ,id, nom){
+        console.log("Add");
         if(props.context.state.dateSejour.debut != "" && props.context.state.dateSejour.fin != ""){
             axios({
                 method: 'post',      
