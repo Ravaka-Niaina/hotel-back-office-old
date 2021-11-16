@@ -77,21 +77,24 @@ function getDate(date){
 
 function ListTarif(props){
     function addReservation(e ,id, nom){
-        axios({
-            method: 'post',      
-            url: process.env.REACT_APP_BACK_URL + '/reservation/insert',
-            withCredentials: true,
-            data: {
-                reservation: {
-                    idTarif: id, 
-                    dateSejour: props.context.state.dateSejour,
-                    dateReservation: getDate(Date.now())
+        if(props.context.state.dateSejour.debut != "" && props.context.state.dateSejour.fin != ""){
+            axios({
+                method: 'post',      
+                url: process.env.REACT_APP_BACK_URL + '/reservation/insert',
+                withCredentials: true,
+                data: {
+                    reservation: {
+                        idTarif: id, 
+                        dateSejour: props.context.state.dateSejour,
+                        dateReservation: getDate(Date.now())
+                    }
                 }
-            }
-        })
-        .then(res => {                                                  
-            props.context.setReservationEnCours(res.data)})
-        .catch(err => console.log(err));
+            })
+            .then(res => {                                                  
+                props.context.setReservationEnCours(res.data)})
+            .catch(err => console.log(err));
+        }
+        
     }
     let tarifs = props.tarifs.map(tarif => {
              return (

@@ -1,4 +1,3 @@
-
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
@@ -28,7 +27,7 @@ class Fact extends React.Component{
             reservation = this.props.context.state.reservationEnCours.tarifReserves.map(tarif => {
                 return (
                     <p> 
-                        {tarif.nomTarif}
+                        {tarif.nomTarif} : {tarif.idRooms.length} 
                         <button onClick={(e) => 
                         this.annulerReservation(this.props.context.state.reservationEnCours._id, tarif.idTarif)}>
                             Annuler
@@ -41,17 +40,25 @@ class Fact extends React.Component{
         if(reservation.length > 0){
             reservation.push(<p><button onClick={(e) => this.props.context.validerReservation()}>Valider</button></p>);
         }
-        reservation.unshift(<p style={{border: "2px solid red"}}>{this.props.context.state.dateSejour.debut} - {this.props.context.state.dateSejour.fin}</p>);
+        
         return(
             <div class="row" style={{textAlign:'center'}}>
                 <h1>Your Stay</h1>
                 <div class="row mb-4">
-                    {reservation}
+                    <div class="col">
+                        <strong> Check in :  </strong>
+                       {reservation}
+                        </div>
+                    
+                    <div class="col" id="locA">
+                        <strong>Check out :</strong>
+                           
+                    </div>
                 </div>
-                <p>TOTAL :</p> 
-                <input type="submit" className="btn btn-primary" value="APPLY"  />     
+                <p>TOTAL :</p>    
             </div>
         );
     }
 }
+
 export default Fact
