@@ -26,7 +26,7 @@ export default class PromotionList extends React.Component {
   }
  
   componentDidMount() {
-    axios.get('http://localhost:3000/promotion')
+    axios.get(process.env.REACT_APP_BACK_URL + '/promotion')
       .then(res => {
         const promotions = res.data;
         console.log(promotions);

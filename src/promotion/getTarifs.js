@@ -11,7 +11,7 @@ export default class GetTypeChambre extends React.Component {
   }
  
   componentDidMount() {
-    axios.get('http://localhost:3000/planTarifaire')
+    axios.get(process.env.REACT_APP_BACK_URL + '/planTarifaire')
       .then(res => {
         const tarifs ={tarifs: res.data.list} ;
         

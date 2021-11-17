@@ -213,8 +213,14 @@ class Filtre extends React.Component{
         console.log(this.props.context.state);
     }
     applyFilter(){
-        console.log('filtre en cours...');
-        callAPI('post', '/typeChambre/', {filtres: this.state.filtres, guests: this.props.context.state.guests}, this.setResult);
+        this.props.context.handleChange("errFiltre", null);
+        if((this.props.context.state.guests.nbEnfant != 0 || this.props.context.state.guests.nbAdulte != 0)
+            && (this.props.context.state.dateSejour.debut != "" && this.props.context.state.dateSejour.fin != "")){
+                console.log('filtre en cours...');
+                callAPI('post', '/typeChambre/', {filtres: this.state.filtres, guests: this.props.context.state.guests}, this.setResult);
+        }else{
+            this.props.context.handleChange("errFiltre", 'Veuillez remplir les champs Adulte, Enfant, Debut sejour et fin sejour au moins');
+        }
     }
 
     handleFiltreChange(event){
@@ -281,17 +287,20 @@ class Filtre extends React.Component{
     changeGuests(e, fieldName){
         let currentState = JSON.parse(JSON.stringify(this.props.context.state));
         currentState.guests[fieldName] = e.target.value;
+        currentState.listTypeChambre = [];
         this.props.context.setState(currentState);
     }
     changeDateSejour(e, fieldName){
         let currentState = JSON.parse(JSON.stringify(this.props.context.state));
         currentState.dateSejour[fieldName] = e.target.value;
+        currentState.listTypeChambre = [];
         this.props.context.setState(currentState);
     }
 
     render(){
         return (
             <div>
+<<<<<<< HEAD
                 <div className = "row">
                     <div className = "col"></div>
                     <TextField className="col"  id="standard-basic" label="Adulte" variant="standard" type="number"
@@ -301,6 +310,9 @@ class Filtre extends React.Component{
                         style={{width:'20%'}} value={this.props.context.state.guests.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")}/>
                     <div className = "col"></div>
                 </div>
+                { this.props.context.state.errFiltre != null 
+                ? <p style={{backgroundColor: "red"}}>{this.props.context.state.errFiltre}</p> 
+                : null }
           {/*    <div id='date'>
                     <p>Debut sejour</p>
                     <TextField id="standard-basic" label="" variant="standard" type="date"

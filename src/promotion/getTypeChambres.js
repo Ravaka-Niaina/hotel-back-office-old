@@ -11,7 +11,7 @@ export default class GetTypeChambre extends React.Component {
   }
  
   componentDidMount() {
-    axios.get('http://localhost:3000/typechambre')
+    axios.get(process.env.REACT_APP_BACK_URL + '/typechambre')
       .then(res => {
         const typeChambres ={typeChambres: res.data.list} ;
         

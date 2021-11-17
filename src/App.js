@@ -31,6 +31,7 @@ import  hideShow  from "./hideShow.js";
 import  Front_client  from "./front_client/front_client";
 import  Devis  from "./front_client/devis";
 import { useTranslation } from "react-i18next";
+import  Reservation  from "./components/client/reservation.js";
 
 
 function App() {
@@ -76,6 +77,8 @@ function App() {
        */} 
         <Route path="/frontClient" exact component={Front_client} />
         <Route path="/devis" exact component={Devis} />
+
+        <Route path="/reservation/:_id" exact component={Reservation} />
 
       </Router>
     </div>

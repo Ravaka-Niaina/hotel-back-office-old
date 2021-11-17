@@ -65,7 +65,7 @@ export default class InsertPromotion extends React.Component {
   // }
 
   async getTypeChambres(){
-    axios.get('http://localhost:3000/typechambre')
+    axios.get(process.env.REACT_APP_BACK_URL + '/typechambre')
     .then(res => {
       const typeChambres ={typeChambres: res.data.list} ;
       
@@ -75,7 +75,7 @@ export default class InsertPromotion extends React.Component {
   }
 
     async getTarifs(){
-    axios.get('http://localhost:3000/planTarifaire')
+    axios.get(process.env.REACT_APP_BACK_URL + '/planTarifaire')
     .then(res => {
       const tarifs ={tarifs: res.data.list} ;
       
@@ -99,7 +99,7 @@ export default class InsertPromotion extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    axios.post(`http://localhost:3000/promotion/create`,  this.state.promotion )
+    axios.post(process.env.REACT_APP_BACK_URL + `/promotion/create`,  this.state.promotion )
       .then(res => {
         console.log(res);
         console.log(res.data);

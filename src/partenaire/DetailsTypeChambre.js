@@ -279,7 +279,7 @@ class DetailsTypeCHambre extends React.Component{
           this.changeStateValue(["typeChambre", "equipements"], res.equipements);
           this.changeStateValue(["open"], false);
         }else{
-            console.log("nisy blem");
+            console.log(this.state);
             this.changeStateValue(["errInsertEq"], res.message);
         }
       }

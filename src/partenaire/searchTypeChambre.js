@@ -40,7 +40,7 @@ export default class searchTypeChambre extends React.Component {
 
   handleSubmit = event => {
     event.preventDefault();
-    axios.get(`http://localhost:3000/typeChambre/search/${this.state.nbAdulte}/${this.state.nbEnfant}`)
+    axios.get(process.env.REACT_APP_BACK_URL + `/typeChambre/search/${this.state.nbAdulte}/${this.state.nbEnfant}`)
     .then(res => {
         const typeChambre = {typeChambre : res.data.typeChambre};
         console.log(typeChambre);
