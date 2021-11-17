@@ -67,7 +67,7 @@ function DateSejour(props) {
       >
         <Box sx={style}>
         <h1>Sejour :</h1>
-            Debut :<TextField id="standard-basic" label="" variant="standard" type="date"
+            Debut :&nbsp;<TextField id="standard-basic" label="" variant="standard" type="date"
                 style={{width:''}} value={props.context.state.dateSejour.debut} 
                 onChange={(e) => changeDateSejour(e,props.context , "debut")}/>&nbsp;&nbsp;
             Fin : <TextField id="standard-basic" label="" variant="standard" type="date"
