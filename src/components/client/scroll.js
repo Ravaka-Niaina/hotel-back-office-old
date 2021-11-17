@@ -24,6 +24,8 @@ class Scroll extends React.Component{
     constructor(props){
         super(props);
         this.state = {
+            resultApplyReservation: null,
+            errFiltre: null,
             guests: {nbEnfant: 0, nbAdulte: 0},
             dateSejour: {debut: "", fin: ""},
             listTypeChambre: [],

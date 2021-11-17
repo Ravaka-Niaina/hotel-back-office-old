@@ -25,6 +25,7 @@ class Fact extends React.Component{
 
     validerReservation(){
         this.props.context.handleChange("err", null);
+        this.props.context.handleChange("resultApplyReservation", null);
         try{
             let idVide = true;
             let emailVide = true;
@@ -44,8 +45,13 @@ class Fact extends React.Component{
                 .then(res => {       
                     console.log(res);  
                     if(res.data.status != 200){
-                        this.props.context.handleChange("err", res.data.errors[0].message);
+                        try{
+                            this.props.context.handleChange("resultApplyReservation", res.data.errors[0].message);
+                        }catch(err){
+                            this.props.context.handleChange("resultApplyReservation", res.data.errors[0]);
+                        }
                     }else{
+                        this.props.context.handleChange("resultApplyReservation", res.data.message);
                         this.props.context.setReservationEnCours({status: 200, reservation: null});
                         this.props.context.handleChange("open", false);
                     }
@@ -144,7 +150,20 @@ class Fact extends React.Component{
                             </div>
                         </Typography>
                     </Box>
-                    </Modal>
+                </Modal>
+
+                <Modal
+                    open={this.props.context.state.resultApplyReservation != null ? true : false}
+                    onClose={(e) => this.props.context.handleChange("resultApplyReservation", null)}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    >
+                    <Box sx={this.style}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2" align="center">
+                            {this.props.context.state.resultApplyReservation}
+                        </Typography>
+                    </Box>
+                </Modal>
             </div>
         );
     }

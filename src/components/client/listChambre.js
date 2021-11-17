@@ -76,7 +76,7 @@ function getDate(date){
 }
 
 function ListTarif(props){
-    function addReservation(e ,id, nom){
+    function addReservation(e ,id, nom, idTypeChambre){
         console.log("Add");
         if(props.context.state.dateSejour.debut != "" && props.context.state.dateSejour.fin != ""){
             axios({
@@ -87,7 +87,9 @@ function ListTarif(props){
                     reservation: {
                         idTarif: id, 
                         dateSejour: props.context.state.dateSejour,
-                        dateReservation: getDate(Date.now())
+                        dateReservation: getDate(Date.now()),
+                        guests: props.context.state.guests,
+                        idTypeChambre : idTypeChambre
                     }
                 }
             })
@@ -134,7 +136,7 @@ function ListTarif(props){
                                         <div class="col"> 
                                             <button className="btn btn-primary btn-sm" 
                                                 style={{marginTop:'7px' , marginLeft:'10px'}} 
-                                                onClick = {(e) => addReservation(e,tarif._id, tarif.nom)}>+
+                                                onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre)}>+
                                             </button>
                                         </div>
                                     </li><br/>
@@ -182,6 +184,7 @@ class DChambre extends React.Component{
     }
 
     componentDidMount(){
+        /*
         axios({                                                     // webService
             method: 'post',                                           //methode get       
             url: process.env.REACT_APP_BACK_URL + "/typeChambre",     //miants ilai url ani amin back
@@ -190,7 +193,7 @@ class DChambre extends React.Component{
         .then(res => {                                                  
             this.setListTypeChambre(res.data)})
         .catch(err => console.log(err));
-        
+        */
     }
 
     addReservation(e ,id, nom){
@@ -200,7 +203,7 @@ class DChambre extends React.Component{
     }
 
     render(){
-        let listChambre = this.props.context.state.listTypeChambre.map(typeChambre => {
+        let listChambre = this.props.context.state.listTypeChambre.map(typeChambre => { 
             return (
             <div className="DChambre1">
                 <div class="Chambre1">
@@ -231,7 +234,7 @@ class DChambre extends React.Component{
                         </ul>
                     </div>
                     <div class="col">
-                        <ListTarif context={this.props.context} tarifs={typeChambre.tarifs} />
+                        <ListTarif context={this.props.context} tarifs={typeChambre.tarifs} idTypeChambre={typeChambre._id} />
                     </div>
                     <div class="col"></div>
                 </div>  
@@ -240,6 +243,10 @@ class DChambre extends React.Component{
         </div>
             )
         }); 
+        if(this.props.context.state.guests.nbEnfant == 0 
+            && this.props.context.state.guests.nbAdulte == 0){
+                listChambre = null;
+            } 
         return (
             <div>
                 <Filtre context={this.props.context} />

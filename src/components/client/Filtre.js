@@ -210,8 +210,14 @@ class Filtre extends React.Component{
         console.log(this.props.context.state);
     }
     applyFilter(){
-        console.log('filtre en cours...');
-        callAPI('post', '/typeChambre/', {filtres: this.state.filtres, guests: this.props.context.state.guests}, this.setResult);
+        this.props.context.handleChange("errFiltre", null);
+        if((this.props.context.state.guests.nbEnfant != 0 || this.props.context.state.guests.nbAdulte != 0)
+            && (this.props.context.state.dateSejour.debut != "" && this.props.context.state.dateSejour.fin != "")){
+                console.log('filtre en cours...');
+                callAPI('post', '/typeChambre/', {filtres: this.state.filtres, guests: this.props.context.state.guests}, this.setResult);
+        }else{
+            this.props.context.handleChange("errFiltre", 'Veuillez remplir les champs Adulte, Enfant, Debut sejour et fin sejour au moins');
+        }
     }
 
     handleFiltreChange(event){
@@ -278,17 +284,22 @@ class Filtre extends React.Component{
     changeGuests(e, fieldName){
         let currentState = JSON.parse(JSON.stringify(this.props.context.state));
         currentState.guests[fieldName] = e.target.value;
+        currentState.listTypeChambre = [];
         this.props.context.setState(currentState);
     }
     changeDateSejour(e, fieldName){
         let currentState = JSON.parse(JSON.stringify(this.props.context.state));
         currentState.dateSejour[fieldName] = e.target.value;
+        currentState.listTypeChambre = [];
         this.props.context.setState(currentState);
     }
 
     render(){
         return (
             <div>
+                { this.props.context.state.errFiltre != null 
+                ? <p style={{backgroundColor: "red"}}>{this.props.context.state.errFiltre}</p> 
+                : null }
                 <p>
                     <TextField id="standard-basic" label="Adulte" variant="standard" type="number"
                         style={{width:'40%'}} value={this.props.context.state.guests.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")}/>
