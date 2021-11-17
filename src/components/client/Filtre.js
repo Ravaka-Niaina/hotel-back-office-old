@@ -324,7 +324,7 @@ class Filtre extends React.Component{
             </div>
         */}
         { this.props.context.state.showFiltre ? 
-                <div className="form-content">
+                <div className="form-content" style = {{marginTop : "20px"}}>
                     <form>
                         <FormGroup>
                             <div class="row">
@@ -335,7 +335,7 @@ class Filtre extends React.Component{
                                 <div class="col">
                                     <FormControl fullWidth>
                                         <InputLabel>Afficher les résultats par</InputLabel>
-                                        <Select>
+                                        <Select size ="small">
                                             <MenuItem value="chambre">Chambre</MenuItem>
                                             <MenuItem value="superficie">Superficie</MenuItem>
                                             <MenuItem value="vue">Vue</MenuItem>
@@ -345,7 +345,7 @@ class Filtre extends React.Component{
                                 <div class="col">
                                     <FormControl fullWidth>
                                         <InputLabel>Trier par</InputLabel>
-                                        <Select>
+                                        <Select size ="small">
                                             <MenuItem value="chambre">Chambre</MenuItem>
                                             <MenuItem value="superficie">Superficie</MenuItem>
                                             <MenuItem value="vue">Vue</MenuItem>

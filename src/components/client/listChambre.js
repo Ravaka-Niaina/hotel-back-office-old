@@ -234,7 +234,6 @@ class DChambre extends React.Component{
                     <div class="col"></div>
                 </div>  
             </div>      
-            <hr/>
         </div>
             )
         }); 
@@ -245,7 +244,7 @@ class DChambre extends React.Component{
         return (
             <div>
                 <Filtre context={this.props.context} />
-                <hr></hr>
+                <hr/>
                  {listChambre}
             </div>
         );

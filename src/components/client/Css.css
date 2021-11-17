@@ -8,9 +8,9 @@
 
 
 .scroll-div{
-	width: 920px;
+	width: 880px;
 	background: rgb(250, 250, 250);
-	height: 570px;
+	max-height: 510px;
 	overflow: hidden;
 	overflow-y: scroll;
   
@@ -26,8 +26,17 @@
 }
 
 .divRight{
-    width: 340px;
-    height: 500px;
+    width: 380px;
     background: rgb(250, 250, 250);
 
+}
+
+#remove:hover {
+	color : red;
+	cursor : pointer
+}
+
+#edit:hover {
+	color : green;
+	cursor : pointer
 }

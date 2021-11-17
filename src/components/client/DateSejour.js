@@ -2,6 +2,7 @@ import * as React from 'react';
 import { styled, Box } from '@mui/system';
 import ModalUnstyled from '@mui/core/ModalUnstyled';
 import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 const StyledModal = styled(ModalUnstyled)`
   position: fixed;
@@ -55,9 +56,13 @@ function DateSejour(props) {
 
   return (
     <div>
-     <h3 onClick={handleOpen} style ={{backgroundColor : "gainsboro"}}> Date Debut : {props.context.state.dateSejour.debut}
-         et date_Fin : {props.context.state.dateSejour.fin}</h3>
-         
+      Date Sejour : 
+      <Button variant="contained" onClick={handleOpen} >
+        <span style ={{color :"white"}}> 
+            Date Debut : {props.context.state.dateSejour.debut} &nbsp;&nbsp; - &nbsp;&nbsp;
+            date_Fin : {props.context.state.dateSejour.fin}
+        </span>
+      </Button>
       <StyledModal
         aria-labelledby="unstyled-modal-title"
         aria-describedby="unstyled-modal-description"
