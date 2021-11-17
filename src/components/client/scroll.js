@@ -9,6 +9,10 @@ import { useCookies } from 'react-cookie';
 import callAPI from '../../utility';
 import './Css.css'
 
+
+import Datee from "./date";
+import DateSejour from "./DateSejour"
+
 function TestCookie(){
     const [cookies, setCookie] = useCookies(['name']);
     let pp = JSON.stringify({user: 'Norck', play: 999, totalPP: 1000, topPlays:['ascension to heaven', 'big black', 'atama no taisou']});
@@ -28,7 +32,8 @@ class Scroll extends React.Component{
             dateSejour: {debut: "", fin: ""},
             listTypeChambre: [],
             reservation: [],
-            reservationEnCours: null
+            reservationEnCours: null,
+            showFiltre : false
         }
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
     }
@@ -58,11 +63,14 @@ class Scroll extends React.Component{
             <div>
                 <TestCookie />
                 <div className="scroll-bg">
+                        <Datee style = {{marginLeft : "50px"}}/><hr/>
                     <div class="row">
                         <div className="col">
                             <div className="scroll-div">
                                 <div className="scroll-object">
+                                    <DateSejour context= {this} /><hr/>
                                     <DChambre context = {this} />
+                                    
                                 </div>
                             </div>
                         </div>

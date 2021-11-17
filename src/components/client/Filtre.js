@@ -1,5 +1,5 @@
 
-import React  from "react";
+import React ,{useState} from "react";
 import MenuItem from '@mui/material/MenuItem';
 
 import FormGroup from '@mui/material/FormGroup';
@@ -38,6 +38,9 @@ function ListOptCheckBox(props){
     });
     return list;
 }
+
+
+
 
 function ListOptRadio(props){
     let list = null;
@@ -289,13 +292,16 @@ class Filtre extends React.Component{
     render(){
         return (
             <div>
-                <p>
-                    <TextField id="standard-basic" label="Adulte" variant="standard" type="number"
-                        style={{width:'40%'}} value={this.props.context.state.guests.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")}/>
-                    <TextField id="standard-basic" label="Enfant" variant="standard" type="number"
-                        style={{width:'40%'}} value={this.props.context.state.guests.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")}/>
-                </p>
-                    <div id='date'>
+                <div className = "row">
+                    <div className = "col"></div>
+                    <TextField className="col"  id="standard-basic" label="Adulte" variant="standard" type="number"
+                        style={{width:'20%'}} value={this.props.context.state.guests.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")}/>
+                    <div className = "col"></div>
+                    <TextField className ="col" id="standard-basic" label="Enfant" variant="standard" type="number"
+                        style={{width:'20%'}} value={this.props.context.state.guests.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")}/>
+                    <div className = "col"></div>
+                </div>
+          {/*    <div id='date'>
                     <p>Debut sejour</p>
                     <TextField id="standard-basic" label="" variant="standard" type="date"
                         style={{width:''}} value={this.props.context.state.dateSejour.debut} onChange={(e) => this.changeDateSejour(e, "debut")}/>
@@ -304,8 +310,9 @@ class Filtre extends React.Component{
                     <p>Fin sejour</p>
                     <TextField id="standard-basic" label="" variant="standard" type="date"
                         style={{marginLeft:'15px'}} value={this.props.context.state.dateSejour.fin} onChange={(e) => this.changeDateSejour(e, "fin")}/>
-                    </div>
-                
+            </div>
+        */}
+        { this.props.context.state.showFiltre ? 
                 <div className="form-content">
                     <form>
                         <FormGroup>
@@ -356,7 +363,7 @@ class Filtre extends React.Component{
                                 </div> : null}
                         </FormGroup>
                     </form>
-                </div>
+                </div> : ""}
             </div>
         );
     }

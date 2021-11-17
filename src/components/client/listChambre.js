@@ -99,13 +99,11 @@ function ListTarif(props){
     let tarifs = props.tarifs.map(tarif => {
              return (
                     <div>
-                        
                         <div class="row">
-                            <div class="col"></div>
-                            <div class="col" style={{marginTop:'-30px'}} >
-                                <ul style={{marginLeft:'25%'}}>
+                            <div class="col" style={{marginTop:'-10px'}} >
+                                <ul style ={{marginLeft : "10%"}}>
                                     <li style={ {  listStyle : 'none' , width : '500px',
-                                                    padding :"1px" ,background : 'gainsboro'} }>
+                                                    padding :"1px" ,border : '5px solid gainsboro'} }>
                                         <div className="row mb-4" style={{margin:"10px"}}>
                                         <div class="col"> 
                                             <strong style={{fontSize:'13px'}}>
@@ -123,8 +121,6 @@ function ListTarif(props){
                                             {/*<ListServiceTarif services={tarif.services} />*/}
                                         </div>
 
-                                        </div>
-                                        
                                         <div class="col"> 
                                             <strong style={{fontSize:'20px'}}>&nbsp;{tarif.prix + " "}
                                             </strong><span style={{fontSize:'14px'}}>Per Night</span><br/>
@@ -136,14 +132,13 @@ function ListTarif(props){
                                                 onClick = {(e) => addReservation(e,tarif._id, tarif.nom)}>+
                                             </button>
                                         </div>
+                                        </div>
                                     </li><br/>
-                                
                                 </ul> 
                             </div>
-                        <div class="col">
-                    </div> 
-                </div>
-            </div> 
+                        <div class="col"></div> 
+                    </div>
+                </div> 
         ) ;
     });
     return tarifs;

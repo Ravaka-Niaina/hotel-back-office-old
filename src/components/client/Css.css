@@ -3,14 +3,14 @@
 	width: 100%;
 	padding: 30px;
 	border-radius: 5px;
-    margin-top: 6%;
+    margin-top: 3%;
 }
 
 
 .scroll-div{
 	width: 920px;
 	background: rgb(250, 250, 250);
-	height: 510px;
+	height: 570px;
 	overflow: hidden;
 	overflow-y: scroll;
   
