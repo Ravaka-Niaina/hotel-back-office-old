@@ -112,16 +112,17 @@ class Fact extends React.Component{
                     <h1>Your Stay</h1>
                     <div class="row mb-4">
                         <div class="col">
-                            <strong> Check in :  </strong>
-                        {reservation}
+                            <strong> Check in : <span>{this.props.context.state.dateSejour.debut}</span> </strong>
+                        
                             </div>
                         
                         <div class="col" id="locA">
-                            <strong>Check out :</strong>
+                            <strong>Check out : <span>{this.props.context.state.dateSejour.fin}</span></strong>
                             
                         </div>
                     </div>
-                    <p>TOTAL :</p>    
+                    <p>TOTAL :</p> 
+                    {reservation}   
                 </div>
                 <Modal
                     open={this.props.context.state.open}

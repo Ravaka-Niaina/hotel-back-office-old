@@ -300,7 +300,6 @@ class Filtre extends React.Component{
     render(){
         return (
             <div>
-<<<<<<< HEAD
                 <div className = "row">
                     <div className = "col"></div>
                     <TextField className="col"  id="standard-basic" label="Adulte" variant="standard" type="number"
