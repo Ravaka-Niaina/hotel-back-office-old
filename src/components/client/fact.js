@@ -7,6 +7,9 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField'
 
+import EditIcon from '@mui/icons-material/Edit';
+import CancelIcon from '@mui/icons-material/Cancel';
+
 class Fact extends React.Component{
     constructor(props){
         super(props);
@@ -90,13 +93,19 @@ class Fact extends React.Component{
             if(this.props.context.state.reservationEnCours){
                 reservation = this.props.context.state.reservationEnCours.tarifReserves.map(tarif => {
                     return (
-                        <p> 
-                            {tarif.nomTarif} : {tarif.idRooms.length} 
-                            <button onClick={(e) => 
-                            this.annulerReservation(this.props.context.state.reservationEnCours._id, tarif.idTarif)}>
-                                Annuler
-                            </button>
-                        </p>
+                        <div className ="row" style = {{margin : "0 auto"}}> 
+                            <div className ="col">
+                                <strong >{tarif.nomTarif}</strong>
+                            </div>
+                            <div className ="col">
+                            <EditIcon style={{color : "green"}} /><span id="edit">edit </span> &nbsp;&nbsp;
+                            <CancelIcon style={{color : "red"}}/><span id="remove" onClick={(e) => 
+                                this.annulerReservation(this.props.context.state.reservationEnCours._id, tarif.idTarif)}
+                            >remove</span>
+                            
+                            </div>
+                            
+                        </div>
                         );
                     }
                 )
@@ -112,17 +121,22 @@ class Fact extends React.Component{
                     <h1>Your Stay</h1>
                     <div class="row mb-4">
                         <div class="col">
-                            <strong> Check in : <span>{this.props.context.state.dateSejour.debut}</span> </strong>
-                        
+                            <strong> Check in : </strong>
+                                <span style={{fontSize :"12px"}}>
+                                    {this.props.context.state.dateSejour.debut}
+                                </span>
                             </div>
                         
                         <div class="col" id="locA">
-                            <strong>Check out : <span>{this.props.context.state.dateSejour.fin}</span></strong>
-                            
+                            <strong>Check out : </strong>
+                                <span style={{fontSize :"12px"}}>
+                                    {this.props.context.state.dateSejour.fin}
+                                </span>
                         </div>
-                    </div>
-                    <p>TOTAL :</p> 
-                    {reservation}   
+                    </div><br/>
+                    {reservation}
+                    <p>TOTAL : </p> 
+                       
                 </div>
                 <Modal
                     open={this.props.context.state.open}

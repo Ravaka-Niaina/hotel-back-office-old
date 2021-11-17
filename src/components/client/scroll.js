@@ -87,7 +87,6 @@ class Scroll extends React.Component{
                                 <div className="scroll-object">
                                     <DateSejour context= {this} /><hr/>
                                     <DChambre context = {this} />
-                                    
                                 </div>
                             </div>
                         </div>
