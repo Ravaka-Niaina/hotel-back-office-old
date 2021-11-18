@@ -32,6 +32,7 @@ import  Front_client  from "./front_client/front_client";
 import  Devis  from "./front_client/devis";
 import { useTranslation } from "react-i18next";
 import  Reservation  from "./components/client/reservation.js";
+import  ApplyReservation  from "./components/client/applyReservation.js";
 
 
 function App() {
@@ -79,6 +80,7 @@ function App() {
         <Route path="/devis" exact component={Devis} />
 
         <Route path="/reservation/:_id" exact component={Reservation} />
+        <Route path="/reservation/:_id/apply" exact component={ApplyReservation} />
 
       </Router>
     </div>
