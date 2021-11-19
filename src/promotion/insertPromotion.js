@@ -103,6 +103,7 @@ export default class InsertPromotion extends React.Component {
       .then(res => {
         console.log(res);
         if(res.data.status == 200){
+          console.log("Should redirect now...");
           this.props.history.push('/promotion');
         }else{
           console.log(res.data.message);
