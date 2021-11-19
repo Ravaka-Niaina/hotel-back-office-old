@@ -134,10 +134,13 @@ class Fact extends React.Component{
             let emailVide = true;
             if(this.props.context.state.reservationEnCours._id != ""){
                 idVide = false;
+                this.props.context.props.history.push("/reservation/" + this.props.context.state.reservationEnCours._id + "/apply");
             }
             if(this.props.context.state.email != ""){
                 emailVide = false;
             }
+            
+            /*
             console.log("id = " + idVide + " , email = " + emailVide);
                 axios({
                     method: 'post',
@@ -159,6 +162,7 @@ class Fact extends React.Component{
                         this.props.context.handleChange("open", false);
                     }
                 }).catch(err => console.log(err));
+            */
         }catch(err2){console.log(err2)}
     }
 
@@ -204,7 +208,7 @@ class Fact extends React.Component{
             for(let u = 0; u < this.props.context.state.itineraires[i].tarifReserves.length; u++){
                 if(this.props.context.state.itineraires[i].tarifReserves[u].etat == undefined
                     || this.props.context.state.itineraires[i].tarifReserves[u].etat == 1){
-                    valider = (<p><button onClick={(e) => this.props.context.validerReservation()}>Valider réservation</button></p>);
+                    valider = (<p><button onClick={(e) => this.validerReservation()}>Valider réservation</button></p>);
                     break;
                 }
             }
