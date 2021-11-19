@@ -430,7 +430,7 @@ function ApplyReservation(props){
                 const a = i;
                 for(let u = 0; u < current.itineraires[i].tarifReserves.length; u++){
                     const b = u;
-                    if(current.itineraires[i].tarifReserves[u] != undefined ){
+                    if(current.itineraires[i].tarifReserves[u] == undefined){
 
                         let nbEnfant = reservation.itineraires[a].tarifReserves[b].guests.nbEnfant;
                         try{
