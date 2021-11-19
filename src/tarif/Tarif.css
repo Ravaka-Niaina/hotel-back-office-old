@@ -5,10 +5,6 @@
     
 }
 
-.MuiBox-root.dayCell{
-    padding-top: 0 !important;
-}
-
 .tarif .MuiTabs-flexContainer{
   justify-content: start !important;
   height: 100% !important;
