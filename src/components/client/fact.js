@@ -178,10 +178,10 @@ class Fact extends React.Component{
             console.log(res); 
             try{
                 res.data.reservation = res.data.reservation[0];
-            }catch(err2){ }
-            console.log(res);
-            this.props.context.setReservationEnCours(res.data)})
-        .catch(err => console.log(err));
+            }catch(err2){ 
+                this.props.context.setReservationEnCours(res.data)
+            }
+        }).catch(err => console.log(err));
     }
 
     annulerReservation(context, idReservation, indexItineraire, indexTarifReserve){
