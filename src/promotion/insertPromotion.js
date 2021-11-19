@@ -427,8 +427,7 @@ style={{marginTop:"15px"}}
 <Button  
 variant="contained" 
 type='submit' 
-style={{textDecoration:'none',color:'black'}}
-onClick={(e)=> this.handleSubmit()}>
+style={{textDecoration:'none',color:'black'}}>
 <span style={{color:'white'}}>Ajouter</span>
 </Button>
    </div>
