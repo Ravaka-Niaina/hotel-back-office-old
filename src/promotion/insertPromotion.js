@@ -102,8 +102,11 @@ export default class InsertPromotion extends React.Component {
     axios.post(process.env.REACT_APP_BACK_URL + `/promotion/create`,  this.state.promotion )
       .then(res => {
         console.log(res);
-        console.log(res.data);
-          alert('success message ...');
+        if(res.data.status == 200){
+          this.props.history.push('/promotion');
+        }else{
+          console.log(res.data.message);
+        }
       })
   }
 
