@@ -1,10 +1,14 @@
 .container{
-    margin-top: 50px;
+    margin-top: 30px;
     width: 100%;
     min-height: 100%;
 }
 .dayline{
     position: relative;
+    width: 85%;
+    float: right;
+    margin-top: 0;
+    overflow-x: scroll;
 }
 .pin{
     background-color: #1976d2 !important;
@@ -21,8 +25,122 @@
 .pin svg{
     font-size: 16px !important;
 }
+.table{
+    background-color: #e0e0e0;
+    text-align: center;
+}
+.table td{
+    border: 1px solid #e0e0e0 !important;
+    padding: 0;
+    background-color: #fff;
+    font-size: 14px;
+}
+.rangeLine td {
+    border-left : 1px solid #e0e0e0;
+    min-width: 60px;
+    padding-left: 10px;
 
-.table tbody,
-.table td {
-    border-width: 4px !important;
+}
+.rangeLine td.limit{
+    border-left : 2px solid #000;
+}
+.rangeLine{
+
+}
+.rangeLine table {
+    border-right : 1px solid #000;
+    margin-top: 30px;
+    margin-bottom: 100px;
+}
+.popper{
+    background-color: #fff;
+    padding: 20px;
+    border-radius:4px;
+    box-shadow: rgb(0 0 0 / 20%) 0px 5px 5px -3px, rgb(0 0 0 / 14%) 0px 8px 10px 1px, rgb(0 0 0 / 12%) 0px 3px 14px 2px;
+    z-index: 1;
+}
+.popper button{
+    width: 100%;
+}
+.popper span:first-of-type{
+    font-weight: 500 !important;
+}
+.popper span:nth-of-type(2){
+    font-size: 12px !important;
+    color: grey;
+}
+legend{
+    float: none !important;
+}
+.sidelist{
+    width: 15% !important;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+.sidelist ul{
+    list-style-type: none;
+    padding-left: 0 !important;
+    border-right: 1px solid #e0e0e0;
+    margin-bottom: 0 !important;
+}
+.sidelist ul > li{
+    height: 50px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-top:12px;
+}
+.sidelist ul > li:first-child{
+    border-top: 1px solid #e0e0e0;
+    padding-top:9px;
+}
+.sidelist ul > li:nth-child(2),
+.sidelist ul > li:nth-child(4){
+    padding-top: 0px;
+    height: 25px !important;
+}
+.sidelist ul > li > span{
+    padding-left: 8px !important;
+    font-size: 12px !important;
+}
+.sidelist button{
+    margin-left:8px !important;
+}
+.sidetitle{
+    font-size: 16px;
+    margin-top: 30px;
+    font-weight: bold;
+    padding-left: 8px;
+    margin-bottom: 8px;
+    display: block;
+}
+.sideline{
+    width:100%;
+    position: relative;
+    overflow: auto;
+}
+.closedline{
+    height: 15px; 
+    margin-bottom: 6px;
+    cursor: pointer;
+}
+.dividerline{
+    height: 1px;
+    background-color: #e0e0e0;
+    margin-top: 50px;
+}
+.tablelinediv{
+    position: relative;
+    height: auto;
+}
+.fullpopper{
+    display: inline-flex;
+    align-items: start;
+    width: 100%;
+    flex-direction: column;
+}
+.fullpopper > div:last-child{
+    align-self: center !important;
+}
+.daycell{
+    padding-top: 12px;
 }

@@ -1,29 +1,18 @@
 import './Tarif.css';
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import  Navbar  from "../Navbar/Navbar";
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
-import axios from "axios";
-import Button from '@mui/material/Button';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../partenaire/typeChambre.css';
 
 import ListTarif from './ListTarif.js';
-
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import CalendarComponent from './CalendarComponent'
+import CalendarComponent from './CalendarComponent';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
 
@@ -37,7 +26,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          {children}
         </Box>
       )}
     </div>
@@ -76,7 +65,7 @@ function Tarif() {
                 <TabPanel value={value} index={0}>
                   <ListTarif />
                 </TabPanel>
-                <TabPanel value={value} index={1}>
+                <TabPanel className="calendarTab" value={value} index={1}>
                     <CalendarComponent/>
                 </TabPanel>
             </Box>
