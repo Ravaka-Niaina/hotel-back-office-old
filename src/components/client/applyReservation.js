@@ -31,6 +31,9 @@ import  Navbar  from "../../Navbar/Navbar";
 
 import {setValue} from '../../../src/utility2.js';
 
+import axios from "axios";
+import Modal from '@mui/material/Modal';
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
       backgroundColor: theme.palette.common.black,
@@ -69,6 +72,18 @@ const rowsPaiement = [
     createPaiement(2, '2021-01-05', 80.5),
     createPaiement(3, '2021-02-13', 225),
 ];
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
 
 function Champs(props){
     return(
@@ -182,16 +197,19 @@ function InputTarifs(props){
 function InputUtilisateur(props){
     let infoUsers = null;
     let itineraires = [];
-    for(let i = 0; i < props.reservation.itineraires.length; i++){
-        const u = i;
-        itineraires.push(
-            <InputTarifs 
-                reservation={props.reservation} 
-                indexItineraire={u}
-                inputs={props.inputs}
-                setInputs={props.setInputs} />
-        );
-    }
+    try{
+        for(let i = 0; i < props.reservation.itineraires.length; i++){
+            const u = i;
+            itineraires.push(
+                <InputTarifs 
+                    reservation={props.reservation} 
+                    indexItineraire={u}
+                    inputs={props.inputs}
+                    setInputs={props.setInputs} />
+            );
+        }
+    }catch(err){console.log(err)}
+    
     if(props.editable){
         return (
             <div>
@@ -415,6 +433,10 @@ function ApplyReservation(props){
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
 
+    const [open, setOpen] = useState(false);
+    const [err, setErr] = useState(null);
+    const [email, setEmail] = useState("");
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -423,6 +445,10 @@ function ApplyReservation(props){
         setValue(index);
     };
 
+    function validerReservation(){
+        callAPI('post', '/reservation/applyWithEmail', {_id: reservation._id, email: "ratefyniaina@gmail.com"}, function(res){console.log(res);} );
+    }
+
     function setDetailReservation(res){
         try{
             let current = JSON.parse(JSON.stringify(res.reservation));
@@ -430,14 +456,14 @@ function ApplyReservation(props){
                 const a = i;
                 for(let u = 0; u < current.itineraires[i].tarifReserves.length; u++){
                     const b = u;
-                    if(current.itineraires[i].tarifReserves[u] == undefined){
+                    if(current.itineraires[a].tarifReserves[b] != undefined){
 
-                        let nbEnfant = reservation.itineraires[a].tarifReserves[b].guests.nbEnfant;
+                        let nbEnfant = current.itineraires[a].tarifReserves[b].guests.nbEnfant;
                         try{
                             nbEnfant = Number.parseInt(nbEnfant);
                         }catch(err){}
                         
-                        let nbAdulte = reservation.itineraires[a].tarifReserves[b].guests.nbAdulte;
+                        let nbAdulte = current.itineraires[a].tarifReserves[b].guests.nbAdulte;
                         try{
                             nbAdulte = Number.parseInt(nbAdulte);
                         }catch(err){}
@@ -462,6 +488,15 @@ function ApplyReservation(props){
     useEffect(() => {
         callAPI('get', '/reservation/details/' + _id, {}, setDetailReservation);
     }, [_id]);
+
+    function setMessage(res){
+        console.log(res);
+    }
+
+    function generatePDF(){
+        //ReactPDF.render(<MyDocument />, `${__dirname}/example.pdf`);
+        //callAPI('post', '/reservation/apply', {_id: _id, email: "ravaka@yopmail.com"}, setMessage);
+    }
 
     return (
         <div>
@@ -517,6 +552,7 @@ function ApplyReservation(props){
                                 <Stack direction="row" spacing={2}>
                                     <Button variant="contained">Modifier réservation</Button>
                                     <Button variant="contained">Annuler réservation</Button>
+                                    <button onClick={(e) => validerReservation()}>Valider réservation</button>
                                 </Stack>
                             </div>
                         </TabPanel>
