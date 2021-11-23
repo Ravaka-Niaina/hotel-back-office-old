@@ -7,6 +7,7 @@ import LocalPhoneIcon from '@mui/icons-material/LocalPhone';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import StarIcon from '@mui/icons-material/Star';
 import { Link } from "react-router-dom";
+
  
 const Front_client = () => {
     const { i18n } = useTranslation();
@@ -50,6 +51,7 @@ style={{width:'150px'}}
       {t('common.link2')}
       </a>
     </Link>
+
 
       <a className="nav-item nav-link" href="#" id='nav-item'>
         <LocalPhoneIcon/>261-20-2220202
@@ -146,10 +148,28 @@ style={{width:'300px',height:'250px'}}
 </div >
 </div>
 </div>
+<div className="hotel4" id='hotels'>
+<img src="/hotelImage.jpg" 
+className="img-fluid" 
+alt="Responsive image"
+style={{width:'300px',height:'250px'}}
+/>
+<p></p>
+<div className="" id='desc'>
+<div className="" id='centrer'>
+<StarIcon id='star'/><StarIcon id='star'/><StarIcon  id='star'/><StarIcon id='star'/><StarIcon id='star'/>
+<p id='text3'>HERITAGE AWALI</p>
+<p id='text4'>LUXE DÉCONTRACTÉ ET TOUT-INCLUS <br/> A L ILE MAURICE</p>
+<p id='text5'>à partir de</p>
+<p id='price'>438 €</p>
+<p id='text5'>par nuit / 2 adultes</p>
+</div >
+</div>
+</div>
  </div>
 
         </div>
-    )
+    );
 }
  
 export default Front_client;

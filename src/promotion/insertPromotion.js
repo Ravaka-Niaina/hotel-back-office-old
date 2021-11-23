@@ -32,6 +32,8 @@ export default class InsertPromotion extends React.Component {
       tarifs: [],
       HideShowP: false,
       HideShowE: false,
+      HideShowJ: false,
+      HideShowH: false,
         promotion: {
             nom: '',
             tarif: '',
@@ -53,9 +55,11 @@ export default class InsertPromotion extends React.Component {
             fevrier: '',
             mars: '',
             avril: '',
-            sejourMin:''
-
-
+            sejourMin:'',
+            leadHour:'',
+            leadDay:'',
+            premierJour:'',
+            dernierJour:''
         },
     };
 }
@@ -171,12 +175,12 @@ Quelle remise voulez-vous offrir ?
     name="radio-buttons-group"
   >
     <FormControlLabel 
-    value="female" 
+    value="male" 
     control={<Radio />} 
     label={<p id='label'>Pourcentage</p>} 
     onClick={() => this.setState({HideShowE :false,HideShowP :true})}/>
     <FormControlLabel 
-    value="male" 
+    value="female" 
     control={<Radio />} 
     label={<p id='label'>Euro</p>} 
     onClick={() => this.setState({HideShowP :false,HideShowE :true})}/>
@@ -279,65 +283,105 @@ style={{marginTop:"15px"}}
   
   <div className="form-group" style={{marginTop:"40px"}}>
 <label>
-Cochez les jours de la semaine pour appliquer du calendrier de cette promotion
+Lead hour ou day 
 </label>
-   <p>
-<FormControlLabel 
-control={<Checkbox/>} 
-label={<p id='label'>Lun</p>} 
-value="1"
-name=""  
-onChange={(e) => this.handleInputChange(e, "lundi")}
+<FormControl component="fieldset">
+  <FormLabel component="legend"></FormLabel>
+  <RadioGroup
+    aria-label=""
+    defaultValue=""
+    name="radio-buttons-group"
+  >
+    <FormControlLabel 
+    value="mal" 
+    control={<Radio />}  
+    label={<p id='label'>Day</p>}
+    onClick={() => this.setState({HideShowH :false,HideShowJ :true})}/>
+    <FormControlLabel 
+    value="female" 
+    control={<Radio />} 
+    label={<p id='label'>Hour</p>} 
+    onClick={() => this.setState({HideShowJ :false,HideShowH :true})}/>
+  </RadioGroup>
+</FormControl>
+
+{
+this.state.HideShowJ ?
+<TextField 
+id="outlined-basic" 
+label="" 
+variant="outlined" 
+className="form-control" 
+style={{width:"130px"}}
+placeholder='Jour'
+size="small"
+type="number" 
+name="leadDay" 
+onChange={(e) => this.handleInputChange(e, "leadDay")}
 />
 
-<FormControlLabel 
-control={<Checkbox/>} 
-label={<p id='label'>Mar</p>} 
-value="1"
-name="mardi"  
-onChange={(e) => this.handleInputChange(e, "mardi")}
+: null
+}
+
+{
+this.state.HideShowH ?
+<TextField 
+id="outlined-basic" 
+label="" 
+variant="outlined" 
+className="form-control" 
+style={{width:"130px"}}
+placeholder='Heure'
+size="small"
+type="number" 
+name="leadHour" 
+onChange={(e) => this.handleInputChange(e, "leadHour")}
+/>
+: null
+}
+
+  </div>
+
+  <div className="form-group" style={{marginTop:"40px"}}>
+<label>
+Nombre de jour d'attribution de la promotion
+</label>
+
+<div className="form-group" style={{marginTop:"25px"}}>
+<p>
+<TextField id="outlined-basic" 
+label="" 
+variant="outlined" 
+className="form-control"  
+style={{width:"200px"}}
+type="text" 
+name="premierJour" 
+InputProps={{
+  endAdornment: <InputAdornment position="end">
+      premier jour
+  </InputAdornment>,
+  }}
+onChange={(e) => this.handleInputChange(e, "premierJour")}
+size="small"
 />
 
-<FormControlLabel 
-control={<Checkbox/>} 
-label={<p id='label'>Mer</p>} 
-value="1"
-name="mercredi"  
-onChange={(e) => this.handleInputChange(e, "mercredi")}
+  <TextField id="outlined-basic" 
+label="" 
+variant="outlined" 
+className="form-control"  
+style={{width:"200px",marginLeft:'20px'}}
+type="text" 
+name="dernierJour"
+InputProps={{
+  endAdornment: <InputAdornment position="end">
+      dernier jour
+  </InputAdornment>,
+  }} 
+onChange={(e) => this.handleInputChange(e, "dernierJour")}
+size="small"
 />
-
-<FormControlLabel 
-control={<Checkbox/>} 
-label={<p id='label'>Jeu</p>}
-value="1"
-name="jeudi"  
-onChange={(e) => this.handleInputChange(e, "jeudi")}
-/>
-
-<FormControlLabel 
-control={<Checkbox/>} 
-label={<p id='label'>Ven</p>} 
-value="1"
-name="vendredi"  
-onChange={(e) => this.handleInputChange(e, "vendredi")}
-/>
-
-<FormControlLabel 
-control={<Checkbox/>} 
-label={<p id='label'>Sam</p>} 
-value="1"
-name="samedi"  
-onChange={(e) => this.handleInputChange(e, "samedi")}
-/>
-
-<FormControlLabel 
-control={<Checkbox/>} 
-label={<p id='label'>Dim</p>} 
-value="1"
-name="dimanche"  
-onChange={(e) => this.handleInputChange(e, "dimanche")}
-/>
-   </p> 
+   </p>
+   </div>
   </div>
 
   <div className="form-group" style={{marginTop:"15px"}}>

@@ -179,6 +179,10 @@ class Filtre extends React.Component{
     
     constructor(props){
         super(props);
+        this.IncrAdulte = this.IncrAdulte.bind(this);
+        this.DecrAdulte = this.DecrAdulte.bind(this);
+        this.IncrEnfant = this.IncrEnfant.bind(this);
+        this.DecrEnfant = this.DecrEnfant.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleRadioChange = this.handleRadioChange.bind(this);
         this.setListFiltre = this.setListFiltre.bind(this);
@@ -197,15 +201,58 @@ class Filtre extends React.Component{
                 show: true,
                 label: 'Masquer les filtres'
             }
-            
+          
         ];
         this.state = {
+            showAge: false,
             filtre: this.filtreOpt[0],
             filtres: [],
-            result: []
+            result: [],
+            nbAdulte:this.props.context.state.guests.nbAdulte,
+            nbEnfant:this.props.context.state.guests.nbEnfant
         };
         this.setResult = this.setResult.bind(this);
     }
+
+    IncrAdulte() {                              // addOne as HandleClick
+        this.setState((preState) => {
+          return {
+            nbAdulte : preState.nbAdulte + 1
+            };
+         });
+       }
+      
+      DecrAdulte() {                              // addOne as HandleClick
+        this.setState((preState) => {
+          if (this.state.adulte !== 0) {
+          return {
+            nbAdulte : preState.nbAdulte - 1
+            };
+          }
+         });
+       }
+
+       IncrEnfant() {                             // addOne as HandleClick
+        this.setState((preState) => {
+          return {
+            nbEnfant : preState.nbEnfant + 1,
+            showAge :true
+            };
+         });
+       }
+      
+      DecrEnfant() {                              // addOne as HandleClick
+        this.setState((preState) => {
+          if (this.state.enfant !== 0) {
+          return {
+            nbEnfant : preState.nbEnfant - 1,
+            showAge :false
+            };
+          }
+         });
+       }
+
+
     setResult(res){
         let currentState = JSON.parse(JSON.stringify(this.props.context.state));
         currentState.listTypeChambre = res.list;
@@ -300,19 +347,52 @@ class Filtre extends React.Component{
     render(){
         return (
             <div>
-                <div className = "row">
-                    <div className = "col"></div>
+                <div className = "">
+                    {/* <div className = "col"></div>
                     <TextField className="col"  id="standard-basic" label="Adulte" variant="standard" type="number"
-                        style={{width:'20%'}} value={this.props.context.state.guests.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")}/>
+                    style={{width:'20%'}} value={this.props.context.state.guests.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")}/>
                     <div className = "col"></div>
                     <TextField className ="col" id="standard-basic" label="Enfant" variant="standard" type="number"
                         style={{width:'20%'}} value={this.props.context.state.guests.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")}/>
-                    <div className = "col"></div>
+                    <div className = "col"></div> */}
+                    <div class='guest1' id='adulte1' onClick={this.DecrAdulte}><p id='moins'>-</p></div>
+                          <div class='guest1'>
+        <input value={this.state.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")} class='adulte' type=""/>
+                          </div>
+                    <div class='guest1' id='adulte11' onClick={this.IncrAdulte}><p id='add'>+</p></div>
+                          <br/>
+                    <div class='guest2' id='enfant1' onClick={this.DecrEnfant}><p id='moins'>-</p></div>
+                          <div class='guest2'>
+        <input value={this.state.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")} class='enfant' type=""/>
+                          </div>
+        <div class='guest2' id='enfant11' onClick={this.IncrEnfant}>
+            <p id='add'>+</p>
+        </div>
                 </div>
+
+                {
+                    this.state.showAge ?
+                    <select value="" name="" class="age">
+                    <option value="">0</option>
+                    <option value="">1</option>
+                    <option value="">2</option>
+                    <option value="">3</option>
+                    <option value="">4</option>
+                    <option value="">5</option>
+                    <option value="">6</option>
+                    <option value="">7</option>
+                    <option value="">8</option>
+                    <option value="">9</option>
+                    <option value="">10</option>
+                    <option value="">11</option>
+                    </select>
+                    : null
+                    }
+
                 { this.props.context.state.errFiltre != null 
-                ? <p style={{backgroundColor: "red"}}>{this.props.context.state.errFiltre}</p> 
-                : null }
-          {/*    <div id='date'>
+                    ? <p style={{backgroundColor: "red"}}>{this.props.context.state.errFiltre}</p> 
+                    : null }
+          {/*   <div id='date'>
                     <p>Debut sejour</p>
                     <TextField id="standard-basic" label="" variant="standard" type="date"
                         style={{width:''}} value={this.props.context.state.dateSejour.debut} onChange={(e) => this.changeDateSejour(e, "debut")}/>

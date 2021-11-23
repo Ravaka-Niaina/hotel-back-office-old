@@ -56,3 +56,111 @@
   #date{
     display:inline-block;  
   }
+
+  div.guest1{
+    display:inline-block;
+  }
+
+  div#adulte1 {
+background-color: rgba(194,181,155,1);
+    height: 50px;
+    width: 40px;
+    color: white;
+    cursor: pointer;
+}
+
+  div#adulte11{
+  background-color: rgba(194,181,155,1);
+    height: 50px;
+    color: white;
+    width: 40px;
+    cursor: pointer;
+  }
+
+  div#adulte1:hover{
+    background-color:white;
+    border: rgba(194,181,155,1) solid 1px;
+    color: rgba(194,181,155,1);
+    }
+
+  div#adulte11:hover{
+    background-color:white;
+    border: rgba(194,181,155,1) solid 1px;
+    color: rgba(194,181,155,1);
+    } 
+
+  input.adulte {
+    background-color: white;
+    border: rgba(194,181,155,1) solid 1px;
+    text-align: center;
+    font-size: 16px;
+    border-radius: inherit;
+    height: 50px;
+    min-width: 0px;
+    width: 100px;
+}
+
+div.guest2{
+  display:inline-block;
+}
+
+div#enfant1 {
+background-color: rgba(194,181,155,1);
+  height: 50px;
+  color: white;
+  width: 40px;
+  cursor: pointer;
+}
+
+div#enfant1:hover{
+  background-color:white;
+  border: rgba(194,181,155,1) solid 1px;
+  color: rgba(194,181,155,1);
+  }
+
+div#enfant11{
+background-color: rgba(194,181,155,1);
+  height: 50px;
+  color: white;
+  width: 40px;
+  cursor: pointer;
+}
+
+div#enfant11:hover{
+  background-color:white;
+  border: rgba(194,181,155,1) solid 1px;
+  color: rgba(194,181,155,1);
+  }
+
+input.enfant {
+  background-color: white;
+  border: rgba(194,181,155,1) solid 1px;
+  text-align: center;
+  font-size: 16px;
+  border-radius: inherit;
+  height: 50px;
+  min-width: 0px;
+  width: 100px;
+}
+
+.age {
+  background-color: white;
+  border: rgba(194,181,155,1) solid 1px;
+  font-size: 16px;
+  border-radius: inherit;
+  height: 50px;
+  min-width: 0px;
+  width: 180px;
+}
+
+p#moins {
+  text-align: center;
+  font-size: x-large;
+  padding-top: 3px;
+}
+p#add {
+text-align: center;
+font-size: x-large;
+padding-top: 3px;
+
+}

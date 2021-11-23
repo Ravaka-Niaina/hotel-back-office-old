@@ -75,7 +75,12 @@ function Global(){
     };
 
     const handleInputChangeInput = (e) =>{
-        setNom(e.target.value);
+        if(e.target.value.trim() === ""){
+            setNom("");
+        }else{
+            setNom(e.target.value);
+        }
+        
     } 
 
     const insert = () => {
@@ -158,32 +163,46 @@ function Global(){
                                 <FormControlLabel value="false"  label="non" checked={show.checkedNon}
                                     control={<Radio onClick = {(e) => setShow(false) }/>}/>
                             </RadioGroup>
-
-                            <strong>precisez les conditions</strong><br/><br/>
+                            
+                            <strong>precisez les conditions</strong>
                                 {
-                                show ? 
-                                <div>
-                                    nom :
-                                    <TextField
-                                        id="outlined-size-small"
-                                        size="small"
-                                        name="nom"
-                                        type="text"
-                                        placeholder="nom"
-                                        onChange={e => handleInputChangeInput(e)}
-                                    /><br/><hr/>
-                                    <table className="table table-striped">
-                                        {date}
-                                    </table> <br/>
-                                    <Button variant="contained" endIcon={<AddIcon />} onClick={handleAddClick}>Add</Button>
-                                    <br/><br/><br/>
-                                    <div style={{width:"fit-content",margin :"auto"}}>
-                                    
-                                    <Button variant="contained" color="success" onClick={(e) => insert()}>Sauvegarder</Button>
+                                    show ? 
+                                    <div style = {{marginTop : "20px"}}>
+                                        <table className="table table-striped">
+                                            {date}
+                                        </table> <br/>
+                                        <Button variant="contained" endIcon={<AddIcon />} onClick={handleAddClick}><span style ={{color : "white"}} >Add</span></Button>
+                                        <br/>
+                                        <div style={{width:"fit-content",margin :"auto"}}>
+                                        
+                                         </div>
                                     </div>
-                                </div>
-                                : null
-                                }
+                                    :  ""
+                                } 
+                                <div style = {{marginTop :"15px"}}> 
+                                    <strong >Nom politique : </strong>
+                                        <TextField
+                                                id="outlined-size-small"
+                                                size="small"
+                                                name="nom"
+                                                type="text"
+                                                placeholder="nom"
+                                                onChange={e => handleInputChangeInput(e)}
+                                            />
+                                </div> <br/>
+                                
+                                   <div style = {{width : "fit-content" , margin : "0 auto"}}>
+                                        {
+                                            nom === "" ? 
+                                            <Button variant="contained" color="success" onClick={(e) => insert()} disabled>
+                                                Sauvegarder
+                                            </Button> :
+                                            <Button variant="contained" color="success" onClick={(e) => insert()} >
+                                                Sauvegarder
+                                            </Button>
+                                        }
+                                    </div> <br/>
+                                              
                         </div>
                     <div className ="col-md-2">
                         
