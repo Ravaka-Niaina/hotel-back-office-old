@@ -436,7 +436,6 @@ function ApplyReservation(props){
     const [open, setOpen] = useState(false);
     const [err, setErr] = useState(null);
     const [email, setEmail] = useState("");
-
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
