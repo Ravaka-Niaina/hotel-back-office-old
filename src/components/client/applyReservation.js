@@ -445,7 +445,7 @@ function ApplyReservation(props){
     };
 
     function validerReservation(){
-        callAPI('post', '/reservation/applyWithEmail', {_id: reservation._id, email: "ratefyniaina@gmail.com"}, function(res){console.log(res);} );
+        callAPI('post', '/reservation/applyWithEmail', {_id: reservation._id, email: "ravaka@yopmail.com"}, function(res){console.log(res);} );
     }
 
     function setDetailReservation(res){

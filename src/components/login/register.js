@@ -33,6 +33,7 @@ class Register extends React.Component{
   }
 
   register(e){
+    console.log(this.state);
     e.preventDefault();
     const requestOptions = {
       method: 'POST',
