@@ -33,6 +33,8 @@ import  Devis  from "./front_client/devis";
 import { useTranslation } from "react-i18next";
 import  Reservation  from "./components/client/reservation.js";
 import ListPolitique from "./politique/listpolitique.js"
+import  ApplyReservation  from "./components/client/applyReservation.js";
+
 
 function App() {
   return (
@@ -83,6 +85,7 @@ function App() {
         <Route path="/devis" exact component={Devis} />
 
         <Route path="/reservation/:_id" exact component={Reservation} />
+        <Route path="/reservation/:_id/apply" exact component={ApplyReservation} />
 
       </Router>
     </div>

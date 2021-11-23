@@ -17,7 +17,7 @@ function TestCookie(){
     const [cookies, setCookie] = useCookies(['name']);
     let pp = JSON.stringify({user: 'Norck', play: 999, totalPP: 1000, topPlays:['ascension to heaven', 'big black', 'atama no taisou']});
     setCookie('pp', pp, '/');
-    console.log(cookies.pp);
+    //console.log(cookies.pp);
     return(
         null
     );
@@ -28,6 +28,8 @@ class Scroll extends React.Component{
     constructor(props){
         super(props);
         this.state = {
+            openChangeDateSejour: false,
+            changeDateSejour: true, 
             resultApplyReservation: null,
             errFiltre: null,
             guests: {nbEnfant: 0, nbAdulte: 0},
@@ -35,11 +37,12 @@ class Scroll extends React.Component{
             listTypeChambre: [],
             reservation: [],
             reservationEnCours: null,
+            itineraires: [],
             showFiltre : false,
             open: false,
             err: null,
             email: ""
-        }
+        };
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
     }
 
@@ -47,6 +50,15 @@ class Scroll extends React.Component{
         let current = JSON.parse(JSON.stringify(this.state));
         current[fieldName] = value;
         this.setState(current);
+    }
+
+    addNewItineraire(){
+        let currentState = JSON.parse(JSON.stringify(this.state));
+        currentState.changeDateSejour = true;
+        currentState.dateSejour.debut = "";
+        currentState.dateSejour.fin = "";
+        currentState.openChangeDateSejour = true;
+        this.setState(currentState);
     }
     
 
@@ -57,9 +69,15 @@ class Scroll extends React.Component{
         }else if(res.status == 200){
             let currentState = JSON.parse(JSON.stringify(this.state));
             currentState.reservationEnCours = res.reservation;
+            try{
+                currentState.itineraires = res.reservation.itineraires; 
+            }catch(err){
+                console.log(err);
+                currentState.itineraires = [];
+            }
+            console.log(currentState.itineraires);
             this.setState(currentState);
         }
-        console.log(res);
     }
 
     validerReservation(){

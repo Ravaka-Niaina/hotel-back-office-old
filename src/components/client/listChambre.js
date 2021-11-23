@@ -76,28 +76,27 @@ function getDate(date){
 }
 
 function ListTarif(props){
+
     function addReservation(e ,id, nom, idTypeChambre){
-        console.log("Add");
-        if(props.context.state.dateSejour.debut != "" && props.context.state.dateSejour.fin != ""){
+        if(props.context.state.itineraires.length > 0){
+            let itineraires = JSON.parse(JSON.stringify(props.context.state.itineraires));
+            itineraires[itineraires.length - 1].tarifReserves.push({
+                idTarif: id, 
+                dateSejour: props.context.state.dateSejour,
+                dateReservation: getDate(Date.now()),
+                guests: props.context.state.guests,
+                idTypeChambre : idTypeChambre
+            });
             axios({
-                method: 'post',      
+                method: 'post',
                 url: process.env.REACT_APP_BACK_URL + '/reservation/insert',
                 withCredentials: true,
-                data: {
-                    reservation: {
-                        idTarif: id, 
-                        dateSejour: props.context.state.dateSejour,
-                        dateReservation: getDate(Date.now()),
-                        guests: props.context.state.guests,
-                        idTypeChambre : idTypeChambre
-                    }
-                }
+                data: {itineraires: itineraires}
             })
             .then(res => {                                                  
                 props.context.setReservationEnCours(res.data)})
             .catch(err => console.log(err));
         }
-        
     }
     let tarifs = props.tarifs.map(tarif => {
              return (
@@ -176,19 +175,6 @@ class DChambre extends React.Component{
         console.log(data);
         currentState.listTypeChambre = data.list;                                         
         this.setState(currentState);               
-    }
-
-    componentDidMount(){
-        /*
-        axios({                                                     // webService
-            method: 'post',                                           //methode get       
-            url: process.env.REACT_APP_BACK_URL + "/typeChambre",     //miants ilai url ani amin back
-            withCredentials: true                                      //type boolean 
-        })                  
-        .then(res => {                                                  
-            this.setListTypeChambre(res.data)})
-        .catch(err => console.log(err));
-        */
     }
 
     addReservation(e ,id, nom){

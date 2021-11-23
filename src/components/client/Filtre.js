@@ -276,7 +276,7 @@ class Filtre extends React.Component{
 
         currentState.filtres = res.filters;
         this.setState(currentState);
-        console.log('current state of things');
+        console.log('filtres obtenus');
         console.log(res.filters);
     }
 
