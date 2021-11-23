@@ -32,7 +32,7 @@ import  Front_client  from "./front_client/front_client";
 import  Devis  from "./front_client/devis";
 import { useTranslation } from "react-i18next";
 import  Reservation  from "./components/client/reservation.js";
-
+import ListPolitique from "./politique/listpolitique.js"
 
 function App() {
   return (
@@ -57,8 +57,12 @@ function App() {
         <Route path="/tarif/insert" exact component={InsertTarif}/>
         <Route path="/tarif/details/:_id/" exact component={DetailsTarif} />
         
+        {/*politique*/}
         <Route path="/chambre" exact component={InsertChambre} />
         <Route path="/politique" exact component={Global} />
+        <Route path="/politique/detail/:_id" exact component={Global} />
+        <Route path="/politique/list" exact component={ListPolitique} />
+
         <Route path="/calendrier" exact component={Calendrier} />
 
         {/*route client */}

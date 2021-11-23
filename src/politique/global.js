@@ -11,24 +11,32 @@ import FormLabel from '@mui/material/FormLabel'
 import InputAdornment from '@mui/material/InputAdornment';
 import {useEffect} from 'react';
 import callAPI from '../utility.js';
-import {useHistory} from 'react-router-dom';    // mapiasa redirection
+import { useParams, useHistory } from 'react-router-dom'
+import "./global.css";
 
 function Global(){
-    const [datePrice , setDatePrice] = useState([{ date: "", pourcentage: "" , type:"number" , jour : "jours"}]);
+    const [datePrice , setDatePrice] = useState([{ date:"" , pourcentage: "" , type : "jour"}]);
 
     const [nom , setNom] = useState ("")
     const[show , setShow] = useState(false);
-    const[jours  , setJour] = useState("");
+    const[message  , setMessage] = useState("");
+    const[messageErrPourC , setmessageErrPourC] = useState("");
+    const[messageErrDate , setmessageErrDate] = useState("");
+    const { _id } = useParams();        
     
        
     let history = useHistory();
     const functionAppel=(res)=>{
-       if(res !== null){
-           console.log(res);
-            history.push("/");
+        if(res.status == 500){
+            setmessageErrPourC(res.messageErrPourC);
+            setmessageErrDate(res.messageErrDate);
+        }else if(res.status == 200 ){
+            console.log(res);
+            history.push("/politique/list");
        }else{
            console.log("pas de reponse");
        }
+           
     }
     // handle input change
     const handleInputChange = (e, index) => {
@@ -47,57 +55,104 @@ function Global(){
     
     // handle click event of the Add button
     const handleAddClick = () => {
-        setDatePrice([...datePrice, { date: "", pourcentage: "" , type:"number" , jour :"jours" }]);
+        setDatePrice([...datePrice, { date: "", pourcentage: "" ,type :"jour"}]);
     };
 
     const handlechange = (e , z) => {
         const copie = JSON.parse(JSON.stringify(datePrice));
         if(copie[z].type === "time"){
-            copie[z].type = 'number';
-            copie[z].jour = "jours"
+            copie[z].type = 'jour';
         }else{
-            copie[z].type = 'time';
-            copie[z].jour = ""
+            copie[z].type = 'heure';
         }
         setDatePrice(copie);
     };
     const handlechangeHeure = (e , z) => {
         const copie = JSON.parse(JSON.stringify(datePrice));
-            copie[z].type = 'time';
-            copie[z].jour = "";
+            copie[z].type = 'heure';
         setDatePrice(copie);
     };
     const handlechangeJour = (e , z) => {
         const copie = JSON.parse(JSON.stringify(datePrice));
-            copie[z].type = 'number';
-            copie[z].jour = "jours"
+            copie[z].type = 'jour';
         setDatePrice(copie);
     };
 
     const handleInputChangeInput = (e) =>{
-        setNom(e.target.value);
-    } 
-
-    const insert = () => {
-        callAPI('post' , "/politique/insertionPolitique" ,{nom : nom , datePrice : datePrice}, functionAppel)
+        if(e.target.value.trim() === ""){
+            setNom("");
+        }else{
+            setNom(e.target.value);
+        }
     }
 
-            //let v = -1;
-    const date = datePrice.map( (x, i) => {
-                //v++;
-                //let z = v ;
-                
+    const setListPolitiqueAnnulation = (data) => {
+        console.log(data);
+        if(data.politique.nom != null){
+                let currentNom = JSON.parse(JSON.stringify(nom));
+                currentNom = data.politique.nom;
+                setNom(currentNom);
+            if(data.politique.datePrice.length != 0){
+                let current = JSON.parse(JSON.stringify(datePrice));
+                current = data.politique.datePrice;
+                setDatePrice(current);
+                setShow(true);
+            }else{
+                console.log("datePriceVide")
+            }
+        }else{
+            console.log("setListPolitiqueAnnulation");
+        }
+       
+    }
+
+    useEffect(() => {
+        if(_id != null){
+            callAPI('get', '/politique/detail/'+ _id, {}, setListPolitiqueAnnulation);
+            console.log("modification")
+        }else(
+            console.log("insertion")
+        )
+        
+    }, [_id])
+
+
+    const insert = () => {
+        for(let i = 0 ; i < datePrice.length ; i++){
+            datePrice[i].date = Number.parseInt(datePrice[i].date);
+            datePrice[i].pourcentage = Number.parseInt(datePrice[i].pourcentage); 
+        }
+        if(show){
+            callAPI('post' , "/politique/insertionPolitique" ,{nom : nom , datePrice : datePrice , remboursable : true}, functionAppel)
+        }else{
+            callAPI('post' , "/politique/insertionPolitique" ,{nom : nom ,  remboursable : false}, functionAppel)
+        }
+      }
+
+      const update = () => {
+        for(let i = 0 ; i < datePrice.length ; i++){
+            datePrice[i].date = Number.parseInt(datePrice[i].date);
+            datePrice[i].pourcentage = Number.parseInt(datePrice[i].pourcentage); 
+        }
+        if(show){
+            callAPI('post' , "/politique/updateP/"+ _id ,{nom : nom , datePrice : datePrice , remboursable : true}, functionAppel)
+        }else{
+            callAPI('post' , "/politique/updateP/"+_id ,{nom : nom ,  remboursable : false}, functionAppel)
+        }
+      }
+
+    const date = datePrice.map( (x, i) => {   
         return (
             <tr>
                 <td colspan="2">
                     <TextField id="input-with-sx"  
                         variant="standard" 
                         name="date"
-                        type={x.type} style={{width : "150px"}}
+                        type="number" style={{width : "150px"}}
                         value={x.date}
                         onChange={e => handleInputChange(e, i)}
                         InputProps={{
-                            startAdornment: <InputAdornment position="start"><strong>{x.jour}</strong></InputAdornment>,
+                            startAdornment: <InputAdornment position="start"><strong>{x.type}</strong></InputAdornment>,
                           }}
                     />
                     
@@ -126,26 +181,26 @@ function Global(){
             </td>
             <td>
                 <FormControl component="fieldset">
-                <RadioGroup row aria-label="gender" name="row-radio-buttons-group"  defaultValue="jours">
-                <FormControlLabel value="jours" control={<Radio size="small"/>} 
+                <RadioGroup row aria-label="gender" name="row-radio-buttons-group"  defaultValue="jour">
+                <FormControlLabel value="jour" control={<Radio size="small"/>} 
                         label="jour" onClick={(e) => handlechangeJour(e , i)}/>
                     <FormControlLabel value="heure" control={<Radio size="small" />} 
                         label="heure" onClick={(e) => handlechangeHeure(e , i)}/>
                 </RadioGroup>
                 </FormControl>
             </td>
-
         </tr> 
                    
                 );
             })
 
         return (
-            <div className="container" ><br/>
+            <div className="container" style={{marginTop : "50px"}}>
                 <div className ="row">
                     <div className ="col-md-2"></div>
                         <div className ="col-md-8" style ={{boxShadow : '0 0 20px 0 rgb(0 0 0 / 20%), 0 5px 5px 0 rgb(0 0 0 / 25%)'}} ><br/>
                             <h4 style={{textAlign : 'center'}}>Politique d'annulation</h4><hr/>
+                            <h5 style={{textAlign : 'center' , color :"red"}}>{message}</h5>
                             <strong>Concellation preference</strong><br/>
                             <span>Y a-t-il une période pendant laquelle le client peut annuler gratuitement?</span><br/>
                             <RadioGroup
@@ -158,32 +213,69 @@ function Global(){
                                 <FormControlLabel value="false"  label="non" checked={show.checkedNon}
                                     control={<Radio onClick = {(e) => setShow(false) }/>}/>
                             </RadioGroup>
-
-                            <strong>precisez les conditions</strong><br/><br/>
+                            <strong>precisez les conditions</strong>
                                 {
-                                show ? 
-                                <div>
-                                    nom :
-                                    <TextField
-                                        id="outlined-size-small"
-                                        size="small"
-                                        name="nom"
-                                        type="text"
-                                        placeholder="nom"
-                                        onChange={e => handleInputChangeInput(e)}
-                                    /><br/><hr/>
-                                    <table className="table table-striped">
-                                        {date}
-                                    </table> <br/>
-                                    <Button variant="contained" endIcon={<AddIcon />} onClick={handleAddClick}>Add</Button>
-                                    <br/><br/><br/>
-                                    <div style={{width:"fit-content",margin :"auto"}}>
-                                    
-                                    <Button variant="contained" color="success" onClick={(e) => insert()}>Sauvegarder</Button>
+                                    show ? 
+                                    <div style = {{marginTop : "20px"}}>
+                                        <table className="table">
+                                            {date}
+                                            <tr>
+                                                <th colspan="2" id="error"> {messageErrDate}</th>
+                                                <th colspan ="2" id="error"> {messageErrPourC}</th>
+                                                <th ></th><th></th>
+                                            </tr>    
+                                        </table> <br/>
+                                        <Button variant="contained" endIcon={<AddIcon />} onClick={handleAddClick}><span style ={{color : "white"}} >Add</span></Button>
+                                        <br/>
+                                        <div style={{width:"fit-content",margin :"auto"}}>
+                                        
+                                         </div>
                                     </div>
-                                </div>
-                                : null
-                                }
+                                    :  ""
+                                } 
+                                <div style = {{marginTop :"15px"}}> 
+                                    <strong >Nom politique : </strong>
+                                        <TextField
+                                                id="outlined-size-small"
+                                                size="small"
+                                                name="nom"
+                                                type="text"
+                                                value = {nom}
+                                                placeholder="nom"
+                                                onChange={e => handleInputChangeInput(e)}
+                                            />
+                                </div> <br/>
+                                
+                                   <div style = {{width : "fit-content" , margin : "0 auto"}}>
+                                       { 
+                                        _id == null ? 
+                                           <div> 
+                                               {
+                                                    nom == "" ? 
+                                                    <Button variant="contained" color="success" onClick={(e) => insert()} disabled>
+                                                        Sauvegarder
+                                                    </Button> :
+                                                    <Button variant="contained" color="success" onClick={(e) => insert()} >
+                                                        Sauvegarder
+                                                    </Button>
+                                                }
+                                            </div> :
+                                            <div> 
+                                                {
+                                                     nom == "" ? 
+                                                     <Button variant="contained" color="success" onClick={(e) => update()} disabled >
+                                                        modifier
+                                                    </Button> : 
+                                                    <Button variant="contained" color="success" onClick={(e) => update()} >
+                                                        modifier
+                                                    </Button>
+
+                                                }   
+                                            </div> 
+                                            
+                                        }
+                                    </div> <br/>
+                                              
                         </div>
                     <div className ="col-md-2">
                         

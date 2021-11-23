@@ -29,7 +29,7 @@ function Navbar(props) {
                 <Tab value={1} component={Link} to="/tarif" icon={<DocumentScannerOutlinedIcon />} iconPosition="start" label="Plan tarifaire" />
                 <Tab value={2} component={Link} to="/typeChambre" icon={<BedroomChildOutlinedIcon />} iconPosition="start" label="Type de chambre" />
                 <Tab value={3} component={Link} icon={<PushPinOutlinedIcon />} to="/promotion" iconPosition="start" label="Promotion" />
-                <Tab value={4} component={Link} icon={<GavelOutlinedIcon />} to="/politique" iconPosition="start" label="Politique" />
+                <Tab value={4} component={Link} icon={<GavelOutlinedIcon />} to="/politique/list" iconPosition="start" label="Politique" />
                 <Tab value={5} icon={<FormatListBulletedOutlinedIcon />} iconPosition="start" label="Réservation" />
                 <Tab value={6} icon={<PersonPinIcon />} iconPosition="start" label="Mon compte" />
             </Tabs>

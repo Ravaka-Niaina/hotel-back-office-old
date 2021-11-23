@@ -79,8 +79,10 @@ class Scroll extends React.Component{
         return(
             <div>
                 <TestCookie />
-                <div className="scroll-bg">
+                <div className="scroll-bg" >
+                    <div style ={{ width :"fit-content" , margin :"0 auto"}}>
                         <Datee style = {{marginLeft : "50px"}}/><hr/>
+                    </div >
                     <div class="row">
                         <div className="col">
                             <div className="scroll-div">

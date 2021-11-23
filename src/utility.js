@@ -12,3 +12,4 @@ export default function callAPI(method, url, data, callback){
         callback(res.data)})
     .catch(err =>{console.log(err); console.log("erreur");} );
 }
+
