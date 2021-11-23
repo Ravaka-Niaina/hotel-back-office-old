@@ -208,13 +208,23 @@ function InputUtilisateur(props){
                     setInputs={props.setInputs} />
             );
         }
-    }catch(err){console.log(err)}
+    }catch(err){/*console.log(err)*/}
     
     if(props.editable){
         return (
             <div>
-                {itineraires}
-            </div>);
+                <TextField
+                    id="outlined-required"
+                    label={"Email utilisateur "}
+                    placeholder="utilisateur@gmail.com"
+                    onChange={(e) => props.setEmail(e.target.value)}
+                    value={props.email}
+                />
+                <div>
+                    {itineraires}
+                </div>
+            </div>
+            );
         {/*
         return (<div>
             <TextField
@@ -445,7 +455,8 @@ function ApplyReservation(props){
     };
 
     function validerReservation(){
-        callAPI('post', '/reservation/applyWithEmail', {_id: reservation._id, email: "ravaka@yopmail.com"}, function(res){console.log(res);} );
+        console.log(email);
+        callAPI('post', '/reservation/applyWithEmail', {_id: reservation._id, email: email}, function(res){console.log(res);} );
     }
 
     function setDetailReservation(res){
@@ -532,7 +543,9 @@ function ApplyReservation(props){
                                 editable={true} 
                                 reservation={reservation}
                                 inputs={inputs}
-                                setInputs={setInputs} />
+                                setInputs={setInputs}
+                                email={email}
+                                setEmail={setEmail} />
                         </TabPanel>
                         <TabPanel value={value} index={2} dir={theme.direction}>
                             <InfoItineraires reservation={reservation} />
@@ -540,7 +553,9 @@ function ApplyReservation(props){
                                 editable={false} 
                                 reservation={reservation}
                                 inputs={inputs}
-                                setInputs={setInputs} />
+                                setInputs={setInputs}
+                                email={email}
+                                setEmail={setEmail} />
                             <Total />
                             <div>
                                 <Stack direction="row" spacing={2}>
