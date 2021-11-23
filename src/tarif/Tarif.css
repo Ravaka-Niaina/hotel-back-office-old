@@ -1,10 +1,8 @@
-
-.tarif .MuiBox-root{
-    padding-top: 55px !important;
+.tarif{
+    overflow: hidden;
 }
-
-.MuiBox-root.dayCell{
-    padding-top: 0 !important;
+.tarif .MuiBox-root{
+    
 }
 
 .tarif .MuiTabs-flexContainer{
@@ -13,6 +11,7 @@
 }
 
 .tarif > .MuiBox-root{
+    padding-top: 65px !important;
     background-color: #f6f8fc;
 }
 
@@ -20,7 +19,7 @@
     overflow: visible !important;
 }
 
-.tarif .MuiButtonBase-root{
+.tarif .MuiTabs-flexContainer .MuiButtonBase-root:not(.Mui-selected){
   color: grey !important;
 }
 
@@ -37,4 +36,20 @@
     height: 2px !important;
     bottom: -1px !important;
     background-color: #fff !important;
+}
+.calendarTab{
+   
+}
+
+.calendarTab > .MuiTabs-root, 
+.calendarTab > .MuiBox-root,
+.calendarTab .MuiContainer-root{
+    padding: 0 !important;
+}
+
+.calendarTab .MuiContainer-root{
+        max-width: 100%;
+}
+.calendarTab legend{
+    float: none !important;
 }

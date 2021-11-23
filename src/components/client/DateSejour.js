@@ -45,28 +45,44 @@ function changeDateSejour(e,context, fieldName)
         }else{
           currentState.showFiltre = false;
         }
-        
         context.setState(currentState);
     } 
 
 function DateSejour(props) {
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+
+  function handleOpen(){
+    if(props.context.state.changeDateSejour === true){
+      props.context.handleChange("openChangeDateSejour", true);
+    }
+  }
+  function handleClose(){
+    if(props.context.state.dateSejour.debut != "" 
+      && props.context.state.dateSejour.fin != ""){
+      let currentState = JSON.parse(JSON.stringify(props.context.state));
+      currentState.openChangeDateSejour = false;
+      currentState.changeDateSejour = false;
+      currentState.itineraires.push({
+        edit: false,
+        dateSejour: JSON.parse(JSON.stringify(props.context.state.dateSejour)),
+        tarifReserves: []
+      });
+      props.context.setState(currentState);
+    }
+  }
 
   return (
     <div>
       Date Sejour : 
-      <Button variant="contained" onClick={handleOpen} >
-        <span style ={{color :"white"}}> 
-            Date Debut : {props.context.state.dateSejour.debut} &nbsp;&nbsp; - &nbsp;&nbsp;
-            date_Fin : {props.context.state.dateSejour.fin}
-        </span>
-      </Button>
+        <Button variant="contained" onClick={handleOpen} >
+          <span style ={{color :"white"}}> 
+              Date Debut : {props.context.state.dateSejour.debut} &nbsp;&nbsp; - &nbsp;&nbsp;
+              Date Fin : {props.context.state.dateSejour.fin}
+          </span>
+        </Button>
       <StyledModal
         aria-labelledby="unstyled-modal-title"
         aria-describedby="unstyled-modal-description"
-        open={open}
+        open={props.context.state.openChangeDateSejour}
         onClose={handleClose}
         BackdropComponent={Backdrop}
       >

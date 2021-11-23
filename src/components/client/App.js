@@ -10,7 +10,7 @@ function FrontApp(){
             <Router>
                 <Route path="/detail" exact component={Detail} />
                 <Route path="/list" exact component={Scroll} />
-                <Route path="/" exact component={Home} />   
+                <Route path="/" exact component={Home} />
             </Router>
         </div>
     );
