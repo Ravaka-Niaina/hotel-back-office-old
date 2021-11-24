@@ -18,33 +18,67 @@ const getDaysBetweenDates = function(startDate, endDate) {
     return dates;
 };
 
+function getNDigits(number, digit){
+    digit = digit + '';
+    const remain = number - digit.length;
+    for(let i = 0; i < remain; i++){
+        digit = "0" + digit;
+    }
+    return digit;
+}
+
+function getDate(date){
+    date = new Date(date);
+    let year = date.getFullYear();
+    let month = getNDigits(2, date.getMonth() + 1);
+    let day = getNDigits(2, date.getDate());
+    date = year + '-' + month + '-' + day;
+    return date;
+}
+
 const CalendarComponent = () => {
+    let today = new Date();
+    let oneMonth = new Date(today);
+    oneMonth.setDate(oneMonth.getDate() + 30);
     const [dates, setDates] = useState([]);
-    const [value, setValue] = useState([moment('2021-11-11'), moment('2021-12-11')]);
+    const [value, setValue] = useState([moment(today), moment(oneMonth)]);
     const alldays = getDaysBetweenDates(value[0],value[1]);
     const [listTypeChambre, setListTypeChambre] = useState([]);
     const [rateLine, setRateLine] = useState([]);
+
+    function getPrix(){
+        try{
+            axios({
+                method: 'post',
+                url: process.env.REACT_APP_BACK_URL + "/typeChambre/prix",
+                withCredentials: true,
+                data: {dateDebut: value[0].format(), dateFin: value[1].format()}
+            })
+            .then(res => {
+                var tmp = [];
+                setListTypeChambre(res.data.typeChambre);
+                console.log(res.data.typeChambre);
+                for(var i = 0; i < res.data.typeChambre.length; i++) {
+                    tmp.push(
+                        <>
+                        <div className={styles.dividerline}></div>
+                        <RateLine typechambre={res.data.typeChambre[i]} indice={i} fromto={value} daterange={alldays} listTypeChambre={listTypeChambre} />
+                        </>
+                    );
+                }
+                setRateLine(tmp);
+            })
+            .catch(err => console.log(err));
+        }catch(err){
+            console.log(err);
+        }
+
+    }
+
     useEffect(() => {
-        axios({
-            method: 'post',
-            url: process.env.REACT_APP_BACK_URL + "/typeChambre",
-            withCredentials: true
-        })
-        .then(res => {
-            var tmp = [];
-            setListTypeChambre(res.data.list);
-            for(var i = 0; i < res.data.list.length; i++) {
-                tmp.push(
-                    <>
-                    <div className={styles.dividerline}></div>
-                    <RateLine typechambre={res.data.list[i]} indice={i} fromto={value} daterange={alldays} />
-                    </>
-                );
-            }
-            setRateLine(tmp);
-        })
-        .catch(err => console.log(err));
+        getPrix();
     },[])
+
     return(
         <Container className={styles.container}>
             <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -56,6 +90,7 @@ const CalendarComponent = () => {
                     setValue(newValue);
                     if(newValue != undefined && newValue[0] != null && newValue[1] != null){
                         const allday = getDaysBetweenDates(newValue[0],newValue[1]);
+                        getPrix();
                     }
                 }}
                 renderInput={(startProps, endProps) => (
