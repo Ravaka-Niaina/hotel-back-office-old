@@ -91,6 +91,16 @@ const FullPriceEditor = (props) => {
     };
     const [interval, setInterval] = React.useState([]);
     const [prix, setPrix] = React.useState([]);
+    const [days, setDays] = React.useState([
+        { value: 1, checked: true, label: "Mon" },
+        { value: 2, checked: true, label: "Tue" },
+        { value: 3, checked: true, label: "Wed" },
+        { value: 4, checked: true, label: "Thu" },
+        { value: 5, checked: true, label: "Fri" },
+        { value: 6, checked: true, label: "Sat" },
+        { value: 7, checked: true, label: "Sun" },
+    ]); // day 1 = lundi , 7 = dimanche
+
     const guestsMax = props.typechambre.nbAdulte + props.typechambre.nbEnfant;
     const history = useHistory();
 
@@ -140,6 +150,7 @@ const FullPriceEditor = (props) => {
         const data = {
             idTarif: props.typechambre.planTarifaire[rate - 1]._id,
             idTypeChambre: props.typechambre._id,
+            days: days,
             versions: versions,
             minSejour: 1,
             dateDebut: interval[0].format("YYYY-MM-DD"),
@@ -147,6 +158,28 @@ const FullPriceEditor = (props) => {
         };
         console.log(data);
         callAPI('post', '/prixTarif/insert', data, refresh);
+    }
+    
+    function handleDayChange(i, checked){
+        let current = JSON.parse(JSON.stringify(days));
+        current[i].checked = checked;
+        setDays(current);
+    }
+
+    let inputDays = [];
+    for(let i = 0; i < days.length; i++){
+        const a = i;
+        inputDays.push(
+            <>
+                <FormControlLabel
+                    style={{padding: 0}}
+                    label={days[i].label}
+                    onChange={(e) => handleDayChange(a, e.target.checked)}
+                    control={<Checkbox checked={days[i].checked} />}
+                />
+                {/*<Checkbox checked={days[i].checked} onChange={(e) => console.log(e)} /><span>{days[i].label}</span>*/}
+            </>
+        );
     }
 
     return(
@@ -164,13 +197,7 @@ const FullPriceEditor = (props) => {
                 <DatePicker interval={interval} setInterval={setInterval} />
                 <br/>
                 <div>
-                    <Checkbox defaultChecked /><span>Mon</span>
-                    <Checkbox defaultChecked /><span>Tue</span>
-                    <Checkbox defaultChecked /><span>Wed</span>
-                    <Checkbox defaultChecked /><span>Thu</span>
-                    <Checkbox defaultChecked /><span>Fri</span>
-                    <Checkbox defaultChecked /><span>Sat</span>
-                    <Checkbox defaultChecked /><span>Sun</span>
+                    {inputDays}
                 </div>
                 <br/>
                 <span>{props.typechambre.nom}</span>
