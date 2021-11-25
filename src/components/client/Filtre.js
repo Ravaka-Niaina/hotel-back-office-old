@@ -213,14 +213,17 @@ class Filtre extends React.Component{
         console.log(this.props.context.state);
     }
     applyFilter(){
-        this.props.context.handleChange("errFiltre", null);
+        console.log({filtres: this.state.filtres, guests: this.props.context.state.guests});
+        
         if((this.props.context.state.guests.nbEnfant !== 0 || this.props.context.state.guests.nbAdulte !== 0)
             && (this.props.context.state.dateSejour.debut !== "" && this.props.context.state.dateSejour.fin !== "")){
                 console.log('filtre en cours...');
                 callAPI('post', '/typeChambre/', {filtres: this.state.filtres, guests: this.props.context.state.guests}, this.setResult);
         }else{
+            console.log("misy olana");
             this.props.context.handleChange("errFiltre", 'Veuillez remplir les champs Adulte, Enfant, Debut sejour et fin sejour au moins');
         }
+        
     }
 
     handleFiltreChange(event){

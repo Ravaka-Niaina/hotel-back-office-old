@@ -7,12 +7,11 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import StaticDateRangePicker from '@mui/lab/StaticDateRangePicker';
 
 const DatePick = (props) => {
-  const[value ,setValue] = useState(["",""])
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
     <StaticDateRangePicker
       displayStaticWrapperAs="desktop"
-      value={value}
+      value={[props.context.state.dateSejour.debut, props.context.state.dateSejour.fin]}
       onChange={(newValue) => props.context.haddleChangeDate(newValue)}
       renderInput={(startProps, endProps) => (
         <React.Fragment>
