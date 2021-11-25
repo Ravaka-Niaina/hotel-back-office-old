@@ -15,10 +15,17 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import PersonIcon from '@mui/icons-material/Person';
 
 import callAPI from '../../utility';
 
 import './filtre.css';
+
+import Typography from '@mui/material/Typography';
+import Popper from '@mui/material/Popper';
+import PopupState, { bindToggle, bindPopper } from 'material-ui-popup-state';
+import Fade from '@mui/material/Fade';
+import Paper from '@mui/material/Paper';
 
 function ListOptCheckBox(props){
     let list = null;
@@ -224,7 +231,7 @@ class Filtre extends React.Component{
       
       DecrAdulte() {                              // addOne as HandleClick
         this.setState((preState) => {
-          if (this.state.adulte !== 0) {
+          if (this.state.nbAdulte !== 0) {
           return {
             nbAdulte : preState.nbAdulte - 1
             };
@@ -236,17 +243,16 @@ class Filtre extends React.Component{
         this.setState((preState) => {
           return {
             nbEnfant : preState.nbEnfant + 1,
-            showAge :true
             };
          });
        }
-      
+ 
+       
       DecrEnfant() {                              // addOne as HandleClick
         this.setState((preState) => {
-          if (this.state.enfant !== 0) {
+          if (this.state.nbEnfant !== 0) {
           return {
             nbEnfant : preState.nbEnfant - 1,
-            showAge :false
             };
           }
          });
@@ -333,7 +339,7 @@ class Filtre extends React.Component{
 
     changeGuests(e, fieldName){
         let currentState = JSON.parse(JSON.stringify(this.props.context.state));
-        currentState.guests[fieldName] = e.target.value;
+        currentState.fieldName = e.target.value;
         currentState.listTypeChambre = [];
         this.props.context.setState(currentState);
     }
@@ -347,29 +353,40 @@ class Filtre extends React.Component{
     render(){
         return (
             <div>
-                <div className = "">
-                    {/* <div className = "col"></div>
-                    <TextField className="col"  id="standard-basic" label="Adulte" variant="standard" type="number"
-                    style={{width:'20%'}} value={this.props.context.state.guests.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")}/>
-                    <div className = "col"></div>
-                    <TextField className ="col" id="standard-basic" label="Enfant" variant="standard" type="number"
-                        style={{width:'20%'}} value={this.props.context.state.guests.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")}/>
-                    <div className = "col"></div> */}
-                    <div class='guest1' id='adulte1' onClick={this.DecrAdulte}><p id='moins'>-</p></div>
+                <div></div>
+
+                <PopupState variant="popper" popupId="demo-popup-popper">
+      {(popupState) => (
+        <div>
+          <Button {...bindToggle(popupState)} id='toggle'>
+          <span></span>
+          </Button>
+          <div className='client'>
+                <div id='client' className='PersonIcon'>
+                <PersonIcon id='PersonIcon'/>
+                </div>
+                <div id='client' className='guests'>
+                <p id='guests'>Guests</p>
+                <p id='NbGuest'>{this.state.nbAdulte} Adult, {this.state.nbEnfant} children</p>
+                </div>
+                </div>
+          <Popper {...bindPopper(popupState)} transition>
+            {({ TransitionProps }) => (
+              <Fade {...TransitionProps} timeout={350}>
+                <Paper id='modal1'>
+                <span id="adultes">Adultes</span><div class='guest1' id='adulte1' onClick={this.DecrAdulte}><p id='moins'>-</p></div>
                           <div class='guest1'>
-        <input value={this.state.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")} class='adulte' type=""/>
+                          <input value={this.state.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")} class='adulte' type=""/>
                           </div>
                     <div class='guest1' id='adulte11' onClick={this.IncrAdulte}><p id='add'>+</p></div>
                           <br/>
-                    <div class='guest2' id='enfant1' onClick={this.DecrEnfant}><p id='moins'>-</p></div>
+                          <span id="enfants">Enfants</span><div class='guest2' id='enfant1' onClick={this.DecrEnfant}><p id='moins'>-</p></div>
                           <div class='guest2'>
-        <input value={this.state.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")} class='enfant' type=""/>
+                          <input value={this.state.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")} class='enfant' type=""/>
                           </div>
         <div class='guest2' id='enfant11' onClick={this.IncrEnfant}>
             <p id='add'>+</p>
         </div>
-                </div>
-
                 {
                     this.state.showAge ?
                     <select value="" name="" class="age">
@@ -388,6 +405,23 @@ class Filtre extends React.Component{
                     </select>
                     : null
                     }
+                </Paper>
+              </Fade>
+            )}
+          </Popper>
+        </div>
+      )}
+    </PopupState>
+                    
+
+                    {/* <div className = "col"></div>
+                    <TextField className="col"  id="standard-basic" label="Adulte" variant="standard" type="number"
+                    style={{width:'20%'}} value={this.props.context.state.guests.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")}/>
+                    <div className = "col"></div>
+                    <TextField className ="col" id="standard-basic" label="Enfant" variant="standard" type="number"
+                        style={{width:'20%'}} value={this.props.context.state.guests.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")}/>
+                    <div className = "col"></div> */}
+
 
                 { this.props.context.state.errFiltre != null 
                     ? <p style={{backgroundColor: "red"}}>{this.props.context.state.errFiltre}</p> 
