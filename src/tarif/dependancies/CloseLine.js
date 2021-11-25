@@ -4,7 +4,7 @@ import {Box} from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 const CloseLine = (props) => {
-    const [opened, setOpened] = useState(false);
+    const [opened, setOpened] = useState(!props.closed);
     const theme = createTheme({
         palette: {
             primary: {

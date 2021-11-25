@@ -52,7 +52,7 @@ const CalendarComponent = () => {
                 method: 'post',
                 url: process.env.REACT_APP_BACK_URL + "/typeChambre/prix",
                 withCredentials: true,
-                data: {dateDebut: value[0].format(), dateFin: value[1].format()}
+                data: {dateDebut: getDate(value[0].format()), dateFin: getDate(value[1].format())}
             })
             .then(res => {
                 var tmp = [];

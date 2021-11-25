@@ -134,23 +134,19 @@ const FullPriceEditor = (props) => {
         console.log(prix);
         for(let i = 0; i < guestsMax; i++){
             if(prix[i].trim() != ""){
-                versions.push({nbPers: (i + 1), prix: Number.parseInt(prix[i])});
+                versions.push({nbPers: (i + 1), prix: Number.parseFloat(prix[i])});
             }
         }
-        if(versions.length > 0){
-            const data = {
-                idTarif: props.typechambre.planTarifaire[rate - 1]._id,
-                idTypeChambre: props.typechambre._id,
-                versions: versions,
-                minSejour: 1,
-                dateDebut: interval[0].format("YYYY-MM-DD"),
-                dateFin: interval[1].format("YYYY-MM-DD")
-            };
-            console.log(data);
-            callAPI('post', '/prixTarif/insert', data, refresh);
-        }else{
-            console.log("Veuillez entrez au moins un prix");
-        }
+        const data = {
+            idTarif: props.typechambre.planTarifaire[rate - 1]._id,
+            idTypeChambre: props.typechambre._id,
+            versions: versions,
+            minSejour: 1,
+            dateDebut: interval[0].format("YYYY-MM-DD"),
+            dateFin: interval[1].format("YYYY-MM-DD")
+        };
+        console.log(data);
+        callAPI('post', '/prixTarif/insert', data, refresh);
     }
 
     return(

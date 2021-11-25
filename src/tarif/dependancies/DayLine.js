@@ -8,6 +8,63 @@ import PriceEditor from './PriceEditor.js'
 import CloseLine from './CloseLine.js';
 import DateRangeLine from './DateRangeLine.js';
 
+import { useEffect } from 'react';
+
+function getMin2(arr){
+    var min = arr[0];
+    for(var i = 1; i < arr.length; i++) {
+        if(min > arr[i]){
+            min = arr[i];
+        }
+    }
+    return min;
+}
+
+function getMinPrix(versions){
+    let prixValid = [];
+    for(let i = 0; i < versions.length; i++){
+        if(versions[i].prix != ""){
+            prixValid.push(versions[i].prix);
+        }
+    }
+    if(prixValid.length > 0){
+        return getMin2(prixValid);
+    }
+    return null;
+}
+
+function RateCells(props){
+    let rows = [];
+    for(let i = 0; i < props.typechambre.planTarifaire.length; i++){
+        let row = [];
+        for(let u = 0; u < props.typechambre.planTarifaire[i].prixTarif.length; u++){
+            const minPrix = getMinPrix(props.typechambre.planTarifaire[i].prixTarif[u].versions);
+            console.log(minPrix);
+            row.push(
+                <td>
+                    <DayCell 
+                        isprice={true} 
+                        highlight={props.selecteds.indexOf(i) >= 0} 
+                        key={i.toString()} 
+                        deselectDay={props.rmSelection.bind(props.context)} 
+                        selectDay={props.addSelection.bind(props.context)} 
+                        selectOneDay={props.oneSelection.bind(props.context)} 
+                        day={minPrix} />
+                </td>
+            );
+        }
+        rows.push(row);
+    }
+    let ratecells = [];
+    for(let i = 0; i < rows.length; i++){
+        const a = i;
+        ratecells.push(
+            <tr>{rows[a]}</tr>
+        );
+    }
+    return ratecells;
+}
+
 const DayLine = (props) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [min,setMin] = useState(0);
@@ -15,9 +72,8 @@ const DayLine = (props) => {
     const openPopper = (target) => {
         setAnchorEl(target);
     };
-    const open = Boolean(anchorEl);
-    const daycells = [];
-    const ratecells = [];
+    let open = Boolean(anchorEl);
+    let daycells = [];
     const [selecteds, setSelecteds] = useState([]);
     const [from, setFrom] = useState('none');
     const [bornesEditDate, setBornesEditDate] = useState([]);
@@ -117,33 +173,9 @@ const DayLine = (props) => {
     const bookedcell = [];
     const closelines = [];
 
-    let rows = [];
-    for(let i = 0; i < props.typechambre.planTarifaire.length; i++){
-        const a = i;
-        let row = [];
-        for(let u = 0; u < props.typechambre.planTarifaire[a].prixTarif.length; u++){
-            const b = u;
-            row.push(
-                <td>
-                    <DayCell 
-                        isprice={true} 
-                        highlight={selecteds.indexOf(i) >= 0} 
-                        key={i.toString()} 
-                        deselectDay={rmSelection.bind(this)} 
-                        selectDay={addSelection.bind(this)} 
-                        selectOneDay={oneSelection.bind(this)} 
-                        day={props.typechambre.planTarifaire[a].prixTarif[b].versions[0].prix} />
-                </td>
-            );
-        }
-        rows.push(row);
-    }
-    for(let i = 0; i < rows.length; i++){
-        const a = i;
-        ratecells.push(
-            <tr>{rows[a]}</tr>
-        );
-    }
+    useEffect(() => {
+        
+    }, []);
 
     for(var i = 0; i < props.daterange.length ; i++){
         daycells.push(
@@ -161,9 +193,12 @@ const DayLine = (props) => {
                 <span>{Math.floor(Math.random() * 10)}</span>
             </td>
         )
+    }
+
+    for(let i = 0; i < props.typechambre.statusDays.length; i++){
         closelines.push(
             <td>
-                <CloseLine/>
+                <CloseLine closed={props.typechambre.statusDays[i].closed} />
             </td>
         )
     }
@@ -198,7 +233,13 @@ const DayLine = (props) => {
                             <tr>
                                 {bookedcell}
                             </tr>
-                            {ratecells}
+                            <RateCells 
+                                typechambre={props.typechambre} 
+                                context={this}
+                                selecteds={selecteds}
+                                rmSelection={rmSelection}
+                                addSelection={addSelection}
+                                oneSelection={oneSelection} />
                         </tbody>
                     </table>
                     { (selecteds.length > 0) ? <Draggable pos={'right'} dragStart={dragStart.bind(this)} rightSelected={rightSelected.bind(this)} leftSelected={leftSelected.bind(this)} /> : null }
