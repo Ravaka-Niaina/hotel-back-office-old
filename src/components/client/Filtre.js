@@ -1,5 +1,5 @@
 
-import React ,{useState} from "react";
+import React from "react";
 import MenuItem from '@mui/material/MenuItem';
 
 import FormGroup from '@mui/material/FormGroup';
@@ -214,8 +214,8 @@ class Filtre extends React.Component{
     }
     applyFilter(){
         this.props.context.handleChange("errFiltre", null);
-        if((this.props.context.state.guests.nbEnfant != 0 || this.props.context.state.guests.nbAdulte != 0)
-            && (this.props.context.state.dateSejour.debut != "" && this.props.context.state.dateSejour.fin != "")){
+        if((this.props.context.state.guests.nbEnfant !== 0 || this.props.context.state.guests.nbAdulte !== 0)
+            && (this.props.context.state.dateSejour.debut !== "" && this.props.context.state.dateSejour.fin !== "")){
                 console.log('filtre en cours...');
                 callAPI('post', '/typeChambre/', {filtres: this.state.filtres, guests: this.props.context.state.guests}, this.setResult);
         }else{
@@ -241,7 +241,7 @@ class Filtre extends React.Component{
     }
     handleRadioChange(event, indexFiltre, indexOption){
         let currentState = JSON.parse(JSON.stringify(this.state));
-        if(event.target.value == currentState.filtres[indexFiltre].value){
+        if(event.target.value === currentState.filtres[indexFiltre].value){
             currentState.filtres[indexFiltre].value = '';
         }else{
             currentState.filtres[indexFiltre].value = event.target.value;
@@ -253,9 +253,9 @@ class Filtre extends React.Component{
 
     setFiltreDefaultValue(filtres, filtreName, optValue){
         for(let i = 0; i < filtres.length; i++){
-            if(filtres[i].name == filtreName){
+            if(filtres[i].name === filtreName){
                 for(let u = 0; u < filtres[i].options.length; u++){
-                    if(filtres[i].options[u].value == optValue){
+                    if(filtres[i].options[u].value === optValue){
                         filtres[i].options[u].checked = true;
                         if(!filtres[i].multipleChoice){
                             filtres[i].value = filtres[i].options[u].value;

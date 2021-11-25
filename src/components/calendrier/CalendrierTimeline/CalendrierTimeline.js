@@ -1,4 +1,4 @@
-import { width } from '@mui/system';
+
 import React from 'react'
 
 import './CalendrierTimeline.css';
@@ -21,7 +21,7 @@ class CalendrierTimeline extends React.Component{
     }
 
 renderMois(jour){
-    if(this.mois !=jour.getMonth()){
+    if(this.mois !== jour.getMonth()){
         this.mois = jour.getMonth();
         return (
             <div className="mois-calendar" style={{width:80}}>
@@ -43,7 +43,7 @@ renderMois(jour){
 }
 renderJour(jour){
     //Debut du mois
-    if(jour.getDate()==1){
+    if(jour.getDate()===1){
         return(
 
             <div className="jour-date">
@@ -53,7 +53,7 @@ renderJour(jour){
         )
     }
     //Dimanche
-    if(jour.getDay()==0){
+    if(jour.getDay()===0){
         return(
 
             <div className="jour-date bold">
@@ -63,7 +63,7 @@ renderJour(jour){
         )
     }
     //Jour samedi
-    if(jour.getDay()==6){
+    if(jour.getDay()===6){
         return(
 
             <div className="jour-date bold">
@@ -72,7 +72,7 @@ renderJour(jour){
             </div>
         )
     }
-    if(jour.getDay()==1){
+    if(jour.getDay()===1){
         return(
 
             <div className="jour-date lundi">

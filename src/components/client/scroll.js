@@ -8,6 +8,7 @@ import { withCookies, Cookies } from 'react-cookie';
 import { useCookies } from 'react-cookie';
 import callAPI from '../../utility';
 import './Css.css'
+import moment from 'moment';
 
 
 import Datee from "./date";
@@ -41,11 +42,11 @@ class Scroll extends React.Component{
             showFiltre : false,
             open: false,
             err: null,
-            email: ""
+            email: "",
         };
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
     }
-
+    
     handleChange(fieldName, value){
         let current = JSON.parse(JSON.stringify(this.state));
         current[fieldName] = value;
@@ -60,8 +61,79 @@ class Scroll extends React.Component{
         currentState.openChangeDateSejour = true;
         this.setState(currentState);
     }
-    
 
+    getConvert(number , value){
+        value = value+"";
+        let compteur = number - value.length;
+        for( let i = 0 ; i < compteur ; i++){
+            value = "0" + value;
+        }
+        return value;
+
+    }
+   
+    getDateAndConvert(dateDebut , dateFin){
+        dateDebut = moment(dateDebut).format("YYYY/MM/DD");
+        dateFin = moment(dateFin).format("YYYY/MM/DD");
+        let current = JSON.parse(JSON.stringify(this.state));
+        current.dateSejour.debut = dateDebut; 
+        current.dateSejour.fin = dateFin;
+        if(current.dateSejour.debut != null && current.dateSejour.fin != null){
+            current.showFiltre = true;
+            current.openChangeDateSejour = false;
+            current.changeDateSejour = false;
+            try{
+                if(current.itineraires[current.itineraires.length - 1].tarifReserves.length > 0){
+                    current.itineraires.push({ 
+                        edit: false,
+                        dateSejour: JSON.parse(JSON.stringify(current.dateSejour)),
+                        tarifReserves: []
+                    });
+                }
+            }catch(err){
+                current.itineraires.push({ 
+                        edit: false,
+                        dateSejour: JSON.parse(JSON.stringify(current.dateSejour)),
+                        tarifReserves: []
+                    });
+            }
+        }else{
+            current.showFiltre = false;
+        }
+        
+        return this.setState(current);
+    }
+
+    getDateAndConvertMethode2(dateDebut , dateFin){
+        dateDebut = new Date(dateDebut);
+        let year1 = dateDebut.getFullYear();
+        let month2 = this.getConvert(2 , dateDebut.getMonth() + 1);
+        let jours3 = this.getConvert(2 , dateDebut.getDay());
+        dateDebut = year1 +"/"+month2 +'/'+jours3;
+
+        dateFin = new Date(dateFin);
+        let year = dateFin.getFullYear();
+        let month = this.getConvert(2 , dateFin.getMonth() + 1);
+        let jours = this.getConvert(2 , dateFin.getDay());
+        
+        dateFin = year +"/"+month +'/'+jours;
+
+        let current = JSON.parse(JSON.stringify(this.state));
+        current.val[0] = dateDebut; 
+        current.val[1] = dateFin;
+        this.setState(current);
+        console.log(current);
+        return dateDebut; 
+    }
+
+    haddleChangeDate(value){
+        if(value[0] != null && value[1] != null){
+            this.getDateAndConvert(value[0] , value[1]);
+        }else{
+          console.log("error");
+        }
+      
+    }
     setReservationEnCours(res){
         if(res.status == 401){// Acces non autorise
             console.log("Access non autorise");
@@ -97,8 +169,10 @@ class Scroll extends React.Component{
         return(
             <div>
                 <TestCookie />
-                <div className="scroll-bg">
-                        <Datee style = {{marginLeft : "50px"}}/><hr/>
+                <div className="scroll-bg" >
+                    <div style ={{ width :"fit-content" , margin :"0 auto"}}>
+                        <Datee context = {this} style = {{marginLeft : "50px"}}/><hr/>
+                    </div >
                     <div class="row">
                         <div className="col">
                             <div className="scroll-div">
@@ -111,7 +185,7 @@ class Scroll extends React.Component{
                         <div className="col">
                             <div className="divRight">
                                 <Fact context = {this} />
-                            </div>
+                               </div>
                         </div>
                     </div>
                 </div>

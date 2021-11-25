@@ -1,4 +1,4 @@
-import React , { useState , useEffect} from 'react';
+import React , { useState} from 'react';
 import styles from '../CalendarComponent.module.css';
 import {Box} from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
