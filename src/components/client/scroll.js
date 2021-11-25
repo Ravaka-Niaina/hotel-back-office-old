@@ -33,7 +33,7 @@ class Scroll extends React.Component{
             changeDateSejour: true, 
             resultApplyReservation: null,
             errFiltre: null,
-            guests: {nbEnfant: 0, nbAdulte: 0},
+            guests: {nbEnfant: 0, nbAdulte: 1},
             dateSejour: {debut: "", fin: ""},
             listTypeChambre: [],
             reservation: [],

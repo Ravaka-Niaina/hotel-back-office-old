@@ -99,7 +99,7 @@ function Itineraires(props){
                             index={i}
                             borne="fin" />
                     </div>
-                    <button onClick={(e) => props.context.setState( setValue( props.context.state, ["itineraires", i, "edit"], true ) )}>
+                    <button variant="contained" color="success" onClick={(e) => props.context.setState( setValue( props.context.state, ["itineraires", i, "edit"], true ) )}>
                         Modifier
                     </button>
                 </div>
@@ -224,7 +224,7 @@ class Fact extends React.Component{
                     <p>TOTAL : </p>
                     {this.props.context.state.changeDateSejour ? 
                         null 
-                    : <button onClick={(e) => this.props.context.addNewItineraire()}>Ajouter itinéraire</button>}
+                    : <button variant="contained" onClick={(e) => this.props.context.addNewItineraire()}>Ajouter itinéraire</button>}
                 </div>
                 <Modal
                     open={this.props.context.state.open}

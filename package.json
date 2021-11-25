@@ -31,6 +31,7 @@
     "i18next": "^21.4.2",
     "i18next-browser-languagedetector": "^6.1.2",
     "install": "^0.13.0",
+    "material-ui-popup-state": "^2.0.0",
     "moment": "^2.29.1",
     "nodemon": "^2.0.14",
     "npm": "^8.1.3",
