@@ -40,7 +40,7 @@ function changeDateSejour(e,context, fieldName)
     {
         let currentState = JSON.parse(JSON.stringify(context.state));
         currentState.dateSejour[fieldName] = e.target.value;
-        if(currentState.dateSejour.debut != "" && currentState.dateSejour.fin != ""){
+        if(currentState.dateSejour.debut !== "" && currentState.dateSejour.fin !== ""){
           currentState.showFiltre = true;
         }else{
           currentState.showFiltre = false;
@@ -56,8 +56,8 @@ function DateSejour(props) {
     }
   }
   function handleClose(){
-    if(props.context.state.dateSejour.debut != "" 
-      && props.context.state.dateSejour.fin != ""){
+    if(props.context.state.dateSejour.debut !== "" 
+      && props.context.state.dateSejour.fin !== ""){
       let currentState = JSON.parse(JSON.stringify(props.context.state));
       currentState.openChangeDateSejour = false;
       currentState.changeDateSejour = false;

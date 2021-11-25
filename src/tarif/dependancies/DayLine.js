@@ -44,10 +44,10 @@ const DayLine = (props) => {
         var min = getMin(selecteds);
         var max = getMax(selecteds);
        // console.log('from : ' + min + ' => ' + max);
-        if((i <= min || (i > min && i <= max)) && from == 'left'){
+        if((i <= min || (i > min && i <= max)) && from === 'left'){
             min = i;
         }
-        if((i >= max || (i >= min && i < max)) && from == 'right'){
+        if((i >= max || (i >= min && i < max)) && from === 'right'){
             max = i;
         }
         var tmp = [];

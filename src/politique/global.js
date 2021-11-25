@@ -181,7 +181,7 @@ function Global(){
             </td>
             <td>
                 <FormControl component="fieldset">
-                <RadioGroup row aria-label="gender" name="row-radio-buttons-group"  defaultValue="jour">
+                <RadioGroup row aria-label="gender" name="row-radio-buttons-group"  defaultValue={x.type}>
                 <FormControlLabel value="jour" control={<Radio size="small"/>} 
                         label="jour" onClick={(e) => handlechangeJour(e , i)}/>
                     <FormControlLabel value="heure" control={<Radio size="small" />} 

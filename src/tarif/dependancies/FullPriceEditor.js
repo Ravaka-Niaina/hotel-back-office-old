@@ -18,7 +18,7 @@ const getDaysBetweenDates = function(startDate, endDate) {
 };
 
 const DatePicker = () => {
-    const [dates, setDates] = useState([]);
+   // const [dates, setDates] = useState([]);
     const [value, setValue] = useState([moment('2021-11-11'), moment('2021-12-11')])
     return(
         <LocalizationProvider dateAdapter={AdapterMoment}>
@@ -28,7 +28,7 @@ const DatePicker = () => {
             value={value}
             onChange={(newValue) => {
                 setValue(newValue);
-                if(newValue != undefined && newValue[0] != null && newValue[1] != null){
+                if(newValue !== undefined && newValue[0] !== null && newValue[1] !== null){
                     const allday = getDaysBetweenDates(newValue[0],newValue[1]);
                 }
             }}

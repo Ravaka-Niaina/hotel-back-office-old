@@ -1,7 +1,6 @@
-import { id } from 'date-fns/locale';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import callAPI from '../../utility';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -29,7 +28,6 @@ import Typography from '@mui/material/Typography';
 
 import  Navbar  from "../../Navbar/Navbar";
 
-import {setValue} from '../../../src/utility2.js';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -180,7 +178,7 @@ function InputTarifs(props){
 }
 
 function InputUtilisateur(props){
-    let infoUsers = null;
+    
     let itineraires = [];
     for(let i = 0; i < props.reservation.itineraires.length; i++){
         const u = i;
@@ -197,7 +195,8 @@ function InputUtilisateur(props){
             <div>
                 {itineraires}
             </div>);
-        {/*
+        {
+            /*
         return (<div>
             <TextField
                 id="outlined-required"
@@ -331,7 +330,7 @@ function InfoItineraires(props){
                     <div style={line}>
                         <Champs 
                             label={"Numéro de réservation " + (u + 1)} 
-                            value={props.reservation.itineraires[u].num == undefined ? "Vide" : props.reservation.itineraires[u].num } />
+                            value={props.reservation.itineraires[u].num === undefined ? "Vide" : props.reservation.itineraires[u].num } />
                         <Champs 
                             label="Nom client" 
                             value="Ratefiarivony Ravaka" />
@@ -410,7 +409,6 @@ function ApplyReservation(props){
     const [reservation, setReservation] = useState(null);
     const [inputs, setInputs] = useState(null);
     const { _id } = useParams();
-    const history = useHistory();
 
     const theme = useTheme();
     const [value, setValue] = React.useState(0);
@@ -430,7 +428,7 @@ function ApplyReservation(props){
                 const a = i;
                 for(let u = 0; u < current.itineraires[i].tarifReserves.length; u++){
                     const b = u;
-                    if(current.itineraires[i].tarifReserves[u] == undefined){
+                    if(current.itineraires[i].tarifReserves[u] === undefined){
 
                         let nbEnfant = reservation.itineraires[a].tarifReserves[b].guests.nbEnfant;
                         try{
