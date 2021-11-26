@@ -13,6 +13,7 @@ import {useEffect} from 'react';
 import callAPI from '../utility.js';
 import { useParams, useHistory } from 'react-router-dom'
 import "./global.css";
+import axios from "axios";
 
 function Global(){
     const [datePrice , setDatePrice] = useState([{ date:"" , pourcentage: "" , type : "jour"}]);
