@@ -101,6 +101,10 @@ const FullPriceEditor = (props) => {
         { value: 7, checked: true, label: "Sun" },
     ]); // day 1 = lundi , 7 = dimanche
 
+    function handleAvailabilityChange(value){
+        console.log(value);
+    }
+
     const guestsMax = props.typechambre.nbAdulte + props.typechambre.nbEnfant;
     const history = useHistory();
 
@@ -133,6 +137,7 @@ const FullPriceEditor = (props) => {
     function refresh(res){
         console.log(res);
         if(res.status === 200){
+            console.log("tokony mande ny redirection");
             history.push('/tarif');
         }else{
             console.log("prix non configuré");
@@ -147,10 +152,17 @@ const FullPriceEditor = (props) => {
                 versions.push({nbPers: (i + 1), prix: Number.parseFloat(prix[i])});
             }
         }
+
+        let usedDays = JSON.parse(JSON.stringify(days));
+        if(value == "close"){
+            for(let i = 0; i < usedDays.length; i++){
+                usedDays[i].checked = false;
+            }
+        }
         const data = {
             idTarif: props.typechambre.planTarifaire[rate - 1]._id,
             idTypeChambre: props.typechambre._id,
-            days: days,
+            days: usedDays,
             versions: versions,
             minSejour: 1,
             dateDebut: interval[0].format("YYYY-MM-DD"),
@@ -209,8 +221,8 @@ const FullPriceEditor = (props) => {
                     onChange={handleChange}
                     row
                 >
-                    <FormControlLabel value="open" control={<Radio />} label="Open" />
-                    <FormControlLabel value="close" control={<Radio />} label="Close" />
+                    <FormControlLabel value="open" control={<Radio />} onChange={(e) => handleAvailabilityChange(e.target.value)} label="Open" />
+                    <FormControlLabel value="close" control={<Radio />} onChange={(e) => handleAvailabilityChange(e.target.value)} label="Close" />
                 </RadioGroup>
                 <br/>
                 <TextField
