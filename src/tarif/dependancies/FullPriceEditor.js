@@ -21,7 +21,6 @@ const getDaysBetweenDates = function(startDate, endDate) {
 };
 
 const DatePicker = (props) => {
-    const [value, setValue] = useState([moment('2021-11-11'), moment('2021-12-11')])
     return(
         <LocalizationProvider dateAdapter={AdapterMoment}>
         <DateRangePicker
@@ -30,9 +29,6 @@ const DatePicker = (props) => {
             value={props.interval}
             onChange={(newValue) => {
                 props.setInterval(newValue);
-                if(newValue != undefined && newValue[0] != null && newValue[1] != null){
-                    const allday = getDaysBetweenDates(newValue[0],newValue[1]);
-                }
             }}
             renderInput={(startProps, endProps) => (
             <React.Fragment>
@@ -86,6 +82,7 @@ const FullPriceEditor = (props) => {
         p: 4,
     };
     const [value, setValue] = React.useState('open');
+    const [tarifs, setTarifs] = React.useState([]);
     const handleChange = (event) => {
         setValue(event.target.value);
         if(event.target.value === "close"){
@@ -117,17 +114,28 @@ const FullPriceEditor = (props) => {
     const history = useHistory();
 
     useEffect( () => {
-        if(!props.showme){
-            let temp = [];
-            for(let i = 0; i < guestsMax; i++){
-                temp.push("");
-            }
-            setPrix(temp);
-            setInterval(props.dateRange);
-            setAllDays(true);
-            setValue("open");
+        console.log(props.typechambre.planTarifaire);
+        let taf = JSON.parse(JSON.stringify(props.typechambre.planTarifaire));
+        if(taf.length > 0){
+            taf.splice(0, 0, {nom: "Choisissez un plan tarifaire..."});
+        }else{
+            taf.splice(0, 0, {nom: "Aucun plan tarifaire..."});
         }
-    })
+        
+        setTarifs(taf);
+    }, [])
+
+    function handleClose(){
+        let temp = [];
+        for(let i = 0; i < guestsMax; i++){
+            temp.push("");
+        }
+        setPrix(temp);
+        setInterval(props.dateRange);
+        setAllDays(true);
+        setValue("open");
+        setRate(1);
+    }
 
     const [rate,setRate] = useState(1);
 
@@ -140,10 +148,9 @@ const FullPriceEditor = (props) => {
 
 
     let rates = [];
-    for(let i = 0; i < props.typechambre.planTarifaire.length; i++){
-        const a = i;
+    for(let i = 0; i < tarifs.length; i++){
         rates.push(
-            <MenuItem value={i + 1}>{props.typechambre.planTarifaire[a].nom}</MenuItem>
+            <MenuItem value={i + 1}>{tarifs[i].nom}</MenuItem>
         );
     }
 
@@ -210,18 +217,55 @@ const FullPriceEditor = (props) => {
         );
     }
 
+    function loadPrix(result){
+        console.log(result);
+        if(result.status === 200){
+            let temp = [];
+            for(let i = 0; i < result.prixTarif.length; i++){
+                temp.push(result.prixTarif[i].prix);
+            }
+            setPrix(temp);
+        }else{
+            console.log("On n'a pas pu charger les prix");
+        }
+    }
+
+    function getPrix(newValue){
+        console.log("rate = " + newValue);
+        if(rate > 1){
+            const data = {
+                idTarif: tarifs[newValue - 1]._id,
+               idTypeChambre: props.typechambre._id,
+               dateDebut: interval[0].format("YYYY-MM-DD"),
+               dateFin: interval[1].format("YYYY-MM-DD")
+           };
+           console.log(data);
+           callAPI('post', '/typeChambre/prix/min', data, loadPrix);
+        }
+    }
+
+    function handleChangeRate(newValue){
+        setRate(newValue);
+        getPrix(newValue);
+    }
+
+    function handleIntervalChange(value){
+        setInterval(value);
+        getPrix();
+    }
+
     return(
         <>
         <Modal
             open={props.showme}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
-            onClose={(e) => props.closeModal()}
+            onClose={(e) => {props.closeModal(); handleClose()}}
         >
             <Box sx={style}
                 className={styles.fullpopper}
             >   
-                <DatePicker interval={interval} setInterval={setInterval} />
+                <DatePicker interval={interval} setInterval={handleIntervalChange} />
                 <br/>
                 <div>
                     {inputDays}
@@ -256,7 +300,7 @@ const FullPriceEditor = (props) => {
                 <Select
                     value={rate}
                     label="Rate"
-                    onChange={(e) => setRate(e.target.value)}
+                    onChange={(e) => handleChangeRate(e.target.value)}
                     size="small"
                 >
                     { rates }
@@ -269,12 +313,12 @@ const FullPriceEditor = (props) => {
                     <Button variant="contained" onClick={(e) => savePrix()}>
                         Save
                     </Button>
-                    <Button onClick={() => props.closeModal(false)} variant="contained">
+                    <Button onClick={() => {props.closeModal(false); handleClose()}} variant="contained">
                         Close
                     </Button>
                 </Stack>
             </Box>
-      </Modal>
+      </Modal> 
         </>
     );
 }
