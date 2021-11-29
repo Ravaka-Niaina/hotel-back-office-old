@@ -90,6 +90,8 @@ const FullPriceEditor = (props) => {
         setValue(event.target.value);
         if(event.target.value === "close"){
             setAllDays(false);
+        }else{
+            setAllDays(true);
         }
     };
     const [interval, setInterval] = React.useState(props.dateRange);
