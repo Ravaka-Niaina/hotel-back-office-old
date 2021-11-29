@@ -88,6 +88,9 @@ const FullPriceEditor = (props) => {
     const [value, setValue] = React.useState('open');
     const handleChange = (event) => {
         setValue(event.target.value);
+        if(event.target.value === "close"){
+            setAllDays(false);
+        }
     };
     const [interval, setInterval] = React.useState(props.dateRange);
     const [prix, setPrix] = React.useState([]);
@@ -101,8 +104,11 @@ const FullPriceEditor = (props) => {
         { value: 7, checked: true, label: "Sun" },
     ]); // day 1 = lundi , 7 = dimanche
 
-    function handleAvailabilityChange(value){
-        console.log(value);
+    function setAllDays(checked){
+        for(let i = 0; i < days.length; i++){
+            days[i].checked = checked;
+        }
+        setDays(days);
     }
 
     const guestsMax = props.typechambre.nbAdulte + props.typechambre.nbEnfant;
@@ -116,6 +122,8 @@ const FullPriceEditor = (props) => {
             }
             setPrix(temp);
             setInterval(props.dateRange);
+            setAllDays(true);
+            setValue("open");
         }
     })
 
@@ -179,6 +187,9 @@ const FullPriceEditor = (props) => {
         let current = JSON.parse(JSON.stringify(days));
         current[i].checked = checked;
         setDays(current);
+        if(checked === true && value === "close"){
+            setValue("open");
+        }
     }
 
     let inputDays = [];
@@ -223,8 +234,8 @@ const FullPriceEditor = (props) => {
                     onChange={handleChange}
                     row
                 >
-                    <FormControlLabel value="open" control={<Radio />} onChange={(e) => handleAvailabilityChange(e.target.value)} label="Open" />
-                    <FormControlLabel value="close" control={<Radio />} onChange={(e) => handleAvailabilityChange(e.target.value)} label="Close" />
+                    <FormControlLabel value="open" control={<Radio />} label="Open" />
+                    <FormControlLabel value="close" control={<Radio />} label="Close" />
                 </RadioGroup>
                 <br/>
                 <TextField
