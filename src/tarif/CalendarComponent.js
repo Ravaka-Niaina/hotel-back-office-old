@@ -62,7 +62,11 @@ const CalendarComponent = () => {
                     tmp.push(
                         <>
                         <div className={styles.dividerline}></div>
-                        <RateLine typechambre={res.data.typeChambre[i]} indice={i} fromto={value} daterange={alldays} listTypeChambre={listTypeChambre} />
+                        <RateLine 
+                            typechambre={res.data.typeChambre[i]} 
+                            indice={i} fromto={value} daterange={alldays} 
+                            listTypeChambre={listTypeChambre}
+                            dateRange={value} />
                         </>
                     );
                 }

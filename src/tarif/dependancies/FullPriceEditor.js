@@ -89,7 +89,7 @@ const FullPriceEditor = (props) => {
     const handleChange = (event) => {
         setValue(event.target.value);
     };
-    const [interval, setInterval] = React.useState([]);
+    const [interval, setInterval] = React.useState(props.dateRange);
     const [prix, setPrix] = React.useState([]);
     const [days, setDays] = React.useState([
         { value: 1, checked: true, label: "Mon" },
@@ -109,12 +109,15 @@ const FullPriceEditor = (props) => {
     const history = useHistory();
 
     useEffect( () => {
-        let temp = [];
-        for(let i = 0; i < guestsMax; i++){
-            temp.push("");
+        if(!props.showme){
+            let temp = [];
+            for(let i = 0; i < guestsMax; i++){
+                temp.push("");
+            }
+            setPrix(temp);
+            setInterval(props.dateRange);
         }
-        setPrix(temp);
-    }, [])
+    })
 
     const [rate,setRate] = useState(1);
 
@@ -204,8 +207,7 @@ const FullPriceEditor = (props) => {
         >
             <Box sx={style}
                 className={styles.fullpopper}
-            >
-                
+            >   
                 <DatePicker interval={interval} setInterval={setInterval} />
                 <br/>
                 <div>
