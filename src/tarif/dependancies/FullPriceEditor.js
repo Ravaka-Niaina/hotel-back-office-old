@@ -121,6 +121,11 @@ const FullPriceEditor = (props) => {
         }else{
             taf.splice(0, 0, {nom: "Aucun plan tarifaire..."});
         }
+        let temp = [];
+        for(let i = 0; i < guestsMax; i++){
+            temp.push("");
+        }
+        setPrix(temp);
         
         setTarifs(taf);
     }, [])
