@@ -13,6 +13,7 @@ import {useEffect} from 'react';
 import callAPI from '../utility.js';
 import { useParams, useHistory } from 'react-router-dom'
 import "./global.css";
+import axios from "axios";
 
 function Global(){
     const [datePrice , setDatePrice] = useState([{ date:"" , pourcentage: "" , type : "jour"}]);
@@ -27,6 +28,7 @@ function Global(){
        
     let history = useHistory();
     const functionAppel=(res)=>{
+
         if(res.status == 500){
             setmessageErrPourC(res.messageErrPourC);
             setmessageErrDate(res.messageErrDate);
@@ -123,7 +125,17 @@ function Global(){
             datePrice[i].pourcentage = Number.parseInt(datePrice[i].pourcentage); 
         }
         if(show){
-            callAPI('post' , "/politique/insertionPolitique" ,{nom : nom , datePrice : datePrice , remboursable : true}, functionAppel)
+            axios({
+                method: "post",      
+                url: process.env.REACT_APP_BACK_URL + "/politique/insertionPolitique",
+                withCredentials: true,
+                data: {nom : nom , datePrice : datePrice , remboursable : true}
+            })
+            .then(res => {  
+                console.log("avec success");                                                
+                functionAppel(res.data)})
+            .catch(err =>{console.log(err); console.log("erreur");} );
+            //callAPI('post' , "/politique/insertionPolitique" ,{nom : nom , datePrice : datePrice , remboursable : true}, functionAppel)
         }else{
             callAPI('post' , "/politique/insertionPolitique" ,{nom : nom ,  remboursable : false}, functionAppel)
         }
