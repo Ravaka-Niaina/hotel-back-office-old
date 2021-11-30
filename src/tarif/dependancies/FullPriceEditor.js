@@ -121,6 +121,11 @@ const FullPriceEditor = (props) => {
         }else{
             taf.splice(0, 0, {nom: "Aucun plan tarifaire..."});
         }
+        let temp = [];
+        for(let i = 0; i < guestsMax; i++){
+            temp.push("");
+        }
+        setPrix(temp);
         
         setTarifs(taf);
     }, [])
@@ -157,40 +162,49 @@ const FullPriceEditor = (props) => {
     function refresh(res){
         console.log(res);
         if(res.status === 200){
-            console.log("tokony mande ny redirection");
-            history.push('/tarif');
+            console.log("Redirection en cours...");
+            // reload
+            window.location.reload();
+            props.closeModal();
+            handleClose();
         }else{
             console.log("prix non configuré");
         }
     }
 
     function savePrix(){
-        let versions = [];
-        console.log(prix);
-        for(let i = 0; i < guestsMax; i++){
-            if(prix[i].trim() != ""){
-                versions.push({nbPers: (i + 1), prix: Number.parseFloat(prix[i])});
-            }
-        }
+        if(rate > 1){
+            let versions = [];
+            console.log(prix);
 
-        let usedDays = JSON.parse(JSON.stringify(days));
-        if(value == "close"){
-            for(let i = 0; i < usedDays.length; i++){
-                usedDays[i].checked = false;
+            if(prix.length > 0){
+                for(let i = 0; i < guestsMax; i++){
+                    if(prix[i].trim() != ""){
+                        versions.push({nbPers: (i + 1), prix: Number.parseFloat(prix[i])});
+                    }
+                }
             }
+
+            let usedDays = JSON.parse(JSON.stringify(days));
+            if(value == "close"){
+                for(let i = 0; i < usedDays.length; i++){
+                    usedDays[i].checked = false;
+                }
+            }
+            const data = {
+                idTarif: tarifs[rate - 1]._id,
+                idTypeChambre: props.typechambre._id,
+                days: usedDays,
+                versions: versions,
+                minSejour: 1,
+                dateDebut: interval[0].format("YYYY-MM-DD"),
+                dateFin: interval[1].format("YYYY-MM-DD")
+            };
+            console.log(data);
+            callAPI('post', '/prixTarif/insert', data, refresh);
         }
-        const data = {
-            idTarif: props.typechambre.planTarifaire[rate - 1]._id,
-            idTypeChambre: props.typechambre._id,
-            days: usedDays,
-            versions: versions,
-            minSejour: 1,
-            dateDebut: interval[0].format("YYYY-MM-DD"),
-            dateFin: interval[1].format("YYYY-MM-DD")
-        };
-        console.log(data);
-        callAPI('post', '/prixTarif/insert', data, refresh);
-    }
+        }
+        
     
     function handleDayChange(i, checked){
         let current = JSON.parse(JSON.stringify(days));
@@ -251,7 +265,7 @@ const FullPriceEditor = (props) => {
 
     function handleIntervalChange(value){
         setInterval(value);
-        getPrix();
+        getPrix(rate);
     }
 
     return(

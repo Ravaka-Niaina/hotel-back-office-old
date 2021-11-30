@@ -2,6 +2,8 @@ import React , { useState} from 'react';
 import styles from '../CalendarComponent.module.css';
 import {Box} from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
+import callAPI from '../../utility';
+const utility = require('../utility.js');
 
 const CloseLine = (props) => {
     const [opened, setOpened] = useState(!props.closed);
@@ -16,6 +18,15 @@ const CloseLine = (props) => {
     // useEffect( () => {
     //     setopened(props.close);
     // })
+    function closeTypeChambre(){
+        const data = {
+            _id: props.idTypeChambre, 
+            dateDebut: utility.getDate(props.statusDay.date),
+            dateFin: utility.getDate(props.statusDay.date)
+        };
+        console.log(data);
+        callAPI('post', '/typeChambre/close', data, function(res){console.log(res); window.location.reload()} );
+    }
     return (
         <>
         <ThemeProvider
@@ -31,7 +42,7 @@ const CloseLine = (props) => {
                 },
                 position: 'relative',
                 }}
-                onClick={() => setOpened(!opened)}
+                onClick={() => {setOpened(!opened); closeTypeChambre()}}
             >
                 {props.day}
             </Box>

@@ -57,7 +57,7 @@ const CalendarComponent = () => {
             .then(res => {
                 var tmp = [];
                 setListTypeChambre(res.data.typeChambre);
-                console.log(res.data.typeChambre);
+                console.log(res.data);
                 for(var i = 0; i < res.data.typeChambre.length; i++) {
                     tmp.push(
                         <>

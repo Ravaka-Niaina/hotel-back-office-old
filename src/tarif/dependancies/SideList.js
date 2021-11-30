@@ -46,7 +46,11 @@ const SideList = (props) => {
                 <ListTarifs planTarifaire={props.typechambre.planTarifaire} />
             </ul>
         </Box>
-        <FullPriceEditor typechambre={props.typechambre}  closeModal={() => setOpenModal(false)} showme={openModal} dateRange={props.dateRange} />
+        <FullPriceEditor 
+            typechambre={props.typechambre}  
+            closeModal={() => setOpenModal(false)} 
+            showme={openModal} 
+            dateRange={props.dateRange} />
         </>
     )
 }

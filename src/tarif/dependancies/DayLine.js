@@ -39,7 +39,7 @@ function RateCells(props){
         let row = [];
         for(let u = 0; u < props.typechambre.planTarifaire[i].prixTarif.length; u++){
             const minPrix = getMinPrix(props.typechambre.planTarifaire[i].prixTarif[u].versions);
-            console.log(minPrix);
+            // console.log(minPrix);
             row.push(
                 <td>
                     <DayCell 
@@ -198,7 +198,10 @@ const DayLine = (props) => {
     for(let i = 0; i < props.typechambre.statusDays.length; i++){
         closelines.push(
             <td>
-                <CloseLine closed={props.typechambre.statusDays[i].closed} />
+                <CloseLine 
+                    closed={props.typechambre.statusDays[i].closed} 
+                    statusDay={props.typechambre.statusDays[i]}
+                    idTypeChambre={props.typechambre._id} />
             </td>
         )
     }

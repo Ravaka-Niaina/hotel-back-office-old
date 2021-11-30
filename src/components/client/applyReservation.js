@@ -429,7 +429,7 @@ function Total(props){
         <div style={line}>
             <ChampsImportant label="Prix total" value="€ 200" />
         </div>
-    );
+    ); 
 }
 
 function ApplyReservation(props){
