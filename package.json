@@ -14,6 +14,7 @@
     "@material-ui/core": "^5.0.0-beta.5",
     "@material-ui/lab": "^5.0.0-alpha.44",
     "@material-ui/pickers": "^3.3.10",
+    "@material/circular-progress": "^13.0.0",
     "@mui/icons-material": "^5.0.4",
     "@mui/lab": "^5.0.0-alpha.53",
     "@mui/material": "^5.0.6",

@@ -7,6 +7,7 @@ import styles from './CalendarComponent.module.css';
 import moment from 'moment';
 import RateLine from './dependancies/RateLine.js';
 import axios from "axios";
+import CircularProgress from '@mui/material/CircularProgress';
 
 const getDaysBetweenDates = function(startDate, endDate) {
     var now = startDate.clone(), dates = [];
@@ -45,8 +46,10 @@ const CalendarComponent = () => {
     const alldays = getDaysBetweenDates(value[0],value[1]);
     const [listTypeChambre, setListTypeChambre] = useState([]);
     const [rateLine, setRateLine] = useState([]);
+    const [load, setLoad] = useState(false);
 
     function getPrix(){
+        setLoad(true);
         try{
             axios({
                 method: 'post',
@@ -55,6 +58,7 @@ const CalendarComponent = () => {
                 data: {dateDebut: getDate(value[0].format()), dateFin: getDate(value[1].format())}
             })
             .then(res => {
+                setLoad(false);
                 var tmp = [];
                 setListTypeChambre(res.data.typeChambre);
                 console.log(res.data);
@@ -72,7 +76,7 @@ const CalendarComponent = () => {
                 }
                 setRateLine(tmp);
             })
-            .catch(err => console.log(err));
+            .catch(err => {console.log(err); setLoad(false);});
         }catch(err){
             console.log(err);
         }
@@ -84,7 +88,9 @@ const CalendarComponent = () => {
     },[])
 
     return(
-        <Container className={styles.container}>
+
+        <Container class="container" className={styles.container}>
+            {load ? <Box sx={{ display: 'flex' }}><CircularProgress /></Box> : null}
             <LocalizationProvider dateAdapter={AdapterMoment}>
             <DateRangePicker
                 startText="Check-in"

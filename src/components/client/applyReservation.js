@@ -19,18 +19,29 @@ import Stack from '@mui/material/Stack';
 
 import * as React from 'react';
 import PropTypes from 'prop-types';
-import SwipeableViews from 'react-swipeable-views';
 import { useTheme } from '@mui/material/styles';
-import AppBar from '@mui/material/AppBar';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 
 import  Navbar  from "../../Navbar/Navbar";
 
+import {setValue} from '../../../src/utility2.js';
 
-import axios from "axios";
 import Modal from '@mui/material/Modal';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+
+const loadingStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 200,
+    height: 200,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+  };
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -78,7 +89,7 @@ const style = {
     transform: 'translate(-50%, -50%)',
     width: 400,
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    //border: '2px solid #000',
     boxShadow: 24,
     p: 4,
   };
@@ -140,149 +151,99 @@ function TabPanel(props) {
     };
   }
 
-function InputTypeChambre(props){
+function handleClientInfo(reservation, indexItineraire, indexTarif, i, categPers, field, value, setReservation){
+    let current = JSON.parse(JSON.stringify(reservation));
+    current.itineraires[indexItineraire].tarifReserves[indexTarif].infoGuests[categPers][i][field] = value;
+    setReservation(current);
+}
+  
+function InputUtilisateur(props){
     let inputs = [];
-    console.log("index tarif = " + props.indexTarif);
-    console.log(props.reservation.itineraires[props.indexItineraire].tarifReserves);
+
+    if(props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests == undefined
+        || props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes == undefined){
+            console.log("Namboarina");
+        let infoGuests = {adultes: [], enfants: []};
+        for(let i = 0; i < props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].guests.nbAdulte; i++){
+            infoGuests.adultes.push({nom: "", email: "", tel: ""});
+        }
+        for(let i = 0; i < props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].guests.nbEnfant; i++){
+            infoGuests.enfants.push({nom: "", email: "", tel: ""});
+        }
+        let temp = JSON.parse(JSON.stringify(props.reservation));
+        temp.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests = infoGuests;
+        props.setReservation(temp);
+        console.log(props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests);
+    }
+
     try{
-        for(let i = 0; i < props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.length; i++){
-            const u = i;
+        console.log(props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].guests);
+        if(props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].guests.nbAdulte > 0){
+            inputs.push(<h5>Adultes</h5>);
+        }
+        for(let i = 0; i < props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].guests.nbAdulte; i++){
             inputs.push(
-                <div>
+                <>
                     <TextField
                         id="outlined-required"
-                        label={"Nom personne " + (u + 1)}
-                        placeholder="Jean"
-                        value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests[u].nom}
+                        label={"Nom"}
+                        placeholder="Dupond"
+                        value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].nom}
+                        onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "adultes", "nom", e.target.value, props.setReservation)}
                     />
                     <TextField
                         id="outlined-required"
-                        label="Adresse email 1"
-                        placeholder="utilisateur@gmail.com"
-                        value=""
+                        label={"Email"}
+                        placeholder="dupond@gmail.com"
+                        value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].email}
+                        onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "adultes", "email", e.target.value, props.setReservation)}
                     />
                     <TextField
                         id="outlined-required"
-                        label="Numéro de téléphone 1"
-                        placeholder="+261 33 45 345 43"
+                        label={"Tel"}
+                        placeholder="034 00 000 00"
+                        value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].tel}
+                        onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "adultes", "tel", e.target.value, props.setReservation)}
                     />
-                </div>
+                </>
+            );
+        }
+
+        if(props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].guests.nbEnfant > 0){
+            inputs.push(<h5>Enfant</h5>);
+        }
+        for(let i = 0; i < props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].guests.nbEnfant; i++){
+            inputs.push(
+                <>
+                    <TextField
+                        id="outlined-required"
+                        label={"Nom"}
+                        placeholder="Dupond"
+                        value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.enfants[i].nom}
+                        onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "enfants", "nom", e.target.value, props.setReservation)}
+                    />
+                    <TextField
+                        id="outlined-required"
+                        label={"Email"}
+                        placeholder="dupond@gmail.com"
+                        type="email"
+                        value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.enfants[i].email}
+                        onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "enfants", "email", e.target.value, props.setReservation)}
+                    />
+                    <TextField
+                        id="outlined-required"
+                        label={"Tel"}
+                        placeholder="034 00 000 00"
+                        value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.enfants[i].tel}
+                        onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "enfants", "tel", e.target.value, props.setReservation)}
+                    />
+                </>
             );
         }
     }catch(err){
-        console.log(err);
-    }
-    return inputs;
-}
 
-function InputTarifs(props){
-    let tarifs = [];
-    for(let i = 0; i < props.reservation.itineraires[props.indexItineraire].tarifReserves.length; i++){
-        const u = i;
-        tarifs.push(
-            <InputTypeChambre
-                reservation={props.reservation}
-                indexItineraire={props.indexItineraire}
-                indexTarif={u} 
-                inputs={props.inputs}
-                setInputs={props.setInputs} />
-        );  
-        
     }
-    return tarifs;
-}
-
-function InputUtilisateur(props){
-    
-    let itineraires = [];
-    try{
-        for(let i = 0; i < props.reservation.itineraires.length; i++){
-            const u = i;
-            itineraires.push(
-                <InputTarifs 
-                    reservation={props.reservation} 
-                    indexItineraire={u}
-                    inputs={props.inputs}
-                    setInputs={props.setInputs} />
-            );
-        }
-    }catch(err){/*console.log(err)*/}
-    
-    if(props.editable){
-        return (
-            <div>
-                <TextField
-                    id="outlined-required"
-                    label={"Email utilisateur "}
-                    placeholder="utilisateur@gmail.com"
-                    onChange={(e) => props.setEmail(e.target.value)}
-                    value={props.email}
-                />
-                <div>
-                    {itineraires}
-                </div>
-            </div>
-            );
-        {/*
-        return (<div>
-            <TextField
-                id="outlined-required"
-                label="Nom personne 1"
-                placeholder="Jean"
-                value=""
-            />
-            <TextField
-                id="outlined-required"
-                label="Adresse email 1"
-                placeholder="utilisateur@gmail.com"
-                value=""
-            />
-            <TextField
-                id="outlined-required"
-                label="Numéro de téléphone 1"
-                placeholder="+261 33 45 345 43"
-            />
-            <h3>Ajouter paiement</h3>
-            <div style={line}>
-            <TextField
-                id="outlined-required"
-                label="Date Paiement"
-                type="datetime-local"
-                defaultValue="2021-11-16"
-            />
-            <TextField
-                id="outlined-required"
-                label="Montant"
-                defaultValue="350 €"
-            />
-            <Button variant="contained">Ajouter paiement</Button>
-            </div>
-            <div>
-                <TextField
-                    id="outlined-required"
-                    label="Message"
-                    placeholder="Placez ici votre message..."
-                    multiline="true"
-                    rows="3"
-                    fullWidth="true"
-                    style={{width: "400px"}}
-                />
-            </div>
-        </div>);
-        */}
-    }else{
-        return (
-        <div>
-            <div style={line}>
-                <Champs label="Nom personne 1" value="Jean" />
-                <Champs label="Adresse email 1" value="Jean" />
-                <Champs label="Numéro de téléphone 1" value= "+261 33 45 345 43" />
-            </div>
-            <div style={line}>
-                <Champs label="Message de l'utilisateur" value= "Voici un exemple de commentaire Voici un exemple de commentaire Voici un exemple de commentaire Voici un exemple de commentaire "/>
-            </div>
-        </div>);
-    }
+    return inputs
 }
 
 function Politiques(props){
@@ -324,21 +285,28 @@ function Politiques(props){
 
 function TarifReserves(props){
     let tarifs = [];
-    for(let i = 0; i < props.tarifReserves.length; i++){
+    console.log("indexItineraire = " + props.indexItineraire);
+    for(let i = 0; i < props.reservation.itineraires[props.indexItineraire].tarifReserves.length; i++){
+        const u = i;
         tarifs.push(
             <div>
                 <h3>Informations Hôtel</h3>
                 <div style={line}>
-                    <Champs label="Nom" value={props.tarifReserves[i].infoTypeChambre.infoHotel.nom} />
-                    <Champs label="Adresse" value={props.tarifReserves[i].infoTypeChambre.infoHotel.adresse} />
-                    <Champs label="Email" value={props.tarifReserves[i].infoTypeChambre.infoHotel.email} />
-                    <Champs label="Téléphone" value={props.tarifReserves[i].infoTypeChambre.infoHotel.tel} />
+                    <Champs label="Nom" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTypeChambre.infoHotel.nom} />
+                    <Champs label="Adresse" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTypeChambre.infoHotel.adresse} />
+                    <Champs label="Email" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTypeChambre.infoHotel.email} />
+                    <Champs label="Téléphone" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTypeChambre.infoHotel.tel} />
                 </div>
                 <div style={line}>
-                    <Champs label="Type chambre" value={props.tarifReserves[i].nomTypeChambre} />
-                    <Champs label="Plan tarifaire" value={props.tarifReserves[i].nomTarif} />
+                    <Champs label="Type chambre" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].nomTypeChambre} />
+                    <Champs label="Plan tarifaire" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].nomTarif} />
                 </div>
-                <Politiques politiques={props.tarifReserves[i].infoTarif.infoPolitique} />
+                <InputUtilisateur 
+                    reservation={props.reservation}
+                    setReservation={props.setReservation}
+                    indexItineraire={props.indexItineraire}
+                    indexTarif={u}/>
+                <Politiques politiques={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTarif.infoPolitique} />
             </div>
             
         );
@@ -368,7 +336,10 @@ function InfoItineraires(props){
                         <ChampsImportant label="Check out" value={props.reservation.itineraires[u].dateSejour.fin} />
                         <Champs label="Nombre de nuité" value="2 nuits" />
                     </div>
-                    <TarifReserves tarifReserves={props.reservation.itineraires[u].tarifReserves} />
+                    <TarifReserves 
+                        indexItineraire={u}
+                        reservation={props.reservation}
+                        setReservation={props.setReservation} />
                 </div>
             );
         }
@@ -434,7 +405,6 @@ function Total(props){
 
 function ApplyReservation(props){
     const [reservation, setReservation] = useState(null);
-    const [inputs, setInputs] = useState(null);
     const { _id } = useParams();
 
     const theme = useTheme();
@@ -443,6 +413,8 @@ function ApplyReservation(props){
     const [open, setOpen] = useState(false);
     const [err, setErr] = useState(null);
     const [email, setEmail] = useState("");
+    const [openLoad, setOpenLoad] = useState(true);
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -452,11 +424,12 @@ function ApplyReservation(props){
     };
 
     function validerReservation(){
-        console.log(email);
-        callAPI('post', '/reservation/applyWithEmail', {_id: reservation._id, email: email}, function(res){console.log(res);} );
+        console.log(reservation);
+        callAPI('post', '/reservation/applyWithEmail', {_id: reservation._id, email: email, reservation: reservation}, function(res){console.log(res);} );
     }
 
     function setDetailReservation(res){
+        setOpenLoad(false);
         try{
             let current = JSON.parse(JSON.stringify(res.reservation));
             for(let i = 0; i < current.itineraires.length; i++){
@@ -476,16 +449,13 @@ function ApplyReservation(props){
                         }catch(err){}
                         
                         const max = nbEnfant + nbAdulte;
-                        current.itineraires[a].tarifReserves[b].infoGuests = [];
-                        for(let v = 0; v < max; v++){
-                            const c = v;
-                            current.itineraires[a].tarifReserves[b].infoGuests[c] = { nom: "", email: "", tel: "" };
-                        }
                     }
                 }
             }
             setReservation(current);
-            console.log(reservation);
+            if(res.reservation.emailUtilisateur != undefined){
+                setEmail(res.reservation.emailUtilisateur);
+            }
         }catch(err){
             console.log(err);
         }
@@ -506,72 +476,40 @@ function ApplyReservation(props){
     }
 
     return (
-        <div>
+        <>
+        <div style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
             <Navbar/>
-            <Box style={{border: "2px solid red"}}>
+            <Box sx={{ bgcolor: 'background.paper', maxWidth: 800, margin: "0 auto"}}>
                 <h1>Détails réservation</h1>
-                
-                <Box sx={{ bgcolor: 'background.paper', maxWidth: 800, margin: "0 auto", border: "2px solid green" }}>
-                    <AppBar position="static">
-                        <Tabs
-                        value={value}
-                        onChange={handleChange}
-                        indicatorColor="secondary"
-                        textColor="inherit"
-                        variant="fullWidth"
-                        aria-label="full width tabs example"
-                        >
-                        <Tab label="Itinéraires" {...a11yProps(0)} />
-                        <Tab label="Utilisateurs" {...a11yProps(1)} />
-                        <Tab label="Résultat" {...a11yProps(2)} />
-                        </Tabs>
-                    </AppBar>
-                    <SwipeableViews
-                        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-                        index={value}
-                        onChangeIndex={handleChangeIndex}
-                    >
-                        <TabPanel value={value} index={0} dir={theme.direction}>
-                            <InfoItineraires reservation={reservation} />
-                            <Total />
-                        </TabPanel>
-                        <TabPanel value={value} index={1} dir={theme.direction}>
-                            <InputUtilisateur 
-                                editable={true} 
-                                reservation={reservation}
-                                inputs={inputs}
-                                setInputs={setInputs}
-                                email={email}
-                                setEmail={setEmail} />
-                        </TabPanel>
-                        <TabPanel value={value} index={2} dir={theme.direction}>
-                            <InfoItineraires reservation={reservation} />
-                            <InputUtilisateur 
-                                editable={false} 
-                                reservation={reservation}
-                                inputs={inputs}
-                                setInputs={setInputs}
-                                email={email}
-                                setEmail={setEmail} />
-                            <Total />
-                            <div>
-                                <Stack direction="row" spacing={2}>
-                                    <Button variant="contained">Imprimer</Button>
-                                    <Button variant="contained">Partager</Button>
-                                    <Button variant="contained">Ajouter au calendrier</Button>
-                                </Stack>
-                                <Stack direction="row" spacing={2}>
-                                    <Button variant="contained">Modifier réservation</Button>
-                                    <Button variant="contained">Annuler réservation</Button>
-                                    <button onClick={(e) => validerReservation()}>Valider réservation</button>
-                                </Stack>
-                            </div>
-                        </TabPanel>
-                    </SwipeableViews>
-                </Box>
+                <TextField
+                    id="outlined-required"
+                    label="Email utilisateur"
+                    placeholder="dupond@gmail.com"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)} />
+                <InfoItineraires reservation={reservation} setReservation={setReservation} />
+                <Total />
+                <Stack direction="row" spacing={2}>
+                    <Button variant="contained">Imprimer</Button>
+                    <Button variant="contained">Partager</Button>
+                    <Button variant="contained">Ajouter au calendrier</Button>
+                </Stack>
+                <Stack direction="row" spacing={2}>
+                    <Button variant="contained">Modifier réservation</Button>
+                    <Button variant="contained">Annuler réservation</Button>
+                    <Button variant="contained" onClick={(e) => validerReservation()}>Valider réservation</Button>
+                </Stack>
             </Box>
         </div>
-      );
+        <Backdrop
+            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+            open={openLoad}
+        >
+            <CircularProgress color="inherit" />
+        </Backdrop>        
+    </>
+    );
 
 }
 export default ApplyReservation;
