@@ -33,7 +33,7 @@ class Scroll extends React.Component{
             changeDateSejour: true, 
             resultApplyReservation: null,
             errFiltre: null,
-            guests: {nbEnfant: 0, nbAdulte: 0},
+            guests: {nbEnfant: 0, nbAdulte: 1},
             dateSejour: {debut: "", fin: ""},
             listTypeChambre: [],
             reservation: [],
@@ -58,7 +58,7 @@ class Scroll extends React.Component{
         currentState.changeDateSejour = true;
         currentState.dateSejour.debut = "";
         currentState.dateSejour.fin = "";
-        currentState.openChangeDateSejour = true;
+        //currentState.openChangeDateSejour = true;
         this.setState(currentState);
     }
 
@@ -78,6 +78,7 @@ class Scroll extends React.Component{
         let current = JSON.parse(JSON.stringify(this.state));
         current.dateSejour.debut = dateDebut; 
         current.dateSejour.fin = dateFin;
+        //console.log(current.itineraires[current.itineraires.length - 1]);
         if(current.dateSejour.debut != null && current.dateSejour.fin != null){
             current.showFiltre = true;
             current.openChangeDateSejour = false;
@@ -89,6 +90,9 @@ class Scroll extends React.Component{
                         dateSejour: JSON.parse(JSON.stringify(current.dateSejour)),
                         tarifReserves: []
                     });
+                }else{
+                    current.itineraires[current.itineraires.length - 1].dateSejour.debut = dateDebut;
+                    current.itineraires[current.itineraires.length - 1].dateSejour.fin = dateFin;
                 }
             }catch(err){
                 current.itineraires.push({ 

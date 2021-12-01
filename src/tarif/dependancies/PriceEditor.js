@@ -14,7 +14,8 @@ const PriceEditor = (props) => {
         <>
             <span>{props.typechambre.nom}</span>
             <br/>
-            <span>{props.fromto[0].format('ll') + ' - ' + props.fromto[1].format('ll')}</span>
+            <span>{props.fromto[0] + ' - ' + props.fromto[1]}</span>
+            {/* <span>{props.fromto[0].format('ll') + ' - ' + props.fromto[1].format('ll')}</span> */}
             <br/>
             <FormControl component="fieldset">
                 <RadioGroup

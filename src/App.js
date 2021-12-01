@@ -30,6 +30,7 @@ import  Devis  from "./front_client/devis";
 import  Reservation  from "./components/client/reservation.js";
 import ListPolitique from "./politique/listpolitique.js"
 import  ApplyReservation  from "./components/client/applyReservation.js";
+import  BasicDateRangePicker  from "./components/client/dateSejourClient";
 
 
 function App() {
@@ -82,6 +83,8 @@ function App() {
 
         <Route path="/reservation/:_id" exact component={Reservation} />
         <Route path="/reservation/:_id/apply" exact component={ApplyReservation} />
+
+        <Route path="/CalendarClient" exact component={BasicDateRangePicker} />
 
       </Router>
     </div>

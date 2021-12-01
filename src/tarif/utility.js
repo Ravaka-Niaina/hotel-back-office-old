@@ -106,3 +106,21 @@ export function handleCheckBoxChange(planTarifaire, setPlanTarifaire, e, name1, 
     console.log(planTarifaire);
 }
 
+function getNDigits(number, digit){
+    digit = digit + '';
+    const remain = number - digit.length;
+    for(let i = 0; i < remain; i++){
+        digit = "0" + digit;
+    }
+    return digit;
+}
+
+export function getDate(date){
+    date = new Date(date);
+    let year = date.getFullYear();
+    let month = getNDigits(2, date.getMonth() + 1);
+    let day = getNDigits(2, date.getDate());
+    date = year + '-' + month + '-' + day;
+    return date;
+}
+

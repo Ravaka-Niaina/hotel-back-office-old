@@ -13,6 +13,8 @@ class Register extends React.Component{
   constructor(props){
     super(props);
     this.state = {
+      hotelDescription: false,
+        description:'',
         email: '',
         mdp: '',
         confirmMdp: '',
@@ -33,6 +35,7 @@ class Register extends React.Component{
   }
 
   register(e){
+    console.log(this.state);
     e.preventDefault();
     const requestOptions = {
       method: 'POST',
@@ -47,6 +50,12 @@ class Register extends React.Component{
   handleEmailChange(event){
     const currentState = JSON.parse(JSON.stringify(this.state));
     currentState.email = event.target.value;
+    this.setState(currentState);
+  }
+
+    handleDescriptionChange(event){
+    const currentState = JSON.parse(JSON.stringify(this.state));
+    currentState.description = event.target.value;
     this.setState(currentState);
   }
 
@@ -76,44 +85,6 @@ class Register extends React.Component{
           <CustomError errors={this.state.errors}/>
           <div className="form">
   
-          {/* <div className="form-group">
-              <label htmlFor='email'>Email :</label>
-              <input 
-                type="email" 
-                name="email" 
-                placeholder="Email"
-                value={this.state.email}
-                onChange={(e) =>this.handleEmailChange(e)}></input>
-            </div>
-            <div className="form-group">
-              <label htmlFor='motPasse'>Mot de passe :</label>
-              <input 
-                type="password" 
-                name="mdp" 
-                placeholder="Mot de passe"
-                value={this.state.mdp}
-                onChange={(e) =>this.handleMdpChange(e)}></input>
-            </div>
-            <div className="form-group">
-              <label htmlFor='confirmation'>Confirmation :</label>
-              <input
-                type="password"
-                name="confirmMdp"
-                placeholder="Confirmation du mot de passe"
-                value={this.state.confirmMdp}
-                onChange={(e) =>this.handleConfirmMdpChange(e)}></input>
-            </div>
-            <div className="form-group">
-              <label htmlFor='type'>Type utilisateur :</label>
-              <select className="form-select" name="type" 
-                value={ this.state.type}
-                onChange={(e) =>this.handleTypeChange(e)}>
-                  <option value="0">Veuillez choisir un type...</option>
-                <option value="1">Partenaire</option>
-                <option value="2">Client</option>
-              </select>
-            </div> */}
-
 <div className="form-group" style={{paddingTop:"15px"}}>
 <TextField 
 id="standard-basic" 
@@ -175,11 +146,31 @@ onChange={(e) =>this.handleConfirmMdpChange(e)}/>
     value={ this.state.type}
     onChange={(e) =>this.handleTypeChange(e)}
   >
-    <MenuItem value="1">Partenaire</MenuItem>
-    <MenuItem value="2">Client</MenuItem>
+    <MenuItem value="1" onClick={() => this.setState({hotelDescription :true})}>Partenaire</MenuItem>
+    <MenuItem value="2" onClick={() => this.setState({hotelDescription :false})}>Client</MenuItem>
   </Select>
 </FormControl>
 </div>
+{
+this.state.hotelDescription ?
+<TextField 
+id="outlined-basic"
+variant="outlined"
+multiline
+rows={2}
+rowsMax={4}
+style={{
+width:'300px',
+height:'50px',
+marginTop:'15px'
+}}
+type="text"
+name="description" 
+value={this.state.description}
+onChange={(e) =>this.handleDescriptionChange(e)}
+/>
+: null
+}
           </div>
         </div>
       
