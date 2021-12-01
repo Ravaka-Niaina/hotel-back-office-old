@@ -1,0 +1,32 @@
+.bae-calendar-container {
+    box-sizing: border-box;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    height: 100%;
+    width: 100%;
+  
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p {
+      padding: 0;
+      margin: 0;
+      line-height: 1;
+      font-family: 'Varela Round', sans-serif;
+    }
+    &.salmon-theme {
+      @import './themes/salmon.scss';
+    }
+    &.monochrome-theme {
+      @import './themes/monochrome.scss';
+    }
+    // &.rouge-theme {
+    //   @import './themes/rouge.scss';
+    // }
+  
+    @import './components/calendar-header.scss';
+    @import './components/weekday-indicator.scss';
+    @import './components/date-indicator.scss';
+  }

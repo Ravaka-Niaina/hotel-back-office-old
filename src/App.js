@@ -33,7 +33,7 @@ import  Devis  from "./front_client/devis";
 import { useTranslation } from "react-i18next";
 import  Reservation  from "./components/client/reservation.js";
 import  ApplyReservation  from "./components/client/applyReservation.js";
-import  BasicDateRangePicker  from "./components/client/dateSejourClient";
+import  dateReservation  from "./calendar/calendar";
 
 
 function App() {
@@ -83,7 +83,7 @@ function App() {
         <Route path="/reservation/:_id" exact component={Reservation} />
         <Route path="/reservation/:_id/apply" exact component={ApplyReservation} />
 
-        <Route path="/CalendarClient" exact component={BasicDateRangePicker} />
+        <Route path="/dateReservation" exact component={dateReservation} />
 
       </Router>
     </div>

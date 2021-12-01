@@ -1,0 +1,25 @@
+.bae-date-indicator {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(auto, 1fr));
+    grid-template-rows: repeat(6, minmax(35px, 1fr));
+    grid-gap: 5px;
+    padding: 0 15px;
+    .date-icon {
+      display: block;
+      justify-content: center;
+      justify-self: center;
+      align-items: center;
+      height: 32px;
+      width: 45px;
+      padding: 5px;
+      cursor: pointer;
+      &[data-active-month='false'] {
+        color: rgba(0, 0, 0, 0.3);
+      }
+      &.active,
+      &.selected {
+        border-radius: 50%;
+        box-shadow: 0 0 3px red;
+      }
+    }
+  }
