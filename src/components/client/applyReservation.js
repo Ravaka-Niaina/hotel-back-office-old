@@ -30,6 +30,8 @@ import Modal from '@mui/material/Modal';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
+import Alert from '@mui/material/Alert';
+
 const loadingStyle = {
     position: 'absolute',
     top: '50%',
@@ -158,6 +160,14 @@ function handleClientInfo(reservation, indexItineraire, indexTarif, i, categPers
 }
   
 function InputUtilisateur(props){
+    function fillInfoOccupant(reservation, setReservation, reservateur, indexItineraire, indexTarif, categPers, i){
+        let current = JSON.parse(JSON.stringify(reservation));
+        current.itineraires[indexItineraire].tarifReserves[indexTarif].infoGuests[categPers][i].nom = reservateur.nom;
+        current.itineraires[indexItineraire].tarifReserves[indexTarif].infoGuests[categPers][i].email = reservateur.email;
+        current.itineraires[indexItineraire].tarifReserves[indexTarif].infoGuests[categPers][i].tel = reservateur.tel;
+        setReservation(current);
+    }
+
     let inputs = [];
 
     if(props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests == undefined
@@ -183,7 +193,7 @@ function InputUtilisateur(props){
         }
         for(let i = 0; i < props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].guests.nbAdulte; i++){
             inputs.push(
-                <>
+                <div>
                     <TextField
                         id="outlined-required"
                         label={"Nom"}
@@ -205,7 +215,8 @@ function InputUtilisateur(props){
                         value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].tel}
                         onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "adultes", "tel", e.target.value, props.setReservation)}
                     />
-                </>
+                    <Button variant="contained" onClick={(e) => fillInfoOccupant(props.reservation, props.setReservation, props.reservateur, props.indexItineraire, props.indexTarif, "adultes", i)}>Celui qui a fait la réservation</Button>
+                </div>
             );
         }
 
@@ -214,7 +225,7 @@ function InputUtilisateur(props){
         }
         for(let i = 0; i < props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].guests.nbEnfant; i++){
             inputs.push(
-                <>
+                <div>
                     <TextField
                         id="outlined-required"
                         label={"Nom"}
@@ -237,7 +248,8 @@ function InputUtilisateur(props){
                         value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.enfants[i].tel}
                         onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "enfants", "tel", e.target.value, props.setReservation)}
                     />
-                </>
+                    <Button variant="contained" onClick={(e) => fillInfoOccupant(props.reservation, props.setReservation, props.reservateur, props.indexItineraire, props.indexTarif, "enfants", i)}>Celui qui a fait la réservation</Button>
+                </div>
             );
         }
     }catch(err){
@@ -305,7 +317,8 @@ function TarifReserves(props){
                     reservation={props.reservation}
                     setReservation={props.setReservation}
                     indexItineraire={props.indexItineraire}
-                    indexTarif={u}/>
+                    indexTarif={u}
+                    reservateur={props.reservateur} />
                 <Politiques politiques={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTarif.infoPolitique} />
             </div>
             
@@ -329,17 +342,17 @@ function InfoItineraires(props){
                         <Champs 
                             label="Nom client" 
                             value="Ratefiarivony Ravaka" />
-                        <button>Celui qui séjourne dans la chambre est celui qui a fait la réservation</button>
                     </div>
                     <div style={line}>
                         <ChampsImportant label="Check in" value={props.reservation.itineraires[u].dateSejour.debut} />
                         <ChampsImportant label="Check out" value={props.reservation.itineraires[u].dateSejour.fin} />
-                        <Champs label="Nombre de nuité" value="2 nuits" />
+                        <Champs label="Nombre de nuité" value={(props.reservation.itineraires[u].nights + 1) + " nights"} />
                     </div>
                     <TarifReserves 
                         indexItineraire={u}
                         reservation={props.reservation}
-                        setReservation={props.setReservation} />
+                        setReservation={props.setReservation}
+                        reservateur={props.reservateur} />
                 </div>
             );
         }
@@ -412,8 +425,11 @@ function ApplyReservation(props){
 
     const [open, setOpen] = useState(false);
     const [err, setErr] = useState(null);
-    const [email, setEmail] = useState("");
+    const [reservateur, setReservateur] = useState({nom: "", email: "", tel: "", messageParticulier: ""});
     const [openLoad, setOpenLoad] = useState(true);
+
+    const [alertSuccess, setAlertSuccess] = useState(null);
+    const [alertError, setAlertError] = useState(null);
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -423,9 +439,23 @@ function ApplyReservation(props){
         setValue(index);
     };
 
+    function handleResponse(res){
+        console.log(res);
+        setOpenLoad(false);
+        if(res.status === 200){
+            setAlertSuccess(res.message);
+        }else{
+            setAlertError(res.errors[0].message);
+        }
+        document.getElementById("content").scrollHeight = document.getElementById("content").scrollTop;
+    }
+
     function validerReservation(){
         console.log(reservation);
-        callAPI('post', '/reservation/applyWithEmail', {_id: reservation._id, email: email, reservation: reservation}, function(res){console.log(res);} );
+        setOpenLoad(true);
+        setAlertSuccess(null);
+        setAlertError(null);
+        callAPI('post', '/reservation/applyWithEmail', {_id: reservation._id, reservateur: reservateur, reservation: reservation}, handleResponse );
     }
 
     function setDetailReservation(res){
@@ -453,8 +483,8 @@ function ApplyReservation(props){
                 }
             }
             setReservation(current);
-            if(res.reservation.emailUtilisateur != undefined){
-                setEmail(res.reservation.emailUtilisateur);
+            if(res.reservation.reservateur != undefined){
+                setReservateur(res.reservation.reservateur);
             }
         }catch(err){
             console.log(err);
@@ -475,20 +505,60 @@ function ApplyReservation(props){
         //callAPI('post', '/reservation/apply', {_id: _id, email: "ravaka@yopmail.com"}, setMessage);
     }
 
+    function handleChangeInfoReservateur(field, value){
+        let current = JSON.parse(JSON.stringify(reservateur));
+        current[field] = value;
+        setReservateur(current);
+    }
+
     return (
         <>
-        <div style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
+        <div id="content" style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
             <Navbar/>
             <Box sx={{ bgcolor: 'background.paper', maxWidth: 800, margin: "0 auto"}}>
                 <h1>Détails réservation</h1>
-                <TextField
-                    id="outlined-required"
-                    label="Email utilisateur"
-                    placeholder="dupond@gmail.com"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)} />
-                <InfoItineraires reservation={reservation} setReservation={setReservation} />
+                {alertSuccess != null ? 
+                    <Stack sx={{ width: '100%' }} spacing={2}>
+                        <Alert severity="success">{alertSuccess}</Alert>
+                    </Stack> : null
+                }
+                {alertError != null ? 
+                    <Stack sx={{ width: '100%' }} spacing={2}>
+                        <Alert severity="error">{alertError}</Alert>
+                    </Stack> : null
+                }
+                <h2>Informations sur la personne qui fait la réservation</h2>
+                <Box>
+                    <TextField
+                        id="outlined-required"
+                        label="Nom"
+                        placeholder="dupond"
+                        value={reservateur.nom}
+                        onChange={(e) => handleChangeInfoReservateur("nom", e.target.value)} />
+                    <TextField
+                        id="outlined-required"
+                        label="Email"
+                        placeholder="dupond@gmail.com"
+                        type="email"
+                        value={reservateur.email}
+                        onChange={(e) => handleChangeInfoReservateur("email", e.target.value)} />
+                    <TextField
+                        id="outlined-required"
+                        label="Tel"
+                        placeholder="034 00 000 00"
+                        value={reservateur.tel}
+                        onChange={(e) => handleChangeInfoReservateur("tel", e.target.value)} />
+                    <TextField
+                        label="Message particulier"
+                        placeholder="Votre message"
+                        value={reservateur.messageParticulier}
+                        onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} />
+                </Box>
+                
+                <InfoItineraires 
+                    reservation={reservation} 
+                    setReservation={setReservation}
+                    reservateur={reservateur} />
                 <Total />
                 <Stack direction="row" spacing={2}>
                     <Button variant="contained">Imprimer</Button>
