@@ -1,5 +1,5 @@
 
-import React ,{useState} from "react";
+import React from "react";
 import MenuItem from '@mui/material/MenuItem';
 
 import FormGroup from '@mui/material/FormGroup';
@@ -221,15 +221,25 @@ class Filtre extends React.Component{
         this.setResult = this.setResult.bind(this);
     }
 
-    IncrAdulte() {                              // addOne as HandleClick
+    IncrAdulte() {         
+        let current = JSON.parse(JSON.stringify(this.props.context.state));
+        current.guests.nbAdulte = current.guests.nbAdulte + 1;
+        this.props.context.setState(current);
+        
+        // addOne as HandleClick
         this.setState((preState) => {
           return {
             nbAdulte : preState.nbAdulte + 1
             };
          });
+        
        }
       
-      DecrAdulte() {                              // addOne as HandleClick
+      DecrAdulte() {        
+        let current = JSON.parse(JSON.stringify(this.props.context.state));
+        current.guests.nbAdulte = current.guests.nbAdulte - 1;
+        this.props.context.setState(current);                      
+        // addOne as HandleClick
         this.setState((preState) => {
           if (this.state.nbAdulte !== 0) {
           return {
@@ -239,7 +249,10 @@ class Filtre extends React.Component{
          });
        }
 
-       IncrEnfant() {                             // addOne as HandleClick
+       IncrEnfant() {          
+        let current = JSON.parse(JSON.stringify(this.props.context.state));
+        current.guests.nbEnfant = current.guests.nbEnfant + 1;
+        this.props.context.setState(current);                      // addOne as HandleClick
         this.setState((preState) => {
           return {
             nbEnfant : preState.nbEnfant + 1,
@@ -248,7 +261,10 @@ class Filtre extends React.Component{
        }
  
        
-      DecrEnfant() {                              // addOne as HandleClick
+      DecrEnfant() {        
+        let current = JSON.parse(JSON.stringify(this.props.context.state));
+        current.guests.nbEnfant = current.guests.nbEnfant - 1;
+        this.props.context.setState(current);                       // addOne as HandleClick
         this.setState((preState) => {
           if (this.state.nbEnfant !== 0) {
           return {
@@ -266,14 +282,17 @@ class Filtre extends React.Component{
         console.log(this.props.context.state);
     }
     applyFilter(){
-        this.props.context.handleChange("errFiltre", null);
-        if((this.props.context.state.guests.nbEnfant != 0 || this.props.context.state.guests.nbAdulte != 0)
-            && (this.props.context.state.dateSejour.debut != "" && this.props.context.state.dateSejour.fin != "")){
+        console.log({filtres: this.state.filtres, guests: this.props.context.state.guests});
+        
+        if((this.props.context.state.guests.nbEnfant !== 0 || this.props.context.state.guests.nbAdulte !== 0)
+            && (this.props.context.state.dateSejour.debut !== "" && this.props.context.state.dateSejour.fin !== "")){
                 console.log('filtre en cours...');
                 callAPI('post', '/typeChambre/', {filtres: this.state.filtres, guests: this.props.context.state.guests}, this.setResult);
         }else{
+            console.log("misy olana");
             this.props.context.handleChange("errFiltre", 'Veuillez remplir les champs Adulte, Enfant, Debut sejour et fin sejour au moins');
         }
+        
     }
 
     handleFiltreChange(event){
@@ -294,7 +313,7 @@ class Filtre extends React.Component{
     }
     handleRadioChange(event, indexFiltre, indexOption){
         let currentState = JSON.parse(JSON.stringify(this.state));
-        if(event.target.value == currentState.filtres[indexFiltre].value){
+        if(event.target.value === currentState.filtres[indexFiltre].value){
             currentState.filtres[indexFiltre].value = '';
         }else{
             currentState.filtres[indexFiltre].value = event.target.value;
@@ -306,9 +325,9 @@ class Filtre extends React.Component{
 
     setFiltreDefaultValue(filtres, filtreName, optValue){
         for(let i = 0; i < filtres.length; i++){
-            if(filtres[i].name == filtreName){
+            if(filtres[i].name === filtreName){
                 for(let u = 0; u < filtres[i].options.length; u++){
-                    if(filtres[i].options[u].value == optValue){
+                    if(filtres[i].options[u].value === optValue){
                         filtres[i].options[u].checked = true;
                         if(!filtres[i].multipleChoice){
                             filtres[i].value = filtres[i].options[u].value;

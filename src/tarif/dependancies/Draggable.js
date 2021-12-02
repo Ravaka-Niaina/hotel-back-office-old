@@ -5,10 +5,10 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 const Draggable = (props) =>{
-    const icon = (props.pos == 'right') ? <ChevronRightIcon /> : <ChevronLeftIcon />;
+    const icon = (props.pos === 'right') ? <ChevronRightIcon /> : <ChevronLeftIcon />;
     return(
         <IconButton data-pos={props.pos} sx={{ 
-            left: ((props.pos == 'right') ? props.rightSelected() : props.leftSelected()) + 'px'
+            left: ((props.pos === 'right') ? props.rightSelected() : props.leftSelected()) + 'px'
         }} 
         fontSize="small"
         onDragStart={props.dragStart} 

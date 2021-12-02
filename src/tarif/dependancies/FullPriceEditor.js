@@ -7,6 +7,9 @@ import moment from 'moment';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import styles from '../CalendarComponent.module.css';
 
+import callAPI from '../../utility';
+import { useHistory } from 'react-router-dom'
+
 const getDaysBetweenDates = function(startDate, endDate) {
     var now = startDate.clone(), dates = [];
 
@@ -17,20 +20,15 @@ const getDaysBetweenDates = function(startDate, endDate) {
     return dates;
 };
 
-const DatePicker = () => {
-    const [dates, setDates] = useState([]);
-    const [value, setValue] = useState([moment('2021-11-11'), moment('2021-12-11')])
+const DatePicker = (props) => {
     return(
         <LocalizationProvider dateAdapter={AdapterMoment}>
         <DateRangePicker
             startText="From"
             endText="To"
-            value={value}
+            value={props.interval}
             onChange={(newValue) => {
-                setValue(newValue);
-                if(newValue != undefined && newValue[0] != null && newValue[1] != null){
-                    const allday = getDaysBetweenDates(newValue[0],newValue[1]);
-                }
+                props.setInterval(newValue);
             }}
             renderInput={(startProps, endProps) => (
             <React.Fragment>
@@ -44,6 +42,34 @@ const DatePicker = () => {
     )
 }
 
+function InputPrix(props){
+    let inputPrix = [];
+    for(let i = 0; i < props.guestsMax; i++){
+        inputPrix.push(
+            <>
+                <TextField
+                    fullwidth={false}
+                    size="small"
+                    id="outlined-number"
+                    label={"x " + (i + 1)}
+                    type="number"
+                    InputProps={{
+                        startAdornment: <InputAdornment position="start"><PersonOutlineIcon/></InputAdornment>,
+                        endAdornment:<InputAdornment position="end">€</InputAdornment>
+                    }}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    value={props.prix[i]}
+                    onChange={(e) => props.handleChangePrix(i, e.target.value)}
+                />
+                <br/>
+            </>
+        );
+    }
+    return inputPrix;
+}
+
 const FullPriceEditor = (props) => {
     const style = {
         position: 'absolute',
@@ -55,38 +81,208 @@ const FullPriceEditor = (props) => {
         boxShadow: 'rgb(0 0 0 / 20%) 0px 5px 5px -3px, rgb(0 0 0 / 14%) 0px 8px 10px 1px, rgb(0 0 0 / 12%) 0px 3px 14px 2px',
         p: 4,
     };
-    const [open, setOpen] = React.useState(false);
     const [value, setValue] = React.useState('open');
+    const [tarifs, setTarifs] = React.useState([]);
     const handleChange = (event) => {
         setValue(event.target.value);
+        if(event.target.value === "close"){
+            setAllDays(false);
+        }else{
+            setAllDays(true);
+        }
     };
+    const [interval, setInterval] = React.useState(props.dateRange);
+    const [prix, setPrix] = React.useState([]);
+    const [days, setDays] = React.useState([
+        { value: 1, checked: true, label: "Mon" },
+        { value: 2, checked: true, label: "Tue" },
+        { value: 3, checked: true, label: "Wed" },
+        { value: 4, checked: true, label: "Thu" },
+        { value: 5, checked: true, label: "Fri" },
+        { value: 6, checked: true, label: "Sat" },
+        { value: 7, checked: true, label: "Sun" },
+    ]); // day 1 = lundi , 7 = dimanche
+
+    function setAllDays(checked){
+        for(let i = 0; i < days.length; i++){
+            days[i].checked = checked;
+        }
+        setDays(days);
+    }
+
+    const guestsMax = props.typechambre.nbAdulte + props.typechambre.nbEnfant;
+    const history = useHistory();
+
     useEffect( () => {
-        setOpen(props.showme);
-    })
+        console.log(props.typechambre.planTarifaire);
+        let taf = JSON.parse(JSON.stringify(props.typechambre.planTarifaire));
+        if(taf.length > 0){
+            taf.splice(0, 0, {nom: "Choisissez un plan tarifaire..."});
+        }else{
+            taf.splice(0, 0, {nom: "Aucun plan tarifaire..."});
+        }
+        let temp = [];
+        for(let i = 0; i < guestsMax; i++){
+            temp.push("");
+        }
+        setPrix(temp);
+        
+        setTarifs(taf);
+    }, [])
+
+    function handleClose(){
+        let temp = [];
+        for(let i = 0; i < guestsMax; i++){
+            temp.push("");
+        }
+        setPrix(temp);
+        setInterval(props.dateRange);
+        setAllDays(true);
+        setValue("open");
+        setRate(1);
+    }
 
     const [rate,setRate] = useState(1);
+
+    function handleChangePrix(i, value){
+        console.log("niova ny prix");
+        let temp = JSON.parse(JSON.stringify(prix));
+        temp[i] = value;
+        setPrix(temp);
+    }
+
+
+    let rates = [];
+    for(let i = 0; i < tarifs.length; i++){
+        rates.push(
+            <MenuItem value={i + 1}>{tarifs[i].nom}</MenuItem>
+        );
+    }
+
+    function refresh(res){
+        console.log(res);
+        if(res.status === 200){
+            console.log("Redirection en cours...");
+            // reload
+            window.location.reload();
+            props.closeModal();
+            handleClose();
+        }else{
+            console.log("prix non configuré");
+        }
+    }
+
+    function savePrix(){
+        if(rate > 1){
+            let versions = [];
+            console.log(prix);
+
+            if(prix.length > 0){
+                for(let i = 0; i < guestsMax; i++){
+                    if(prix[i].trim() != ""){
+                        versions.push({nbPers: (i + 1), prix: Number.parseFloat(prix[i])});
+                    }
+                }
+            }
+
+            let usedDays = JSON.parse(JSON.stringify(days));
+            if(value == "close"){
+                for(let i = 0; i < usedDays.length; i++){
+                    usedDays[i].checked = false;
+                }
+            }
+            const data = {
+                idTarif: tarifs[rate - 1]._id,
+                idTypeChambre: props.typechambre._id,
+                days: usedDays,
+                versions: versions,
+                minSejour: 1,
+                dateDebut: interval[0].format("YYYY-MM-DD"),
+                dateFin: interval[1].format("YYYY-MM-DD")
+            };
+            console.log(data);
+            callAPI('post', '/prixTarif/insert', data, refresh);
+        }
+        }
+        
+    
+    function handleDayChange(i, checked){
+        let current = JSON.parse(JSON.stringify(days));
+        current[i].checked = checked;
+        setDays(current);
+        if(checked === true && value === "close"){
+            setValue("open");
+        }
+    }
+
+    let inputDays = [];
+    for(let i = 0; i < days.length; i++){
+        const a = i;
+        inputDays.push(
+            <>
+                <FormControlLabel
+                    style={{padding: 0}}
+                    label={days[i].label}
+                    onChange={(e) => handleDayChange(a, e.target.checked)}
+                    control={<Checkbox checked={days[i].checked} />}
+                />
+                {/*<Checkbox checked={days[i].checked} onChange={(e) => console.log(e)} /><span>{days[i].label}</span>*/}
+            </>
+        );
+    }
+
+    function loadPrix(result){
+        console.log(result);
+        if(result.status === 200){
+            let temp = [];
+            for(let i = 0; i < result.prixTarif.length; i++){
+                temp.push(result.prixTarif[i].prix);
+            }
+            setPrix(temp);
+        }else{
+            console.log("On n'a pas pu charger les prix");
+        }
+    }
+
+    function getPrix(newValue){
+        console.log("rate = " + newValue);
+        if(rate > 1){
+            const data = {
+                idTarif: tarifs[newValue - 1]._id,
+               idTypeChambre: props.typechambre._id,
+               dateDebut: interval[0].format("YYYY-MM-DD"),
+               dateFin: interval[1].format("YYYY-MM-DD")
+           };
+           console.log(data);
+           callAPI('post', '/typeChambre/prix/min', data, loadPrix);
+        }
+    }
+
+    function handleChangeRate(newValue){
+        setRate(newValue);
+        getPrix(newValue);
+    }
+
+    function handleIntervalChange(value){
+        setInterval(value);
+        getPrix(rate);
+    }
 
     return(
         <>
         <Modal
-            open={open}
+            open={props.showme}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
+            onClose={(e) => {props.closeModal(); handleClose()}}
         >
             <Box sx={style}
                 className={styles.fullpopper}
-            >
-                
-                <DatePicker/>
+            >   
+                <DatePicker interval={interval} setInterval={handleIntervalChange} />
                 <br/>
                 <div>
-                    <Checkbox defaultChecked /><span>Mon</span>
-                    <Checkbox defaultChecked /><span>Tue</span>
-                    <Checkbox defaultChecked /><span>Wed</span>
-                    <Checkbox defaultChecked /><span>Thu</span>
-                    <Checkbox defaultChecked /><span>Fri</span>
-                    <Checkbox defaultChecked /><span>Sat</span>
-                    <Checkbox defaultChecked /><span>Sun</span>
+                    {inputDays}
                 </div>
                 <br/>
                 <span>{props.typechambre.nom}</span>
@@ -118,70 +314,25 @@ const FullPriceEditor = (props) => {
                 <Select
                     value={rate}
                     label="Rate"
-                    onChange={(e) => setRate(e.target.value)}
+                    onChange={(e) => handleChangeRate(e.target.value)}
                     size="small"
                 >
-                    <MenuItem value={1}>Standard Rate</MenuItem>
-                    <MenuItem value={2}>Medium Rate</MenuItem>
-                    <MenuItem value={3}>Lux Rate</MenuItem>
+                    { rates }
                 </Select>
                 </FormControl>
                 <br/>
-                <TextField
-                    fullwidth={false}
-                    size="small"
-                    id="outlined-number"
-                    label="x 1"
-                    type="number"
-                    InputProps={{
-                        startAdornment: <InputAdornment position="start"><PersonOutlineIcon/></InputAdornment>,
-                        endAdornment:<InputAdornment position="end">€</InputAdornment>
-                    }}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                />
-                <br/>
-                <TextField
-                    fullwidth={false}
-                    size="small"
-                    id="outlined-number"
-                    label="x 2"
-                    type="number"
-                    InputProps={{
-                        startAdornment: <InputAdornment position="start"><PersonOutlineIcon/></InputAdornment>,
-                        endAdornment:<InputAdornment position="end">€</InputAdornment>
-                    }}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                />
-                <br/>
-                <TextField
-                    fullwidth={false}
-                    size="small"
-                    id="outlined-number"
-                    label="x 3"
-                    type="number"
-                    InputProps={{
-                        startAdornment: <InputAdornment position="start"><PersonOutlineIcon/></InputAdornment>,
-                        endAdornment:<InputAdornment position="end">€</InputAdornment>
-                    }}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                />
-                <br/>
+                <InputPrix guestsMax={guestsMax} prix={prix} handleChangePrix={handleChangePrix} />
+                
                 <Stack direction="row" spacing={2}>
-                    <Button variant="contained" disabled>
+                    <Button variant="contained" onClick={(e) => savePrix()}>
                         Save
                     </Button>
-                    <Button onClick={() => props.closeModal(false)} variant="contained">
+                    <Button onClick={() => {props.closeModal(false); handleClose()}} variant="contained">
                         Close
                     </Button>
                 </Stack>
             </Box>
-      </Modal>
+      </Modal> 
         </>
     );
 }

@@ -4,6 +4,18 @@ import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
 import FullPriceEditor from './FullPriceEditor.js';
 import styles from '../CalendarComponent.module.css';
 
+function ListTarifs(props){
+    let list = [];
+    for(let i = 0; i < props.planTarifaire.length; i++){
+        list.push(
+            <li>
+                <span>{props.planTarifaire[i].nom}</span>
+            </li>
+        );
+    }
+    return list;
+}
+
 const SideList = (props) => {
     const [openModal,setOpenModal] = useState(false);
     return(
@@ -31,12 +43,14 @@ const SideList = (props) => {
                 <li>
                     <span>Booked</span>
                 </li>
-                <li>
-                    <span>Standard Rate x 2</span>
-                </li>
+                <ListTarifs planTarifaire={props.typechambre.planTarifaire} />
             </ul>
         </Box>
-        <FullPriceEditor typechambre={props.typechambre}  closeModal={() => setOpenModal(false)} showme={openModal} />
+        <FullPriceEditor 
+            typechambre={props.typechambre}  
+            closeModal={() => setOpenModal(false)} 
+            showme={openModal} 
+            dateRange={props.dateRange} />
         </>
     )
 }

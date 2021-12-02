@@ -1,4 +1,4 @@
-import React , { useState } from 'react';
+
 import {Box} from '@mui/material';
 import styles from '../CalendarComponent.module.css';
 import DayLine from './DayLine.js';
@@ -12,7 +12,7 @@ const RateLine = (props) => {
             }}
             className={styles.sideline}
         >
-            <SideList typechambre={props.typechambre}/>
+            <SideList typechambre={props.typechambre} dateRange={props.dateRange} />
             <DayLine typechambre={props.typechambre} indice={props.indice} fromto={props.fromto} daterange={props.daterange}/>
         </Box>
     )

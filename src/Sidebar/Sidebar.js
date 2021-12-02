@@ -3,7 +3,6 @@ import './Sidebar.css';
 import React from 'react';
 import HomeIcon from '@mui/icons-material/Home';
 import BedroomParentIcon from '@mui/icons-material/BedroomParent';
-import RedeemIcon from '@mui/icons-material/Redeem';
 import {Link} from 'react-router-dom';
 // import {SidebarData} from './SidebarData';
 class Sidebar extends React.Component {
