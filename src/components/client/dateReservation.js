@@ -11,7 +11,7 @@ export default class Example extends React.Component {
     this.handleDayClick = this.handleDayClick.bind(this);
     this.handleDayMouseEnter = this.handleDayMouseEnter.bind(this);
     this.handleResetClick = this.handleResetClick.bind(this);
-    this.renderDay = this.renderDay.bind(this);
+    // this.renderDay = this.renderDay.bind(this);
     this.state =this.getInitialState();
   }
   getInitialState() {
@@ -57,37 +57,37 @@ export default class Example extends React.Component {
     this.setState(this.getInitialState());
   }
 
-renderDay(day) {
-  const birthdays = {
-  3: ['Mirko'],
-}
-  const date = day.getDate();
-  console.log(date);
-  const dateStyle = {
-    position: 'absolute',
-    color: 'black',
-    bottom: 0,
-    right: 0,
-    fontSize: 20,
-  };
-  const birthdayStyle = { fontSize: '0.8em', textAlign: 'left' };
-  const cellStyle = {
-    height: 50,
-    width: 60,
-    position: 'relative',
-  };
-  return (
-    <div style={cellStyle}>
-      <div style={dateStyle}>{date}</div>
-      {birthdays[date] &&
-        birthdays[date].map((name, i) => (
-          <div key={i} style={birthdayStyle}>
-             {name}
-          </div>
-        ))}
-    </div>
-  );
-}
+// renderDay(day) {
+//   const birthdays = {
+//   3: ['Mirko'],
+// }
+//   const date = day.getDate();
+//   console.log(date);
+//   const dateStyle = {
+//     position: 'absolute',
+//     color: 'black',
+//     bottom: 0,
+//     right: 0,
+//     fontSize: 20,
+//   };
+//   const birthdayStyle = { fontSize: '0.8em', textAlign: 'left' };
+//   const cellStyle = {
+//     height: 50,
+//     width: 60,
+//     position: 'relative',
+//   };
+//   return (
+//     <div style={cellStyle}>
+//       <div style={dateStyle}>{date}</div>
+//       {birthdays[date] &&
+//         birthdays[date].map((name, i) => (
+//           <div key={i} style={birthdayStyle}>
+//              {name}
+//           </div>
+//         ))}
+//     </div>
+  // );
+// }
 
   render() {
     const { from, to, enteredTo } = this.state;
@@ -103,7 +103,7 @@ renderDay(day) {
           modifiers={modifiers}
           onDayClick={this.handleDayClick}
           onDayMouseEnter={this.handleDayMouseEnter}
-          renderDay={this.renderDay}
+          // renderDay={this.renderDay}
         />
         <div>
           {!from && !to && 'Please select the first day.'}
