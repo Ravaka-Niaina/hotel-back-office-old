@@ -34,7 +34,11 @@ function InfoItineraires(props){
                         indexItineraire={u}
                         reservation={props.reservation}
                         setReservation={props.setReservation}
-                        reservateur={props.reservateur} />
+                        reservateur={props.reservateur}
+                        affilie={props.affilie}
+                        setAffilie={props.setAffilie}
+                        openLoad={props.openLoad}
+                        setOpenLoad={props.setOpenLoad} />
                 </div>
             );
         }

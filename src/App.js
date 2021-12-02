@@ -1,6 +1,6 @@
-
 // import './App.css';
 import  Login  from "./components/login/login";
+import  register  from "./components/login/register";
 import  Register  from "./components/login/register";
 import  InsertTypeChambre  from "./partenaire/InsertTypeChambre.js";
 import  DetailsTypeChambre  from "./partenaire/DetailsTypeChambre.js";
@@ -10,6 +10,7 @@ import  DetailsTarif  from "./tarif/DetailsTarif.js";
 import  home  from "./home/home";
 import Tarif from "./tarif/Tarif.js";
 import Paiement from "./paiement";
+import  DCHambre  from "./components/client/listChambre";
 
 import InsertChambre from './partenaire/chambre/InsertChambre.js';
 import  AppClient  from "./components/client/scroll";
@@ -21,12 +22,14 @@ import Calendrier from "./partenaire/Calendrier/Calendrier";
 
 import  PromotionList  from "./promotion/promotionList.js";
 import  InsertPromotion  from "./promotion/insertPromotion.js";
+import  tarifList  from "./promotion/getTarifs.js";
 import Global from "./politique/global.js";
 import  searchTypeChambre  from "./partenaire/searchTypeChambre.js";
 import  guest  from "./partenaire/guest.js";
 import  hideShow  from "./hideShow.js";
 import  Front_client  from "./front_client/front_client";
 import  Devis  from "./front_client/devis";
+import { useTranslation } from "react-i18next";
 import  Reservation  from "./components/client/reservation.js";
 import ListPolitique from "./politique/listpolitique.js"
 import  ApplyReservation  from "./components/client/applyReservation.js";
@@ -90,6 +93,4 @@ function App() {
     </div>
   );
 }
-
-//push heroku
 export default App;

@@ -12,6 +12,7 @@ import  Navbar  from "../../Navbar/Navbar";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
+import Icon from '@mui/material/Icon';
 
 import Total from './applyReservation/Total.js';
 import InfoItineraires from './applyReservation/InfoItineraires.js';
@@ -54,7 +55,7 @@ function ApplyReservation(props){
 
     const [alertSuccess, setAlertSuccess] = useState(null);
     const [alertError, setAlertError] = useState(null);
-    const [affilie, setAffilie] = useState(false);
+    const [affilie, setAffilie] = useState([]);
 
     function handleResponse(res){
         console.log(res);
@@ -77,45 +78,49 @@ function ApplyReservation(props){
 
     function setDetailReservation(res){
         setOpenLoad(false);
-        try{
-            let current = JSON.parse(JSON.stringify(res.reservation));
-            for(let i = 0; i < current.itineraires.length; i++){
-                const a = i;
-                for(let u = 0; u < current.itineraires[i].tarifReserves.length; u++){
-                    const b = u;
-                    if(current.itineraires[a].tarifReserves[b] != undefined){
-
-                        let nbEnfant = current.itineraires[a].tarifReserves[b].guests.nbEnfant;
-                        try{
-                            nbEnfant = Number.parseInt(nbEnfant);
-                        }catch(err){}
-                        
-                        let nbAdulte = current.itineraires[a].tarifReserves[b].guests.nbAdulte;
-                        try{
-                            nbAdulte = Number.parseInt(nbAdulte);
-                        }catch(err){}
-                        
-                        const max = nbEnfant + nbAdulte;
+        console.log(res);
+        if(res.status === 200){
+            try{
+                let current = JSON.parse(JSON.stringify(res.reservation));
+                let tempAffilie = [];
+                for(let i = 0; i < current.itineraires.length; i++){
+                    tempAffilie.push(false);
+                    const a = i;
+                    for(let u = 0; u < current.itineraires[i].tarifReserves.length; u++){
+                        const b = u;
+                        if(current.itineraires[a].tarifReserves[b] != undefined){
+    
+                            let nbEnfant = current.itineraires[a].tarifReserves[b].guests.nbEnfant;
+                            try{
+                                nbEnfant = Number.parseInt(nbEnfant);
+                            }catch(err){}
+                            
+                            let nbAdulte = current.itineraires[a].tarifReserves[b].guests.nbAdulte;
+                            try{
+                                nbAdulte = Number.parseInt(nbAdulte);
+                            }catch(err){}
+                            
+                            const max = nbEnfant + nbAdulte;
+                        }
                     }
                 }
+                setReservation(current);
+                setAffilie(tempAffilie);
+                if(res.reservation.reservateur != undefined){
+                    setReservateur(res.reservation.reservateur);
+                }
+            }catch(err){
+                console.log(err);
             }
-            setReservation(current);
-            if(res.reservation.reservateur != undefined){
-                setReservateur(res.reservation.reservateur);
-            }
-        }catch(err){
-            console.log(err);
+        }else{
+            console.log(res.errors[0].message);
+            setAlertError(res.errors[0].message);
         }
-        
     }
 
     useEffect(() => {
         callAPI('get', '/reservation/details/' + _id, {}, setDetailReservation);
     }, [_id]);
-
-    function setMessage(res){
-        console.log(res);
-    }
 
     function generatePDF(){
         //ReactPDF.render(<MyDocument />, `${__dirname}/example.pdf`);
@@ -130,72 +135,82 @@ function ApplyReservation(props){
 
     return (
         <>
-        <div id="content" style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
-            <Navbar/>
-            <Box sx={{ bgcolor: 'background.paper', maxWidth: 800, margin: "0 auto"}}>
-                <h1>Détails réservation</h1>
-                {alertSuccess != null ? 
-                    <Stack sx={{ width: '100%' }} spacing={2}>
-                        <Alert severity="success">{alertSuccess}</Alert>
-                    </Stack> : null
-                }
-                {alertError != null ? 
-                    <Stack sx={{ width: '100%' }} spacing={2}>
-                        <Alert severity="error">{alertError}</Alert>
-                    </Stack> : null
-                }
-                <h2>Informations sur la personne qui fait la réservation</h2>
-                <Box>
-                    <TextField
-                        id="outlined-required"
-                        label="Nom"
-                        placeholder="dupond"
-                        value={reservateur.nom}
-                        onChange={(e) => handleChangeInfoReservateur("nom", e.target.value)} />
-                    <TextField
-                        id="outlined-required"
-                        label="Email"
-                        placeholder="dupond@gmail.com"
-                        type="email"
-                        value={reservateur.email}
-                        onChange={(e) => handleChangeInfoReservateur("email", e.target.value)} />
-                    <TextField
-                        id="outlined-required"
-                        label="Tel"
-                        placeholder="034 00 000 00"
-                        value={reservateur.tel}
-                        onChange={(e) => handleChangeInfoReservateur("tel", e.target.value)} />
-                    <TextField
-                        label="Message particulier"
-                        placeholder="Votre message"
-                        value={reservateur.messageParticulier}
-                        onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} />
-                </Box>
-                
-                <InfoItineraires 
-                    reservation={reservation} 
-                    setReservation={setReservation}
-                    reservateur={reservateur} />
-                <Total />
-                <Stack direction="row" spacing={2}>
-                    <Button variant="contained">Imprimer</Button>
-                    <Button variant="contained">Partager</Button>
-                    <Button variant="contained">Ajouter au calendrier</Button>
+            {(reservation !== null) ? 
+                <div id="content" style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
+                    <Navbar/>
+                    <Box sx={{ bgcolor: 'background.paper', maxWidth: 800, margin: "0 auto"}}>
+                        <h1>Détails réservation</h1>
+                        {alertSuccess != null ? 
+                            <Stack sx={{ width: '100%' }} spacing={2}>
+                                <Alert severity="success">{alertSuccess}</Alert>
+                            </Stack> : null
+                        }
+                        {alertError != null ? 
+                            <Stack sx={{ width: '100%' }} spacing={2}>
+                                <Alert severity="error">{alertError}</Alert>
+                            </Stack> : null
+                        }
+                        <h2>Informations sur la personne qui fait la réservation</h2>
+                        <Box>
+                            <TextField
+                                id="outlined-required"
+                                label="Nom"
+                                placeholder="dupond"
+                                value={reservateur.nom}
+                                onChange={(e) => handleChangeInfoReservateur("nom", e.target.value)} />
+                            <TextField
+                                id="outlined-required"
+                                label="Email"
+                                placeholder="dupond@gmail.com"
+                                type="email"
+                                value={reservateur.email}
+                                onChange={(e) => handleChangeInfoReservateur("email", e.target.value)} />
+                            <TextField
+                                id="outlined-required"
+                                label="Tel"
+                                placeholder="034 00 000 00"
+                                value={reservateur.tel}
+                                onChange={(e) => handleChangeInfoReservateur("tel", e.target.value)} />
+                            <TextField 
+                                label="Message particulier"
+                                placeholder="Votre message"
+                                value={reservateur.messageParticulier}
+                                onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} />
+                        </Box>
+                        
+                        <InfoItineraires 
+                            reservation={reservation} 
+                            setReservation={setReservation}
+                            reservateur={reservateur}
+                            affilie={affilie}
+                            setAffilie={setAffilie}
+                            openLoad={openLoad}
+                            setOpenLoad={setOpenLoad} />
+                        <Total />
+                        <Stack direction="row" spacing={2}>
+                            <Button variant="contained">Imprimer</Button>
+                            <Button variant="contained">Partager</Button>
+                            <Button variant="contained">Ajouter au calendrier</Button>
+                        </Stack>
+                        <Stack direction="row" spacing={2}>
+                            <Button variant="contained">Modifier réservation</Button>
+                            <Button variant="contained">Annuler réservation</Button>
+                            <Button variant="contained" onClick={(e) => validerReservation()}>Valider réservation</Button>
+                        </Stack>
+                    </Box>
+                </div>
+                : <Stack sx={{ width: '100%' }} spacing={2}>
+                    <Icon><img src="../../warning.svg" style={{width:'50%'}} ></img></Icon>
+                    <Alert severity="error">{alertError}</Alert>
                 </Stack>
-                <Stack direction="row" spacing={2}>
-                    <Button variant="contained">Modifier réservation</Button>
-                    <Button variant="contained">Annuler réservation</Button>
-                    <Button variant="contained" onClick={(e) => validerReservation()}>Valider réservation</Button>
-                </Stack>
-            </Box>
-        </div>
-        <Backdrop
-            sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            open={openLoad}
-        >
-            <CircularProgress color="inherit" />
-        </Backdrop>        
-    </>
+            }
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={openLoad}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>        
+        </>
     );
 
 }

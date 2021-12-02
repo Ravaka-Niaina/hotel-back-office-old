@@ -14,6 +14,10 @@ function InputUtilisateur(props){
         current.itineraires[indexItineraire].tarifReserves[indexTarif].infoGuests[categPers][i].email = reservateur.email;
         current.itineraires[indexItineraire].tarifReserves[indexTarif].infoGuests[categPers][i].tel = reservateur.tel;
         setReservation(current);
+        
+        let temp = JSON.parse(JSON.stringify(props.affilie));
+        temp[indexItineraire] = true;
+        props.setAffilie(temp);
     }
 
     let inputs = [];
@@ -63,7 +67,7 @@ function InputUtilisateur(props){
                         value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].tel}
                         onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "adultes", "tel", e.target.value, props.setReservation)}
                     />
-                    <Button variant="contained" onClick={(e) => fillInfoOccupant(props.reservation, props.setReservation, props.reservateur, props.indexItineraire, props.indexTarif, "adultes", i)}>Celui qui a fait la réservation</Button>
+                    {(props.affilie.length > 0 && !props.affilie[props.indexItineraire]) ? <Button variant="contained" onClick={(e) => fillInfoOccupant(props.reservation, props.setReservation, props.reservateur, props.indexItineraire, props.indexTarif, "adultes", i)}>Celui qui a fait la réservation</Button> : null}
                 </div>
             );
         }
@@ -96,7 +100,7 @@ function InputUtilisateur(props){
                         value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.enfants[i].tel}
                         onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "enfants", "tel", e.target.value, props.setReservation)}
                     />
-                    <Button variant="contained" onClick={(e) => fillInfoOccupant(props.reservation, props.setReservation, props.reservateur, props.indexItineraire, props.indexTarif, "enfants", i)}>Celui qui a fait la réservation</Button>
+                    {(props.affilie.length > 0 && !props.affilie[props.indexItineraire]) ? <Button variant="contained" onClick={(e) => fillInfoOccupant(props.reservation, props.setReservation, props.reservateur, props.indexItineraire, props.indexTarif, "enfants", i)}>Celui qui a fait la réservation</Button> : null}
                 </div>
             );
         }
