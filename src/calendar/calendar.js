@@ -18,12 +18,17 @@ const themes = {
 
 const BaeCalendar = ({ theme, activeDates, onDateSelect }) => {
   const presetActiveDates = useRef(presetDateTracker(activeDates || []));
-  const [selectDate, setSelectDate] = useState(getToday());
+
+  let today = new Date();
+  today = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const [selectDate, setSelectDate] = useState(today);
 
   let oneMonth = new Date(selectDate);
   oneMonth.setMonth(oneMonth.getMonth() + 2);
   oneMonth.setDate(0);
   const [monthLater, setMonthLater] = useState(oneMonth);
+
+  const [bornes, setBornes] = useState({debut: null, fin: null, isDebut: true});
 
   useEffect(() => {
     if (onDateSelect) {
@@ -41,6 +46,8 @@ const BaeCalendar = ({ theme, activeDates, onDateSelect }) => {
           activeDates={presetActiveDates.current}
           selectDate={selectDate}
           setSelectDate={setSelectDate}
+          bornes={bornes}
+          setBornes={setBornes}
         />
       </div>
       <div style={{width: "20px", display: "inline-block"}}></div>
@@ -51,6 +58,8 @@ const BaeCalendar = ({ theme, activeDates, onDateSelect }) => {
           activeDates={presetActiveDates.current}
           selectDate={monthLater}
           setSelectDate={setMonthLater}
+          bornes={bornes}
+          setBornes={setBornes}
         />
       </div>
     </div>

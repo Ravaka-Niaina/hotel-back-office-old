@@ -13,13 +13,15 @@
       width: 45px;
       padding: 5px;
       cursor: pointer;
+      height: fit-content;
       &[data-active-month='false'] {
         color: rgba(0, 0, 0, 0.3);
-      }
+    }
       &.active,
-      &.selected {
-        border-radius: 50%;
-        box-shadow: 0 0 3px red;
+      &.selected, &.selected div{
+        background-color: #C2B59B;
+        color: #FFFF;
+        height: fit-content;
       }
     }
   }

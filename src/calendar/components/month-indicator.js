@@ -9,7 +9,10 @@ import { monthsFull } from '../constants/dates';
 
 const MonthIndicator = ({ selectDate, setSelectDate, monthLater, setMonthLater }) => {
   const changeDate = (e) => {
-    setSelectDate(e.target.getAttribute('data-date'));
+    const firstMonth = new Date(e.target.getAttribute('data-date'));
+    const secondMonth = new Date(firstMonth.getFullYear(), firstMonth.getMonth() + 1, 1)
+    setSelectDate(firstMonth);
+    setMonthLater(secondMonth);
   };
 
   const monthSet = getMonthSet(selectDate);
