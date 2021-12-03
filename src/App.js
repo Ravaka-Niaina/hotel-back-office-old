@@ -33,7 +33,7 @@ import { useTranslation } from "react-i18next";
 import  Reservation  from "./components/client/reservation.js";
 import ListPolitique from "./politique/listpolitique.js"
 import  ApplyReservation  from "./components/client/applyReservation.js";
-import  BasicDateRangePicker  from "./components/client/dateSejourClient";
+import  BasicDateRangePicker  from "./calendar/calendar";
 
 
 function App() {

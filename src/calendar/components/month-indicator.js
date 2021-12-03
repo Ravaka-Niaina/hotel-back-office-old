@@ -7,7 +7,7 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 import { monthsFull } from '../constants/dates';
 
-const MonthIndicator = ({ selectDate, setSelectDate }) => {
+const MonthIndicator = ({ selectDate, setSelectDate, monthLater, setMonthLater }) => {
   const changeDate = (e) => {
     setSelectDate(e.target.getAttribute('data-date'));
   };
@@ -17,7 +17,6 @@ const MonthIndicator = ({ selectDate, setSelectDate }) => {
   return (
     <div className="bae-month-indicator">
       <ArrowBackIosNewIcon data-date={monthSet.prev} onClick={changeDate}/>
-      <h3>{monthsFull[getMonth(monthSet.current)]}</h3>
       <ArrowForwardIosIcon data-date={monthSet.next} onClick={changeDate}/>
     </div>
   );

@@ -2,7 +2,9 @@
     box-sizing: border-box;
     box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
     height: 100%;
-    width: 100%;
+    max-width: 700px;
+    display: inline-block;
+    padding-bottom: 10px;
   
     h1,
     h2,

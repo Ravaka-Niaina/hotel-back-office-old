@@ -35,10 +35,10 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate }) => {
         key={key}
         onClick={changeDate}
       > 
-        <div>
+        <div style={{textAlign: "center"}}>
         {getDayOfMonth(i.date)}
         </div>
-        <div> 
+        <div style={{textAlign: "center"}}> 
         {"£"+i.price}
         </div>
       </div>
