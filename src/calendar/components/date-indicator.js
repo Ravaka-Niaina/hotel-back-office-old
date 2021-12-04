@@ -21,14 +21,7 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
       temp.isDebut = true;
     }
     console.log(temp);
-    
-    /*if(temp.fin != null){
-      if(new Date(temp.debut) > new Date(temp.fin)){
-        const tmp = temp.debut + "";
-        temp.debut = temp.fin;
-        temp.fin = tmp;
-      }
-    }*/
+
     setBornes(temp);
     console.log(temp);
   };
@@ -41,8 +34,6 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
   for(var i=0; i<datesInMonth.length;i++){
     datesInMonth[i].price=i+1;
   }
-
-  let removeUnwanted = true;
 
   const debut = new Date(bornes.debut);
   const fin = new Date(bornes.fin);

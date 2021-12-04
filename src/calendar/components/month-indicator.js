@@ -8,19 +8,20 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { monthsFull } from '../constants/dates';
 
 const MonthIndicator = ({ selectDate, setSelectDate, monthLater, setMonthLater }) => {
-  const changeDate = (e) => {
-    const firstMonth = new Date(e.target.getAttribute('data-date'));
-    const secondMonth = new Date(firstMonth.getFullYear(), firstMonth.getMonth() + 1, 1)
+  const changeDate = (date) => {
+    console.log("azo = " + date);
+    const firstMonth = new Date(date);
+    const secondMonth = new Date(firstMonth.getFullYear(), firstMonth.getMonth() + 1, 1);
     setSelectDate(firstMonth);
     setMonthLater(secondMonth);
   };
 
   const monthSet = getMonthSet(selectDate);
-
+  
   return (
     <div className="bae-month-indicator">
-      <ArrowBackIosNewIcon data-date={monthSet.prev} onClick={changeDate}/>
-      <ArrowForwardIosIcon data-date={monthSet.next} onClick={changeDate}/>
+      <ArrowBackIosNewIcon onClick={(e) => changeDate(monthSet.prev)}/>
+      <ArrowForwardIosIcon onClick={(e) => changeDate(monthSet.next)}/>
     </div>
   );
 };
