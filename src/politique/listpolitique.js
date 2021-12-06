@@ -39,10 +39,11 @@ class ListPolitique extends React.Component{
     }
     
     functionAppelList(data){
+        console.log(data);
          let current = JSON.parse(JSON.stringify(this.state));
          current.politique = data.politique;
          this.setState(current);
-
+         console.log(current);
      }
     
     componentDidMount(){
