@@ -1,4 +1,4 @@
-import React from 'react';
+import background from './cross.png';
 import {
   getDayOfMonth,
   getMonthDayYear,
@@ -51,17 +51,23 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
 
   const debut = new Date(bornes.debut);
   const fin = new Date(bornes.fin);
+  let today = new Date();
+  today = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const monthDates = datesInMonth.map((i, key) => {
     const selected = '';
     const temp = new Date(utility.getDate(i.date));
     const active = debut <= temp && fin >= temp ? 'active' : '';
+    const nonDispo = i.price !== undefined ? "" : "nonDispo";
+    console.log(i.date);
+    let today = new Date();
+    today = new Date(today.getFullYear(), today.getMonth(), 1);
     return (
       <div>
         {i.currentMonth ? 
           <div>
           {i.price !== undefined ? 
             <div
-              className={`date-icon ${selected} ${active}`}
+              className={`date-icon ${selected} ${active} ${nonDispo}`}
               data-active-month={i.currentMonth}
               data-date={i.date.toString()}
               key={key}
@@ -75,12 +81,10 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
               </div>
               {i.promotions !== undefined && i.promotions.length > 0 ? <div style={{height: "3px", backgroundColor: "blue"}}></div> : null}
             </div> : 
-            <div
-              key={key}
-              style={{backgroundImage: "nonDispo.png"}}
-            > 
-              <div style={{textAlign: "center"}}>
-              {getDayOfMonth(i.date)}
+            <div style={{width: "45px", height: "46px"}}>
+              <div className=" nonDispo" key={key} ></div>
+              <div style={{textAlign: "center", paddingTop: "7px"}}>
+                {getDayOfMonth(i.date)}
               </div>
             </div>
           }

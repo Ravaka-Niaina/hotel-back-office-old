@@ -36,6 +36,7 @@ const BaeCalendar = ({ theme, activeDates, onDateSelect }) => {
 
   function populatePrix(res){
     if(res.status === 200){
+      console.log(res);
       setPrix(res.result);
     }
   }

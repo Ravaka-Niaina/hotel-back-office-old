@@ -18,10 +18,12 @@ const MonthIndicator = ({ selectDate, setSelectDate, monthLater, setMonthLater, 
   };
 
   const monthSet = getMonthSet(selectDate);
-  
+  let today = new Date();
+  today = new Date(today.getFullYear(), today.getMonth(), 1);
   return (
     <div className="bae-month-indicator">
-      <ArrowBackIosNewIcon onClick={(e) => changeDate(monthSet.prev)}/>
+      {today < selectDate ? <ArrowBackIosNewIcon onClick={(e) => changeDate(monthSet.prev)} /> : 
+      <ArrowBackIosNewIcon style={{opacity: "0.5"}} />}
       <ArrowForwardIosIcon onClick={(e) => changeDate(monthSet.next)}/>
     </div>
   );
