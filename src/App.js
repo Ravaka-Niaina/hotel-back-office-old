@@ -65,7 +65,7 @@ function App() {
         <Route path="/calendrier" exact component={Calendrier} />
 
         {/*route client */}
-        <Route path="/test" exact component={test} />
+        <Route path="/imgbeauteCam/currentElinPhotoshop" exact component={test} />
 
         {/*route client */}
         <Route path="/login" exact component={Login} />
