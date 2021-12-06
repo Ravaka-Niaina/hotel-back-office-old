@@ -102,6 +102,7 @@ const FullPriceEditor = (props) => {
         { value: 6, checked: true, label: "Sat" },
         { value: 7, checked: true, label: "Sun" },
     ]); // day 1 = lundi , 7 = dimanche
+    const [toSell, setToSell] = React.useState(0);
 
     function setAllDays(checked){
         for(let i = 0; i < days.length; i++){
@@ -178,8 +179,9 @@ const FullPriceEditor = (props) => {
             console.log(prix);
 
             if(prix.length > 0){
+                console.log(prix);
                 for(let i = 0; i < guestsMax; i++){
-                    if(prix[i].trim() != ""){
+                    if((prix[i] + "").trim() != ""){
                         versions.push({nbPers: (i + 1), prix: Number.parseFloat(prix[i])});
                     }
                 }
@@ -198,12 +200,13 @@ const FullPriceEditor = (props) => {
                 versions: versions,
                 minSejour: 1,
                 dateDebut: interval[0].format("YYYY-MM-DD"),
-                dateFin: interval[1].format("YYYY-MM-DD")
+                dateFin: interval[1].format("YYYY-MM-DD"),
+                toSell: toSell
             };
             console.log(data);
             callAPI('post', '/prixTarif/insert', data, refresh);
         }
-        }
+    }
         
     
     function handleDayChange(i, checked){
@@ -232,11 +235,13 @@ const FullPriceEditor = (props) => {
     }
 
     function loadPrix(result){
+        console.log("ny azo");
         console.log(result);
         if(result.status === 200){
             let temp = [];
-            for(let i = 0; i < result.prixTarif.length; i++){
-                temp.push(result.prixTarif[i].prix);
+            setToSell(result.prixTarif.toSell);
+            for(let i = 0; i < result.prixTarif.versions.length; i++){
+                temp.push(result.prixTarif.versions[i].prix);
             }
             setPrix(temp);
         }else{
@@ -246,7 +251,7 @@ const FullPriceEditor = (props) => {
 
     function getPrix(newValue){
         console.log("rate = " + newValue);
-        if(rate > 1){
+        if(newValue > 1){
             const data = {
                 idTarif: tarifs[newValue - 1]._id,
                idTypeChambre: props.typechambre._id,
@@ -307,6 +312,9 @@ const FullPriceEditor = (props) => {
                     InputLabelProps={{
                         shrink: true,
                     }}
+                    value={toSell}
+                    type="number"
+                    onChange={(e) => setToSell(Number.parseInt(e.target.value))}
                 />
                 <br/>
                 <FormControl component="fieldset">

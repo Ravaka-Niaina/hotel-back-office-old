@@ -83,8 +83,8 @@ const getDatesInMonthDisplay = (month, year) => {
 };
 
 const getMonthSet = (selectDate) => {
-  console.log("prev = " + new Date(selectDate.getFullYear(), selectDate.getMonth(), 0));
-  console.log("next = " + new Date(selectDate.getFullYear(), selectDate.getMonth() + 2, 0));
+  // console.log("prev = " + new Date(selectDate.getFullYear(), selectDate.getMonth(), 0));
+  // console.log("next = " + new Date(selectDate.getFullYear(), selectDate.getMonth() + 2, 0));
   const result = {
     current: selectDate,
     prev: new Date(selectDate.getFullYear(), selectDate.getMonth(), 0),

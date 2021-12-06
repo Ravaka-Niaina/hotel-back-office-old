@@ -7,13 +7,14 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 import { monthsFull } from '../constants/dates';
 
-const MonthIndicator = ({ selectDate, setSelectDate, monthLater, setMonthLater }) => {
+const MonthIndicator = ({ selectDate, setSelectDate, monthLater, setMonthLater, getPrix }) => {
   const changeDate = (date) => {
     console.log("azo = " + date);
-    const firstMonth = new Date(date);
-    const secondMonth = new Date(firstMonth.getFullYear(), firstMonth.getMonth() + 1, 1);
+    let firstMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+    const secondMonth = new Date(firstMonth.getFullYear(), firstMonth.getMonth() + 2, 0);
     setSelectDate(firstMonth);
     setMonthLater(secondMonth);
+    getPrix(firstMonth, secondMonth);
   };
 
   const monthSet = getMonthSet(selectDate);

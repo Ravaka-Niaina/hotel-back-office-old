@@ -10,6 +10,10 @@ import MonthIndicator from './components/month-indicator';
 
 import { presetDateTracker } from './utils/date-utils';
 
+import {data} from './utils/data.js';
+import callAPI from '../utility.js';
+import {getDate} from '../tarif/utility.js';
+
 const themes = {
   salmon: 'salmon-theme',
   monochrome: 'monochrome-theme',
@@ -20,25 +24,42 @@ const BaeCalendar = ({ theme, activeDates, onDateSelect }) => {
   const presetActiveDates = useRef(presetDateTracker(activeDates || []));
 
   let today = new Date();
-  today = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  today = new Date(today.getFullYear(), today.getMonth() , 1);
   const [selectDate, setSelectDate] = useState(today);
 
-  let oneMonth = new Date(selectDate);
-  oneMonth.setMonth(oneMonth.getMonth() + 2);
-  oneMonth.setDate(0);
+  let oneMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0);
   const [monthLater, setMonthLater] = useState(oneMonth);
 
   const [bornes, setBornes] = useState({debut: null, fin: null, isDebut: true});
 
+  let [prix, setPrix] = useState(null);
+
+  function populatePrix(res){
+    if(res.status === 200){
+      setPrix(res.result);
+    }
+  }
+
+  function getPrix(dateDebut, dateFin){
+    const data = {dateDebut: getDate(dateDebut), dateFin: getDate(dateFin)};
+    callAPI('post', '/planTarifaire/disponibilite', data, populatePrix);
+  }
+
   useEffect(() => {
+    console.log("voahantso");
+    getPrix(selectDate, monthLater);
+    //setPrix(data);
     if (onDateSelect) {
       onDateSelect(selectDate);
     }
-  }, [selectDate]);
+  }, []);
 
   return (
     <div style={{width: "fit-content", margin: "0 auto"}}>
-      <MonthIndicator selectDate={selectDate} setSelectDate={setSelectDate} monthLater={monthLater} setMonthLater={setMonthLater} />
+      <MonthIndicator 
+        selectDate={selectDate} setSelectDate={setSelectDate} 
+        monthLater={monthLater} setMonthLater={setMonthLater} 
+        getPrix={getPrix} />
       <div className={`bae-calendar-container ${themes[theme]}`}>
         <CalendarHeader selectDate={selectDate} />
         <WeekdayIndicator />
@@ -48,9 +69,10 @@ const BaeCalendar = ({ theme, activeDates, onDateSelect }) => {
           setSelectDate={setSelectDate}
           bornes={bornes}
           setBornes={setBornes}
+          prix={prix}
         />
       </div>
-      <div style={{width: "20px", display: "inline-block"}}></div>
+      <div style={{width: "20px", height: "20px", display: "inline-block"}}></div>
       <div className={`bae-calendar-container ${themes[theme]}`}>
         <CalendarHeader selectDate={monthLater} />
         <WeekdayIndicator />
@@ -60,6 +82,7 @@ const BaeCalendar = ({ theme, activeDates, onDateSelect }) => {
           setSelectDate={setMonthLater}
           bornes={bornes}
           setBornes={setBornes}
+          prix={prix}
         />
       </div>
     </div>
