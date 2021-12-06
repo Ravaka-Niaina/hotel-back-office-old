@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export  function APIGeT(method , url , callback){
+export default function APIGeT(method , url , callback){
     axios ({
         method : method,
         url : process.env.REACT_APP_BACK_URL + url,

@@ -6,7 +6,14 @@ import {Link} from 'react-router-dom';
 import React from "react";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { useCookies } from 'react-cookie';
 const axios = require('axios').default;
+
+function Typecookie(type){
+  const [cookies, setCookie] = useCookies();
+  return setCookie('type', type, { path: '/' });
+}
+
 
 class Login extends React.Component{
 
@@ -15,13 +22,26 @@ class Login extends React.Component{
     this.state = {
       email: '',
       mdp: '',
-      errors: []
+      errors: [], 
+      type : ""
     };
   }
+
   tryRedirectToHome(res){
     console.log(res);
+    this.state.type = res.type;
     if(res.status === 200){
-      this.props.history.push('/');
+      if(res.type == "61aa0a7fd50d02f54b01a3ed"){
+        this.props.history.push('/frontClient');
+      }
+      if(res.type == "61aa0a7fd50d02f54b01a3ee"){
+        this.props.history.push('/');
+      }
+      if(res.type == "61aa0a7fd50d02f54b01a3ec"){
+        this.props.history.push('/');
+      }
+      //Typecookie(res.type);
+      
     }else{
       let currentState = JSON.parse(JSON.stringify(this.state));
       currentState.errors = res.errors;
@@ -114,7 +134,6 @@ class Login extends React.Component{
                 </p>
             </Link>
             <div className="footer">
-              {/* <button type="button" className="btn" id="btn" onClick={(e) => this.login(e)}>Login</button> */}
               <Button 
               variant="contained" 
               style={{backgroundColor:'#1E90FF'}} 
@@ -124,7 +143,7 @@ class Login extends React.Component{
             </div>
           </div>
         </div>
-      </div>
+      </div> 
     );
   }
   

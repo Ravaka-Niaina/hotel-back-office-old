@@ -9,6 +9,8 @@ import TableRow from '@mui/material/TableRow';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
+import Navbar from '../Navbar/Navbar.js';
+import APIGeT from "./utility.js";
 
 const utility = require("./utility.js");
 
@@ -45,7 +47,7 @@ class ListPolitique extends React.Component{
     
     componentDidMount(){
        let url = '/politique/list', method ='get';
-       utility.APIGeT(method, url , this.functionAppelList);
+       APIGeT(method, url , this.functionAppelList);
     }
 
     deletePolitiqueAnnulation(id , nom ){
@@ -89,6 +91,8 @@ class ListPolitique extends React.Component{
         
  
         return(
+            <>
+            <Navbar currentPage={2}/>
             <div style = {{padding :"5%"}}>
                 <Link to={'/politique'}>
                     <Button variant ="contained">Insert Politique</Button> 
@@ -108,22 +112,14 @@ class ListPolitique extends React.Component{
                             </TableCell>
                             <TableCell align="center"><strong>Actions</strong></TableCell>
                         </TableRow>
-                        {/*<TableRow>
-                            <TableCell align="center"></TableCell>
-                            <TableCell align="center"></TableCell>
-                            <div align="center">
-                                <TableCell align="center"><strong>DateTime</strong></TableCell>
-                                <TableCell align="center"><strong>type</strong></TableCell>
-                                <TableCell align="center"><strong>%</strong></TableCell>
-                            </div>
-                            <TableCell align="center"><strong></strong></TableCell>
-                        </TableRow>*/}
+                        
                     </TableHead>
                             <TableBody>
                                 { list }   
                             </TableBody>
                 </Table>
             </div>
+            </>
         );
     }
 }

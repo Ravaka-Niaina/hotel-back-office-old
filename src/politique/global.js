@@ -7,10 +7,11 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Radio from '@mui/material/Radio';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl'
-import InputAdornment from '@mui/material/InputAdornment';
+import Alert from '@mui/material/Alert';
 import {useEffect} from 'react';
 import callAPI from '../utility.js';
-import { useParams, useHistory } from 'react-router-dom'
+import Navbar from '../Navbar/Navbar.js'
+import { useParams, useHistory, Link } from 'react-router-dom'
 import "./global.css";
 import axios from "axios";
 
@@ -22,15 +23,14 @@ function Global(){
     const[description, setDescription] = useState('');
     const[show , setShow] = useState(false);
     const[message  , setMessage] = useState("");
-    const [griseAdd , setGrise] = useState(true);
+    const [griseAdd , setGrise] = useState(false);
 
-    const[messageErrDate , setmessageErrDate] = useState("");
     const { _id } = useParams();        
     
        
     let history = useHistory();
     const functionAppel=(res)=>{
-        console.log(res);
+        console.log(res.status);
         if(res.status == 500){
             setMessage(res.message);
         }else if(res.status == 200 ){
@@ -50,13 +50,15 @@ function Global(){
 
         let temp = 0;
         for (let i = 0; i < list.length ; i++){
-            let convert = Number.parseFloat(list[i].pourcentage); 
-            temp = temp + convert;  
+            if(list[i].pourcentage != null){
+                let convert = Number.parseFloat(list[i].pourcentage); 
+                temp += convert;  
+            }
         }
         if(temp > 100 ){
-            setGrise(false);
-        }else{
             setGrise(true);
+        }else{
+            setGrise(false);
         }
         let rest = (100 - temp);
         setVal(rest);
@@ -69,12 +71,28 @@ function Global(){
     current[indice][fieldname] = e.target.value;
     setDatePrice(current);
    }
-    
-    const handleRemoveClick = index => {
+   const handleRemoveClick = index => {
+        const list = JSON.parse(JSON.stringify(datePrice));
+        if(list[index].pourcentage !== null){
+            let convert = Number.parseFloat(list[index].pourcentage);
+            let convertValue = Number.parseFloat(valueP);
+            setVal(convertValue+convert);
+        }
+        if(valueP > 100){
+            setGrise(true);
+        }else{
+            setGrise(false);
+        }
+        list.splice(index , 1);
+        setDatePrice(list);
+   }
+    /*const handleRemoveClick = index => {
         const list = [...datePrice];
         list.splice(index, 1);
         setDatePrice(list);
-    };
+        
+        
+    };*/
     
     // handle click event of the Add button
     const handleAddClick = () => {
@@ -112,11 +130,19 @@ function Global(){
             if(data.politique.datePrice.length != 0){
                 let current = JSON.parse(JSON.stringify(datePrice));
                 current = data.politique.datePrice;
-                setDatePrice(current);
+                let temp = 0;
+                for(let i = 0 ; i < data.politique.datePrice.length; i++){
+                    temp += data.politique.datePrice[i].pourcentage;
+                }
+                let rest = (100 - temp);
+                setVal(rest);
                 setShow(true);
+                setDatePrice(current);
+                
             }else{
                 console.log("datePriceVide")
             }
+            console.log(show);
         }else{
             console.log("setListPolitiqueAnnulation");
         }
@@ -140,7 +166,7 @@ function Global(){
             datePrice[i].pourcentage = Number.parseInt(datePrice[i].pourcentage); 
         }
         if(show){
-           callAPI('post' , "/politique/insertionPolitique" ,{nom : nom ,description : description, type : dateTime , datePrice : datePrice , remboursable : true}, functionAppel)
+            callAPI('post' , "/politique/insertionPolitique" ,{nom : nom ,description : description, type : dateTime , datePrice : datePrice , remboursable : true}, functionAppel)
         }else{
             callAPI('post' , "/politique/insertionPolitique" ,{nom : nom ,description : description,  remboursable : false}, functionAppel)
         }
@@ -171,7 +197,6 @@ function Global(){
                 />
                 <TextField 
                     id="outlined-size-small"
-                    defaultValue="Small"
                     size="small"
                     type="number"
                     name="date"
@@ -189,7 +214,6 @@ function Global(){
                 />
                 <TextField
                     id="outlined-size-small"
-                    defaultValue="Small"
                     size="small"
                     name="pourcentage"
                     type="number"
@@ -208,7 +232,9 @@ function Global(){
             })
 
         return (
-            <div className="container" style={{marginTop : "50px"}}>
+            <>
+            <Navbar currentPage={2}/>
+            <div className="container" style={{marginTop : "100px"}}>
                 <div className ="row">
                     <div className ="col-md-2"></div>
                         <div className ="col-md-8" style ={{boxShadow : '0 0 20px 0 rgb(0 0 0 / 20%), 0 5px 5px 0 rgb(0 0 0 / 25%)'}} ><br/>
@@ -217,12 +243,12 @@ function Global(){
                             <span>Y a-t-il une période pendant laquelle le client peut annuler gratuitement?</span><br/>
                             <RadioGroup
                                 aria-label="gender"
-                                defaultValue="false"
+                                value={show}
                                 name="radio-buttons-group"
                             >
-                                <FormControlLabel value="true" checked={show.checkedOui}  label="oui" 
+                                <FormControlLabel value="true" label="oui" 
                                     control={<Radio onClick = {(e) => setShow(true) }/>}/>
-                                <FormControlLabel value="false"  label="non" checked={show.checkedNon}
+                                <FormControlLabel value="false"  label="non"
                                     control={<Radio onClick = {(e) => setShow(false) }/>}/>
                             </RadioGroup>
                             <strong>precisez les conditions</strong>
@@ -231,7 +257,7 @@ function Global(){
                                         <div style = {{marginTop : "20px"}}>
                                             <div style = {{marginTop : "20px"}}>
                                                 <FormControl component="fieldset">
-                                                <RadioGroup row aria-label="gender" name="row-radio-buttons-group"  defaultValue={dateTime}>
+                                                <RadioGroup row aria-label="gender" name="row-radio-buttons-group"  value={dateTime}>
                                                 <FormControlLabel value="jour" control={<Radio size="small"/>} 
                                                         label="jour" onClick={(e) => handlechangeType(e)}/>
                                                     <FormControlLabel value="heure" control={<Radio size="small" />} 
@@ -240,8 +266,7 @@ function Global(){
                                                 </FormControl>
                                             </div><br/> 
                                             {date} 
-                                            <span style={{marginLeft :"30px" ,color :"red"}}>{message}</span><br/> 
-                                            
+                                           <br/>
                                         <div>
                                             <input
                                                 style={{width : "70px" , borderStyle: "none" , backgroundColor : "white" , minWidth : "0px"}}
@@ -249,7 +274,6 @@ function Global(){
                                             />
                                             <TextField 
                                                 id="outlined-size-small"
-                                                defaultValue="Small"
                                                 size="small"
                                                 name="pourcentage"
                                                 type="number"
@@ -265,20 +289,26 @@ function Global(){
                                             />
                                             <TextField
                                                 id="outlined-size-small"
-                                                defaultValue="Small"
                                                 size="small"
                                                 name="pourcentage"
                                                 type="number"
                                                 value={valueP}
                                                 disabled
                                             />    
-                                        </div><br/> 
-                                            <Button variant="contained" endIcon={<AddIcon />} 
+                                        </div>
+                                        { 
+                                            griseAdd ?
+                                            <Button variant="contained" endIcon={<AddIcon />} disabled
                                                     onClick={handleAddClick}><span style ={{color : "white"}} >Add</span>
-                                            </Button>   
-                                        <br/></div>
+                                            </Button>  : 
+                                             <Button variant="contained" endIcon={<AddIcon />} 
+                                                    onClick={handleAddClick}><span style ={{color : "white"}} >Add</span>
+                                            </Button>
+                                        }  
+                                        </div>
                                     :  ""
-                                } 
+                                } <br/>
+                                {message !== "" ? <Alert severity="error">{message}</Alert> : " " }<br/> 
                                 <div style = {{marginTop :"15px"}}> 
                                     <strong >Nom politique : </strong>
                                         <TextField
@@ -308,10 +338,10 @@ function Global(){
                                             />
                                 </div> <br/>
                                 
-                                   <div style = {{width : "fit-content" , margin : "0 auto"}}>
+                                   <div style = {{width : "fit-content" , margin : " 0 auto" }}>
                                        { 
                                         _id == null ? 
-                                           <div> 
+                                           <> 
                                                {
                                                     nom == "" ? 
                                                     <Button variant="contained" color="success" onClick={(e) => insert()} disabled>
@@ -321,8 +351,8 @@ function Global(){
                                                         Sauvegarder
                                                     </Button>
                                                 }
-                                            </div> :
-                                            <div> 
+                                            </> :
+                                            <> 
                                                 {
                                                      nom == "" ? 
                                                      <Button variant="contained" color="success" onClick={(e) => update()} disabled >
@@ -333,17 +363,19 @@ function Global(){
                                                     </Button>
 
                                                 }   
-                                            </div> 
+                                            </> 
                                             
                                         }
+                                            <Link to ="/politique/list">
+                                                <Button variant="contained" style={{marginLeft : "2px"}}>retour</Button>
+                                            </Link>
                                     </div> <br/>
                                               
                         </div>
-                    <div className ="col-md-2">
-                        
-                    </div>
+                        <div className ="col-md-2"></div>
                 </div>
             </div>
+            </>
         );
     
 }
