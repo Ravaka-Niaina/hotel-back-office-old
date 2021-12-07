@@ -289,7 +289,6 @@ class Filtre extends React.Component{
                 console.log('filtre en cours...');
                 callAPI('post', '/typeChambre/', {filtres: this.state.filtres, guests: this.props.context.state.guests}, this.setResult);
         }else{
-            console.log("misy olana");
             this.props.context.handleChange("errFiltre", 'Veuillez remplir les champs Adulte, Enfant, Debut sejour et fin sejour au moins');
         }
         

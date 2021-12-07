@@ -54,35 +54,39 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
   let today = new Date();
   today = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const monthDates = datesInMonth.map((i, key) => {
-    const selected = '';
     const temp = new Date(utility.getDate(i.date));
-    const active = debut <= temp && fin >= temp ? 'active' : '';
-    const nonDispo = i.price !== undefined ? "" : "nonDispo";
-    console.log(i.date);
-    let today = new Date();
-    today = new Date(today.getFullYear(), today.getMonth(), 1);
+    let notValid = "";
+    let price = "";
+    if(today > i.date){
+      notValid = "hier";
+    }else if(i.price === undefined){
+      notValid = "nonDispo";
+    }else{
+      price = "€ " + i.price;
+      notValid = notValid + " date-icon";
+    }
+
+    if(debut <= temp && fin >= temp){
+      notValid = notValid + " active";
+    }
     return (
       <div>
         {i.currentMonth ? 
           <div>
           {i.price !== undefined ? 
             <div
-              className={`date-icon ${selected} ${active} ${nonDispo}`}
+              className={`${notValid}`}
               data-active-month={i.currentMonth}
               data-date={i.date.toString()}
               key={key}
               onClick={(e) => changeDate(utility.getDate(i.date))}
             > 
-              <div style={{textAlign: "center"}}>
-              {getDayOfMonth(i.date)}
-              </div>
-              <div style={{textAlign: "center"}}> 
-              {"€ "+i.price}
-              </div>
+              <div style={{textAlign: "center"}}> {getDayOfMonth(i.date)} </div>
+              <div style={{textAlign: "center"}}> {price} </div>
               {i.promotions !== undefined && i.promotions.length > 0 ? <div style={{height: "3px", backgroundColor: "blue"}}></div> : null}
             </div> : 
             <div style={{width: "45px", height: "46px"}}>
-              <div className=" nonDispo" key={key} ></div>
+              <div className={`${notValid}`} key={key} ></div>
               <div style={{textAlign: "center", paddingTop: "7px"}}>
                 {getDayOfMonth(i.date)}
               </div>
