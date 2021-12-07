@@ -10,9 +10,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import Navbar from '../Navbar/Navbar.js';
-import APIGeT from "./utility.js";
+import APIGeT from "../APiGet.js";
 
-const utility = require("./utility.js");
 
 function DatePrice(props){
     let datePrice = [];

@@ -31,6 +31,7 @@ import  Reservation  from "./components/client/reservation.js";
 import ListPolitique from "./politique/listpolitique.js"
 import  ApplyReservation  from "./components/client/applyReservation.js";
 import  BasicDateRangePicker  from "./components/client/dateSejourClient";
+import  listeUser  from "./components/User/listeUser";
 
 
 function App() {
@@ -67,9 +68,11 @@ function App() {
         {/*route client */}
         <Route path="/imgbeauteCam/currentElinPhotoshop" exact component={test} />
 
-        {/*route client */}
+
+        {/*route user */}
         <Route path="/login" exact component={Login} />
         <Route path="/Register" exact component={Register} />
+        <Route path="/userList" exact component={listeUser} />
         {/*
         <Route path="/Home" exact component={Home} />
         <Route path="/TypeChambre/" exact component={ListTypeChambre} />
