@@ -12,7 +12,8 @@ import moment from 'moment';
 
 
 import Datee from "./date";
-import DateSejour from "./DateSejour"
+import DateSejour from "./DateSejour";
+import BaeCalendar from "../../calendar/calendar.js";
 
 function TestCookie(){
     const [cookies, setCookie] = useCookies(['name']);
@@ -176,7 +177,10 @@ class Scroll extends React.Component{
                 <TestCookie />
                 <div className="scroll-bg" >
                     <div style ={{ width :"fit-content" , margin :"0 auto"}}>
-                        <Datee context = {this} style = {{marginLeft : "50px"}}/><hr/>
+                        <div style={{backgroundColor: "white"}}>
+                            <BaeCalendar context = {this} />
+                        </div>
+                        {/*<Datee context = {this} style = {{marginLeft : "50px"}}/><hr/>*/}
                     </div >
                     <div class="row">
                         <div className="col">

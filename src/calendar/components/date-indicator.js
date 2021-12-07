@@ -8,7 +8,7 @@ import {
 import { getDatesInMonthDisplay } from '../utils/date-utils';
 const utility = require('../../tarif/utility.js');
 
-const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBornes, prix }) => {
+const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBornes, prix, context }) => {
   const changeDate = (day) => {
     setSelectDate(new Date(day));
     let temp = JSON.parse(JSON.stringify(bornes));
@@ -21,6 +21,8 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
       temp.isDebut = true;
     }
     setBornes(temp);
+    const dates = [temp.debut, temp.fin];
+    context.haddleChangeDate(dates);
   };
 
   const datesInMonth = getDatesInMonthDisplay(

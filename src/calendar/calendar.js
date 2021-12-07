@@ -20,7 +20,7 @@ const themes = {
   rouge: 'rouge-theme',
 };
 
-const BaeCalendar = ({ theme, activeDates, onDateSelect }) => {
+const BaeCalendar = ({ theme, activeDates, onDateSelect, context }) => {
   const presetActiveDates = useRef(presetDateTracker(activeDates || []));
 
   let today = new Date();
@@ -47,12 +47,12 @@ const BaeCalendar = ({ theme, activeDates, onDateSelect }) => {
   }
 
   useEffect(() => {
-    console.log("voahantso");
     getPrix(selectDate, monthLater);
     //setPrix(data);
     if (onDateSelect) {
       onDateSelect(selectDate);
     }
+    console.log(context);
   }, []);
 
   return (
@@ -71,6 +71,7 @@ const BaeCalendar = ({ theme, activeDates, onDateSelect }) => {
           bornes={bornes}
           setBornes={setBornes}
           prix={prix}
+          context={context}
         />
       </div>
       <div style={{width: "20px", height: "20px", display: "inline-block"}}></div>
@@ -84,6 +85,7 @@ const BaeCalendar = ({ theme, activeDates, onDateSelect }) => {
           bornes={bornes}
           setBornes={setBornes}
           prix={prix}
+          context={context}
         />
       </div>
     </div>
