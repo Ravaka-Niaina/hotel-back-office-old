@@ -10,7 +10,6 @@
 .scroll-div{
 	width: 880px;
 	background: rgb(250, 250, 250);
-	max-height: 510px;
 	overflow: hidden;
 	overflow-y: scroll;
   

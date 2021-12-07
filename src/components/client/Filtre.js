@@ -287,7 +287,15 @@ class Filtre extends React.Component{
         if((this.props.context.state.guests.nbEnfant !== 0 || this.props.context.state.guests.nbAdulte !== 0)
             && (this.props.context.state.dateSejour.debut !== "" && this.props.context.state.dateSejour.fin !== "")){
                 console.log('filtre en cours...');
-                callAPI('post', '/typeChambre/', {filtres: this.state.filtres, guests: this.props.context.state.guests}, this.setResult);
+                console.log(this.state.filtres);
+                console.log(this.props.context.state.guests);
+                const data = {
+                    filtres: this.state.filtres, 
+                    guests: this.props.context.state.guests, 
+                    dateDebut: this.props.context.state.dateSejour.debut,
+                    dateFin: this.props.context.state.dateSejour.fin
+                }
+                callAPI('post', '/typeChambre/', data, this.setResult);
         }else{
             this.props.context.handleChange("errFiltre", 'Veuillez remplir les champs Adulte, Enfant, Debut sejour et fin sejour au moins');
         }

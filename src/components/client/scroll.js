@@ -59,6 +59,8 @@ class Scroll extends React.Component{
         currentState.changeDateSejour = true;
         currentState.dateSejour.debut = "";
         currentState.dateSejour.fin = "";
+        currentState.listTypeChambre = [];
+        currentState.showFiltre = false;
         //currentState.openChangeDateSejour = true;
         this.setState(currentState);
     }
@@ -169,7 +171,6 @@ class Scroll extends React.Component{
         current.reservation.push(this.state.reservation.length);
         this.setState(current);
     }
-
     
     render(){
         return(
