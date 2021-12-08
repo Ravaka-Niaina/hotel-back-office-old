@@ -73,7 +73,7 @@ function DateSejour(props) {
   return (
     <div>
       Date Sejour : 
-        <Button variant="contained" onClick={handleOpen} >
+        <Button variant="contained">
           <span style ={{color :"white"}}> 
               Date Debut : {props.context.state.dateSejour.debut} &nbsp;&nbsp; - &nbsp;&nbsp;
               Date Fin : {props.context.state.dateSejour.fin}

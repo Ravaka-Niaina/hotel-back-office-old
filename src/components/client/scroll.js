@@ -141,23 +141,12 @@ class Scroll extends React.Component{
         }
       
     }
-    setReservationEnCours(res){
-        console.log(res);
-        if(res.status == 401){// Acces non autorise
-            console.log("Access non autorise");
-            this.handleChange("open", true);
-        }else if(res.status == 200){
-            let currentState = JSON.parse(JSON.stringify(this.state));
-            currentState.reservationEnCours = res.reservation;
-            try{
-                currentState.itineraires = res.reservation.itineraires; 
-            }catch(err){
-                console.log(err);
-                currentState.itineraires = [];
-            }
-            console.log(currentState.itineraires);
-            this.setState(currentState);
-        }
+    setReservationEnCours(reservation){
+        console.log(reservation);
+        let currentState = JSON.parse(JSON.stringify(this.state));
+        currentState.reservationEnCours = reservation;
+        currentState.itineraires = reservation.itineraires;
+        this.setState(currentState);
     }
 
     validerReservation(){

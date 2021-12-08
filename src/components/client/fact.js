@@ -78,7 +78,6 @@ function Reservations(props){
 function Itineraires(props){
     let itineraires = [];
     for(let i = 0; i < props.context.state.itineraires.length; i++){
-        console.log("misy itineraire");
         itineraires.push(
             <div>
                 <div class="row mb-4">
@@ -167,7 +166,6 @@ class Fact extends React.Component{
     }
 
     componentDidMount(){
-        console.log("maka reservation en ligne");
         axios({
             method: 'get',
             url: process.env.REACT_APP_BACK_URL + '/reservation/',
@@ -175,12 +173,8 @@ class Fact extends React.Component{
             data: {}
         })
         .then(res => {  
-            console.log(res); 
-            try{
-                res.data.reservation = res.data.reservation[0];
-            }catch(err2){ 
-                this.props.context.setReservationEnCours(res.data)
-            }
+            console.log(res.data.reservation[0]); 
+            this.props.context.setReservationEnCours(res.data.reservation[0]);
         }).catch(err => console.log(err));
     }
 
