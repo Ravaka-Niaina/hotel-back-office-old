@@ -279,7 +279,6 @@ class Filtre extends React.Component{
         let currentState = JSON.parse(JSON.stringify(this.props.context.state));
         currentState.listTypeChambre = res.list;
         this.props.context.setState(currentState);
-        console.log(this.props.context.state);
     }
     applyFilter(){
         console.log({filtres: this.state.filtres, guests: this.props.context.state.guests});

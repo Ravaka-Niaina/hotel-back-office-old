@@ -77,6 +77,14 @@ function getDate(date){
 
 function ListTarif(props){
 
+    function setReservationEnCours(res){
+        if(res.status === 200){
+            props.context.setReservationEnCours(res.reservation);
+        }else{
+            console.log(res);
+        }
+    }
+
     function addReservation(e ,id, nom, idTypeChambre){
         if(props.context.state.itineraires.length > 0){
             let itineraires = JSON.parse(JSON.stringify(props.context.state.itineraires));
@@ -95,7 +103,7 @@ function ListTarif(props){
                 data: {itineraires: itineraires}
             })
             .then(res => {                                                  
-                props.context.setReservationEnCours(res.data)})
+                setReservationEnCours(res.data)})
             .catch(err => console.log(err));
         }
     }
