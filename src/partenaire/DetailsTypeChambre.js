@@ -162,7 +162,7 @@ class DetailsTypeCHambre extends React.Component{
         axios({
             method: 'get',
             url: process.env.REACT_APP_BACK_URL +
-                "/typeChambre/details/" + this.props.match.params._id + '?id',
+                "/typeChambre/details/" + this.props.match.params._id ,
             withCredentials: true
         })
         .then(res => this.setDetailsTypeChambre(res.data))
@@ -233,27 +233,7 @@ class DetailsTypeCHambre extends React.Component{
         }
       }
 
-    /*
-    handlePhotoChange(event){
-        let currentState = JSON.parse(JSON.stringify(this.state));
-        if(event.target.files[0]){
-            let img = event.target.files[0];
-            const r = /^image/;
-            if(r.test(img.type)){
-                const reader = new FileReader();
-                reader.onload = (evt) => {
-                    currentState.typeChambre.photo = evt.target.result;
-                    currentState.previewPhoto = evt.target.result;
-                    this.setState(currentState);
-                }
-                reader.readAsDataURL(img);
-            }else{
-                currentState.previewPhoto = this.noImage;
-                this.setState(currentState);
-            }
-        }
-    }
-    */
+   
 
     handleCheckBoxPlanTarifaire(e, index){
         let current = JSON.parse(JSON.stringify(this.state));

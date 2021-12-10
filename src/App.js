@@ -46,6 +46,8 @@ import APIGet from "./APiGet.js"
 import {BrowserRouter as Router, Route , useHistory ,Switch} from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
+import  ListTChambre  from "./partenaire/ListTChambre.js";
+
 function  Boucleroute(props){
     let route = props.ReponseRoute.map(list => {
       return (
@@ -96,7 +98,7 @@ function App(){
        }
     }
   }
-
+/*
   function responseList(data){
       console.log(data);
       setRoute(data.routeAccess);
@@ -113,26 +115,13 @@ function App(){
       APIGet("get" , "/access/dataAccess/"+id , responseList);
     }
     
-  }, []); 
+  }, []); */
   
   return(
     <div className="App"> 
       <Router>
-          <Boucleroute ReponseRoute ={ReponseRoute}/>
-          <Route path="/" exact component={home} />
-          <Route path="/login" exact component={Login} />
-          <Route path="/Register" exact component={Register} />
-      </Router>
-    </div>
-  );
-
-}
-export default App;
-/*
-function App() {
-  return (
-    <div className="App">
-      <Router>
+        <Route path="/ListTC" exact component={ListTChambre} />
+        
         <Route path="/TypeChambre/search" exact component={searchTypeChambre} />
         <Route path="/guest" exact component={guest} />
         <Route path="/hideShow" exact component={hideShow} />
@@ -153,7 +142,7 @@ function App() {
         <Route path="/tarif" exact component={Tarif} />
         <Route path="/tarif/insert" exact component={InsertTarif}/>
         <Route path="/tarif/details/:_id" exact component={DetailsTarif} />
-       
+      
         <Route path="/chambre" exact component={InsertChambre} />
         <Route path="/politique" exact component={Global} />
         <Route path="/politique/detail/:_id" exact component={Global} />
@@ -167,7 +156,7 @@ function App() {
         <Route path="/Register" exact component={Register} />
         <Route path="/userList" exact component={listeUser} />
         <Route path="/Register/:_id" exact component={Register} />
-         
+        
         <Route path="/frontClient" exact component={Front_client} />
         <Route path="/devis" exact component={Devis} />
 
@@ -175,6 +164,18 @@ function App() {
         <Route path="/reservation/:_id/apply" exact component={ApplyReservation} />
 
         <Route path="/CalendarClient" exact component={BasicDateRangePicker} />
+      </Router>
+    </div>
+  );
+
+}
+export default App;
+/*
+function App() {
+  return (
+    <div className="App">
+      <Router>
+     
 
       </Router>
     </div>
