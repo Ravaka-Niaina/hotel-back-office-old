@@ -9,6 +9,8 @@ import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button'
 import APiGet from '../../APiGet.js';
 import Navbar from '../../Navbar/Navbar.js';
+import { Link } from 'react-router-dom';
+
 
 class ListeUser extends React.Component{
     constructor(props){
@@ -20,7 +22,6 @@ class ListeUser extends React.Component{
         this.activation = this.activation.bind(this);
         this.deactivation = this.deactivation.bind(this);
     }
-    
 
     setValue(data){
         console.log(data);
@@ -45,7 +46,8 @@ class ListeUser extends React.Component{
     }
 
     componentDidMount(){
-        APiGet("get" , "/user/listePartenaire" , this.setValue)
+        APiGet("get" , "/user/listePartenaire" , this.setValue);
+        
     }
 
     activer(event , value){
@@ -55,6 +57,7 @@ class ListeUser extends React.Component{
     desactiver(event , value){
         APiGet("get" , "/user/deactivate/"+value , this.deactivation)
     }
+   
 
     render(){
         let listeU = null;
@@ -63,29 +66,28 @@ class ListeUser extends React.Component{
                 <TableRow>
                     <TableCell align="center"><strong>{liste.nom}</strong></TableCell>
                     <TableCell align="center"><strong>{liste.prenom}</strong></TableCell>
-                    <TableCell align="center"><strong>{
-                            liste.active ? 
-                                <FormControlLabel 
-                                    control={<Checkbox defaultChecked/>}
-                                    label = ""
-                                    disabled
-                                /> : 
-                                <FormControlLabel 
-                                    control={<Checkbox/>}
-                                    label = ""
-                                    disabled
-                                />
-                         } </strong></TableCell>
+                    <TableCell align="center"><strong>
+                        <FormControlLabel 
+                            label = ""
+                            control={<Checkbox  checked={liste.active}/>}
+                            disabled
+                        /> 
+                    </strong></TableCell>
                     <TableCell align="center">
                         <strong>
                             {
                                 liste.active ? 
-                                <button className="btn"  onClick = {(e) => this.desactiver(e , liste._id)}
+                                <button size = "small"  onClick = {(e) => this.desactiver(e , liste._id)}
                                     style={{textDecoration:'none',backgroundColor:' #2F4050',color:'white'}}>
                                     desactiver 
                                 </button> :
-                                <Button variant="contained" onClick = {(e) => this.activer(e , liste._id)}>Activer</Button>
+                                <Button size = "small" variant="contained" onClick = {(e) => this.activer(e , liste._id)}>Activer</Button>
                             }
+                            <Link to={'/Register/'+liste._id}> 
+                                <Button variant="contained" size = "small" style={{textDecoration:'none',backgroundColor:'green',
+                                    color:'white'}}> detail
+                                </Button>
+                            </Link>
                         </strong>
                     </TableCell>
                 </TableRow>

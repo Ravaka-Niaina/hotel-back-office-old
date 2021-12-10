@@ -1,3 +1,4 @@
+import Cookies from 'universal-cookie';
 import  Sidebar  from "../../Sidebar/Sidebar";
 import  Navbar  from "../../Navbar/Navbar";
 import CustomError from '../../CustomError';
@@ -9,45 +10,46 @@ import Button from '@mui/material/Button';
 import { useCookies } from 'react-cookie';
 const axios = require('axios').default;
 
+
+
 function Typecookie(type){
+  console.log(type);
   const [cookies, setCookie] = useCookies();
-  return setCookie('type', type, { path: '/' });
+  return setCookie('idSession', type, { path: '/' });
 }
 
 
 class Login extends React.Component{
-
   constructor(props){
     super(props);
     this.state = {
       email: '',
       mdp: '',
       errors: [], 
-      type : ""
+      type : "" 
     };
   }
 
   tryRedirectToHome(res){
     console.log(res);
-    this.state.type = res.type;
+    this.state.type = res.idSession;
     if(res.status === 200){
-      if(res.type == "61aa0a7fd50d02f54b01a3ed"){
-        this.props.history.push('/frontClient');
-      }
-      if(res.type == "61aa0a7fd50d02f54b01a3ee"){
-        this.props.history.push('/');
-      }
-      if(res.type == "61aa0a7fd50d02f54b01a3ec"){
-        this.props.history.push('/');
-      }
-      //Typecookie(res.type);
-      
+      const cookie = new Cookies();
+      cookie.set('sessionId', this.state.type , { path: '/' })
+      window.location.href = "/"
+      //this.props.history.push("/");
     }else{
       let currentState = JSON.parse(JSON.stringify(this.state));
       currentState.errors = res.errors;
       this.setState(currentState);
     }
   }
+
+  componentDidMount(){
+      const cookie = new Cookies();
+      cookie.set('sessionId', "V01", { path: '/login' });
+        
+    }
 
   handleEmailChange(event){
     const currentState = JSON.parse(JSON.stringify(this.state));

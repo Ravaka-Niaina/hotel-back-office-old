@@ -27,6 +27,7 @@ export function ChambresAtrb(props){
     let list = props.chambresAtrb.map(chambre => {
         i++;
         let u = i;
+        console.log(chambre.checked);
         return(
             <FormControlLabel
                 checked={chambre.checked}
@@ -98,7 +99,7 @@ export function handleInputChange3(planTarifaire, setPlanTarifaire, e, name1, na
     current[name1][name2][name3] = e.target.value;
     setPlanTarifaire(current); 
 }
-    
+    //(props.planTarifaire, props.setPlanTarifaire, e, "chambresAtrb", u, "checked")
 export function handleCheckBoxChange(planTarifaire, setPlanTarifaire, e, name1, name2, name3){
     let current = JSON.parse(JSON.stringify(planTarifaire));
     current[name1][name2][name3] = e.target.checked;
