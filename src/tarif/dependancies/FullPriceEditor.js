@@ -1,5 +1,5 @@
 import React , { useState , useEffect} from 'react';
-import {Button,Stack,TextField,Box,Radio,RadioGroup,FormControl,FormControlLabel,InputAdornment,Modal,Checkbox,InputLabel,MenuItem,Select} from '@mui/material';
+import {Button,Stack,TextField,Box,Radio,RadioGroup,FormControl,FormControlLabel,InputAdornment,Modal,Checkbox,InputLabel,MenuItem,Select, FormLabel} from '@mui/material';
 import DateRangePicker from '@mui/lab/DateRangePicker';
 import AdapterMoment from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -8,7 +8,7 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import styles from '../CalendarComponent.module.css';
 
 import callAPI from '../../utility';
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom';
 
 const getDaysBetweenDates = function(startDate, endDate) {
     var now = startDate.clone(), dates = [];
@@ -85,11 +85,13 @@ const FullPriceEditor = (props) => {
     const [tarifs, setTarifs] = React.useState([]);
     const handleChange = (event) => {
         setValue(event.target.value);
+        /*
         if(event.target.value === "close"){
             setAllDays(false);
         }else{
             setAllDays(true);
         }
+        */
     };
     const [interval, setInterval] = React.useState(props.dateRange);
     const [prix, setPrix] = React.useState([]);
@@ -103,6 +105,8 @@ const FullPriceEditor = (props) => {
         { value: 7, checked: true, label: "Sun" },
     ]); // day 1 = lundi , 7 = dimanche
     const [toSell, setToSell] = React.useState(0);
+    const [isTypeChambreOpen, setIsTypeChambreOpen] = React.useState("open");
+    const [isTarifOpen, setIsTarifOpen] = React.useState("open");
 
     function setAllDays(checked){
         for(let i = 0; i < days.length; i++){
@@ -162,6 +166,7 @@ const FullPriceEditor = (props) => {
 
     function refresh(res){
         console.log(res);
+        
         if(res.status === 200){
             console.log("Redirection en cours...");
             // reload
@@ -171,10 +176,10 @@ const FullPriceEditor = (props) => {
         }else{
             console.log("prix non configuré");
         }
+        
     }
 
-    function savePrix(){
-        if(rate > 1){
+    function savePrix(forTypeChambre, forTarif){
             let versions = [];
             console.log(prix);
 
@@ -201,11 +206,14 @@ const FullPriceEditor = (props) => {
                 minSejour: 1,
                 dateDebut: interval[0].format("YYYY-MM-DD"),
                 dateFin: interval[1].format("YYYY-MM-DD"),
-                toSell: toSell
+                toSell: toSell,
+                isTypeChambreOpen: isTypeChambreOpen === "open" ? true : false,
+                isTarifOpen: isTarifOpen === "open" ? true : false,
+                forTypeChambre: forTypeChambre,
+                forTarif: forTarif
             };
             console.log(data);
             callAPI('post', '/prixTarif/insert', data, refresh);
-        }
     }
         
     
@@ -292,11 +300,24 @@ const FullPriceEditor = (props) => {
                 <br/>
                 <span>{props.typechambre.nom}</span>
                 <br/>
+                <FormLabel component="legend">Type chambre</FormLabel>
                 <RadioGroup
                     aria-label="gender"
                     name="controlled-radio-buttons-group"
-                    value={value}
-                    onChange={handleChange}
+                    value={isTypeChambreOpen}
+                    onChange={(e) => setIsTypeChambreOpen(e.target.value)}
+                    row
+                >
+                    <FormControlLabel value="open" control={<Radio />} label="Open" />
+                    <FormControlLabel value="close" control={<Radio />} label="Close" />
+                </RadioGroup>
+
+                <FormLabel component="legend">Plan tarifaire</FormLabel>
+                <RadioGroup
+                    aria-label="gender"
+                    name="controlled-radio-buttons-group"
+                    value={isTarifOpen}
+                    onChange={(e) => setIsTarifOpen(e.target.value)}
                     row
                 >
                     <FormControlLabel value="open" control={<Radio />} label="Open" />
@@ -332,8 +353,14 @@ const FullPriceEditor = (props) => {
                 <InputPrix guestsMax={guestsMax} prix={prix} handleChangePrix={handleChangePrix} />
                 
                 <Stack direction="row" spacing={2}>
-                    <Button variant="contained" onClick={(e) => savePrix()}>
-                        Save
+                    <Button variant="contained" onClick={(e) => savePrix(true, false)}>
+                        Sauvegarder type chambre
+                    </Button>
+                    <Button variant="contained" onClick={(e) => savePrix(false, true)}>
+                        Sauvegarder tarif
+                    </Button>
+                    <Button variant="contained" onClick={(e) => savePrix(true, true)}>
+                        Sauvegarder tout
                     </Button>
                     <Button onClick={() => {props.closeModal(false); handleClose()}} variant="contained">
                         Close

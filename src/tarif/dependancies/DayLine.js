@@ -177,7 +177,7 @@ const DayLine = (props) => {
         
     }, []);
 
-    for(var i = 0; i < props.daterange.length ; i++){
+    for(var i = 0; i < props.typechambre.statusDays.length ; i++){
         daycells.push(
         <td>
             <DayCell 
@@ -186,7 +186,8 @@ const DayLine = (props) => {
                 key={i.toString()} 
                 deselectDay={rmSelection.bind(this)} 
                 selectDay={addSelection.bind(this)} 
-                selectOneDay={oneSelection.bind(this)} day={i} />
+                selectOneDay={oneSelection.bind(this)} day={i}
+                day={props.typechambre.statusDays[i].toSell} />
         </td>);
         bookedcell.push(
             <td>
