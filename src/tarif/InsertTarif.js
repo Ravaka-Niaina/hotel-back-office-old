@@ -49,7 +49,7 @@ function InsertTarif(){
     }
 
     useEffect(() => {
-        callAPI('get', '/typeChambre/TPAvecPA', {}, setListTypeChambre);
+        callAPI('get', '/TCTarif/TPAvecPA', {}, setListTypeChambre);
       }, []);
 
     function tryRedirect(res){

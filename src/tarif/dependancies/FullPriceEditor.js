@@ -166,7 +166,7 @@ const FullPriceEditor = (props) => {
 
     function refresh(res){
         console.log(res);
-        
+        /*
         if(res.status === 200){
             console.log("Redirection en cours...");
             // reload
@@ -176,7 +176,7 @@ const FullPriceEditor = (props) => {
         }else{
             console.log("prix non configuré");
         }
-        
+        */
     }
 
     function savePrix(forTypeChambre, forTarif){
@@ -213,7 +213,7 @@ const FullPriceEditor = (props) => {
                 forTarif: forTarif
             };
             console.log(data);
-            callAPI('post', '/prixTarif/insert', data, refresh);
+            callAPI('post', '/TCTarif/configPrix', data, refresh);
     }
         
     

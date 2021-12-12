@@ -294,7 +294,9 @@ class Filtre extends React.Component{
                     dateDebut: this.props.context.state.dateSejour.debut,
                     dateFin: this.props.context.state.dateSejour.fin
                 }
-                callAPI('post', '/typeChambre/', data, this.setResult);
+                console.log("miku");
+                console.log(data);
+                callAPI('post', '/TCTarif/', data, this.setResult);
         }else{
             this.props.context.handleChange("errFiltre", 'Veuillez remplir les champs Adulte, Enfant, Debut sejour et fin sejour au moins');
         }
