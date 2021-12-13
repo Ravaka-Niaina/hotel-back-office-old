@@ -1,41 +1,98 @@
 .container{
-margin-right: auto;
-margin-left: auto;
-}
-.jumbotron{
-padding: 20px 70px 20px 70px;
-width: 75%;
-}
-.jumbotron1{
-    width: 1200px;
+    margin-right: auto;
+    margin-left: auto;
+    }
+    .jumbotron{
     padding: 20px 70px 20px 70px;
+    width: 75%;
     }
-#title1{
-    font-family: Arial, Helvetica, sans-serif;
-    color: #293846;
-}
-
-#bigLabel{
-    color: #616569;
+    .jumbotron1{
+        width: 1200px;
+        padding: 20px 70px 20px 70px;
+        }
+    #title1{
+        font-family: Arial, Helvetica, sans-serif;
+        color: #293846;
+    }
+    
+    #bigLabel{
+        color: #616569;
+        font-family: 'Roboto', sans-serif;
+        font-size: 15px;
+        }
+    
+    #label{
+        color: #616569;
+        font-family: 'Roboto', sans-serif;
+        font-size: 15px;
+        }
+    
+    #libel{
+        color: #616569;
+        font-family: 'Roboto', sans-serif;
+        font-size: 15px;
+        }
+    
+    #litleLabel{
+    color: black;
     font-family: 'Roboto', sans-serif;
-    font-size: 15px;
+    font-size: 14px;
     }
-
-#litleLabel{
-color: black;
-font-family: 'Roboto', sans-serif;
-font-size: 14px;
-}
-
-#guest{
-display:inline-block;
-}
-
-.plus{
-display:inline-block;    
-}
-
-#plus{
-    background-color: gainsboro;
-    margin-top:40px;
-}
+    
+    #inputLabel{
+        color: black;
+        font-family: 'Roboto', sans-serif;
+        font-size: 14px;
+        }
+    
+    #guest{
+    display:inline-block;
+    }
+    
+    .plus{
+    display:inline-block;    
+    }
+    
+    #Plus{
+        background-color: rgb(47, 64, 80);
+        margin-top: 15px;
+        border: 1px solid;
+        margin-left: 12px;
+        color: white;
+        width: 35px;
+        height: 35px;
+        padding-top: 0px;
+    }
+    
+    #Moins{
+        background-color: rgb(47, 64, 80);
+        width: 35px;
+        height: 35px;
+        margin-top: 15px;
+        border: 1px solid;
+        margin-left: 12px;
+        color: white;
+    }
+    
+    .pied{
+        margin-left: 2%;
+    }
+    
+    div.bouton-aligne{
+        display:inline-block;
+    }
+    
+    #btn2{
+        margin-left: 10%;
+    }
+    
+    #btn1{
+        text-decoration:'none';
+        color:'black';
+    }
+    
+    #btnAdd{
+        text-decoration:'none';
+        color:'black';
+    }
+    

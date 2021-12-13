@@ -11,6 +11,10 @@ import  Navbar  from "../Navbar/Navbar";
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio'
+import {Link} from 'react-router-dom';
+import OutlinedInput from '@mui/material/OutlinedInput';
+
+
 const utility = require('./utility.js');
 
 
@@ -60,101 +64,121 @@ function DetailsTarif(){
       }, [_id]);
 
     return(
-        <div className="container">
+        <div className="">
             <Navbar currentPage={1}/>
-            <div className="row">
-                <div className="col-md-3"></div>
-                    <div className="col-md-9">
-                        <div className="jumbotron" 
-                            style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)',marginTop:'-60px'}}>
+                        <div className="jumbotron">
                             <h1 className="text-center" id='title1'>Modifier plan tarifaire</h1>
                             <hr></hr>
                             <CustomError errors={errors} />
                             <form className="needs-validation">
                                 <Box>
                                     <div style={{marginTop:'40px',display:'inline'}}>
-                                        <label style={{marginRight: '10px'}}>Nom: </label>
                                         <TextField 
-                                            id="standard-basic"
-                                            variant="standard"
+                                            id="outlined-basic"
+                                            variant="outlined"
+                                            size='small'
                                             style={{width: '300px'}}
                                             type="text"
+                                            label={
+                                                <p id='libel'>
+                                                    Nom
+                                                </p>
+                                                     }
                                             value={planTarifaire.nom}
                                             onChange={(e) => utility.handleInputChange1(planTarifaire, setPlanTarifaire, e, "nom")}
                                         />
                                     </div>
+
                                     <div style={{marginTop:'30px'}}>
-                                        <label style={{marginRight: '10px'}}>Déscription: </label>
+                                        <label style={{textDecoration: 'underline'}} id='bigLabel'>Déscription </label> 
+                                        <br/>
                                         <TextField 
-                                            id="standard-basic"
-                                            variant="standard"
-                                            style={{width: '300px'}}
+                                            id="outlined-basic"
+                                            variant="outlined"
+                                            multiline
+                                            rows={4}
+                                            rowsMax={4}
+                                            style={{
+                                            width:'100%',
+                                            height:'50px',
+                                            marginTop:'15px'
+                                                  }}
                                             type="text"
                                             value={planTarifaire.description}
                                             onChange={(e) => utility.handleInputChange1(planTarifaire, setPlanTarifaire, e, "description")}
                                         />
                                     </div>
-                                    <div style={{marginTop:'30px'}}>
+
+                                    <div style={{marginTop:'100px'}}>
                                         <div>
-                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Date de réservation: </label>
+                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} id='bigLabel'>Date de réservation </label>
                                         </div>
-                                            <div className="row">
+                                            <div className="row" style={{marginTop:'10px'}}>
                                                 <div className="col">
-                                                    <label style={{marginRight: '10px'}}>Début: </label>
-                                                    <TextField 
-                                                        id="standard-basic"
-                                                        variant="standard"
-                                                        style={{width: '200px'}}
-                                                        type="date"
-                                                        value={planTarifaire.dateReservation.debut}
-                                                        onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "dateReservation", "debut")}
+                                                    <label style={{marginRight: '10px'}} id='litleLabel'>Début: </label>
+
+                                                    <OutlinedInput
+                                                    id="outlined-adornment-weight"
+                                                    size='small'
+                                                    style={{width: '200px'}}
+                                                    type="date"
+                                                    value={planTarifaire.dateReservation.debut}
+                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "dateReservation", "debut")}
                                                     />
+
                                                 </div>
                                                 <div className="col">
-                                                    <label style={{marginRight: '10px'}}>Fin: </label>
-                                                    <TextField 
-                                                        id="standard-basic"
-                                                        variant="standard"
-                                                        style={{width: '200px'}}
-                                                        type="date"
-                                                        value={planTarifaire.dateReservation.fin}
-                                                        onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "dateReservation", "fin")}
+                                                    <label style={{marginRight: '10px'}} id='litleLabel'>Fin: </label>
+
+                                                    <OutlinedInput
+                                                    id="outlined-adornment-weight"
+                                                    size='small'
+                                                    style={{width: '200px'}}
+                                                    type="date"
+                                                    value={planTarifaire.dateReservation.fin}
+                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "dateReservation", "fin")}
                                                     />
+
                                                 </div>
                                             </div>
                                     </div>
                                     <div style={{marginTop:'30px'}}>
                                         <div>
-                                            <label className="row form-label-mt4" style={{textDecoration: 'underline'}} >Date de séjour: </label>
+                                            <label className="row form-label-mt4" style={{textDecoration: 'underline',marginLeft:'0px'}} id='bigLabel'>Date de séjour </label>
                                         </div>
-                                        <div className="row">
+                                        <div className="row" style={{marginTop:'10px'}}>
                                             <div className="col">
-                                                <label style={{marginRight: '10px'}}>Début: </label>
-                                                <TextField 
-                                                    id="standard-basic"
-                                                    variant="standard"
+                                                <label style={{marginRight: '10px'}} id='litleLabel'>Début: </label>
+
+                                                <OutlinedInput
+                                                    id="outlined-adornment-weight"
+                                                    size='small'
                                                     style={{width: '200px'}}
                                                     type="date"
                                                     value={planTarifaire.dateSejour.debut}
                                                     onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "dateSejour", "debut")}
-                                                />
+                                                    />
+
                                             </div>
                                             <div className="col">
-                                                <label style={{marginRight: '10px'}}>Fin: </label>
-                                                <TextField 
-                                                    id="standard-basic"
-                                                    variant="standard"
+                                                <label style={{marginRight: '10px'}} id='litleLabel'>Fin: </label>
+                                                <OutlinedInput
+                                                    id="outlined-adornment-weight"
+                                                    size='small'
                                                     style={{width: '200px'}}
                                                     type="date"
                                                     value={planTarifaire.dateSejour.fin}
                                                     onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "dateSejour", "fin")}
-                                                />
+                                                    />
+
                                             </div>
                                         </div>
                                     </div>
                                     <div style={{marginTop:'30px'}}>
                                         <div>
-                                            <label className="row form-label-mt4" style={{textDecoration: 'underline'}} >Lead { isLeadHour ? "hour" : "day"}: </label>
+                                            <label className="row form-label-mt4" style={{textDecoration: 'underline',fontFamily:'Roboto',fontSize:'15px',marginLeft:'0px'}} >
+                                                Lead { isLeadHour ? "hour" : "day"} 
+                                            </label>
                                         </div>
                                         <RadioGroup
                                             aria-label="Lead"
@@ -163,14 +187,15 @@ function DetailsTarif(){
                                         >
                                             <div className ="row">
                                                 <div className ="col">
-                                                    <TextField 
-                                                        id="standard-basic"
-                                                        variant="standard"
-                                                        style={{width: "200px"}}
-                                                        type="number"
-                                                        value={lead}
-                                                        onChange={(e) => setLead(e.target.value)}
+                                                <OutlinedInput
+                                                    id="outlined-adornment-weight"
+                                                    size='small'
+                                                    style={{width: "200px"}}
+                                                    type="number"
+                                                    value={lead}
+                                                    onChange={(e) => setLead(e.target.value)}
                                                     />
+
                                                 </div>
                                                 <div className ="col">
                                                     <FormControlLabel checked={isLeadHour ? true : false} value="hour" onClick={(e) => setIsLeadHour(true)} control={<Radio />} label="Hour" />
@@ -183,7 +208,7 @@ function DetailsTarif(){
                                     </div>
                                     <div style={{marginTop:'30px'}}>
                                         <div>
-                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Chambres attribuées: </label>
+                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} id='bigLabel'>Chambres attribuées </label>
                                         </div>
                                         <div>
                                             <utility.ChambresAtrb 
@@ -195,7 +220,7 @@ function DetailsTarif(){
                                     </div>
                                     <div style={{marginTop:'30px'}}>
                                         <div>
-                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Politiques d'annulation: </label>
+                                            <label className="form-label-mt4" style={{textDecoration: 'underline'}} id='bigLabel'>Politiques d'annulation: </label>
                                         </div>
                                         <utility.PolitiqueAnnulAtrb  
                                             politiqueAnnulAtrb={planTarifaire.politiqueAnnulAtrb}
@@ -205,15 +230,23 @@ function DetailsTarif(){
                                         
                                     </div>
                                 </Box>
+
                                 <div style={{marginTop:'50px'}}>
-                                    <Button variant="contained" color="success" onClick={(e) => update(e)}>
-                                        Modifier
-                                    </Button>
+
+<Button variant="contained"  style={{backgroundColor:'#FA8072'}} onClick={(e) => update(e)}>
+    Modifier
+</Button>
+<Link to='/typeChambre' style={{textDecoration:'none'}}>
+    <Button variant="contained" style={{backgroundColor:'#293846',color:'white',marginLeft:'20px'}}>
+        Retour
+    </Button>
+</Link>
                                 </div>
+
                             </form>
                         </div>
-                    </div>
-                </div>
+ 
+                
             </div>
             
     );

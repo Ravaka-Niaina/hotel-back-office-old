@@ -6,6 +6,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 
 import ReactPlayer from 'react-player'
 
+import './typeChambre.css';
+
 function handleVideoChange(state, setState, e, index, context){
     let currentState = JSON.parse(JSON.stringify(state));
     try{
@@ -55,17 +57,17 @@ function removeInputVideo(state, setState, index, context){
 
 export function Videos(props){
     let inputs = [];
-    const btnAdd = <button onClick={(e) => addInputVideo(props.state, props.setState, props.context)}>+</button>
+    const btnAdd = <button id='Plus' onClick={(e) => addInputVideo(props.state, props.setState, props.context)}>+</button>
     let videos = props.state.videos == undefined ? props.state.typeChambre.videos : props.state.videos;
     for(let i = 0; i < videos.length; i++){
         let u = i;
         const add = u == videos.length - 1 ? btnAdd : null;
         const remove = videos.length > 1 ? 
-            <button onClick={(e) => removeInputVideo(props.state, props.setState, u, props.context)}>-</button>
+            <button onClick={(e) => removeInputVideo(props.state, props.setState, u, props.context)} id='Moins'>-</button>
             : null;
         let input = 
         <div>
-            <TextField id="standard-basic" label={"Video " + (u+1) } variant="standard" type="text"
+            <TextField id="standard-basic" label={ (u+1) } variant="standard" type="text"
             value={videos[u]}
             onChange={(e) => handleVideoChange(props.state, props.setState, e, u, props.context)}
             style={{width:'40%'}}/>
@@ -112,7 +114,7 @@ export function Preview(props){
 
 export const FileInput = ({value, handlePhotoChange, text, accepts}) => {
     if(!text){
-        text = "Cliquez pour choisir une photo...";
+        text = <p id='bigLabel'>Cliquez pour choisir une photo...</p>;
     }
     if(!accepts){
         accepts = "image/*"

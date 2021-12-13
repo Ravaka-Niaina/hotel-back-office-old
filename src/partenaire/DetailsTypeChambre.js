@@ -54,7 +54,10 @@ function Equipements(props){
                     onChange={(e) => props.handleCheckBoxEquipement(e, u)}
                     style={{marginLeft:"20px"}}
                 />
-                <Font font={equipement.font} /> {equipement.nom}
+                <Font font={equipement.font} />
+                <span id='litleLabel' style={{marginLeft:'8px'}}>
+            {equipement.nom}
+                </span>
             </div>
         );
     })
@@ -62,6 +65,7 @@ function Equipements(props){
 }
 
 function PlanTarifaire(props){
+     console.log(props.planTarifaire);
     let i = -1;
     let list = props.planTarifaire.map(tarif => {
         i++;
@@ -71,7 +75,9 @@ function PlanTarifaire(props){
             checked={tarif.checked}
             control={<Checkbox/>}
             onChange={(e) => props.handleCheckBoxPlanTarifaire(e, u)}
-            label={tarif.nom}
+            label={<span id='litleLabel'>
+            {tarif.nom}
+                  </span>}
             style={{marginLeft:"20px"}}
           />
         );
@@ -330,11 +336,8 @@ class DetailsTypeCHambre extends React.Component{
             <div> 
                 <Navbar/>
                 
-            <div className="container">
-             <div className="row">
-              <div className="col-md-12">
-                <div className="jumbotron1" 
-                    style={{backgroundColor:'white',boxShadow: '0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25)',marginLeft:'180px',marginTop:'-60px'}}>
+            <div className="">
+                <div className="jumbotron">
                     <h1 className="text-center" id='title1'>Détails type chambre</h1>
                     <hr></hr>
                     <CustomError errors={this.state.errors} />
@@ -342,8 +345,13 @@ class DetailsTypeCHambre extends React.Component{
                         <Box>
                             <div style={{marginTop:'40px'}}>
                                 
-                                <TextField id="standard-basic" label="Nom" variant="standard" style={{width:'40%'}} 
-                                    value={this.state.typeChambre.nom} onChange={(e) => this.handleInputChange(e, "nom")}/>
+                                <TextField 
+                                id="outlined-basic"
+                                variant="outlined"
+                                size='small' 
+                                label="Nom" 
+                                style={{width:'40%'}} 
+                                value={this.state.typeChambre.nom} onChange={(e) => this.handleInputChange(e, "nom")}/>
                                 {
                                     //console.log('yes')
                                 }
@@ -361,7 +369,7 @@ class DetailsTypeCHambre extends React.Component{
                                 <div style={{marginTop:'30px'}}>
                                     <div className="row">
                                     <div style={{marginTop:'10px'}}>
-                                        <label className="form-label mt-4" style={{textDecoration:'underline'}}>Videos : </label>
+                                        <label className="form-label mt-4" style={{textDecoration:'underline'}} id='bigLabel'> Videos  </label>
                                     </div>
                                     </div>
                                     <div className="row">
@@ -369,33 +377,68 @@ class DetailsTypeCHambre extends React.Component{
                                     </div>
                                 </div>
                                 <div style={{marginTop:'30px'}}>
-                                    <TextField id="standard-basic" label="chambre totale" variant="standard" type="number"
+                                    <TextField 
+                                    id="outlined-basic"
+                                    variant="outlined"
+                                    size='small'                                   
+                                    id="standard-basic" 
+                                    label="chambre totale"  
+                                    type="number"
                                         style={{width:'40%'}} value={this.state.typeChambre.chambreTotal} onChange={(e) => this.handleInputChange(e, "chambreTotal")}/>
                                 </div>
 
                                 <div style={{marginTop:'30px'}}>
-                                    <TextField id="standard-basic" label="Etage" variant="standard" type="text"
-                                        style={{width:'40%'}} value={this.state.typeChambre.etage} onChange={(e) => this.handleInputChange(e, "etage")}/>
-                                    <TextField id="standard-basic" label="Superficie" variant="standard" type="number" 
-                                        style={{width:'40%',marginLeft:'152px'}} value={this.state.typeChambre.superficie} onChange={(e) => this.handleInputChange(e, "superficie")}/>
+                                    <TextField 
+                                    id="outlined-basic"
+                                    variant="outlined"
+                                    size='small'  
+                                    label="Etage" 
+                                    type="text"
+                                    style={{width:'40%'}} 
+                                    value={this.state.typeChambre.etage} onChange={(e) => this.handleInputChange(e, "etage")}/>
+                                    <TextField 
+                                    id="outlined-basic"
+                                    variant="outlined"
+                                    size='small'  
+                                    label="Superficie" 
+                                    type="number" 
+                                    style={{width:'40%',marginLeft:'123px'}} 
+                                    value={this.state.typeChambre.superficie} 
+                                    onChange={(e) => this.handleInputChange(e, "superficie")}/>
                                 </div>
 
                             </div>
 
                             <div style={{marginTop:'20px'}}>
-                                <label className="form-label mt-4" style={{textDecoration:'underline'}}>Occupation : </label>
+                                <label className="form-label mt-4" style={{textDecoration:'underline'}} id='bigLabel'>Occupation  </label>
                             </div>
                             <div style={{marginTop:'5px'}}>
-                                <TextField id="standard-basic" label="Adulte" variant="standard" type="number" style={{width:'40%'}}
-                                    value={this.state.typeChambre.nbAdulte} onChange={(e) => this.handleInputChange(e, "nbAdulte")}/>
-                                <TextField id="standard-basic" label="Enfant" variant="standard" type="number" style={{width:'40%',marginLeft:'152px'}}
+                                <TextField 
+                                id="outlined-basic"
+                                variant="outlined"
+                                size='small'  
+                                label="Adulte" 
+                                type="number" 
+                                style={{width:'40%'}}
+                                value={this.state.typeChambre.nbAdulte} 
+                                onChange={(e) => this.handleInputChange(e, "nbAdulte")}/>
+                                <TextField 
+                                id="outlined-basic"
+                                variant="outlined"
+                                size='small'
+                                label="Enfant" 
+                                type="number" 
+                                style={{width:'40%',marginLeft:'123px' }}
                                     value={this.state.typeChambre.nbEnfant} onChange={(e) => this.handleInputChange(e, "nbEnfant")}/>
                             </div>
                             <div style={{marginTop:'20px'}}>
                                 <div style={{}}>
-                                    <label className="form-label mt-4" style={{textDecoration:'underline'}}>Description: </label>
+                                    <label className="form-label mt-4" style={{textDecoration:'underline'}} id='bigLabel'>Description </label>
                                 </div>
-                                <TextField id="outlined-basic" variant="outlined" type='text'
+                                <TextField
+                                id="outlined-basic" 
+                                variant="outlined" 
+                                type='text'
                                     placeholder=""
                                     multiline
                                     rows={2}
@@ -406,7 +449,7 @@ class DetailsTypeCHambre extends React.Component{
                             </div>
                             <div style={{marginTop:'30px'}}>
                                 <div>
-                                    <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Equipements: </label>
+                                    <label className="form-label-mt4" style={{textDecoration: 'underline'}} id='bigLabel'>Equipements </label>
                                 </div>
                                 <FormGroup>
                                     <Equipements  equipements={this.state.typeChambre.equipements} handleCheckBoxEquipement={this.handleCheckBoxEquipement} />
@@ -414,7 +457,7 @@ class DetailsTypeCHambre extends React.Component{
                                 <Button onClick={(e) => this.changeStateValue(["open"], true)}>Ajouter equipement</Button>
                                 <Modal
                                     open={this.state.open}
-                                    onClose={(e) => {console.log("tokony mikatona"); this.changeStateValue(["open"], false)}}
+                                    onClose={(e) => { this.changeStateValue(["open"], false)}}
                                     aria-labelledby="modal-modal-title"
                                     aria-describedby="modal-modal-description"
                                 >
@@ -428,16 +471,30 @@ class DetailsTypeCHambre extends React.Component{
                                         : null
                                     }
                                     <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                        <TextField id="standard-basic" className="form-control" label="Font" variant="standard" style={{width:"300px"}}
+                                        <div style={{marginLeft:'14px'}}>
+                                        <TextField 
+                                        id="outlined-basic"
+                                        variant="outlined"
+                                        size='small'  
+                                        className="form-control" 
+                                        label="Font" 
+                                        style={{width:"300px"}}
                                         type="text" 
                                         name="Font" 
                                         value={this.state.newIcon.font}
                                         onChange={(e) => this.handleNewEqChange(e, "font")}/>
-                                        <TextField id="standard-basic" className="form-control" label="Nom" variant="standard" style={{width:"300px"}}
+                                        <TextField 
+                                        id="outlined-basic"
+                                        variant="outlined"
+                                        size='small'  
+                                        className="form-control" 
+                                        label="Nom"
+                                        style={{width:"300px",marginTop:'10px'}}
                                         type="text" 
                                         name="Nom" 
                                         value={this.state.newIcon.nom}
                                         onChange={(e) => this.handleNewEqChange(e, "nom")}/>
+                                    </div>
                                         <br/>
                                         <div style={{margin:'0 auto', width:'fit-content', marginTop:'20px'}}>
                                             <Button variant="contained" onClick={(e) => this.addEquipement()}>Ajouter equipement</Button>
@@ -448,7 +505,7 @@ class DetailsTypeCHambre extends React.Component{
                             </div>
                             <div style={{marginTop:'30px'}}>
                                 <div>
-                                    <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Plan tarifaire attribué: </label>
+                                    <label className="form-label-mt4" style={{textDecoration: 'underline'}} id='bigLabel'>Plan tarifaire attribué: </label>
                                 </div>
                                 <FormGroup>
                                     <PlanTarifaire planTarifaire={this.state.typeChambre.planTarifaire} handleCheckBoxPlanTarifaire={this.handleCheckBoxPlanTarifaire}/>
@@ -466,14 +523,13 @@ class DetailsTypeCHambre extends React.Component{
                             Retour
                         </Button>
                     </Link>
-                </div>
+                    </div>
             </form>
             </div>
             </div>
                 {/* <div className="col-md-2"></div> */}
             </div>
-            </div>
-            </div>
+
         );
     }
 }
