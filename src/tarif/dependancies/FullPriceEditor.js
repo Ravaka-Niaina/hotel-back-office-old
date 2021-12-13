@@ -166,7 +166,6 @@ const FullPriceEditor = (props) => {
 
     function refresh(res){
         console.log(res);
-        /*
         if(res.status === 200){
             console.log("Redirection en cours...");
             // reload
@@ -176,44 +175,43 @@ const FullPriceEditor = (props) => {
         }else{
             console.log("prix non configuré");
         }
-        */
     }
 
     function savePrix(forTypeChambre, forTarif){
-            let versions = [];
+        let versions = [];
+        console.log(prix);
+
+        if(prix.length > 0){
             console.log(prix);
-
-            if(prix.length > 0){
-                console.log(prix);
-                for(let i = 0; i < guestsMax; i++){
-                    if((prix[i] + "").trim() != ""){
-                        versions.push({nbPers: (i + 1), prix: Number.parseFloat(prix[i])});
-                    }
+            for(let i = 0; i < guestsMax; i++){
+                if((prix[i] + "").trim() != ""){
+                    versions.push({nbPers: (i + 1), prix: Number.parseFloat(prix[i])});
                 }
             }
+        }
 
-            let usedDays = JSON.parse(JSON.stringify(days));
-            if(value == "close"){
-                for(let i = 0; i < usedDays.length; i++){
-                    usedDays[i].checked = false;
-                }
+        let usedDays = JSON.parse(JSON.stringify(days));
+        if(value == "close"){
+            for(let i = 0; i < usedDays.length; i++){
+                usedDays[i].checked = false;
             }
-            const data = {
-                idTarif: tarifs[rate - 1]._id,
-                idTypeChambre: props.typechambre._id,
-                days: usedDays,
-                versions: versions,
-                minSejour: 1,
-                dateDebut: interval[0].format("YYYY-MM-DD"),
-                dateFin: interval[1].format("YYYY-MM-DD"),
-                toSell: toSell,
-                isTypeChambreOpen: isTypeChambreOpen === "open" ? true : false,
-                isTarifOpen: isTarifOpen === "open" ? true : false,
-                forTypeChambre: forTypeChambre,
-                forTarif: forTarif
-            };
-            console.log(data);
-            callAPI('post', '/TCTarif/configPrix', data, refresh);
+        }
+        const data = {
+            idTarif: tarifs[rate - 1]._id,
+            idTypeChambre: props.typechambre._id,
+            days: usedDays,
+            versions: versions,
+            minSejour: 1,
+            dateDebut: interval[0].format("YYYY-MM-DD"),
+            dateFin: interval[1].format("YYYY-MM-DD"),
+            toSell: toSell,
+            isTypeChambreOpen: isTypeChambreOpen === "open" ? true : false,
+            isTarifOpen: isTarifOpen === "open" ? true : false,
+            forTypeChambre: forTypeChambre,
+            forTarif: forTarif
+        };
+        console.log(data);
+        callAPI('post', '/TCTarif/configPrix', data, refresh);
     }
     
     function handleDayChange(i, checked){

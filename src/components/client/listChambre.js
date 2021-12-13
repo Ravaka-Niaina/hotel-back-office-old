@@ -102,7 +102,7 @@ function ListTarif(props){
                 withCredentials: true,
                 data: {itineraires: itineraires}
             })
-            .then(res => {                                                  
+            .then(res => {
                 setReservationEnCours(res.data)})
             .catch(err => console.log(err));
         }
@@ -243,7 +243,7 @@ class DChambre extends React.Component{
                  {listChambre}
             </div>
         );
-        this.addReservation()
+        //this.addReservation()
     }
 }
 export default DChambre
