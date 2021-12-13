@@ -48,7 +48,6 @@ const BaeCalendar = ({ theme, activeDates, onDateSelect, context }) => {
     fin.setDate(1);
 
     const data = {dateDebut: getDate(debut), dateFin: getDate(fin)};
-    console.log(data);
     callAPI('post', '/TCTarif/disponibiliteTarif', data, populatePrix);
   }
 

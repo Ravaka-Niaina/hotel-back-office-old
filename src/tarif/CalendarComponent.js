@@ -69,8 +69,8 @@ const CalendarComponent = () => {
                         <RateLine 
                             typechambre={res.data.typeChambre[i]} 
                             indice={i} fromto={value} daterange={alldays} 
-                            listTypeChambre={listTypeChambre}
-                            dateRange={value} />
+                            dateRange={value}
+                            getPrix={getPrix} />
                         </>
                     );
                 }
@@ -80,7 +80,6 @@ const CalendarComponent = () => {
         }catch(err){
             console.log(err);
         }
-
     }
 
     useEffect(() => {

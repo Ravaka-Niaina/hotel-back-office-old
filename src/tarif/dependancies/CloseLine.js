@@ -6,7 +6,7 @@ import callAPI from '../../utility';
 const utility = require('../utility.js');
 
 const CloseLine = (props) => {
-    const [opened, setOpened] = useState(!props.closed);
+    const [opened, setOpened] = useState(props.closed ? false : true);
     const theme = createTheme({
         palette: {
             primary: {
@@ -29,6 +29,7 @@ const CloseLine = (props) => {
     }
     return (
         <>
+        {console.log("RELOAD CLOSELINE...")}
         <ThemeProvider
             theme={theme}
             >

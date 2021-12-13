@@ -169,9 +169,12 @@ const FullPriceEditor = (props) => {
         if(res.status === 200){
             console.log("Redirection en cours...");
             // reload
+            /*
             window.location.reload();
             props.closeModal();
             handleClose();
+            */
+           props.getPrix();
         }else{
             console.log("prix non configuré");
         }
