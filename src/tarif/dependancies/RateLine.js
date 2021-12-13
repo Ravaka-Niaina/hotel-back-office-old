@@ -12,8 +12,18 @@ const RateLine = (props) => {
             }}
             className={styles.sideline}
         >
-            <SideList typechambre={props.typechambre} dateRange={props.dateRange} getPrix={props.getPrix} />
-            <DayLine typechambre={props.typechambre} indice={props.indice} fromto={props.fromto} daterange={props.daterange}/>
+            <SideList 
+                typechambre={props.typechambre} 
+                dateRange={props.dateRange} 
+                getPrix={props.getPrix} 
+                dateMin={props.dateMin}
+                setOpenLoad={props.setOpenLoad} />
+            <DayLine 
+                typechambre={props.typechambre} 
+                indice={props.indice} 
+                fromto={props.fromto} 
+                daterange={props.daterange}
+                setOpenLoad={props.setOpenLoad} />
         </Box>
     )
 }

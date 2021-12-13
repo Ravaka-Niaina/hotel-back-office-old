@@ -51,7 +51,9 @@ const SideList = (props) => {
             closeModal={() => setOpenModal(false)} 
             showme={openModal} 
             dateRange={props.dateRange}
-            getPrix={props.getPrix} />
+            getPrix={props.getPrix}
+            dateMin={props.dateMin}
+            setOpenLoad={props.setOpenLoad} />
         </>
     )
 }

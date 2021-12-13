@@ -1,4 +1,4 @@
-import React , { useState} from 'react';
+import React , { useState, useEffect } from 'react';
 import styles from '../CalendarComponent.module.css';
 import {Box} from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -15,9 +15,9 @@ const CloseLine = (props) => {
             },
         },
     })
-    // useEffect( () => {
-    //     setopened(props.close);
-    // })
+    useEffect( () => {
+        setOpened(!props.closed);
+    })
     function closeTypeChambre(){
         const data = {
             _id: props.idTypeChambre, 
@@ -29,7 +29,7 @@ const CloseLine = (props) => {
     }
     return (
         <>
-        {console.log("RELOAD CLOSELINE...")}
+
         <ThemeProvider
             theme={theme}
             >

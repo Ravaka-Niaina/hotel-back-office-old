@@ -8,6 +8,7 @@ import moment from 'moment';
 import RateLine from './dependancies/RateLine.js';
 import axios from "axios";
 import CircularProgress from '@mui/material/CircularProgress';
+import Backdrop from '@mui/material/Backdrop';
 
 const getDaysBetweenDates = function(startDate, endDate) {
     var now = startDate.clone(), dates = [];
@@ -44,12 +45,13 @@ const CalendarComponent = () => {
     const [dates, setDates] = useState([]);
     const [value, setValue] = useState([moment(today), moment(oneMonth)]);
     const alldays = getDaysBetweenDates(value[0],value[1]);
-    const [listTypeChambre, setListTypeChambre] = useState([]);
     const [rateLine, setRateLine] = useState([]);
-    const [load, setLoad] = useState(false);
+    const [openLoad, setOpenLoad] = useState(false);
+    const [dateMin, setDateMin] = useState(null);
+    const [isFirst, setIsFirst] = useState(true);
 
     function getPrix(){
-        setLoad(true);
+        setOpenLoad(true);
         try{
             axios({
                 method: 'post',
@@ -58,10 +60,9 @@ const CalendarComponent = () => {
                 data: {dateDebut: getDate(value[0].format()), dateFin: getDate(value[1].format())}
             })
             .then(res => {
-                setLoad(false);
-                var tmp = [];
-                setListTypeChambre(res.data.typeChambre);
-                console.log(res.data);
+                //console.log(res.data);
+                //setDateMin(new Date(res.data.dateMin));
+                let tmp = [];
                 for(var i = 0; i < res.data.typeChambre.length; i++) {
                     tmp.push(
                         <>
@@ -70,13 +71,16 @@ const CalendarComponent = () => {
                             typechambre={res.data.typeChambre[i]} 
                             indice={i} fromto={value} daterange={alldays} 
                             dateRange={value}
-                            getPrix={getPrix} />
+                            getPrix={getPrix}
+                            dateMin={dateMin}
+                            setOpenLoad={setOpenLoad} />
                         </>
                     );
                 }
                 setRateLine(tmp);
+                setOpenLoad(false);
             })
-            .catch(err => {console.log(err); setLoad(false);});
+            .catch(err => {console.log(err); setOpenLoad(false);});
         }catch(err){
             console.log(err);
         }
@@ -84,35 +88,41 @@ const CalendarComponent = () => {
 
     useEffect(() => {
         getPrix();
-    },[])
+    }, []);
 
     return(
-
-        <Container class="container" className={styles.container}>
-            {load ? <Box sx={{ display: 'flex' }}><CircularProgress /></Box> : null}
-            <LocalizationProvider dateAdapter={AdapterMoment}>
-            <DateRangePicker
-                startText="Check-in"
-                endText="Check-out"
-                value={value}
-                onChange={(newValue) => {
-                    setValue(newValue);
-                    if(newValue != undefined && newValue[0] != null && newValue[1] != null){
-                        const allday = getDaysBetweenDates(newValue[0],newValue[1]);
-                        getPrix();
-                    }
-                }}
-                renderInput={(startProps, endProps) => (
-                <React.Fragment>
-                    <TextField {...startProps} />
-                    <Box sx={{ mx: 2 }}> to </Box>
-                    <TextField {...endProps} />
-                </React.Fragment>
-                )}
-            />
-            </LocalizationProvider>
-            {rateLine}
-        </Container>
+        <>
+            <Container class="container" className={styles.container} style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
+                <LocalizationProvider dateAdapter={AdapterMoment}>
+                <DateRangePicker
+                    startText="Check-in"
+                    endText="Check-out"
+                    value={value}
+                    onChange={(newValue) => {
+                        setValue(newValue);
+                        if(newValue != undefined && newValue[0] != null && newValue[1] != null){
+                            const allday = getDaysBetweenDates(newValue[0],newValue[1]);
+                            getPrix();
+                        }
+                    }}
+                    renderInput={(startProps, endProps) => (
+                    <React.Fragment>
+                        <TextField {...startProps} />
+                        <Box sx={{ mx: 2 }}> to </Box>
+                        <TextField {...endProps} />
+                    </React.Fragment>
+                    )}
+                />
+                </LocalizationProvider>
+                {rateLine}
+            </Container>
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={openLoad}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop>
+        </>
     );
 }
 

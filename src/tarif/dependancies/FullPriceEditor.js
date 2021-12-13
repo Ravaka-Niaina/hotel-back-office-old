@@ -83,16 +83,6 @@ const FullPriceEditor = (props) => {
     };
     const [value, setValue] = React.useState('open');
     const [tarifs, setTarifs] = React.useState([]);
-    const handleChange = (event) => {
-        setValue(event.target.value);
-        /*
-        if(event.target.value === "close"){
-            setAllDays(false);
-        }else{
-            setAllDays(true);
-        }
-        */
-    };
     const [interval, setInterval] = React.useState(props.dateRange);
     const [prix, setPrix] = React.useState([]);
     const [days, setDays] = React.useState([
@@ -168,19 +158,15 @@ const FullPriceEditor = (props) => {
         console.log(res);
         if(res.status === 200){
             console.log("Redirection en cours...");
-            // reload
-            /*
-            window.location.reload();
-            props.closeModal();
-            handleClose();
-            */
-           props.getPrix();
+            props.getPrix();
         }else{
             console.log("prix non configuré");
+            props.setOpenLoad(false);
         }
     }
 
     function savePrix(forTypeChambre, forTarif){
+        props.setOpenLoad(true);
         let versions = [];
         console.log(prix);
 
@@ -243,7 +229,6 @@ const FullPriceEditor = (props) => {
     }
 
     function loadPrix(result){
-        console.log("ny azo");
         console.log(result);
         if(result.status === 200){
             let temp = [];
@@ -266,7 +251,6 @@ const FullPriceEditor = (props) => {
                dateDebut: interval[0].format("YYYY-MM-DD"),
                dateFin: interval[1].format("YYYY-MM-DD")
            };
-           console.log(data);
            callAPI('post', '/typeChambre/prix/min', data, loadPrix);
         }
     }
@@ -281,6 +265,8 @@ const FullPriceEditor = (props) => {
         getPrix(rate);
     }
 
+    const [minDate, setMinDate] = React.useState(new Date());
+
     return(
         <>
         <Modal
@@ -292,7 +278,7 @@ const FullPriceEditor = (props) => {
             <Box sx={style}
                 className={styles.fullpopper}
             >   
-                <DatePicker interval={interval} setInterval={handleIntervalChange} />
+                <DatePicker interval={interval} setInterval={handleIntervalChange} minDate={minDate} />
                 <br/>
                 <div>
                     {inputDays}
