@@ -53,7 +53,7 @@ const CalendarComponent = () => {
         try{
             axios({
                 method: 'post',
-                url: process.env.REACT_APP_BACK_URL + "/typeChambre/prix",
+                url: process.env.REACT_APP_BACK_URL + "/TCTarif/prix",
                 withCredentials: true,
                 data: {dateDebut: getDate(value[0].format()), dateFin: getDate(value[1].format())}
             })

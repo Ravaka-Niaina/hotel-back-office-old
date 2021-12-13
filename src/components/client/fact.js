@@ -189,10 +189,9 @@ class Fact extends React.Component{
             withCredentials: true,
             data: data
         })
-        .then(res => {   
-            console.log("io lty e")
+        .then(res => { 
             console.log(res);                                               
-            context.setReservationEnCours(res.data)})
+            context.setReservationEnCours(res.data.reservation)})
         .catch(err => console.log(err));
     }
 

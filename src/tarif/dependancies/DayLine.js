@@ -190,10 +190,16 @@ const DayLine = (props) => {
                 day={props.typechambre.statusDays[i].toSell} />
         </td>);
         bookedcell.push(
-            <td>
-                <span>{Math.floor(Math.random() * 10)}</span>
-            </td>
-        )
+        <td>
+            <DayCell 
+                isprice={false} 
+                highlight={selecteds.indexOf(i) >= 0} 
+                key={i.toString()} 
+                deselectDay={rmSelection.bind(this)} 
+                selectDay={addSelection.bind(this)} 
+                selectOneDay={oneSelection.bind(this)} day={i}
+                day={props.typechambre.booked[i].value} />
+        </td>);
     }
 
     for(let i = 0; i < props.typechambre.statusDays.length; i++){

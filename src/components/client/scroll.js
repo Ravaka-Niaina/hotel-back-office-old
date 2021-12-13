@@ -145,7 +145,11 @@ class Scroll extends React.Component{
         console.log(reservation);
         let currentState = JSON.parse(JSON.stringify(this.state));
         currentState.reservationEnCours = reservation;
-        currentState.itineraires = reservation.itineraires;
+        if(reservation === null){
+            currentState.itineraires = [];
+        }else{
+            currentState.itineraires = reservation.itineraires;
+        }
         this.setState(currentState);
     }
 

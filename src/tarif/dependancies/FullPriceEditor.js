@@ -215,7 +215,6 @@ const FullPriceEditor = (props) => {
             console.log(data);
             callAPI('post', '/TCTarif/configPrix', data, refresh);
     }
-        
     
     function handleDayChange(i, checked){
         let current = JSON.parse(JSON.stringify(days));
@@ -338,6 +337,12 @@ const FullPriceEditor = (props) => {
                     onChange={(e) => setToSell(Number.parseInt(e.target.value))}
                 />
                 <br/>
+                <Stack direction="row" spacing={2}>
+                    <Button variant="contained" onClick={(e) => savePrix(true, false)}>
+                        Sauvegarder type chambre
+                    </Button>
+                </Stack>
+                <br/>
                 <FormControl component="fieldset">
                 <InputLabel variant="outlined">Rate</InputLabel>
                 <Select
@@ -353,15 +358,18 @@ const FullPriceEditor = (props) => {
                 <InputPrix guestsMax={guestsMax} prix={prix} handleChangePrix={handleChangePrix} />
                 
                 <Stack direction="row" spacing={2}>
-                    <Button variant="contained" onClick={(e) => savePrix(true, false)}>
-                        Sauvegarder type chambre
-                    </Button>
                     <Button variant="contained" onClick={(e) => savePrix(false, true)}>
                         Sauvegarder tarif
                     </Button>
+                </Stack>
+                <br/>
+                <Stack direction="row" spacing={2}>
                     <Button variant="contained" onClick={(e) => savePrix(true, true)}>
                         Sauvegarder tout
                     </Button>
+                </Stack>
+                <br/>
+                <Stack direction="row" spacing={2}>
                     <Button onClick={() => {props.closeModal(false); handleClose()}} variant="contained">
                         Close
                     </Button>
