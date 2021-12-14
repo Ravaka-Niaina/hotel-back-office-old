@@ -232,7 +232,7 @@ const FullPriceEditor = (props) => {
         console.log(result);
         if(result.status === 200){
             let temp = [];
-            setToSell(result.prixTarif.toSell);
+            //setToSell(result.prixTarif.toSell);
             for(let i = 0; i < result.prixTarif.versions.length; i++){
                 temp.push(result.prixTarif.versions[i].prix);
             }
