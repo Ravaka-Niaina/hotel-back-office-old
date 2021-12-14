@@ -12,6 +12,9 @@ import CancelIcon from '@mui/icons-material/Cancel';
 
 import {setValue} from '../../../src/utility2.js';
 
+
+import './filtre.css';
+
 function PrintDateSejour(props){
     // itineraire, borne, handleChange, label
     let retour = [];
@@ -82,8 +85,9 @@ function Itineraires(props){
             <div>
                 <div class="row mb-4">
                     <div class="col">
-                        <strong> Check in : </strong>
+                        <span id='litleLabel'> Check in : </span>
                         <PrintDateSejour 
+                            id='litleLabel'
                             label="Check in" 
                             context={props.context} 
                             index={i}
@@ -91,16 +95,19 @@ function Itineraires(props){
                     </div>
                     
                     <div class="col" id="locA">
-                        <strong>Check out : </strong>
-                        <PrintDateSejour 
+                        <span id='litleLabel'>Check out : </span>
+                        <PrintDateSejour
+                            id='litleLabel'  
                             label="Check out"
                             context={props.context}
                             index={i}
                             borne="fin" />
                     </div>
-                    <button variant="contained" color="success" onClick={(e) => props.context.setState( setValue( props.context.state, ["itineraires", i, "edit"], true ) )}>
+                    <p>
+                    <Button size='small' variant="contained" color="success" onClick={(e) => props.context.setState( setValue( props.context.state, ["itineraires", i, "edit"], true ) )}>
                         Modifier
-                    </button>
+                    </Button>
+                    </p>
                 </div>
                 <Reservations context={props.context} indexItineraire={i} annulerReservation={props.annulerReservation} />
             </div>
@@ -179,7 +186,6 @@ class Fact extends React.Component{
     }
 
     annulerReservation(context, idReservation, indexItineraire, indexTarifReserve){
-        console.log("Annulation en cours");
         const data = { _id: idReservation, indexItineraire: indexItineraire, indexTarifReserve: indexTarifReserve };
         console.log(data);
         console.log(context.state.itineraires);
@@ -202,7 +208,7 @@ class Fact extends React.Component{
             for(let u = 0; u < this.props.context.state.itineraires[i].tarifReserves.length; u++){
                 if(this.props.context.state.itineraires[i].tarifReserves[u].etat == undefined
                     || this.props.context.state.itineraires[i].tarifReserves[u].etat == 1){
-                    valider = (<p><button onClick={(e) => this.validerReservation()}>Valider réservation</button></p>);
+                    valider = (<p style={{textAlign:'center',paddingBottom:'12px'}}><Button size='medium' variant="outlined"  onClick={(e) => this.validerReservation()}>Valider réservation</Button></p>);
                     break;
                 }
             }
@@ -213,12 +219,13 @@ class Fact extends React.Component{
         return(
             <div>
                 <div class="row" style={{textAlign:'center'}}>
-                    <h1>Your Stay</h1>
+                    <h3>Your Stay</h3>
                     <Itineraires context={this.props.context} annulerReservation={this.annulerReservation} />
-                    <p>TOTAL : </p>
+                    <p id='bigLabel'>TOTAL : </p>
                     {this.props.context.state.changeDateSejour ? 
                         null 
-                    : <button variant="contained" onClick={(e) => this.props.context.addNewItineraire()}>Ajouter itinéraire</button>}
+                    : 
+                    <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()}>Ajouter itinéraire</Button></p>}
                 </div>
                 <Modal
                     open={this.props.context.state.open}

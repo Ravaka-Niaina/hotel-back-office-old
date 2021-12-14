@@ -1,17 +1,23 @@
 .jumbotron{
     padding: 20px 70px 20px 70px;
-    width: 75%;
+    width: 55%;
+    background-color: white;
+    box-shadow: 0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25);
+    margin-top: 4%;
+    margin-left: auto;
+    margin-right: auto;
     }
     
     #title1{
         font-family: 'Roboto', sans-serif;
         color: #1976d2;
+   
     }
 
 #litleLabel{
 color: black;
 font-family: 'Roboto', sans-serif;
-font-size: 14px;
+font-size: 15px;
 }
 
 #bigLabel{
@@ -26,4 +32,38 @@ font-size: 14px;
 
 .col2{
 margin-left: 40px;
+}
+
+#libelle
+{
+    font-size: 15px;
+    font-family: 'Roboto';
+    margin-top: 16px;
+}
+
+.pied{
+    margin-left: 2%;
+}
+
+div.bouton-aligne{
+	display:inline-block;
+}
+
+#btn2{
+    margin-left: 10%;
+}
+
+#libel{
+    color: #616569;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    }
+
+#btn1{
+    text-decoration:'none';
+}
+
+#btnAdd{
+    text-decoration:'none';
+    color:'black';
 }

@@ -193,7 +193,7 @@ onChange={(e) =>this.handleDescriptionChange(e)}
             </button> */}
 <Button 
 variant="contained" 
-color="primary" 
+style={{backgroundColor:'#2ac4ea'}} 
 onClick={(e) => this.register(e)}
 style={{textDecoration:'none'}}>
 <span style={{color:'white'}}>S'inscrire</span>

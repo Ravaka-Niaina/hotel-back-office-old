@@ -23,6 +23,7 @@ import Calendrier from "./partenaire/Calendrier/Calendrier";
 import  PromotionList  from "./promotion/promotionList.js";
 import  InsertPromotion  from "./promotion/insertPromotion.js";
 import  tarifList  from "./promotion/getTarifs.js";
+import  DetailsPromotion  from "./promotion/DetailsPromotion";
 import Global from "./politique/global.js";
 import  searchTypeChambre  from "./partenaire/searchTypeChambre.js";
 import  guest  from "./partenaire/guest.js";
@@ -33,6 +34,8 @@ import { useTranslation } from "react-i18next";
 import  Reservation  from "./components/client/reservation.js";
 import ListPolitique from "./politique/listpolitique.js"
 import  ApplyReservation  from "./components/client/applyReservation.js";
+import  dateReservation  from "./components/client/dateReservation";
+import  calendar  from "./calendar/calendar";
 import  BasicDateRangePicker  from "./calendar/calendar";
 
 
@@ -45,6 +48,7 @@ function App() {
         <Route path="/hideShow" exact component={hideShow} />
         <Route path="/promotion" exact component={PromotionList} />
         <Route path="/promotion/create" exact component={InsertPromotion} />
+        <Route path="/promotion/detail/:_id" exact component={DetailsPromotion} />
         <Route path="/" exact component={home} />
         <Route path="/client" exact component={AppClient} />
         {/*<Route path="/Paiement" exact component={Paiement} />*/}
@@ -86,6 +90,8 @@ function App() {
 
         <Route path="/reservation/:_id" exact component={Reservation} />
         <Route path="/reservation/:_id/apply" exact component={ApplyReservation} />
+        <Route path="/dateReservation" exact component={dateReservation} />
+        <Route path="/calendar" exact component={calendar} />
 
         <Route path="/CalendarClient" exact component={BasicDateRangePicker} />
 

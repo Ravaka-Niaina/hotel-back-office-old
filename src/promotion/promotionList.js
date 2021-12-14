@@ -58,8 +58,6 @@ export default class PromotionList extends React.Component {
                                         <TableHead>
                                         <TableRow>
                                             <TableCell align="center"><strong>Nom</strong></TableCell>
-                                            <TableCell align="center"><strong>Tarif</strong></TableCell>
-                                            <TableCell align="center"><strong>Type Chambre</strong></TableCell>
                                             <TableCell align="center"><strong>Remise</strong></TableCell>
                                             <TableCell align="center"><strong>Date Sejour</strong></TableCell>
                                             
@@ -70,9 +68,17 @@ export default class PromotionList extends React.Component {
                                         <TableRow>
                                             <TableCell align="center">{promotion.nom}</TableCell>
                                             <TableCell align="center">{promotion.tarif}</TableCell>
-                                            <TableCell align="center">{promotion.typeChambre}</TableCell>
-                                            <TableCell align="center">{promotion.remiseEuro}</TableCell>
                                             <TableCell align="center">{promotion.dateDebutS}-{promotion.dateFinS}</TableCell>
+                                            <TableCell align="center">
+                                            {/*<Link to={'/promotion/detail/' + promotion._id}>
+                                             <button className="btn"
+                                              style={{textDecoration:'none',
+                                              backgroundColor:'	#2F4050',
+                                              color:'white'}}>
+                                              Voir détails
+                                             </button>
+                                             </Link>*/}
+                                            </TableCell>
                                             
                                         </TableRow>
                                         ))}  

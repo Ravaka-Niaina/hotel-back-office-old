@@ -36,7 +36,7 @@ function ListOptCheckBox(props){
         return(
             <FormControlLabel
                 style={{padding: 0}}
-                label={option.value}
+                label={<span id='litleLabel'>{option.value}</span>}
                 multipleChoice={props.multipleChoice}
                 onChange={(e) => props.handleChange(e, props.indexFiltre, indexOption)}
                 control={<Checkbox checked={option.checked} />}
@@ -59,7 +59,7 @@ function ListOptRadio(props){
             <FormControlLabel
                 style={{padding: 0}}
                 value={option.value}
-                label={option.value}
+                label={<span id='litleLabel'>{option.value}</span>}
                 control={<Radio onClick={(e) => props.handleRadioChange(e, props.indexFiltre, indexOption)}/>}
             />
         );
@@ -211,6 +211,7 @@ class Filtre extends React.Component{
           
         ];
         this.state = {
+            closePopper: true,
             showAge: false,
             filtre: this.filtreOpt[0],
             filtres: [],
@@ -388,12 +389,12 @@ class Filtre extends React.Component{
           <span></span>
           </Button>
           <div className='client'>
-                <div id='client' className='PersonIcon'>
-                <PersonIcon id='PersonIcon'/>
-                </div>
                 <div id='client' className='guests'>
-                <p id='guests'>Guests</p>
-                <p id='NbGuest'>{this.state.nbAdulte} Adult, {this.state.nbEnfant} children</p>
+                <p>
+                <PersonIcon id='PersonIcon'/>
+                <span id='guests'>Guests</span><br/>
+                <span id='NbGuest'>{this.state.nbAdulte} Adult, {this.state.nbEnfant} children</span>
+                </p>
                 </div>
                 </div>
           <Popper {...bindPopper(popupState)} transition>
@@ -469,26 +470,26 @@ class Filtre extends React.Component{
                         <FormGroup>
                             <div class="row">
                                 <div class=" col">
-                                    <FormControlLabel control={<Checkbox defaultChecked />} label="accessible" />
+                                    <FormControlLabel control={<Checkbox defaultChecked />} label={<span id='litleLabel'>accessible</span>} />
                                     <img src="accessible.svg" style={{width:'20%'}} ></img>
                                 </div>
                                 <div class="col">
                                     <FormControl fullWidth>
-                                        <InputLabel>Afficher les résultats par</InputLabel>
+                                        <InputLabel id='litleLabel'>Afficher les résultats par</InputLabel>
                                         <Select size ="small">
-                                            <MenuItem value="chambre">Chambre</MenuItem>
-                                            <MenuItem value="superficie">Superficie</MenuItem>
-                                            <MenuItem value="vue">Vue</MenuItem>
+                                            <MenuItem value="chambre" id='litleLabel'>Chambre</MenuItem>
+                                            <MenuItem value="superficie" id='litleLabel'>Superficie</MenuItem>
+                                            <MenuItem value="vue" id='litleLabel'>Vue</MenuItem>
                                         </Select>
                                     </FormControl>
                                 </div>
                                 <div class="col">
                                     <FormControl fullWidth>
-                                        <InputLabel>Trier par</InputLabel>
+                                        <InputLabel id='litleLabel'>Trier par</InputLabel>
                                         <Select size ="small">
-                                            <MenuItem value="chambre">Chambre</MenuItem>
-                                            <MenuItem value="superficie">Superficie</MenuItem>
-                                            <MenuItem value="vue">Vue</MenuItem>
+                                            <MenuItem id='litleLabel' value="chambre">Chambre</MenuItem>
+                                            <MenuItem id='litleLabel' value="superficie">Superficie</MenuItem>
+                                            <MenuItem id='litleLabel' value="vue">Vue</MenuItem>
                                         </Select>
                                     </FormControl>
                                 </div>
@@ -508,7 +509,7 @@ class Filtre extends React.Component{
                                 <div>
                                     <ListFiltres filtre={this.state.filtres} handleChange={this.handleChange} handleRadioChange={this.handleRadioChange} />
                                     <div className="apply">
-                                        <strong>{ this.props.context.state.listTypeChambre.length }</strong> matching rooms
+                                        <strong>{ this.props.context.state.listTypeChambre.length }</strong><span id='litleLabel'>matching rooms</span>
                                         <Button style={{marginLeft: '10px'}} onClick={(e) =>  this.applyFilter()} variant="contained">APPLY</Button>
                                     </div>
                                 </div> : null}
