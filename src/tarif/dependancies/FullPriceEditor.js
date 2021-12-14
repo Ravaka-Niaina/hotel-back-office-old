@@ -297,18 +297,6 @@ const FullPriceEditor = (props) => {
                     <FormControlLabel value="open" control={<Radio />} label="Open" />
                     <FormControlLabel value="close" control={<Radio />} label="Close" />
                 </RadioGroup>
-
-                <FormLabel component="legend">Plan tarifaire</FormLabel>
-                <RadioGroup
-                    aria-label="gender"
-                    name="controlled-radio-buttons-group"
-                    value={isTarifOpen}
-                    onChange={(e) => setIsTarifOpen(e.target.value)}
-                    row
-                >
-                    <FormControlLabel value="open" control={<Radio />} label="Open" />
-                    <FormControlLabel value="close" control={<Radio />} label="Close" />
-                </RadioGroup>
                 <br/>
                 <TextField
                     fullwidth={false}
@@ -340,6 +328,17 @@ const FullPriceEditor = (props) => {
                 >
                     { rates }
                 </Select>
+                <FormLabel component="legend">Plan tarifaire</FormLabel>
+                <RadioGroup
+                    aria-label="gender"
+                    name="controlled-radio-buttons-group"
+                    value={isTarifOpen}
+                    onChange={(e) => setIsTarifOpen(e.target.value)}
+                    row
+                >
+                    <FormControlLabel value="open" control={<Radio />} label="Open" />
+                    <FormControlLabel value="close" control={<Radio />} label="Close" />
+                </RadioGroup>
                 </FormControl>
                 <br/>
                 <InputPrix guestsMax={guestsMax} prix={prix} handleChangePrix={handleChangePrix} />
