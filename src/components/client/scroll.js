@@ -44,6 +44,7 @@ class Scroll extends React.Component{
             open: false,
             err: null,
             email: "",
+            reload: true
         };
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
     }
@@ -145,7 +146,12 @@ class Scroll extends React.Component{
         console.log(reservation);
         let currentState = JSON.parse(JSON.stringify(this.state));
         currentState.reservationEnCours = reservation;
-        currentState.itineraires = reservation.itineraires;
+        currentState.reload = true;
+        if(reservation === null){
+            currentState.itineraires = [];
+        }else{
+            currentState.itineraires = reservation.itineraires;
+        }
         this.setState(currentState);
     }
 

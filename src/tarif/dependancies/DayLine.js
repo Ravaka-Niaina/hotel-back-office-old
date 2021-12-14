@@ -177,7 +177,7 @@ const DayLine = (props) => {
         
     }, []);
 
-    for(var i = 0; i < props.daterange.length ; i++){
+    for(var i = 0; i < props.typechambre.statusDays.length ; i++){
         daycells.push(
         <td>
             <DayCell 
@@ -186,16 +186,25 @@ const DayLine = (props) => {
                 key={i.toString()} 
                 deselectDay={rmSelection.bind(this)} 
                 selectDay={addSelection.bind(this)} 
-                selectOneDay={oneSelection.bind(this)} day={i} />
+                selectOneDay={oneSelection.bind(this)} day={i}
+                day={props.typechambre.statusDays[i].toSell} />
         </td>);
         bookedcell.push(
-            <td>
-                <span>{Math.floor(Math.random() * 10)}</span>
-            </td>
-        )
+        <td>
+            <DayCell 
+                isprice={false} 
+                highlight={selecteds.indexOf(i) >= 0} 
+                key={i.toString()} 
+                deselectDay={rmSelection.bind(this)} 
+                selectDay={addSelection.bind(this)} 
+                selectOneDay={oneSelection.bind(this)} day={i}
+                day={props.typechambre.booked[i].value} />
+        </td>);
     }
 
+    
     for(let i = 0; i < props.typechambre.statusDays.length; i++){
+        console.log(props.typechambre.statusDays[i]);
         closelines.push(
             <td>
                 <CloseLine 

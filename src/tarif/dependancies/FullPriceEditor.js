@@ -1,5 +1,5 @@
 import React , { useState , useEffect} from 'react';
-import {Button,Stack,TextField,Box,Radio,RadioGroup,FormControl,FormControlLabel,InputAdornment,Modal,Checkbox,InputLabel,MenuItem,Select} from '@mui/material';
+import {Button,Stack,TextField,Box,Radio,RadioGroup,FormControl,FormControlLabel,InputAdornment,Modal,Checkbox,InputLabel,MenuItem,Select, FormLabel} from '@mui/material';
 import DateRangePicker from '@mui/lab/DateRangePicker';
 import AdapterMoment from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -8,7 +8,7 @@ import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import styles from '../CalendarComponent.module.css';
 
 import callAPI from '../../utility';
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom';
 
 const getDaysBetweenDates = function(startDate, endDate) {
     var now = startDate.clone(), dates = [];
@@ -83,14 +83,6 @@ const FullPriceEditor = (props) => {
     };
     const [value, setValue] = React.useState('open');
     const [tarifs, setTarifs] = React.useState([]);
-    const handleChange = (event) => {
-        setValue(event.target.value);
-        if(event.target.value === "close"){
-            setAllDays(false);
-        }else{
-            setAllDays(true);
-        }
-    };
     const [interval, setInterval] = React.useState(props.dateRange);
     const [prix, setPrix] = React.useState([]);
     const [days, setDays] = React.useState([
@@ -103,6 +95,8 @@ const FullPriceEditor = (props) => {
         { value: 7, checked: true, label: "Sun" },
     ]); // day 1 = lundi , 7 = dimanche
     const [toSell, setToSell] = React.useState(0);
+    const [isTypeChambreOpen, setIsTypeChambreOpen] = React.useState("open");
+    const [isTarifOpen, setIsTarifOpen] = React.useState("open");
 
     function setAllDays(checked){
         for(let i = 0; i < days.length; i++){
@@ -164,50 +158,50 @@ const FullPriceEditor = (props) => {
         console.log(res);
         if(res.status === 200){
             console.log("Redirection en cours...");
-            // reload
-            window.location.reload();
-            props.closeModal();
-            handleClose();
+            props.getPrix();
         }else{
             console.log("prix non configuré");
+            props.setOpenLoad(false);
         }
     }
 
-    function savePrix(){
-        if(rate > 1){
-            let versions = [];
+    function savePrix(forTypeChambre, forTarif){
+        props.setOpenLoad(true);
+        let versions = [];
+        console.log(prix);
+
+        if(prix.length > 0){
             console.log(prix);
-
-            if(prix.length > 0){
-                console.log(prix);
-                for(let i = 0; i < guestsMax; i++){
-                    if((prix[i] + "").trim() != ""){
-                        versions.push({nbPers: (i + 1), prix: Number.parseFloat(prix[i])});
-                    }
+            for(let i = 0; i < guestsMax; i++){
+                if((prix[i] + "").trim() != ""){
+                    versions.push({nbPers: (i + 1), prix: Number.parseFloat(prix[i])});
                 }
             }
-
-            let usedDays = JSON.parse(JSON.stringify(days));
-            if(value == "close"){
-                for(let i = 0; i < usedDays.length; i++){
-                    usedDays[i].checked = false;
-                }
-            }
-            const data = {
-                idTarif: tarifs[rate - 1]._id,
-                idTypeChambre: props.typechambre._id,
-                days: usedDays,
-                versions: versions,
-                minSejour: 1,
-                dateDebut: interval[0].format("YYYY-MM-DD"),
-                dateFin: interval[1].format("YYYY-MM-DD"),
-                toSell: toSell
-            };
-            console.log(data);
-            callAPI('post', '/prixTarif/insert', data, refresh);
         }
+
+        let usedDays = JSON.parse(JSON.stringify(days));
+        if(value == "close"){
+            for(let i = 0; i < usedDays.length; i++){
+                usedDays[i].checked = false;
+            }
+        }
+        const data = {
+            idTarif: tarifs[rate - 1]._id,
+            idTypeChambre: props.typechambre._id,
+            days: usedDays,
+            versions: versions,
+            minSejour: 1,
+            dateDebut: interval[0].format("YYYY-MM-DD"),
+            dateFin: interval[1].format("YYYY-MM-DD"),
+            toSell: toSell,
+            isTypeChambreOpen: isTypeChambreOpen === "open" ? true : false,
+            isTarifOpen: isTarifOpen === "open" ? true : false,
+            forTypeChambre: forTypeChambre,
+            forTarif: forTarif
+        };
+        console.log(data);
+        callAPI('post', '/TCTarif/configPrix', data, refresh);
     }
-        
     
     function handleDayChange(i, checked){
         let current = JSON.parse(JSON.stringify(days));
@@ -235,7 +229,6 @@ const FullPriceEditor = (props) => {
     }
 
     function loadPrix(result){
-        console.log("ny azo");
         console.log(result);
         if(result.status === 200){
             let temp = [];
@@ -258,7 +251,6 @@ const FullPriceEditor = (props) => {
                dateDebut: interval[0].format("YYYY-MM-DD"),
                dateFin: interval[1].format("YYYY-MM-DD")
            };
-           console.log(data);
            callAPI('post', '/typeChambre/prix/min', data, loadPrix);
         }
     }
@@ -273,6 +265,8 @@ const FullPriceEditor = (props) => {
         getPrix(rate);
     }
 
+    const [minDate, setMinDate] = React.useState(new Date());
+
     return(
         <>
         <Modal
@@ -284,7 +278,7 @@ const FullPriceEditor = (props) => {
             <Box sx={style}
                 className={styles.fullpopper}
             >   
-                <DatePicker interval={interval} setInterval={handleIntervalChange} />
+                <DatePicker interval={interval} setInterval={handleIntervalChange} minDate={minDate} />
                 <br/>
                 <div>
                     {inputDays}
@@ -292,11 +286,24 @@ const FullPriceEditor = (props) => {
                 <br/>
                 <span>{props.typechambre.nom}</span>
                 <br/>
+                <FormLabel component="legend">Type chambre</FormLabel>
                 <RadioGroup
                     aria-label="gender"
                     name="controlled-radio-buttons-group"
-                    value={value}
-                    onChange={handleChange}
+                    value={isTypeChambreOpen}
+                    onChange={(e) => setIsTypeChambreOpen(e.target.value)}
+                    row
+                >
+                    <FormControlLabel value="open" control={<Radio />} label="Open" />
+                    <FormControlLabel value="close" control={<Radio />} label="Close" />
+                </RadioGroup>
+
+                <FormLabel component="legend">Plan tarifaire</FormLabel>
+                <RadioGroup
+                    aria-label="gender"
+                    name="controlled-radio-buttons-group"
+                    value={isTarifOpen}
+                    onChange={(e) => setIsTarifOpen(e.target.value)}
                     row
                 >
                     <FormControlLabel value="open" control={<Radio />} label="Open" />
@@ -317,6 +324,12 @@ const FullPriceEditor = (props) => {
                     onChange={(e) => setToSell(Number.parseInt(e.target.value))}
                 />
                 <br/>
+                <Stack direction="row" spacing={2}>
+                    <Button variant="contained" onClick={(e) => savePrix(true, false)}>
+                        Sauvegarder type chambre
+                    </Button>
+                </Stack>
+                <br/>
                 <FormControl component="fieldset">
                 <InputLabel variant="outlined">Rate</InputLabel>
                 <Select
@@ -332,9 +345,18 @@ const FullPriceEditor = (props) => {
                 <InputPrix guestsMax={guestsMax} prix={prix} handleChangePrix={handleChangePrix} />
                 
                 <Stack direction="row" spacing={2}>
-                    <Button variant="contained" onClick={(e) => savePrix()}>
-                        Save
+                    <Button variant="contained" onClick={(e) => savePrix(false, true)}>
+                        Sauvegarder tarif
                     </Button>
+                </Stack>
+                <br/>
+                <Stack direction="row" spacing={2}>
+                    <Button variant="contained" onClick={(e) => savePrix(true, true)}>
+                        Sauvegarder tout
+                    </Button>
+                </Stack>
+                <br/>
+                <Stack direction="row" spacing={2}>
                     <Button onClick={() => {props.closeModal(false); handleClose()}} variant="contained">
                         Close
                     </Button>

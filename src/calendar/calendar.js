@@ -42,18 +42,40 @@ const BaeCalendar = ({ theme, activeDates, onDateSelect, context }) => {
   }
 
   function getPrix(dateDebut, dateFin){
-    const data = {dateDebut: getDate(dateDebut), dateFin: getDate(dateFin)};
-    callAPI('post', '/planTarifaire/disponibilite', data, populatePrix);
+    let debut = new Date(dateDebut);
+    debut.setDate(1);
+    let fin = new Date(dateFin);
+    fin.setDate(1);
+
+    const data = {dateDebut: getDate(debut), dateFin: getDate(fin)};
+    callAPI('post', '/TCTarif/disponibiliteTarif', data, populatePrix);
+  }
+
+  function stopReload(){
+    let temp = JSON.parse(JSON.stringify(context.state));
+    temp.reload = false;
+    context.setState(temp);
   }
 
   useEffect(() => {
-    getPrix(selectDate, monthLater);
-    //setPrix(data);
-    if (onDateSelect) {
-      onDateSelect(selectDate);
+    if(context.state.reload){
+      getPrix(selectDate, monthLater);
+      stopReload();
+      //setPrix(data);
+      if (onDateSelect) {
+        onDateSelect(selectDate);
+      }
+      console.log("reload calendar...");
     }
-    console.log(context);
-  }, []);
+    
+  });
+
+  function reload(){
+    let temp = JSON.parse(JSON.stringify(context.state));
+    temp.reload = true;
+    context.setState(temp);
+    getPrix(selectDate, monthLater);
+  }
 
   return (
     <div style={{width: "fit-content", margin: "0 auto"}}>

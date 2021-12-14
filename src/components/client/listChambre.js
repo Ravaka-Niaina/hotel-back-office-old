@@ -77,6 +77,14 @@ function getDate(date){
 
 function ListTarif(props){
 
+    function setReservationEnCours(res){
+        if(res.status === 200){
+            props.context.setReservationEnCours(res.reservation);
+        }else{
+            console.log(res);
+        }
+    }
+
     function addReservation(e ,id, nom, idTypeChambre){
         if(props.context.state.itineraires.length > 0){
             let itineraires = JSON.parse(JSON.stringify(props.context.state.itineraires));
@@ -94,8 +102,8 @@ function ListTarif(props){
                 withCredentials: true,
                 data: {itineraires: itineraires}
             })
-            .then(res => {                                                  
-                props.context.setReservationEnCours(res.data)})
+            .then(res => {
+                setReservationEnCours(res.data)})
             .catch(err => console.log(err));
         }
     }
@@ -235,7 +243,7 @@ class DChambre extends React.Component{
                  {listChambre}
             </div>
         );
-        this.addReservation()
+        //this.addReservation()
     }
 }
 export default DChambre

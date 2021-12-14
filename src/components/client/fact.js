@@ -189,15 +189,15 @@ class Fact extends React.Component{
             withCredentials: true,
             data: data
         })
-        .then(res => {   
-            console.log("io lty e")
+        .then(res => { 
             console.log(res);                                               
-            context.setReservationEnCours(res.data)})
+            context.setReservationEnCours(res.data.reservation)})
         .catch(err => console.log(err));
     }
 
     render(){
         let valider = null;
+        console.log(this.props.context.state);
         for(let i = 0; i < this.props.context.state.itineraires.length; i++){
             for(let u = 0; u < this.props.context.state.itineraires[i].tarifReserves.length; u++){
                 if(this.props.context.state.itineraires[i].tarifReserves[u].etat == undefined

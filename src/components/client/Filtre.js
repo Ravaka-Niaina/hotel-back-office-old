@@ -279,7 +279,6 @@ class Filtre extends React.Component{
         let currentState = JSON.parse(JSON.stringify(this.props.context.state));
         currentState.listTypeChambre = res.list;
         this.props.context.setState(currentState);
-        console.log(this.props.context.state);
     }
     applyFilter(){
         console.log({filtres: this.state.filtres, guests: this.props.context.state.guests});
@@ -295,7 +294,8 @@ class Filtre extends React.Component{
                     dateDebut: this.props.context.state.dateSejour.debut,
                     dateFin: this.props.context.state.dateSejour.fin
                 }
-                callAPI('post', '/typeChambre/', data, this.setResult);
+                console.log(data);
+                callAPI('post', '/TCTarif/', data, this.setResult);
         }else{
             this.props.context.handleChange("errFiltre", 'Veuillez remplir les champs Adulte, Enfant, Debut sejour et fin sejour au moins');
         }
