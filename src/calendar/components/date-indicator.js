@@ -1,3 +1,8 @@
+import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+
 import background from './cross.png';
 import {
   getDayOfMonth,
@@ -7,6 +12,18 @@ import {
 } from '../utils/moment-utils';
 import { getDatesInMonthDisplay } from '../utils/date-utils';
 const utility = require('../../tarif/utility.js');
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#f5f5f9',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: '1px solid #dadde9',
+  },
+}));
 
 const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBornes, prix, context }) => {
   const changeDate = (day) => {
@@ -29,6 +46,25 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
     getMonth(selectDate) + 1,
     getYear(selectDate)
   );
+
+  const getHtmlPromo = (prixOriginal, promotions) => {
+    let htmlProm = [];
+    for(let i = 0; i < promotions.length; i++){
+      htmlProm.push(
+        <div>
+          <div>Prix sans prom: <strong>{prixOriginal + " €"}</strong></div>
+        </div>
+      );
+      htmlProm.push(
+        <div>
+          <h4>{promotions[i].nom}</h4>
+          <div>Premier jour: <strong>{promotions[i].premierJour}</strong></div>
+          <div>Remise: <strong>{promotions[i].remise} {promotions[i].isPourcentage ? "%" : ""}</strong></div>
+        </div>
+      );
+    }
+    return htmlProm;
+  }
   
   if(prix !== null){
     for(let i = 0; i < prix.length; i++){
@@ -41,6 +77,7 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
             if(prix[i].prices[u] !== null){
               datesInMonth[v].price = prix[i].prices[u].aPayer;
               datesInMonth[v].promotions = prix[i].prices[u].promotions;
+              datesInMonth[v].prixOriginal = prix[i].prices[u].prixOriginal;
             }
             u++;
           }
@@ -71,22 +108,42 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
     if(debut <= temp && fin >= temp){
       notValid = notValid + " active";
     }
+    console.log(i);
     return (
       <div>
         {i.currentMonth ? 
           <div>
           {i.price !== undefined ? 
-            <div
-              className={`${notValid}`}
-              data-active-month={i.currentMonth}
-              data-date={i.date.toString()}
-              key={key}
-              onClick={(e) => changeDate(utility.getDate(i.date))}
-            > 
-              <div style={{textAlign: "center"}}> {getDayOfMonth(i.date)} </div>
-              <div style={{textAlign: "center"}}> {price} </div>
-              {i.promotions !== undefined && i.promotions.length > 0 ? <div style={{height: "3px", backgroundColor: "blue"}}></div> : null}
-            </div> : 
+            <div>
+              {i.promotions !== undefined && i.promotions.length > 0 ?
+                <HtmlTooltip
+                  title={ getHtmlPromo(i.prixOriginal, i.promotions) }
+                >
+                  <div
+                    className={`${notValid}`}
+                    data-active-month={i.currentMonth}
+                    data-date={i.date.toString()}
+                    key={key}
+                    onClick={(e) => changeDate(utility.getDate(i.date))}
+                  > 
+                    <div style={{textAlign: "center"}}> {getDayOfMonth(i.date)} </div>
+                    <div style={{textAlign: "center"}}> {price} </div>
+                    <div style={{height: "3px", backgroundColor: "blue"}}></div>
+                  </div>
+                </HtmlTooltip> :
+                <div
+                  className={`${notValid}`}
+                  data-active-month={i.currentMonth}
+                  data-date={i.date.toString()}
+                  key={key}
+                  onClick={(e) => changeDate(utility.getDate(i.date))}
+                > 
+                  <div style={{textAlign: "center"}}> {getDayOfMonth(i.date)} </div>
+                  <div style={{textAlign: "center"}}> {price} </div>                
+                </div>
+              }
+            </div>
+             : 
             <div style={{width: "45px", height: "46px"}}>
               <div className={`${notValid}`} key={key} ></div>
               <div style={{textAlign: "center", paddingTop: "7px"}}>
