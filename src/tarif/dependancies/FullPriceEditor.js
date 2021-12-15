@@ -80,6 +80,12 @@ const FullPriceEditor = (props) => {
         bgcolor: 'background.paper',
         boxShadow: 'rgb(0 0 0 / 20%) 0px 5px 5px -3px, rgb(0 0 0 / 14%) 0px 8px 10px 1px, rgb(0 0 0 / 12%) 0px 3px 14px 2px',
         p: 4,
+
+        position:'absolute',
+            overflow:'scroll',
+            overflowX: 'hidden',
+            height: '100%',
+            display:'block'
     };
     const [value, setValue] = React.useState('open');
     const [tarifs, setTarifs] = React.useState([]);
