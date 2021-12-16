@@ -270,30 +270,30 @@ function InsertTypeCHambre(){
                   <Box>
                     <div style={{marginTop:'40px',display:'inline'}}>
                       <TextField 
-                      id="outlined-basic"
-                      variant="outlined"
-                      size='small'
-                      label={
-                      <p id='libel'>
-                      Nom
-                      </p>
-                            } 
-                      style={{width:'40%'}}
-                      type="text" 
-                      value={state.nom} onChange={(e) => handleInputChange(e, "nom")}
+                        id="outlined-basic"
+                        variant="outlined"
+                        size='small'
+                        label={
+                        <p id='libel'>
+                        Nom
+                        </p>
+                              } 
+                        style={{width:'40%', background: "2px solid red"}}
+                        type="text" 
+                        value={state.nom} onChange={(e) => handleInputChange(e, "nom")}
                       />
                       <TextField 
-                      id="outlined-basic"
-                      variant="outlined"
-                      size='small'
-                      label={
-                        <p id='libel'>
-                            Chambre total
-                        </p>
-                             } 
-                      type="number"
-                      style={{width:'40%',marginLeft:'123px'}}
-                      value={state.chambreTotal} onChange={(e) => handleInputChange(e, "chambreTotal")}
+                        id="outlined-basic"
+                        variant="outlined"
+                        size='small'
+                        label={
+                          <p id='libel'>
+                              Chambre total
+                          </p>
+                              } 
+                        type="number"
+                        style={{width:'40%',marginLeft:'123px'}}
+                        value={state.chambreTotal} onChange={(e) => handleInputChange(e, "chambreTotal")}
                       />
                     </div>
 

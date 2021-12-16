@@ -202,9 +202,7 @@ const DayLine = (props) => {
         </td>);
     }
 
-    
     for(let i = 0; i < props.typechambre.statusDays.length; i++){
-        console.log(props.typechambre.statusDays[i]);
         closelines.push(
             <td>
                 <CloseLine 
