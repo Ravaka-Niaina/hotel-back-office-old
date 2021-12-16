@@ -44,7 +44,8 @@ const DayCell = (props) => {
             >
                 {props.day != null && props.isprice ? 
                 <div>
-                    <div style={{marginTop: '-5px'}}>{props.day}</div>
+                    <div style={{height: "10px", backgroundColor: (props.closed ? "#FF0000" : "#64E986"), marginTop: "-12px"}}></div>
+                    {props.day}
                     <div style={{fontSize: "12px"}}>
                         <span>{'x' + props.nbPers}</span>
                     </div>

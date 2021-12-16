@@ -53,7 +53,8 @@ function RateCells(props){
                         selectDay={props.addSelection.bind(props.context)} 
                         selectOneDay={props.oneSelection.bind(props.context)} 
                         day={minPrix.prix}
-                        nbPers={minPrix.nbPers} />
+                        nbPers={minPrix.nbPers}
+                        closed={props.typechambre.planTarifaire[i].prixTarif[u].closed} />
                 </td>
             );
         }
