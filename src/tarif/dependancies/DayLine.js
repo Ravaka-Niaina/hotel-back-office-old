@@ -213,7 +213,9 @@ const DayLine = (props) => {
                 <CloseLine 
                     closed={props.typechambre.statusDays[i].closed} 
                     statusDay={props.typechambre.statusDays[i]}
-                    idTypeChambre={props.typechambre._id} />
+                    idTypeChambre={props.typechambre._id}
+                    setOpenLoad={props.setOpenLoad}
+                    getPrix={props.getPrix} />
             </td>
         )
     }

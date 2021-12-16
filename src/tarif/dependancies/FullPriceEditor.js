@@ -117,17 +117,14 @@ const FullPriceEditor = (props) => {
     useEffect( () => {
         console.log(props.typechambre.planTarifaire);
         let taf = JSON.parse(JSON.stringify(props.typechambre.planTarifaire));
-        if(taf.length > 0){
-            taf.splice(0, 0, {nom: "Choisissez un plan tarifaire..."});
-        }else{
-            taf.splice(0, 0, {nom: "Aucun plan tarifaire..."});
+        for(let i = 0; i < taf.length; i++){
+            taf.checked = false;
         }
         let temp = [];
         for(let i = 0; i < guestsMax; i++){
             temp.push("");
         }
         setPrix(temp);
-        
         setTarifs(taf);
     }, [])
 
@@ -156,7 +153,13 @@ const FullPriceEditor = (props) => {
     let rates = [];
     for(let i = 0; i < tarifs.length; i++){
         rates.push(
-            <MenuItem value={i + 1}>{tarifs[i].nom}</MenuItem>
+            <FormControlLabel
+                style={{padding: 0}}
+                label={tarifs[i].nom}
+                onChange={(e) => handleRateChange(i, e.target.checked)}
+                control={<Checkbox checked={tarifs[i].checked} />}
+            />
+            //<MenuItem value={i + 1}>{tarifs[i].nom}</MenuItem>
         );
     }
 
@@ -191,8 +194,14 @@ const FullPriceEditor = (props) => {
                 usedDays[i].checked = false;
             }
         }
+        let tabIdTarif = [];
+        for(let i = 0; i < tarifs.length; i++){
+            if(tarifs[i].checked){
+                tabIdTarif.push(tarifs[i]._id);
+            }
+        }
         const data = {
-            idTarif: tarifs[rate - 1]._id,
+            tabIdTarif: tabIdTarif,
             idTypeChambre: props.typechambre._id,
             days: usedDays,
             versions: versions,
@@ -216,6 +225,12 @@ const FullPriceEditor = (props) => {
         if(checked === true && value === "close"){
             setValue("open");
         }
+    }
+
+    const handleRateChange = (i, checked) => {
+        let temp = JSON.parse(JSON.stringify(tarifs));
+        temp[i].checked = checked;
+        setTarifs(temp);
     }
 
     let inputDays = [];
@@ -325,15 +340,8 @@ const FullPriceEditor = (props) => {
                 </Stack>
                 <br/>
                 <FormControl component="fieldset">
-                <InputLabel variant="outlined">Rate</InputLabel>
-                <Select
-                    value={rate}
-                    label="Rate"
-                    onChange={(e) => handleChangeRate(e.target.value)}
-                    size="small"
-                >
-                    { rates }
-                </Select>
+                {/*<InputLabel variant="outlined">Rate</InputLabel>*/}
+                { rates }
                 <FormLabel component="legend">Plan tarifaire</FormLabel>
                 <RadioGroup
                     aria-label="gender"

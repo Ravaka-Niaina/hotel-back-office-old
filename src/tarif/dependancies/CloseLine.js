@@ -19,13 +19,14 @@ const CloseLine = (props) => {
         setOpened(!props.closed);
     })
     function closeTypeChambre(){
+        props.setOpenLoad(true);
         const data = {
             _id: props.idTypeChambre, 
             dateDebut: utility.getDate(props.statusDay.date),
             dateFin: utility.getDate(props.statusDay.date)
         };
         console.log(data);
-        callAPI('post', '/typeChambre/close', data, function(res){console.log(res); window.location.reload()} );
+        callAPI('post', '/typeChambre/close', data, function(res){console.log(res); props.getPrix()} );
     }
     return (
         <>
