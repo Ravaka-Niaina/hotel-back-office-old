@@ -64,6 +64,7 @@ function InsertTarif(){
     }
 
     function insert(e){
+        e.preventDefault();
         const current = utility.getPlan(planTarifaire, isLeadHour, lead);
         callAPI('post', '/planTarifaire/insert', current, tryRedirect);
     }
