@@ -24,6 +24,7 @@ export function LeadDay(props){
     
 export function ChambresAtrb(props){
     let i = -1;
+    console.log(props.chambresAtrb);
     let list = props.chambresAtrb.map(chambre => {
         i++;
         let u = i;
