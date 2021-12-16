@@ -13,7 +13,10 @@ import { useEffect } from 'react';
 function getMin2(arr){
     var min = arr[0];
     for(var i = 1; i < arr.length; i++) {
-        if(min > arr[i]){
+        console.log(arr[i]);
+        if(arr[i].nbPers === 2 && arr[i].prix !== "" && arr[i].prix > 0){
+            return arr[i];
+        }else if(min > arr[i]){
             min = arr[i];
         }
     }
@@ -24,13 +27,13 @@ function getMinPrix(versions){
     let prixValid = [];
     for(let i = 0; i < versions.length; i++){
         if(versions[i].prix != ""){
-            prixValid.push(versions[i].prix);
+            prixValid.push(versions[i]);
         }
     }
     if(prixValid.length > 0){
         return getMin2(prixValid);
     }
-    return null;
+    return {nbPers: null, prix: null};
 }
 
 function RateCells(props){
@@ -49,7 +52,8 @@ function RateCells(props){
                         deselectDay={props.rmSelection.bind(props.context)} 
                         selectDay={props.addSelection.bind(props.context)} 
                         selectOneDay={props.oneSelection.bind(props.context)} 
-                        day={minPrix} />
+                        day={minPrix.prix}
+                        nbPers={minPrix.nbPers} />
                 </td>
             );
         }
