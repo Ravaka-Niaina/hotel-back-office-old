@@ -29,6 +29,7 @@ export default class PromotionList extends React.Component {
     axios.get(process.env.REACT_APP_BACK_URL + '/promotion')
       .then(res => {
         if(res.data.status == 200){
+          console.log(res.data);
           this.setState({promotions: res.data.promotions});
         }else{
           console.log(res.data.message);

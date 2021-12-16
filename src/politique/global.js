@@ -197,19 +197,18 @@ function Global(){
                 />
                 <TextField 
                     id="outlined-size-small"
-                    size="small"
+                    size="small" label = {dateTime}
                     type="number"
                     name="date"
                     required
                     value = {x.date}
-                    placeholder={dateTime}
                     onChange={e => handleInputChange2(e, i , "date")}
                 />
                 <TextField 
                     id="outlined-size-small"
-                    placeholder="% :"
+                    placeholder="Pourcentage : "
                     size="small"
-                    style={{width : "70px" , backgroundColor : "gainsboro" , fontSize :"10px"}}
+                    style={{width : "130px" , backgroundColor : "gainsboro" , fontSize :"10px"}}
                     disabled
                 />
                 <TextField
@@ -218,7 +217,7 @@ function Global(){
                     name="pourcentage"
                     type="number"
                     value = {x.pourcentage}
-                    placeholder="pourcentage"
+                    label="pourcentage"
                     required
                     onChange={e => handleInputChange(e, i)}
                 />    
@@ -282,9 +281,9 @@ function Global(){
                                             />
                                             <TextField 
                                                 id="outlined-size-small"
-                                                placeholder="% :"
+                                                placeholder="Pourcentage :"
                                                 size="small"
-                                                style={{width : "70px" , backgroundColor : "gainsboro" , fontSize :"10px"}}
+                                                style={{width : "130px" , backgroundColor : "gainsboro" , fontSize :"10px"}}
                                                 disabled
                                             />
                                             <TextField
@@ -313,11 +312,10 @@ function Global(){
                                     <strong >Nom politique : </strong>
                                         <TextField
                                                 id="outlined-size-small"
-                                                size="small"
+                                                size="small" label ="nom"
                                                 name="nom"
                                                 type="text"
                                                 value = {nom}
-                                                placeholder="nom"
                                                 onChange={e => handleInputChangeInputNom(e)}
                                             />
                                 </div>
@@ -325,7 +323,7 @@ function Global(){
                                     <strong >Description : </strong>
                                         <TextField
                                                 id="outlined-size-small"
-                                                size="small"
+                                                size="small" label ="description"
                                                 multiline
                                                 rows={2}
                                                 rowsMax={4}
@@ -333,7 +331,6 @@ function Global(){
                                                 name="description"
                                                 type="text"
                                                 value = {description}
-                                                placeholder="description"
                                                 onChange={e => handleInputChangeInputDesc(e)}
                                             />
                                 </div> <br/>

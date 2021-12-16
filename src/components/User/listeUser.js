@@ -28,7 +28,7 @@ class ListeUser extends React.Component{
         let current =JSON.parse(JSON.stringify(this.state));
         current.listeUser = data.userModel;
         this.setState(current);
-        console.log("data " + current);
+        console.log(current);
     }
 
     activation(data){
@@ -47,7 +47,6 @@ class ListeUser extends React.Component{
 
     componentDidMount(){
         APiGet("get" , "/user/listePartenaire" , this.setValue);
-        
     }
 
     activer(event , value){

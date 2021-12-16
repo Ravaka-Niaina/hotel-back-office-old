@@ -22,7 +22,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import GETaPI from "../APiGet.js";
-import ModalLTChambre from "./ModalLTChambre.js";
 import  Navbar  from "../Navbar/Navbar";
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
@@ -33,21 +32,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 
 
-function createData(name, calories, fat, carbs, protein) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-  };
-}
-
 let rows = [];
-
-
-
-
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -78,40 +63,41 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
+
 const headCells = [
   {
     id: 'nom',
     numeric: false,
     disablePadding: true,
-    label: 'nom T',
+    label: 'nom Tarif',
   },
   {
-    id: 'nbAdulte',
-    numeric: true,
-    disablePadding: false,
-    label: 'ndrAdulte',
+    id: 'tarif',
+    numeric: false,
+    disablePadding: true,
+    label: "Tarif",
   },
   {
-    id: 'nbEnfant',
+    id: 'typeChambre',
     numeric: true,
     disablePadding: false,
-    label: 'nbrEnfant',
+    label: 'Type Chambre',
   },
   {
-    id: 'chambreTotal',
+    id: 'remiseEuro',
     numeric: true,
     disablePadding: false,
-    label: 'typeChambre',
+    label: 'Remise',
   },
   {
-    id: 'superficie',
+    id: 'date',
     numeric: true,
     disablePadding: false,
-    label: 'superficie',
+    label: 'Date Sejour',
   },
   {
     id: 'action',
-    numeric: false,
+    numeric: true,
     disablePadding: false,
     label: 'Action',
   }
@@ -131,7 +117,7 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'center'}
+            align={headCell.numeric ? 'left' : 'center'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -236,18 +222,21 @@ export default function EnhancedTable() {
     setOrderBy(property);
   };
 
-  function setPlanTarifaire(data){
+  function functionAppelList(data){
+    console.log(data);
+    
     rows = [];
-    for(let i = 0; i < data.TCModel.length; i++){
-      rows.push(data.TCModel[i]);  
+    for(let i = 0; i < data.promotions.length; i++){
+      rows.push(data.promotions[i]);  
     }
-    setList(data.TCModel);
-    //return rows;
+    setList(data.promotions);
+   // rows = list;
+    
   }
+ 
 
   useEffect(() => {
-    GETaPI('get', '/typeChambre/TC',setPlanTarifaire);
-
+      GETaPI("get", "/promotion" ,functionAppelList);
   }, []);
 
   const handleSelectAllClick = (event) => {
@@ -255,7 +244,6 @@ export default function EnhancedTable() {
       const newSelecteds = rows.map((n) => n.name);
       setSelected(newSelecteds);
       return;
-
     }
     setSelected([]);
   };
@@ -290,33 +278,25 @@ export default function EnhancedTable() {
 
   return (
     <>
-    <Navbar currentPage={2}/><br/>
+    <Navbar currentPage={3}/><br/>
     <Box sx={{ width: '100%', padding :"50px" }}>
-    <Link to={'/TypeChambre/insert'} style={{float : 'left'}}>
-          <Button 
-          variant="contained" 
-          endIcon={<AddIcon style={{color:'white'}}/>}
-          style={{textDecoration:'none'}}>
-              <span style={{color:'white'}}>Ajouter Type chambre</span>
-          </Button>
-      </Link> 
-      <div style={{float : 'right'}}>  
-        <TextField 
-          id="outlined-size-small"
-          size="small" label ="Search"
-          name="Search"
-          type="text"
-        />
-        <SearchIcon style={{color:"blue"}}/>
-      </div> 
-      
-      
-      <br/><br/>
+    <Link to={'/promotion/create'}  style={{float : 'left'}}>
+        <Button variant ="contained">Insert Promotion</Button> 
+    </Link>
+    <div style={{float : 'right'}}>  
+      <TextField 
+        id="outlined-size-small"
+        size="small" label ="Search"
+        name="Search"
+        type="text"
+      />
+      <SearchIcon style={{color:"blue"}}/>
+    </div> <br/><br/>
       <Paper sx={{ width: '100%', mb: 2 }}>
-      <ModalLTChambre open={open} id = {indiceU} setO = {closeModal}/>
+     
         <TableContainer>
           <Table
-            sx={{ minWidth: 750 }}
+            sx={{ minWidth: 600 }}
             aria-labelledby="tableTitle"
             size={dense ? 'small' : 'medium'}
           >
@@ -337,7 +317,7 @@ export default function EnhancedTable() {
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
-                    <TableRow
+                    <TableRow 
                       onClick={(event) => handleClick(event, row._id , true)}
                       role="checkbox"
                       tabIndex={-1}
@@ -352,15 +332,16 @@ export default function EnhancedTable() {
                       >
                         {row.nom}
                       </TableCell>
-                      <TableCell align="right">{row.nbAdulte}</TableCell>
-                      <TableCell align="right">{row.nbEnfant}</TableCell>
-                      <TableCell align="right">{row.chambreTotal}</TableCell>
-                      <TableCell align="right">{row.superficie}</TableCell>
-                      <TableCell align="center">
-                        <Link to={'/typeChambre/details/' + row._id}>
-                          <EditIcon style={{color : "green"}} /> 
-                        </Link>
-                          <DeleteIcon style={{color : "red"}}/></TableCell>
+                      <TableCell >{row.tarif}</TableCell>
+                      <TableCell align="left">{row.typeChambre}</TableCell>
+                      <TableCell align="left">{row.remiseEuro}</TableCell>
+                      <TableCell align="left">{row.dateDebutS} au {row.dateFinS} </TableCell>
+                      <TableCell align="rigth">
+                        <Link to={'/'}> 
+                          <EditIcon style={{color : "green"}} />
+                        </Link> 
+                          <DeleteIcon style={{color : "red"}}/>
+                      </TableCell>
                     </TableRow>
                   );
                 })}

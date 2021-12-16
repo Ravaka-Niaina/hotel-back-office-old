@@ -5,13 +5,16 @@ import  listeUser  from "./components/User/listeUser";
 
 import  InsertTypeChambre  from "./partenaire/InsertTypeChambre.js";
 import  DetailsTypeChambre  from "./partenaire/DetailsTypeChambre.js";
-import  ListTypeChambre  from "./partenaire/ListTypeChambre.js";
+import  ListTypeChambre  from "./partenaire/ListTChambre.js";
 import  searchTypeChambre  from "./partenaire/searchTypeChambre.js";
 
 import  InsertTarif  from "./tarif/InsertTarif.js";
 import  DetailsTarif  from "./tarif/DetailsTarif.js";
 
 import Tarif from "./tarif/Tarif.js";
+import LTarif from "./tarif/LTarif.js";
+import CalendarComponent from './tarif/CalendarComponent';
+
 import Paiement from "./paiement";
 
 import InsertChambre from './partenaire/chambre/InsertChambre.js';
@@ -19,10 +22,11 @@ import  AppClient  from "./components/client/scroll";
 import  test  from "./components/client/Cookies";
 
 
-import  PromotionList  from "./promotion/promotionList.js";
+import  PromotionList  from "./promotion/LPromotion.js";
 import  InsertPromotion  from "./promotion/insertPromotion.js";
 import Global from "./politique/global.js";
-import ListPolitique from "./politique/listpolitique.js"
+import ListPolitique from "./politique/LPolitique.js"
+import testData from "./politique/listpolitique.js"
 
 import  Front_client  from "./front_client/front_client";
 
@@ -37,7 +41,7 @@ import  guest  from "./partenaire/guest.js";
 import  hideShow  from "./hideShow.js";
 
 
-import NotFound from './NotFound';
+import DropDown from './pagination/pagination.js';
 
 
 import { useCookies } from 'react-cookie';
@@ -46,8 +50,11 @@ import APIGet from "./APiGet.js"
 import {BrowserRouter as Router, Route , useHistory ,Switch} from 'react-router-dom';
 import Cookies from 'universal-cookie';
 
-import  ListTChambre  from "./partenaire/ListTChambre.js";
+// import  ListTChambre  from "./partenaire/ListTChambre.js";
+import  ListTChambre  from "./dataTable/datatable.js";
 
+
+/*
 function  Boucleroute(props){
     let route = props.ReponseRoute.map(list => {
       return (
@@ -56,8 +63,11 @@ function  Boucleroute(props){
     })
     return route;
   }
+  */
 
 function App(){
+
+  /*
   const [cookies, setCookie] = useCookies();
   const [route, setRoute] = useState([]);
   const id = cookies.sessionId;
@@ -98,7 +108,7 @@ function App(){
        }
     }
   }
-/*
+
   function responseList(data){
       console.log(data);
       setRoute(data.routeAccess);
@@ -139,7 +149,9 @@ function App(){
         <Route path="/TypeChambre/insert" exact component={InsertTypeChambre} />
         <Route path="/TypeChambre/details/:_id" exact component={DetailsTypeChambre} />
 
-        <Route path="/tarif" exact component={Tarif} />
+        <Route path="/tarif" exact component={LTarif} />
+        <Route path="/tarif/calendar" exact component={CalendarComponent} />
+
         <Route path="/tarif/insert" exact component={InsertTarif}/>
         <Route path="/tarif/details/:_id" exact component={DetailsTarif} />
       
@@ -147,6 +159,7 @@ function App(){
         <Route path="/politique" exact component={Global} />
         <Route path="/politique/detail/:_id" exact component={Global} />
         <Route path="/politique/list" exact component={ListPolitique} />
+        <Route path="/politique/testData" exact component={testData} />
 
         <Route path="/calendrier" exact component={Calendrier} />
     
@@ -162,6 +175,7 @@ function App(){
 
         <Route path="/reservation/:_id" exact component={Reservation} />
         <Route path="/reservation/:_id/apply" exact component={ApplyReservation} />
+        <Route path="/drop" exact component={DropDown} />
 
         <Route path="/CalendarClient" exact component={BasicDateRangePicker} />
       </Router>
@@ -170,16 +184,4 @@ function App(){
 
 }
 export default App;
-/*
-function App() {
-  return (
-    <div className="App">
-      <Router>
-     
 
-      </Router>
-    </div>
-  );
-}
-*/
-//push heroku

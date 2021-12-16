@@ -22,32 +22,17 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import GETaPI from "../APiGet.js";
-import ModalLTChambre from "./ModalLTChambre.js";
 import  Navbar  from "../Navbar/Navbar";
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
+
 import EditIcon from '@mui/icons-material/Edit';
 import Pagination from '../pagination/pagination.js';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 
-
-function createData(name, calories, fat, carbs, protein) {
-  return {
-    name,
-    calories,
-    fat,
-    carbs,
-    protein,
-  };
-}
-
 let rows = [];
-
-
-
-
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -78,43 +63,75 @@ function stableSort(array, comparator) {
   return stabilizedThis.map((el) => el[0]);
 }
 
+function ChambreAtrb(props){
+  let liste = props.row.map(list => {
+    return(
+      <li>{list.nom}</li>
+    );
+  })
+  return liste;
+}
+
+function Politic(props){
+  let liste = props.row.map(list => {
+    return(
+      <li>{list.nom}</li>
+    );
+  })
+  return liste;
+}
+
+
 const headCells = [
   {
     id: 'nom',
     numeric: false,
     disablePadding: true,
-    label: 'nom T',
+    label: 'nom Tarif',
   },
   {
-    id: 'nbAdulte',
+    id: 'chambresAtrb',
     numeric: true,
     disablePadding: false,
-    label: 'ndrAdulte',
+    label: 'typeChambreAtr',
   },
   {
-    id: 'nbEnfant',
+    id: 'dateSejour[0]',
     numeric: true,
     disablePadding: false,
-    label: 'nbrEnfant',
+    label: 'Sejour debut',
   },
   {
-    id: 'chambreTotal',
+    id: 'dateSejour[1]',
     numeric: true,
     disablePadding: false,
-    label: 'typeChambre',
+    label: 'Sejour fin',
   },
   {
-    id: 'superficie',
+    id: 'dateReservation[0]',
     numeric: true,
     disablePadding: false,
-    label: 'superficie',
+    label: 'Reservation debut',
+  },
+  {
+    id: 'dateReservation[1]',
+    numeric: true,
+    disablePadding: false,
+    label: 'Reservation fin',
+  },
+  {
+    id: 'politiqueAnnulAtrb',
+    numeric: true,
+    disablePadding: false,
+    label: 'politique',
   },
   {
     id: 'action',
-    numeric: false,
+    numeric: true,
     disablePadding: false,
     label: 'Action',
   }
+  
 ];
 
 
@@ -131,7 +148,7 @@ function EnhancedTableHead(props) {
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'center'}
+            align={headCell.numeric ? 'left' : 'center'}
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -238,16 +255,15 @@ export default function EnhancedTable() {
 
   function setPlanTarifaire(data){
     rows = [];
-    for(let i = 0; i < data.TCModel.length; i++){
-      rows.push(data.TCModel[i]);  
+    for(let i = 0; i < data.list.length; i++){
+      rows.push(data.list[i]);  
     }
-    setList(data.TCModel);
-    //return rows;
+    setList(data.list);
+    return rows;
   }
 
   useEffect(() => {
-    GETaPI('get', '/typeChambre/TC',setPlanTarifaire);
-
+    GETaPI('post', "/planTarifaire",setPlanTarifaire);
   }, []);
 
   const handleSelectAllClick = (event) => {
@@ -255,7 +271,6 @@ export default function EnhancedTable() {
       const newSelecteds = rows.map((n) => n.name);
       setSelected(newSelecteds);
       return;
-
     }
     setSelected([]);
   };
@@ -290,14 +305,14 @@ export default function EnhancedTable() {
 
   return (
     <>
-    <Navbar currentPage={2}/><br/>
+    <Navbar currentPage={1}/><br/>
     <Box sx={{ width: '100%', padding :"50px" }}>
-    <Link to={'/TypeChambre/insert'} style={{float : 'left'}}>
+    <Link to={'/tarif/insert'}  style={{float : 'left'}}>
           <Button 
           variant="contained" 
           endIcon={<AddIcon style={{color:'white'}}/>}
           style={{textDecoration:'none'}}>
-              <span style={{color:'white'}}>Ajouter Type chambre</span>
+              <span style={{color:'white'}}>Ajouter Plan tarifaire</span>
           </Button>
       </Link> 
       <div style={{float : 'right'}}>  
@@ -308,12 +323,9 @@ export default function EnhancedTable() {
           type="text"
         />
         <SearchIcon style={{color:"blue"}}/>
-      </div> 
-      
-      
-      <br/><br/>
+      </div> <br/><br/>
       <Paper sx={{ width: '100%', mb: 2 }}>
-      <ModalLTChambre open={open} id = {indiceU} setO = {closeModal}/>
+     
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -352,15 +364,18 @@ export default function EnhancedTable() {
                       >
                         {row.nom}
                       </TableCell>
-                      <TableCell align="right">{row.nbAdulte}</TableCell>
-                      <TableCell align="right">{row.nbEnfant}</TableCell>
-                      <TableCell align="right">{row.chambreTotal}</TableCell>
-                      <TableCell align="right">{row.superficie}</TableCell>
-                      <TableCell align="center">
-                        <Link to={'/typeChambre/details/' + row._id}>
+                      <TableCell align="left"><ChambreAtrb  row = {row.chambresAtrb}/></TableCell>
+                      <TableCell align="left">{row.dateSejour.debut}</TableCell>
+                      <TableCell align="left">{row.dateSejour.fin}</TableCell>
+                      <TableCell align="left">{row.dateReservation.debut}</TableCell>
+                      <TableCell align="left">{row.dateReservation.fin}</TableCell>
+                      <TableCell align="left"><Politic  row = {row.politiqueAnnulAtrb}/></TableCell>
+                      <TableCell align="rigth">
+                        <Link to={'/tarif/details/' + row._id}>
+
                           <EditIcon style={{color : "green"}} /> 
-                        </Link>
-                          <DeleteIcon style={{color : "red"}}/></TableCell>
+                        </Link >
+                        <DeleteIcon style={{color : "red"}}/></TableCell>
                     </TableRow>
                   );
                 })}

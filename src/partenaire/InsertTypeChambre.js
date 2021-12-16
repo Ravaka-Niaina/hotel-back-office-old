@@ -107,6 +107,7 @@ function InsertTypeCHambre(){
   }
 
   function setListEquipement(res){
+    console.log(res);
     let current = JSON.parse(JSON.stringify(state));
     current.equipements = res.equipements;
     setState(current);
@@ -114,7 +115,7 @@ function InsertTypeCHambre(){
 
   useEffect(() => {
     callAPI('post', '/planTarifaire', {}, setPlanTarifaire);
-    callAPI('get', '/equipement', {}, setListEquipement);
+    //callAPI('get', '/equipement', {}, setListEquipement);
   }, []); 
 
   function handleCheckBoxPlanTarifaire(e, index){

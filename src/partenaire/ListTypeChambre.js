@@ -30,15 +30,15 @@ class ListTypeChambre extends React.Component{
 
     setListTypeChambre(data){
         console.log(data);
-        let currentState = JSON.parse(JSON.stringify(this.state));
-        currentState = data;
+       let currentState = JSON.parse(JSON.stringify(this.state));
+        currentState.list = data.TCModel;
         this.setState(currentState);
     }
 
     componentDidMount(){
         axios({
-            method: 'post',
-            url: process.env.REACT_APP_BACK_URL + "/typeChambre",
+            method: 'get',
+            url: process.env.REACT_APP_BACK_URL + "/typeChambre/TC",
             withCredentials: true
         })
         .then(res => this.setListTypeChambre(res.data))

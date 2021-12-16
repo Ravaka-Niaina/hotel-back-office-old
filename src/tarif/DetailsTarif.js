@@ -11,7 +11,9 @@ import  Navbar  from "../Navbar/Navbar";
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio'
+import { Link } from 'react-router-dom';
 const utility = require('./utility.js');
+
 
 
 
@@ -209,6 +211,9 @@ function DetailsTarif(){
                                     <Button variant="contained" color="success" onClick={(e) => update(e)}>
                                         Modifier
                                     </Button>
+                                    <Link to ="/tarif">
+                                        <Button variant="contained" style={{marginLeft : "2px"}}>retour</Button>
+                                    </Link>
                                 </div>
                             </form>
                         </div>
