@@ -146,29 +146,6 @@ class Fact extends React.Component{
                 emailVide = false;
             }
             
-            /*
-            console.log("id = " + idVide + " , email = " + emailVide);
-                axios({
-                    method: 'post',
-                    url: process.env.REACT_APP_BACK_URL + '/reservation/applyWithEmail',
-                    withCredentials: true,
-                    data: {_id: this.props.context.state.reservationEnCours._id, email: this.props.context.state.email}
-                })
-                .then(res => {       
-                    console.log(res);  
-                    if(res.data.status != 200){
-                        try{
-                            this.props.context.handleChange("resultApplyReservation", res.data.errors[0].message);
-                        }catch(err){
-                            this.props.context.handleChange("resultApplyReservation", res.data.errors[0]);
-                        }
-                    }else{
-                        this.props.context.handleChange("resultApplyReservation", res.data.message);
-                        this.props.context.setReservationEnCours({status: 200, reservation: null});
-                        this.props.context.handleChange("open", false);
-                    }
-                }).catch(err => console.log(err));
-            */
         }catch(err2){console.log(err2)}
     }
 

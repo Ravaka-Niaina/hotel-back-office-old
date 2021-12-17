@@ -14,6 +14,23 @@ import NavBarClient from '../Book/BookComponent.js';
 import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
 
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import Promotions from "./promotion";
+import DateSejour from "./DateSejour";
+import BaeCalendar from "../../calendar/calendar.js";
+
+const Item = styled(Paper)(({ theme }) => ({
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  }));
+
+
+
 function TestCookie(){
     const [cookies, setCookie] = useCookies(['name']);
     let pp = JSON.stringify({user: 'Norck', play: 999, totalPP: 1000, topPlays:['ascension to heaven', 'big black', 'atama no taisou']});
@@ -180,7 +197,22 @@ class Scroll extends React.Component{
             <div>
                 <div style={{filter: "blur(" + (this.state.openLoad ? "2" : "0") + "px)"}}>
                     <NavBarClient context={this} />
-                    <DChambre context = {this} />
+                    <Box sx={{ flexGrow: 1, padding :"5px" }}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={3}>
+                                <Item>Promotion</Item>
+                                <Promotions />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Item>xs=4</Item>
+                                <DChambre context = {this} />
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Item>Panier</Item>
+                                <Fact context = {this} />
+                            </Grid>
+                        </Grid>
+                    </Box>
                 </div>
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}

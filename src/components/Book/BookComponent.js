@@ -71,7 +71,7 @@ const BookComponent = (props) => {
           />
           <TextField
               fullwidth={false}
-              size="small"
+              size="small" 
               id="outlined-number"
               label="Occupancy"
               value={props.context.state.guests.nbAdulte + " adults - " + props.context.state.guests.nbEnfant + " children"}
