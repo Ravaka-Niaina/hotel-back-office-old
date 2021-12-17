@@ -244,10 +244,6 @@ class Filtre extends React.Component{
         }
     }
 
-    getAllDispoActuel(){
-        callAPI('post', '/TCTarif/all', {}, this.setResult);
-    }
-
     handleFiltreChange(event){
         let currentState = JSON.parse(JSON.stringify(this.state));
         let i = this.state.filtre.value;
