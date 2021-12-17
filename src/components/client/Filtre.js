@@ -332,7 +332,7 @@ class Filtre extends React.Component{
         return (
             <div>
                 { this.props.context.state.errFiltre != null ? <p style={{backgroundColor: "red"}}>{this.props.context.state.errFiltre}</p> : null }
-                <div className="form-content" style = {{marginTop : "20px", backgroundColor: "white", width: "1050px"}}>
+                <div className="form-content" style = {{marginTop : "20px", backgroundColor: "white", width: "700px"}}>
                     <form>
                         <FormGroup>
                             <div class="row">

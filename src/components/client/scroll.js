@@ -200,16 +200,16 @@ class Scroll extends React.Component{
                     <Box sx={{ flexGrow: 1, padding :"5px" }}>
                         <Grid container spacing={2}>
                             <Grid item xs={3}>
-                                <Item>Promotion</Item>
-                                <Promotions />
+                                <Item>
+                                <Promotions /></Item>
                             </Grid>
                             <Grid item xs={6}>
-                                <Item>xs=4</Item>
-                                <DChambre context = {this} />
+                                <Item>
+                                <DChambre context = {this} /></Item>
                             </Grid>
                             <Grid item xs={3}>
-                                <Item>Panier</Item>
-                                <Fact context = {this} />
+                                <Item>
+                                <Fact context = {this} /></Item>
                             </Grid>
                         </Grid>
                     </Box>
