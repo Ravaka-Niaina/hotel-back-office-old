@@ -70,14 +70,14 @@ export default class PromotionList extends React.Component {
                                             <TableCell align="center">{promotion.tarif}</TableCell>
                                             <TableCell align="center">{promotion.dateDebutS}-{promotion.dateFinS}</TableCell>
                                             <TableCell align="center">
-                                            {/*<Link to={'/promotion/detail/' + promotion._id}>
+                                            <Link to={'/promotion/detail/' + promotion._id}>
                                              <button className="btn"
                                               style={{textDecoration:'none',
                                               backgroundColor:'	#2F4050',
                                               color:'white'}}>
                                               Voir détails
                                              </button>
-                                             </Link>*/}
+                                             </Link>
                                             </TableCell>
                                             
                                         </TableRow>

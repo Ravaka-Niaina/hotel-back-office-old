@@ -1,7 +1,8 @@
 import { Checkbox } from "@mui/material";
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 import FormControlLabel from '@mui/material/FormControlLabel';
+
+import './insertTarif.css';
 
 export function LeadDay(props){
     let i = -1;
@@ -14,7 +15,9 @@ export function LeadDay(props){
                 checked={day.checked}
                 control={<Checkbox/>}
                 onChange={(e) => props.handleCheckBoxChange(props.planTarifaire, props.setPlanTarifaire, e, "LeadDay", u, "checked")}
-                label={day.label}
+                label={<span id='litleLabel'>
+                {day.label}
+                      </span>}
                 style={{marginLeft:"20px"}}
             />
         );
@@ -32,7 +35,9 @@ export function ChambresAtrb(props){
                 checked={chambre.checked}
                 control={<Checkbox/>}
                 onChange={(e) => props.handleCheckBoxChange(props.planTarifaire, props.setPlanTarifaire, e, "chambresAtrb", u, "checked")}
-                label={chambre.nom}
+                label={<span id='litleLabel'>
+                {chambre.nom}
+                      </span>}
                 style={{marginLeft:"20px"}}
             />
         );
@@ -50,7 +55,9 @@ export function PolitiqueAnnulAtrb(props){
                 checked={politique.checked}
                 control={<Checkbox/>}
                 onChange={(e) => props.handleCheckBoxChange(props.planTarifaire, props.setPlanTarifaire, e, "politiqueAnnulAtrb", u, "checked")}
-                label={politique.nom}
+                label={<span id='litleLabel'>
+                {politique.nom}
+                      </span>}
                 style={{marginLeft:"20px"}}
             />
         );

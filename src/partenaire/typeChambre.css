@@ -1,7 +1,15 @@
-.container{
+.jumbotronTC{
     margin-right: auto;
     margin-left: auto;
+    margin-top: 4%;
     }
+
+#input-group1{
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+
     .jumbotron{
     padding: 20px 70px 20px 70px;
     width: 75%;
@@ -13,6 +21,8 @@
     #title1{
         font-family: Arial, Helvetica, sans-serif;
         color: #293846;
+        text-align: center;
+        text-decoration: underline;
     }
     
     #bigLabel{
