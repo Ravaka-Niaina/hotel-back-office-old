@@ -66,7 +66,7 @@ function stableSort(array, comparator) {
 function ChambreAtrb(props){
   let liste = props.row.map(list => {
     return(
-      <li>{list.nom}</li>
+      (list !== null ? <li>{list.nom}</li> : null )
     );
   })
   return liste;
@@ -75,7 +75,7 @@ function ChambreAtrb(props){
 function Politic(props){
   let liste = props.row.map(list => {
     return(
-      <li>{list.nom}</li>
+      (list !== null ? <li>{list.nom}</li> : null )
     );
   })
   return liste;
@@ -254,6 +254,7 @@ export default function EnhancedTable() {
   };
 
   function setPlanTarifaire(data){
+    console.log(data);
     rows = [];
     for(let i = 0; i < data.list.length; i++){
       rows.push(data.list[i]);  
