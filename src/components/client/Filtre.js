@@ -227,6 +227,7 @@ class Filtre extends React.Component{
         
         if((this.props.context.state.guests.nbEnfant !== 0 || this.props.context.state.guests.nbAdulte !== 0)
             && (this.props.context.state.dateSejour.debut !== "" && this.props.context.state.dateSejour.fin !== "")){
+                this.props.context.handleChange("errFiltre", null);
                 console.log('filtre en cours...');
                 console.log(this.state.filtres);
                 console.log(this.props.context.state.guests);
@@ -241,7 +242,10 @@ class Filtre extends React.Component{
         }else{
             this.props.context.handleChange("errFiltre", 'Veuillez remplir les champs Adulte, Enfant, Debut sejour et fin sejour au moins');
         }
-        
+    }
+
+    getAllDispoActuel(){
+        callAPI('post', '/TCTarif/all', {}, this.setResult);
     }
 
     handleFiltreChange(event){
@@ -327,83 +331,20 @@ class Filtre extends React.Component{
     render(){
         return (
             <div>
-                <div></div>      
-
-                    {/* <div className = "col"></div>
-                    <TextField className="col"  id="standard-basic" label="Adulte" variant="standard" type="number"
-                    style={{width:'20%'}} value={this.props.context.state.guests.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")}/>
-                    <div className = "col"></div>
-                    <TextField className ="col" id="standard-basic" label="Enfant" variant="standard" type="number"
-                        style={{width:'20%'}} value={this.props.context.state.guests.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")}/>
-                    <div className = "col"></div> */}
-
-
-                { this.props.context.state.errFiltre != null 
-                    ? <p style={{backgroundColor: "red"}}>{this.props.context.state.errFiltre}</p> 
-                    : null }
-          {/*   <div id='date'>
-                    <p>Debut sejour</p>
-                    <TextField id="standard-basic" label="" variant="standard" type="date"
-                        style={{width:''}} value={this.props.context.state.dateSejour.debut} onChange={(e) => this.changeDateSejour(e, "debut")}/>
-                    </div>
-                    <div id='date'>
-                    <p>Fin sejour</p>
-                    <TextField id="standard-basic" label="" variant="standard" type="date"
-                        style={{marginLeft:'15px'}} value={this.props.context.state.dateSejour.fin} onChange={(e) => this.changeDateSejour(e, "fin")}/>
-            </div>
-        */}
-        { this.props.context.state.showFiltre ? 
-                <div className="form-content" style = {{marginTop : "20px"}}>
+                { this.props.context.state.errFiltre != null ? <p style={{backgroundColor: "red"}}>{this.props.context.state.errFiltre}</p> : null }
+                <div className="form-content" style = {{marginTop : "20px", backgroundColor: "white", width: "1050px"}}>
                     <form>
                         <FormGroup>
                             <div class="row">
-                                <div class=" col">
-                                    <FormControlLabel control={<Checkbox defaultChecked />} label={<span id='litleLabel'>accessible</span>} />
-                                    <img src="accessible.svg" style={{width:'20%'}} ></img>
-                                </div>
-                                <div class="col">
-                                    <FormControl fullWidth>
-                                        <InputLabel id='litleLabel'>Afficher les résultats par</InputLabel>
-                                        <Select size ="small">
-                                            <MenuItem value="chambre" id='litleLabel'>Chambre</MenuItem>
-                                            <MenuItem value="superficie" id='litleLabel'>Superficie</MenuItem>
-                                            <MenuItem value="vue" id='litleLabel'>Vue</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                                <div class="col">
-                                    <FormControl fullWidth>
-                                        <InputLabel id='litleLabel'>Trier par</InputLabel>
-                                        <Select size ="small">
-                                            <MenuItem id='litleLabel' value="chambre">Chambre</MenuItem>
-                                            <MenuItem id='litleLabel' value="superficie">Superficie</MenuItem>
-                                            <MenuItem id='litleLabel' value="vue">Vue</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                                <div class="col" style={{marginTop: '-6px'}}>
-                                    <FormControl>
-                                        <Button
-                                            value={this.state.filtre.value} 
-                                            style={{width:'180px', backgroundColor: this.state.filtre.backgroundColor, color: this.state.filtre.textColor}}
-                                            onClick={(e) => this.handleFiltreChange()} >
-                                            {this.state.filtre.label}
-                                        </Button>
-                                    </FormControl>
+                                <ListFiltres filtre={this.state.filtres} handleChange={this.handleChange} handleRadioChange={this.handleRadioChange} />
+                                <div className="apply">
+                                    <strong>{ this.props.context.state.listTypeChambre.length }</strong><span id='litleLabel'>matching rooms</span>
+                                    <Button style={{marginLeft: '10px'}} onClick={(e) =>  this.applyFilter()} variant="contained">APPLY</Button>
                                 </div>
                             </div>
-                            <Divider />
-                            {this.state.filtre.show ? 
-                                <div>
-                                    <ListFiltres filtre={this.state.filtres} handleChange={this.handleChange} handleRadioChange={this.handleRadioChange} />
-                                    <div className="apply">
-                                        <strong>{ this.props.context.state.listTypeChambre.length }</strong><span id='litleLabel'>matching rooms</span>
-                                        <Button style={{marginLeft: '10px'}} onClick={(e) =>  this.applyFilter()} variant="contained">APPLY</Button>
-                                    </div>
-                                </div> : null}
                         </FormGroup>
                     </form>
-                </div> : ""}
+                </div>
             </div>
         );
     }

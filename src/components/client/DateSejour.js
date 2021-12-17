@@ -38,14 +38,9 @@ const style = {
 
 function changeDateSejour(e,context, fieldName)
     {
-        let currentState = JSON.parse(JSON.stringify(context.state));
-        currentState.dateSejour[fieldName] = e.target.value;
-        if(currentState.dateSejour.debut !== "" && currentState.dateSejour.fin !== ""){
-          currentState.showFiltre = true;
-        }else{
-          currentState.showFiltre = false;
-        }
-        context.setState(currentState);
+      let currentState = JSON.parse(JSON.stringify(context.state));
+      currentState.dateSejour[fieldName] = e.target.value;
+      context.setState(currentState);
     } 
 
 function DateSejour(props) {
@@ -94,7 +89,6 @@ function DateSejour(props) {
             Fin : <TextField id="standard-basic" label="" variant="standard" type="date"
                 style={{marginLeft:'15px'}} value={props.context.state.dateSejour.fin} 
                 onChange={(e) => changeDateSejour(e, props.context ,"fin")}/>
-                    
         </Box>
       </StyledModal>
     </div>

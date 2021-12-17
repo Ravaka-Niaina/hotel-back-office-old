@@ -26,7 +26,7 @@ class FiltreAdulteEnfant extends React.Component{
             nbEnfant:this.props.context.state.guests.nbEnfant
         };
     }
-
+    
     IncrAdulte() {         
         let current = JSON.parse(JSON.stringify(this.props.context.state));
         current.guests.nbAdulte = current.guests.nbAdulte + 1;

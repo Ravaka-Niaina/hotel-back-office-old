@@ -11,16 +11,13 @@ import './Css.css'
 import moment from 'moment';
 import NavBarClient from '../Book/BookComponent.js';
 
-
-import Datee from "./date";
-import DateSejour from "./DateSejour";
-import BaeCalendar from "../../calendar/calendar.js";
+import CircularProgress from '@mui/material/CircularProgress';
+import Backdrop from '@mui/material/Backdrop';
 
 function TestCookie(){
     const [cookies, setCookie] = useCookies(['name']);
     let pp = JSON.stringify({user: 'Norck', play: 999, totalPP: 1000, topPlays:['ascension to heaven', 'big black', 'atama no taisou']});
     setCookie('pp', pp, '/');
-    //console.log(cookies.pp);
     return(
         null
     );
@@ -47,7 +44,8 @@ class Scroll extends React.Component{
             email: "",
             reload: true,
             openCalendar: false,
-            openChangeNbGuest: false
+            openChangeNbGuest: false,
+            openLoad: false
         };
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
     }
@@ -64,9 +62,19 @@ class Scroll extends React.Component{
         currentState.dateSejour.debut = "";
         currentState.dateSejour.fin = "";
         currentState.listTypeChambre = [];
-        currentState.showFiltre = false;
         //currentState.openChangeDateSejour = true;
         this.setState(currentState);
+    }
+
+    setResult(res){
+        console.log(res);
+        let temp = {...this.state};
+        temp.listTypeChambre = res.list;
+        this.setState(temp);
+    }
+
+    componentDidMount(){
+        callAPI('get', '/TCTarif/all', {}, this.setResult);
     }
 
     getConvert(number , value){
@@ -87,7 +95,6 @@ class Scroll extends React.Component{
         current.dateSejour.fin = dateFin;
         //console.log(current.itineraires[current.itineraires.length - 1]);
         if(current.dateSejour.debut != null && current.dateSejour.fin != null){
-            current.showFiltre = true;
             current.openChangeDateSejour = false;
             current.changeDateSejour = false;
             try{
@@ -108,8 +115,6 @@ class Scroll extends React.Component{
                         tarifReserves: []
                     });
             }
-        }else{
-            current.showFiltre = false;
         }
         
         return this.setState(current);
@@ -173,31 +178,16 @@ class Scroll extends React.Component{
     render(){
         return(
             <div>
-                <NavBarClient context={this} />
-                <TestCookie />
-                <div className="scroll-bg" >
-                    {this.state.openCalendar ? 
-                        <div style ={{ width :"fit-content" , margin :"0 auto"}}>
-                            <div style={{backgroundColor: "white"}}>
-                                <BaeCalendar context = {this} />
-                            </div>
-                        </div > : null }
-                    <div class="row">
-                        <div className="col">
-                            <div className="scroll-div">
-                                <div className="scroll-object">
-                                    <DateSejour context= {this} /><hr/>
-                                    <DChambre context = {this} />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col">
-                            <div className="divRight">
-                                <Fact context = {this} />
-                               </div>
-                        </div>
-                    </div>
+                <div style={{filter: "blur(" + (this.state.openLoad ? "2" : "0") + "px)"}}>
+                    <NavBarClient context={this} />
+                    <DChambre context = {this} />
                 </div>
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={this.state.openLoad}
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
             </div>
         );
     }
