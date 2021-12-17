@@ -3,14 +3,28 @@ import styles from './Book.module.css';
 import Navbar  from "../../NavbarClient/Navbar";
 import {Button, TextField, Box, InputAdornment, ToggleButtonGroup, ToggleButton, Typography} from '@mui/material';
 import {EventNote, ExpandMore, ManageSearch, Search, ArrowDropDown, PersonOutline} from '@mui/icons-material';
+import FiltreAdulteEnfant from '../client/FiltreAdulteEnfant';
 
-const BookComponent = () => {
+const BookComponent = (props) => {
   const [groupby, setGroupBy] = React.useState('a');
   const handleGroupByChange = (event, g) => {
     if(g !== null){
       setGroupBy(g);
     }
   };
+
+    function changeOpenCalendar(){
+        let temp = {...props.context.state};
+        temp.openCalendar = !temp.openCalendar;
+        props.context.setState(temp);
+    }
+
+    function changeOpenChangeNbGuest(){
+        let temp = {...props.context.state};
+        temp.openChangeNbGuest = !temp.openChangeNbGuest;
+        props.context.setState(temp);
+    }
+
   return(
   <div className={styles.Book}>
     <Navbar currentPage={0}/>
@@ -21,7 +35,7 @@ const BookComponent = () => {
               size="small"
               id="outlined-number"
               label="Check-in"
-              defaultValue="JJ/MM/YY"
+              value={props.context.state.dateSejour.debut}
               InputProps={{
                   startAdornment: <InputAdornment position="start"><EventNote/></InputAdornment>,
                   endAdornment:<InputAdornment position="end"><ExpandMore/></InputAdornment>,
@@ -30,13 +44,14 @@ const BookComponent = () => {
               InputLabelProps={{
                   shrink: true
               }}
+              onClick={(e) => changeOpenCalendar()}
           />
           <TextField
               fullwidth={false}
               size="small"
               id="outlined-number"
               label="Check-out"
-              defaultValue="JJ/MM/YY"
+              value={props.context.state.dateSejour.fin}
               InputProps={{
                   startAdornment: <InputAdornment position="start"><EventNote/></InputAdornment>,
                   endAdornment:<InputAdornment position="end"><ExpandMore/></InputAdornment>,
@@ -45,6 +60,7 @@ const BookComponent = () => {
               InputLabelProps={{
                   shrink: true
               }}
+              onClick={(e) => changeOpenCalendar()}
           />
           <TextField
               fullwidth={false}
@@ -60,6 +76,7 @@ const BookComponent = () => {
               InputLabelProps={{
                   shrink: true
               }}
+              onClick={(e) => changeOpenChangeNbGuest()}
           />
           <Button variant="outlined" startIcon={<Search />}>
               Search
@@ -87,6 +104,7 @@ const BookComponent = () => {
           <ToggleButton size="small" value="a">Type chambre</ToggleButton>
           <ToggleButton size="small" value="b">Plan tarifaires</ToggleButton>
         </ToggleButtonGroup>
+        <FiltreAdulteEnfant context={props.context} />
     </Box>
   </div>
 )};

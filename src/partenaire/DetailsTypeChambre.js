@@ -318,24 +318,74 @@ class DetailsTypeCHambre extends React.Component{
                 
             <div className="">
                 <div className="jumbotron">
-                    <h1 className="text-center" id='title1'>Détails type chambre</h1>
-                    <hr></hr>
+                    <h1 className="" id='title1'>Détails type chambre</h1>
                     <CustomError errors={this.state.errors} />
-                    <form className="needs-validation">
+                    <form className="needs-validation" style={{marginTop:'15px'}}>
                         <Box>
                             <div style={{marginTop:'40px'}}>
+
+                            <div style={{marginTop:'40px'}} id='input-group1'>
+                      <TextField 
+                      id="outlined-basic"
+                      variant="outlined"
+                      size='small'
+                      label={
+                      <p id='libel'>
+                      Nom
+                      </p>
+                            } 
+                      style={{width:'370px'}}
+                      type="text" 
+                      value={this.state.typeChambre.nom} onChange={(e) => this.handleInputChange(e, "nom")}
+                      />
+                    <TextField 
+                      id="outlined-basic"
+                      variant="outlined"
+                      size='small'
+                      label={
+                        <p id='libel'>
+                            Chambre total
+                        </p>
+                             } 
+                      type="number"
+                      style={{width:'370px',marginLeft:'123px'}}
+                      value={this.state.typeChambre.chambreTotal} onChange={(e) => this.handleInputChange(e, "chambreTotal")}
+                      />
+                     </div>
+
+                     <div style={{marginTop:'40px'}} id='input-group1'>
+                      <TextField 
+                      id="outlined-basic"
+                      variant="outlined"
+                      size='small'
+                      label={
+                        <p id='libel'>
+                            Etage
+                        </p>
+                             } 
+                      type="number"
+                      style={{width:'370px'}}
+                      value={this.state.typeChambre.etage} onChange={(e) => this.handleInputChange(e, "etage")}
+                      />
+                      <TextField 
+                      id="outlined-basic"
+                      variant="outlined"
+                      size='small'
+                      label={
+                        <p id='libel'>
+                            Superficie
+                        </p>
+                             } 
+                      type="number" 
+                      style={{width:'370px',marginLeft:'123px'}}
+                      value={this.state.typeChambre.superficie} onChange={(e) =>this.handleInputChange(e, "superficie")}
+                      />
+                    </div>
                                 
-                                <TextField 
-                                id="outlined-basic"
-                                variant="outlined"
-                                size='small' 
-                                label="Nom" 
-                                style={{width:'40%'}} 
-                                value={this.state.typeChambre.nom} onChange={(e) => this.handleInputChange(e, "nom")}/>
                                 {
                                     //console.log('yes')
                                 }
-                                <div style={{marginTop:'30px'}}>
+                                <div style={{marginTop:'15px'}}>
                                     <div className="row">
                                         <Preview preview={this.state.previewPhoto} />
                                     </div>
@@ -346,7 +396,8 @@ class DetailsTypeCHambre extends React.Component{
                                             handlePhotoChange={this.handlePhotoChange} />
                                     </div>
                                 </div>
-                                <div style={{marginTop:'30px'}}>
+
+                                <div style={{marginTop:'15px'}}>
                                     <div className="row">
                                     <div style={{marginTop:'10px'}}>
                                         <label className="form-label mt-4" style={{textDecoration:'underline'}} id='bigLabel'> Videos  </label>
@@ -356,40 +407,10 @@ class DetailsTypeCHambre extends React.Component{
                                         <Videos state={this.state} setState={this.setState} context={this} />
                                     </div>
                                 </div>
-                                <div style={{marginTop:'30px'}}>
-                                    <TextField 
-                                    id="outlined-basic"
-                                    variant="outlined"
-                                    size='small'                                   
-                                    id="standard-basic" 
-                                    label="chambre totale"  
-                                    type="number"
-                                        style={{width:'40%'}} value={this.state.typeChambre.chambreTotal} onChange={(e) => this.handleInputChange(e, "chambreTotal")}/>
-                                </div>
-
-                                <div style={{marginTop:'30px'}}>
-                                    <TextField 
-                                    id="outlined-basic"
-                                    variant="outlined"
-                                    size='small'  
-                                    label="Etage" 
-                                    type="text"
-                                    style={{width:'40%'}} 
-                                    value={this.state.typeChambre.etage} onChange={(e) => this.handleInputChange(e, "etage")}/>
-                                    <TextField 
-                                    id="outlined-basic"
-                                    variant="outlined"
-                                    size='small'  
-                                    label="Superficie" 
-                                    type="number" 
-                                    style={{width:'40%',marginLeft:'123px'}} 
-                                    value={this.state.typeChambre.superficie} 
-                                    onChange={(e) => this.handleInputChange(e, "superficie")}/>
-                                </div>
 
                             </div>
 
-                            <div style={{marginTop:'20px'}}>
+                            <div style={{marginTop:'10px'}}>
                                 <label className="form-label mt-4" style={{textDecoration:'underline'}} id='bigLabel'>Occupation  </label>
                             </div>
                             <div style={{marginTop:'5px'}}>
@@ -399,7 +420,7 @@ class DetailsTypeCHambre extends React.Component{
                                 size='small'  
                                 label="Adulte" 
                                 type="number" 
-                                style={{width:'40%'}}
+                                style={{width:'370px'}}
                                 value={this.state.typeChambre.nbAdulte} 
                                 onChange={(e) => this.handleInputChange(e, "nbAdulte")}/>
                                 <TextField 
@@ -408,10 +429,10 @@ class DetailsTypeCHambre extends React.Component{
                                 size='small'
                                 label="Enfant" 
                                 type="number" 
-                                style={{width:'40%',marginLeft:'123px' }}
+                                style={{width:'370px',marginLeft:'123px' }}
                                     value={this.state.typeChambre.nbEnfant} onChange={(e) => this.handleInputChange(e, "nbEnfant")}/>
                             </div>
-                            <div style={{marginTop:'20px'}}>
+                            <div style={{marginTop:'15px'}}>
                                 <div style={{}}>
                                     <label className="form-label mt-4" style={{textDecoration:'underline'}} id='bigLabel'>Description </label>
                                 </div>
@@ -422,12 +443,14 @@ class DetailsTypeCHambre extends React.Component{
                                     placeholder=""
                                     multiline
                                     rows={2}
+                                    label="Description"
                                     rowsMax={4}
-                                    style={{width:'100%',height:'50px'}}
+                                    style={{width:'100%',height:'50px',marginTop:'5px'}}
                                     value={this.state.typeChambre.description} onChange={(e) => this.handleInputChange(e, "description")}
                                 />
                             </div>
-                            <div style={{marginTop:'30px'}}>
+
+                            <div style={{marginTop:'40px'}}>
                                 <div>
                                     <label className="form-label-mt4" style={{textDecoration: 'underline'}} id='bigLabel'>Equipements </label>
                                 </div>
@@ -483,7 +506,7 @@ class DetailsTypeCHambre extends React.Component{
                                     </Box>
                                 </Modal>
                             </div>
-                            <div style={{marginTop:'30px'}}>
+                            <div style={{marginTop:'15px'}}>
                                 <div>
                                     <label className="form-label-mt4" style={{textDecoration: 'underline'}} id='bigLabel'>Plan tarifaire attribué: </label>
                                 </div>
@@ -493,7 +516,7 @@ class DetailsTypeCHambre extends React.Component{
                             </div>
                         </Box>
 
-                    <div style={{marginTop:'50px'}}>
+                    <div style={{marginTop:'30px'}}>
 
                     <Button variant="contained"  style={{backgroundColor:'#FA8072'}} onClick={(e) => this.update(e)}>
                         Modifier

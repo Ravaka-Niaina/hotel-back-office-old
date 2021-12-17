@@ -233,7 +233,7 @@ export default function EnhancedTable() {
    // rows = list;
     
   }
- 
+
 
   useEffect(() => {
       GETaPI("get", "/promotion" ,functionAppelList);

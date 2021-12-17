@@ -9,6 +9,7 @@ import { useCookies } from 'react-cookie';
 import callAPI from '../../utility';
 import './Css.css'
 import moment from 'moment';
+import NavBarClient from '../Book/BookComponent.js';
 
 
 import Datee from "./date";
@@ -44,7 +45,9 @@ class Scroll extends React.Component{
             open: false,
             err: null,
             email: "",
-            reload: true
+            reload: true,
+            openCalendar: false,
+            openChangeNbGuest: false
         };
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
     }
@@ -170,14 +173,15 @@ class Scroll extends React.Component{
     render(){
         return(
             <div>
+                <NavBarClient context={this} />
                 <TestCookie />
                 <div className="scroll-bg" >
-                    <div style ={{ width :"fit-content" , margin :"0 auto"}}>
-                        <div style={{backgroundColor: "white"}}>
-                            <BaeCalendar context = {this} />
-                        </div>
-                        {/*<Datee context = {this} style = {{marginLeft : "50px"}}/><hr/>*/}
-                    </div >
+                    {this.state.openCalendar ? 
+                        <div style ={{ width :"fit-content" , margin :"0 auto"}}>
+                            <div style={{backgroundColor: "white"}}>
+                                <BaeCalendar context = {this} />
+                            </div>
+                        </div > : null }
                     <div class="row">
                         <div className="col">
                             <div className="scroll-div">

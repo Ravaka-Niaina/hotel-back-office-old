@@ -1,4 +1,3 @@
-
 import React from "react";
 import MenuItem from '@mui/material/MenuItem';
 
@@ -186,10 +185,6 @@ class Filtre extends React.Component{
     
     constructor(props){
         super(props);
-        this.IncrAdulte = this.IncrAdulte.bind(this);
-        this.DecrAdulte = this.DecrAdulte.bind(this);
-        this.IncrEnfant = this.IncrEnfant.bind(this);
-        this.DecrEnfant = this.DecrEnfant.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleRadioChange = this.handleRadioChange.bind(this);
         this.setListFiltre = this.setListFiltre.bind(this);
@@ -221,60 +216,6 @@ class Filtre extends React.Component{
         };
         this.setResult = this.setResult.bind(this);
     }
-
-    IncrAdulte() {         
-        let current = JSON.parse(JSON.stringify(this.props.context.state));
-        current.guests.nbAdulte = current.guests.nbAdulte + 1;
-        this.props.context.setState(current);
-        
-        // addOne as HandleClick
-        this.setState((preState) => {
-          return {
-            nbAdulte : preState.nbAdulte + 1
-            };
-         });
-        
-       }
-      
-      DecrAdulte() {        
-        let current = JSON.parse(JSON.stringify(this.props.context.state));
-        current.guests.nbAdulte = current.guests.nbAdulte - 1;
-        this.props.context.setState(current);                      
-        // addOne as HandleClick
-        this.setState((preState) => {
-          if (this.state.nbAdulte !== 0) {
-          return {
-            nbAdulte : preState.nbAdulte - 1
-            };
-          }
-         });
-       }
-
-       IncrEnfant() {          
-        let current = JSON.parse(JSON.stringify(this.props.context.state));
-        current.guests.nbEnfant = current.guests.nbEnfant + 1;
-        this.props.context.setState(current);                      // addOne as HandleClick
-        this.setState((preState) => {
-          return {
-            nbEnfant : preState.nbEnfant + 1,
-            };
-         });
-       }
- 
-       
-      DecrEnfant() {        
-        let current = JSON.parse(JSON.stringify(this.props.context.state));
-        current.guests.nbEnfant = current.guests.nbEnfant - 1;
-        this.props.context.setState(current);                       // addOne as HandleClick
-        this.setState((preState) => {
-          if (this.state.nbEnfant !== 0) {
-          return {
-            nbEnfant : preState.nbEnfant - 1,
-            };
-          }
-         });
-       }
-
 
     setResult(res){
         let currentState = JSON.parse(JSON.stringify(this.props.context.state));
@@ -377,69 +318,16 @@ class Filtre extends React.Component{
         this.props.context.setState(currentState);
     }
 
+    changeOpenCalendar(){
+        let temp = {...this.state};
+        temp.openCalendar = !temp.openCalendar;
+        this.setState(temp);
+    }
+
     render(){
         return (
             <div>
-                <div></div>
-
-                <PopupState variant="popper" popupId="demo-popup-popper">
-      {(popupState) => (
-        <div>
-          <Button {...bindToggle(popupState)} id='toggle'>
-          <span></span>
-          </Button>
-          <div className='client'>
-                <div id='client' className='guests'>
-                <p>
-                <PersonIcon id='PersonIcon'/>
-                <span id='guests'>Guests</span><br/>
-                <span id='NbGuest'>{this.state.nbAdulte} Adult, {this.state.nbEnfant} children</span>
-                </p>
-                </div>
-                </div>
-          <Popper {...bindPopper(popupState)} transition>
-            {({ TransitionProps }) => (
-              <Fade {...TransitionProps} timeout={350}>
-                <Paper id='modal1'>
-                <span id="adultes">Adultes</span><div class='guest1' id='adulte1' onClick={this.DecrAdulte}><p id='moins'>-</p></div>
-                          <div class='guest1'>
-                          <input value={this.state.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")} class='adulte' type=""/>
-                          </div>
-                    <div class='guest1' id='adulte11' onClick={this.IncrAdulte}><p id='add'>+</p></div>
-                          <br/>
-                          <span id="enfants">Enfants</span><div class='guest2' id='enfant1' onClick={this.DecrEnfant}><p id='moins'>-</p></div>
-                          <div class='guest2'>
-                          <input value={this.state.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")} class='enfant' type=""/>
-                          </div>
-        <div class='guest2' id='enfant11' onClick={this.IncrEnfant}>
-            <p id='add'>+</p>
-        </div>
-                {
-                    this.state.showAge ?
-                    <select value="" name="" class="age">
-                    <option value="">0</option>
-                    <option value="">1</option>
-                    <option value="">2</option>
-                    <option value="">3</option>
-                    <option value="">4</option>
-                    <option value="">5</option>
-                    <option value="">6</option>
-                    <option value="">7</option>
-                    <option value="">8</option>
-                    <option value="">9</option>
-                    <option value="">10</option>
-                    <option value="">11</option>
-                    </select>
-                    : null
-                    }
-                </Paper>
-              </Fade>
-            )}
-          </Popper>
-        </div>
-      )}
-    </PopupState>
-                    
+                <div></div>      
 
                     {/* <div className = "col"></div>
                     <TextField className="col"  id="standard-basic" label="Adulte" variant="standard" type="number"
