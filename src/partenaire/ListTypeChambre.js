@@ -30,8 +30,8 @@ class ListTypeChambre extends React.Component{
 
     setListTypeChambre(data){
         console.log(data);
-        let currentState = JSON.parse(JSON.stringify(this.state));
-        currentState = data;
+       let currentState = JSON.parse(JSON.stringify(this.state));
+        currentState.list = data.TCModel;
         this.setState(currentState);
     }
 
@@ -46,17 +46,7 @@ class ListTypeChambre extends React.Component{
     }
 
     render(){
-    //     let list = null;
-    //     list = this.state.list.map(typeChambre => {
-    //         return <tr>
-    //             <td>{typeChambre.nom}</td>
-    //             <td><Link to={'/typeChambre/details/' + typeChambre._id}>
-    //                 <button className="btn"
-    // style={{textDecoration:'none',backgroundColor:'	#7FFFD4'}}>
-    //         Voir détails
-    //         </button></Link></td>
-    //         </tr>
-    //     });
+    
          let list = null;
         list = this.state.list.map(typeChambre => {
             return <TableRow

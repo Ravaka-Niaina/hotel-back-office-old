@@ -11,6 +11,7 @@ export function setValue(obj, field, value){
                     save.push(obj[field[0]]);
                 }
             }
+           
             
         }else{
             try{

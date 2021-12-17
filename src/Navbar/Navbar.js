@@ -17,8 +17,20 @@ import Divider from '@mui/material/Divider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Box from '@mui/material/Box';
 import { Link } from 'react-router-dom';
+import Drop from "./drop.js";
+
 function Navbar(props) {
     const [value, setValue] = React.useState(0);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+      };
+      const handleClose = () => {
+        setAnchorEl(null);
+      };
+
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
@@ -26,7 +38,8 @@ function Navbar(props) {
             <nav className="navbar navbar-expand-lg navbar-dark" id="navbar">
             <Tabs value={props.currentPage} onChange={handleChange} aria-label="icon label tabs example">
                 <Tab value={0} component={Link} to="/" icon={<HomeOutlinedIcon />} iconPosition="start" label="Accueil" />
-                <Tab value={1} component={Link} to="/tarif" icon={<DocumentScannerOutlinedIcon />} iconPosition="start" label="Plan tarifaire" />
+                <Tab value={1} component={Link} to="#" icon={<DocumentScannerOutlinedIcon />} iconPosition="start" label="Plan tarifaire" onClick={handleClick} />
+                <Drop click = {handleChange} close ={handleClose} open={open} anchorEl={anchorEl} />
                 <Tab value={2} component={Link} to="/typeChambre" icon={<BedroomChildOutlinedIcon />} iconPosition="start" label="Type de chambre" />
                 <Tab value={3} component={Link} icon={<PushPinOutlinedIcon />} to="/promotion" iconPosition="start" label="Promotion" />
 

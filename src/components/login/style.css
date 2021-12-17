@@ -1,18 +1,6 @@
 .container{
     margin-top: 10%;
 }
-.base-container{
-    width: 40%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: white;
-    box-shadow: 0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25);
-    margin-left: auto;
-    margin-right: auto;
-    padding-top: 2%;
-    padding-bottom: 2%;
-}
 
 .header{
     font-size: 24px;
@@ -21,9 +9,14 @@
 }
 
 .content{
-    display: flex;
-    flex-direction: column;
+width: fit-content;
+margin: 0 auto;
 }
+
+#img{
+    width: fit-content;
+    margin: 0 auto;
+    }
 
 .form{
     margin-top: 2eme;
@@ -89,5 +82,10 @@ input:focus{
       margin-left: 5px;
       }
 
+      #id {
+          color : #fff ! important;
+          border-color: #3E68A8 ! important;
+
+      }
 
     

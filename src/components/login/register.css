@@ -74,7 +74,8 @@ input:focus{
 }
 
 .footer{
-    margin-top: 5px;
+    width : fit-content;
+    margin : 0 auto;
 }
 
 #btn {
@@ -100,6 +101,11 @@ input:focus{
       cursor: pointer;
       margin-left: 5px;
       }
+
+    .textfield {
+        background-color: transparent;
+        color: white;
+    } 
 
 
     

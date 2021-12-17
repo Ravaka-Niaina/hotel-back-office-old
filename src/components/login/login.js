@@ -1,3 +1,4 @@
+import Cookies from 'universal-cookie';
 import  Sidebar  from "../../Sidebar/Sidebar";
 import  Navbar  from "../../Navbar/Navbar";
 import CustomError from '../../CustomError';
@@ -6,28 +7,59 @@ import {Link} from 'react-router-dom';
 import React from "react";
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import { useCookies } from 'react-cookie';
+import { breadcrumbsClasses } from '@material-ui/core';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
 const axios = require('axios').default;
 
-class Login extends React.Component{
+const styles = theme => ({
+  notchedOutline: {
+    borderWidth: "1px",
+    borderColor: "yellow !important"
+  }
+});
 
+function Typecookie(type){
+  console.log(type);
+  const [cookies, setCookie] = useCookies();
+  return setCookie('idSession', type, { path: '/' });
+}
+
+
+class Login extends React.Component{
   constructor(props){
     super(props);
     this.state = {
       email: '',
       mdp: '',
-      errors: []
+      errors: [], 
+      type : "" 
     };
   }
+
   tryRedirectToHome(res){
     console.log(res);
+    this.state.type = res.idSession;
     if(res.status === 200){
-      this.props.history.push('/');
+      const cookie = new Cookies();
+      cookie.set('sessionId', this.state.type , { path: '/' })
+      window.location.href = "/"
+      //this.props.history.push("/");
     }else{
       let currentState = JSON.parse(JSON.stringify(this.state));
       currentState.errors = res.errors;
       this.setState(currentState);
     }
   }
+
+  componentDidMount(){
+      const cookie = new Cookies();
+      cookie.set('sessionId', "V01", { path: '/login' });
+      document.body.style.backgroundColor = "#2F4050";
+
+        
+    }
 
   handleEmailChange(event){
     const currentState = JSON.parse(JSON.stringify(this.state));
@@ -55,15 +87,31 @@ class Login extends React.Component{
   }
 
   render(){
+    const {classes} = this.props;
     return (
       <div>
         <div className="container">
-          <div className="login-container">
-          <img src="user.png" style={{width : '15%',marginLeft:''}} ></img>
+          <div className="login-container"> 
+           <div id='img'>
+           <AccountCircleIcon fontSize="large" style = {{color : "white"}}/>
+           </div>
             <div className="content">
               <CustomError errors={this.state.errors} />
               <div className="form">
                 <div className="form-group" style={{paddingTop:"15px"}}>
+                  <TextField style={{width:"300px"}} 
+                     type ="email" label ="email" 
+                    name="email"  value={this.state.email}
+                    onChange={(e) => this.handleEmailChange(e)}
+                   
+                    /> <br/>
+                  
+                    <TextField type ="password"
+                      label="password"style={{width:"300px"}}
+                      name="mdp" value={this.state.mdp}
+                      onChange={(e) => this.handleMdpChange(e)}/>
+                    
+                    {/**
                   <TextField 
                   id="standard-basic" 
                   className="form-control" 
@@ -73,13 +121,13 @@ class Login extends React.Component{
                     </p>
                         } 
                   variant="standard" 
-                  style={{width:"280px"}}
+                  style={{}}
                   type="email" 
                   name="email" 
                   value={this.state.email}
                   onChange={(e) => this.handleEmailChange(e)}/>
                   </div>
-                  <div className="form-group" style={{paddingTop:"15px"}}>
+                  <div className="form-group" style={{paddingTop:"15px"}}>  
                   <TextField 
                   id="standard-basic" 
                   className="form-control" 
@@ -89,14 +137,14 @@ class Login extends React.Component{
                     </p>
                         }
                    variant="standard" 
-                   style={{width:"280px"}}
+                   style={{}}
                   type="password" 
                   name="mdp" 
                   value={this.state.mdp}
-                  onChange={(e) => this.handleMdpChange(e)}/>
+                  onChange={(e) => this.handleMdpChange(e)}/> */}
                 </div>
               </div>
-            </div>
+            
               
 
             <Link 
@@ -107,27 +155,26 @@ class Login extends React.Component{
               marginTop:'30px'}}>
               <p 
               style={{
-                color:"#87CEEB",
-                color:'#2F4050',
+                color:"white",
                 textDecoration:'underline'}}>
                 S'inscrire
                 </p>
             </Link>
             <div className="footer">
-              {/* <button type="button" className="btn" id="btn" onClick={(e) => this.login(e)}>Login</button> */}
               <Button 
-              variant="contained" 
+              variant="contained"  size ="small"
               style={{backgroundColor:'#1E90FF'}} 
               onClick={(e) => this.login(e)}>
               <span style={{color:'white'}}>Se Connecter</span>
               </Button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </div> 
     );
   }
   
 }
 
-export default Login;
+export default(Login);
