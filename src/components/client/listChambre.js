@@ -7,6 +7,7 @@ import { NorthWest } from '@mui/icons-material';
 import TextField from '@mui/material/TextField';
 import callAPI from '../../utility';
 import { ReactComponent as airConditioner } from '../../public/air-conditioner-svgrepo-com.svg';
+import Filtre from './Filtre.js';
 
 function ListConditionAnnulation(props){
     let services = props.politiqueAnnulAtrb.map(condition =>{
@@ -235,6 +236,8 @@ class DChambre extends React.Component{
             } 
         return (
             <div>
+                { this.props.context.state.showFiltre ? <Filtre context={this.props.context} /> : null }
+                <hr/>
                  {listChambre}
             </div>
         );

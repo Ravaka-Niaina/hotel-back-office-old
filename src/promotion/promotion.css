@@ -68,8 +68,75 @@ div.bouton-aligne{
     display:inline-block;
 }
 
-#label{
+/* #label{
 font-size: 15px;
 font-family: Arial;
 margin-top: 15px;
+} */
+
+#bigLabel{
+    color: #616569;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    }
+
+#label{
+    color: #616569;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    margin-top: 15px;
+    }
+
+#litleLabel{
+color: black;
+font-family: 'Roboto', sans-serif;
+font-size: 14px;
+}
+
+input#dateD {
+    width: 200px;
+    min-width: 0px;
+    background-color: transparent;
+    border: solid 1px lightslategray;
+    font-family: 'Roboto';
+}
+
+input#dateF {
+    width: 200px;
+    min-width: 0px;
+    background-color: transparent;
+    border: solid 1px lightslategray;
+    font-family: 'Roboto';
+}
+
+input#sejourMin {
+    width: 200px;
+    min-width: 0px;
+    background-color: transparent;
+    border: solid 1px lightslategray;
+    font-family: 'Roboto';
+}
+
+input#leadDay {
+    width: 200px;
+    min-width: 0px;
+    background-color: transparent;
+    border: solid 1px lightslategray;
+    font-family: 'Roboto';
+}
+
+input#leadHour {
+    width: 200px;
+    min-width: 0px;
+    background-color: transparent;
+    border: solid 1px lightslategray;
+    font-family: 'Roboto';
+}
+
+input#nom {
+    width: 200px;
+    min-width: 0px;
+    background-color: transparent;
+    border: solid 1px lightslategray;
+    font-family: 'Roboto';
 }

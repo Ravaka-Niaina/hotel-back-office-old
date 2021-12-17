@@ -1,4 +1,3 @@
-
 import React from "react";
 import MenuItem from '@mui/material/MenuItem';
 
@@ -186,10 +185,6 @@ class Filtre extends React.Component{
     
     constructor(props){
         super(props);
-        this.IncrAdulte = this.IncrAdulte.bind(this);
-        this.DecrAdulte = this.DecrAdulte.bind(this);
-        this.IncrEnfant = this.IncrEnfant.bind(this);
-        this.DecrEnfant = this.DecrEnfant.bind(this);
         this.handleChange = this.handleChange.bind(this);
         this.handleRadioChange = this.handleRadioChange.bind(this);
         this.setListFiltre = this.setListFiltre.bind(this);
@@ -222,60 +217,6 @@ class Filtre extends React.Component{
         this.setResult = this.setResult.bind(this);
     }
 
-    IncrAdulte() {         
-        let current = JSON.parse(JSON.stringify(this.props.context.state));
-        current.guests.nbAdulte = current.guests.nbAdulte + 1;
-        this.props.context.setState(current);
-        
-        // addOne as HandleClick
-        this.setState((preState) => {
-          return {
-            nbAdulte : preState.nbAdulte + 1
-            };
-         });
-        
-       }
-      
-      DecrAdulte() {        
-        let current = JSON.parse(JSON.stringify(this.props.context.state));
-        current.guests.nbAdulte = current.guests.nbAdulte - 1;
-        this.props.context.setState(current);                      
-        // addOne as HandleClick
-        this.setState((preState) => {
-          if (this.state.nbAdulte !== 0) {
-          return {
-            nbAdulte : preState.nbAdulte - 1
-            };
-          }
-         });
-       }
-
-       IncrEnfant() {          
-        let current = JSON.parse(JSON.stringify(this.props.context.state));
-        current.guests.nbEnfant = current.guests.nbEnfant + 1;
-        this.props.context.setState(current);                      // addOne as HandleClick
-        this.setState((preState) => {
-          return {
-            nbEnfant : preState.nbEnfant + 1,
-            };
-         });
-       }
- 
-       
-      DecrEnfant() {        
-        let current = JSON.parse(JSON.stringify(this.props.context.state));
-        current.guests.nbEnfant = current.guests.nbEnfant - 1;
-        this.props.context.setState(current);                       // addOne as HandleClick
-        this.setState((preState) => {
-          if (this.state.nbEnfant !== 0) {
-          return {
-            nbEnfant : preState.nbEnfant - 1,
-            };
-          }
-         });
-       }
-
-
     setResult(res){
         let currentState = JSON.parse(JSON.stringify(this.props.context.state));
         currentState.listTypeChambre = res.list;
@@ -286,6 +227,7 @@ class Filtre extends React.Component{
         
         if((this.props.context.state.guests.nbEnfant !== 0 || this.props.context.state.guests.nbAdulte !== 0)
             && (this.props.context.state.dateSejour.debut !== "" && this.props.context.state.dateSejour.fin !== "")){
+                this.props.context.handleChange("errFiltre", null);
                 console.log('filtre en cours...');
                 console.log(this.state.filtres);
                 console.log(this.props.context.state.guests);
@@ -300,7 +242,10 @@ class Filtre extends React.Component{
         }else{
             this.props.context.handleChange("errFiltre", 'Veuillez remplir les champs Adulte, Enfant, Debut sejour et fin sejour au moins');
         }
-        
+    }
+
+    getAllDispoActuel(){
+        callAPI('post', '/TCTarif/all', {}, this.setResult);
     }
 
     handleFiltreChange(event){
@@ -377,145 +322,29 @@ class Filtre extends React.Component{
         this.props.context.setState(currentState);
     }
 
+    changeOpenCalendar(){
+        let temp = {...this.state};
+        temp.openCalendar = !temp.openCalendar;
+        this.setState(temp);
+    }
+
     render(){
         return (
             <div>
-                <div></div>
-
-                <PopupState variant="popper" popupId="demo-popup-popper">
-      {(popupState) => (
-        <div>
-          <Button {...bindToggle(popupState)} id='toggle'>
-            <span></span>
-          </Button>
-            <div className='client'>
-                <div id='client' className='guests'>
-                    <p>
-                        <PersonIcon id='PersonIcon'/>
-                        <span id='guests'>Guests</span><br/>
-                        <span id='NbGuest'>{this.state.nbAdulte} Adult, {this.state.nbEnfant} children</span>
-                    </p>
-                </div>
-            </div>
-          <Popper {...bindPopper(popupState)} transition>
-            {({ TransitionProps }) => (
-              <Fade {...TransitionProps} timeout={350}>
-                <Paper id='modal1'>
-                <span id="adultes">Adultes</span><div class='guest1' id='adulte1' onClick={this.DecrAdulte}><p id='moins'>-</p></div>
-                          <div class='guest1'>
-                          <input value={this.state.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")} class='adulte' type=""/>
-                          </div>
-                    <div class='guest1' id='adulte11' onClick={this.IncrAdulte}><p id='add'>+</p></div>
-                          <br/>
-                          <span id="enfants">Enfants</span><div class='guest2' id='enfant1' onClick={this.DecrEnfant}><p id='moins'>-</p></div>
-                          <div class='guest2'>
-                          <input value={this.state.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")} class='enfant' type=""/>
-                          </div>
-        <div class='guest2' id='enfant11' onClick={this.IncrEnfant}>
-            <p id='add'>+</p>
-        </div>
-                {
-                    this.state.showAge ?
-                    <select value="" name="" class="age">
-                    <option value="">0</option>
-                    <option value="">1</option>
-                    <option value="">2</option>
-                    <option value="">3</option>
-                    <option value="">4</option>
-                    <option value="">5</option>
-                    <option value="">6</option>
-                    <option value="">7</option>
-                    <option value="">8</option>
-                    <option value="">9</option>
-                    <option value="">10</option>
-                    <option value="">11</option>
-                    </select>
-                    : null
-                    }
-                </Paper>
-              </Fade>
-            )}
-          </Popper>
-        </div>
-      )}
-    </PopupState>
-                    
-
-                    {/* <div className = "col"></div>
-                    <TextField className="col"  id="standard-basic" label="Adulte" variant="standard" type="number"
-                    style={{width:'20%'}} value={this.props.context.state.guests.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")}/>
-                    <div className = "col"></div>
-                    <TextField className ="col" id="standard-basic" label="Enfant" variant="standard" type="number"
-                        style={{width:'20%'}} value={this.props.context.state.guests.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")}/>
-                    <div className = "col"></div> */}
-
-
-                { this.props.context.state.errFiltre != null 
-                    ? <p style={{backgroundColor: "red"}}>{this.props.context.state.errFiltre}</p> 
-                    : null }
-          {/*   <div id='date'>
-                    <p>Debut sejour</p>
-                    <TextField id="standard-basic" label="" variant="standard" type="date"
-                        style={{width:''}} value={this.props.context.state.dateSejour.debut} onChange={(e) => this.changeDateSejour(e, "debut")}/>
-                    </div>
-                    <div id='date'>
-                    <p>Fin sejour</p>
-                    <TextField id="standard-basic" label="" variant="standard" type="date"
-                        style={{marginLeft:'15px'}} value={this.props.context.state.dateSejour.fin} onChange={(e) => this.changeDateSejour(e, "fin")}/>
-            </div>
-        */}
-        { this.props.context.state.showFiltre ? 
-                <div className="form-content" style = {{marginTop : "20px"}}>
+                { this.props.context.state.errFiltre != null ? <p style={{backgroundColor: "red"}}>{this.props.context.state.errFiltre}</p> : null }
+                <div className="form-content" style = {{marginTop : "20px", backgroundColor: "white", width: "700px"}}>
                     <form>
                         <FormGroup>
                             <div class="row">
-                                <div class=" col">
-                                    <FormControlLabel control={<Checkbox defaultChecked />} label={<span id='litleLabel'>accessible</span>} />
-                                    <img src="accessible.svg" style={{width:'20%'}} ></img>
-                                </div>
-                                <div class="col">
-                                    <FormControl fullWidth>
-                                        <InputLabel id='litleLabel'>Afficher les résultats par</InputLabel>
-                                        <Select size ="small">
-                                            <MenuItem value="chambre" id='litleLabel'>Chambre</MenuItem>
-                                            <MenuItem value="superficie" id='litleLabel'>Superficie</MenuItem>
-                                            <MenuItem value="vue" id='litleLabel'>Vue</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                                <div class="col">
-                                    <FormControl fullWidth>
-                                        <InputLabel id='litleLabel'>Trier par</InputLabel>
-                                        <Select size ="small">
-                                            <MenuItem id='litleLabel' value="chambre">Chambre</MenuItem>
-                                            <MenuItem id='litleLabel' value="superficie">Superficie</MenuItem>
-                                            <MenuItem id='litleLabel' value="vue">Vue</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </div>
-                                <div class="col" style={{marginTop: '-6px'}}>
-                                    <FormControl>
-                                        <Button
-                                            value={this.state.filtre.value} 
-                                            style={{width:'180px', backgroundColor: this.state.filtre.backgroundColor, color: this.state.filtre.textColor}}
-                                            onClick={(e) => this.handleFiltreChange()} >
-                                            {this.state.filtre.label}
-                                        </Button>
-                                    </FormControl>
+                                <ListFiltres filtre={this.state.filtres} handleChange={this.handleChange} handleRadioChange={this.handleRadioChange} />
+                                <div className="apply">
+                                    <strong>{ this.props.context.state.listTypeChambre.length }</strong><span id='litleLabel'>matching rooms</span>
+                                    <Button style={{marginLeft: '10px'}} onClick={(e) =>  this.applyFilter()} variant="contained">APPLY</Button>
                                 </div>
                             </div>
-                            <Divider />
-                            {this.state.filtre.show ? 
-                                <div>
-                                    <ListFiltres filtre={this.state.filtres} handleChange={this.handleChange} handleRadioChange={this.handleRadioChange} />
-                                    <div className="apply">
-                                        <strong>{ this.props.context.state.listTypeChambre.length }</strong><span id='litleLabel'>matching rooms</span>
-                                        <Button style={{marginLeft: '10px'}} onClick={(e) =>  this.applyFilter()} variant="contained">APPLY</Button>
-                                    </div>
-                                </div> : null}
                         </FormGroup>
                     </form>
-                </div> : ""}
+                </div>
             </div>
         );
     }
