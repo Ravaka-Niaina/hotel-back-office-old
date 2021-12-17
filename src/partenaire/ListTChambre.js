@@ -237,16 +237,17 @@ export default function EnhancedTable() {
   };
 
   function setPlanTarifaire(data){
+    console.log(data);
     rows = [];
-    for(let i = 0; i < data.TCModel.length; i++){
-      rows.push(data.TCModel[i]);  
+    for(let i = 0; i < data.list.length; i++){
+      rows.push(data.list[i]);  
     }
-    setList(data.TCModel);
+    setList(data.list);
     //return rows;
   }
 
   useEffect(() => {
-    GETaPI('get', '/typeChambre/TC',setPlanTarifaire);
+    GETaPI('get', '/TCTarif',setPlanTarifaire);
 
   }, []);
 

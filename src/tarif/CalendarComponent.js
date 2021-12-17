@@ -9,6 +9,7 @@ import RateLine from './dependancies/RateLine.js';
 import axios from "axios";
 import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
+import  Navbar  from "../Navbar/Navbar";
 
 const getDaysBetweenDates = function(startDate, endDate) {
     var now = startDate.clone(), dates = [];
@@ -92,6 +93,7 @@ const CalendarComponent = () => {
 
     return(
         <>
+            <Navbar currentPage={1}/>
             <Container class="container" className={styles.container} style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
                 <LocalizationProvider dateAdapter={AdapterMoment}>
                 <DateRangePicker
