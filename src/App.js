@@ -37,6 +37,7 @@ import  ApplyReservation  from "./components/client/applyReservation.js";
 import  dateReservation  from "./components/client/dateReservation";
 import  calendar  from "./calendar/calendar";
 import  BasicDateRangePicker  from "./calendar/calendar";
+import  BookComponent from "./components/Book/BookComponent.js";
 
 
 function App() {
@@ -77,6 +78,7 @@ function App() {
         {/*route client */}
         <Route path="/login" exact component={Login} />
         <Route path="/Register" exact component={Register} />
+        <Route path="/book" exact component={BookComponent} />
         {/*
         <Route path="/Home" exact component={Home} />
         <Route path="/TypeChambre/" exact component={ListTypeChambre} />

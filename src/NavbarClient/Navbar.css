@@ -1,0 +1,14 @@
+header{
+    box-shadow: none !important;
+    background-color: rgb(246, 248, 252) !important;
+  }
+  header .MuiTypography-root,
+  header .MuiButton-root,
+  header .MuiButtonBase-root{
+    color: #084298 !important;
+  }
+  header .MuiButtonBase-root:nth-child(2){
+    color: #fff !important;
+    background-color: #084298 !important;
+  }
+  
