@@ -191,7 +191,7 @@ class Scroll extends React.Component{
                                 <Promotions />
                             </Grid>
                             <Grid item xs={6}>
-                                <Item>xs=4</Item>
+                                <Item>typeChambre</Item>
                                 <DChambre context = {this} />
                             </Grid>
                             <Grid item xs={3}>
@@ -200,29 +200,6 @@ class Scroll extends React.Component{
                             </Grid>
                         </Grid>
                     </Box>
-                {/*<div className="scroll-bg" >
-                    
-//                     <div style ={{ width :"fit-content" , margin :"0 auto"}}>
-//                         <div style={{backgroundColor: "white"}}>
-//                             *<BaeCalendar context = {this} />*
-//                         </div>
-//                     </div >
-//                     <div class="row">
-//                         <div className="col">
-//                             <div className="scroll-div">
-//                                 <div className="scroll-object">
-//                                     <DateSejour context= {this} /><hr/>
-//                                     <DChambre context = {this} />
-//                                 </div>
-//                             </div>
-//                         </div>
-//                         <div className="col">
-//                             <div className="divRight">
-//                                 <Fact context = {this} />
-//                                </div>
-//                         </div>
-//                     </div>
-//                 </div>*/}
              </div>
         );
     }
