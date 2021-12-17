@@ -386,17 +386,17 @@ class Filtre extends React.Component{
       {(popupState) => (
         <div>
           <Button {...bindToggle(popupState)} id='toggle'>
-          <span></span>
+            <span></span>
           </Button>
-          <div className='client'>
+            <div className='client'>
                 <div id='client' className='guests'>
-                <p>
-                <PersonIcon id='PersonIcon'/>
-                <span id='guests'>Guests</span><br/>
-                <span id='NbGuest'>{this.state.nbAdulte} Adult, {this.state.nbEnfant} children</span>
-                </p>
+                    <p>
+                        <PersonIcon id='PersonIcon'/>
+                        <span id='guests'>Guests</span><br/>
+                        <span id='NbGuest'>{this.state.nbAdulte} Adult, {this.state.nbEnfant} children</span>
+                    </p>
                 </div>
-                </div>
+            </div>
           <Popper {...bindPopper(popupState)} transition>
             {({ TransitionProps }) => (
               <Fade {...TransitionProps} timeout={350}>

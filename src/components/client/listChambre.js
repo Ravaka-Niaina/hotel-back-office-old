@@ -4,7 +4,6 @@ import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Link} from 'react-router-dom'
 import { NorthWest } from '@mui/icons-material';
-import Filtre from './Filtre';
 import TextField from '@mui/material/TextField';
 import callAPI from '../../utility';
 import { ReactComponent as airConditioner } from '../../public/air-conditioner-svgrepo-com.svg';
@@ -218,10 +217,8 @@ class DChambre extends React.Component{
                     <div class="col"></div>
                 </div>
                 <div class="row">
-                    <div class="col">
-                        <ul>
+                    <div className="equipement" style ={{diplay : "flex"}}>
                             <Equipements equipements={typeChambre.equipements}/>
-                        </ul>
                     </div>
                     <div class="col">
                         <ListTarif context={this.props.context} tarifs={typeChambre.tarifs} idTypeChambre={typeChambre._id} />
@@ -238,8 +235,6 @@ class DChambre extends React.Component{
             } 
         return (
             <div>
-                <Filtre context={this.props.context} />
-                <hr/>
                  {listChambre}
             </div>
         );

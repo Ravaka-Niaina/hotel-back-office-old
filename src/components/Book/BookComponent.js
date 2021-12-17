@@ -48,7 +48,7 @@ const BookComponent = () => {
           />
           <TextField
               fullwidth={false}
-              size="small"
+              size="small" 
               id="outlined-number"
               label="Occupancy"
               defaultValue="2 adults - 0 children"

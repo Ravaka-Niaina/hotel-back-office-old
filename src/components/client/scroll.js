@@ -9,11 +9,23 @@ import { useCookies } from 'react-cookie';
 import callAPI from '../../utility';
 import './Css.css'
 import moment from 'moment';
-
-
-import Datee from "./date";
+import NavBarClient from "../Book/BookComponent.js";
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import Promotions from "./promotion";
 import DateSejour from "./DateSejour";
 import BaeCalendar from "../../calendar/calendar.js";
+
+const Item = styled(Paper)(({ theme }) => ({
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  }));
+
+
 
 function TestCookie(){
     const [cookies, setCookie] = useCookies(['name']);
@@ -170,31 +182,48 @@ class Scroll extends React.Component{
     render(){
         return(
             <div>
-                <TestCookie />
-                <div className="scroll-bg" >
-                    <div style ={{ width :"fit-content" , margin :"0 auto"}}>
-                        <div style={{backgroundColor: "white"}}>
-                            <BaeCalendar context = {this} />
-                        </div>
-                        {/*<Datee context = {this} style = {{marginLeft : "50px"}}/><hr/>*/}
-                    </div >
-                    <div class="row">
-                        <div className="col">
-                            <div className="scroll-div">
-                                <div className="scroll-object">
-                                    <DateSejour context= {this} /><hr/>
-                                    <DChambre context = {this} />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col">
-                            <div className="divRight">
+                <NavBarClient  />
+
+                    <Box sx={{ flexGrow: 1, padding :"5px" }}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={3}>
+                                <Item>Promotion</Item>
+                                <Promotions />
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Item>xs=4</Item>
+                                <DChambre context = {this} />
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Item>Panier</Item>
                                 <Fact context = {this} />
-                               </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                            </Grid>
+                        </Grid>
+                    </Box>
+                {/*<div className="scroll-bg" >
+                    
+//                     <div style ={{ width :"fit-content" , margin :"0 auto"}}>
+//                         <div style={{backgroundColor: "white"}}>
+//                             *<BaeCalendar context = {this} />*
+//                         </div>
+//                     </div >
+//                     <div class="row">
+//                         <div className="col">
+//                             <div className="scroll-div">
+//                                 <div className="scroll-object">
+//                                     <DateSejour context= {this} /><hr/>
+//                                     <DChambre context = {this} />
+//                                 </div>
+//                             </div>
+//                         </div>
+//                         <div className="col">
+//                             <div className="divRight">
+//                                 <Fact context = {this} />
+//                                </div>
+//                         </div>
+//                     </div>
+//                 </div>*/}
+             </div>
         );
     }
 }
