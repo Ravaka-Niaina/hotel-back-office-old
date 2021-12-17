@@ -237,7 +237,6 @@ class DChambre extends React.Component{
         return (
             <div>
                 { this.props.context.state.showFiltre ? <Filtre context={this.props.context} /> : null }
-                <hr/>
                  {listChambre}
             </div>
         );
