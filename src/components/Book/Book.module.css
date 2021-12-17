@@ -1,0 +1,37 @@
+body{
+    min-height: 100% !important;
+    background-color: rgb(246, 248, 252) !important;
+}
+.filter {
+    width: 100%;
+    height: 100px;
+    background-color: #084298;
+    padding-top: 20px;
+}
+.filter > div{
+    justify-content: center;
+}
+
+.filter > div > div{
+    Background-color: #fff !important;
+    border: 8px solid #f9fafb;
+    border-radius: 3px;
+}
+.filter > div > button {
+    Background-color: #fff !important;
+    background-color: #ffc107 !important;
+    color: #084298 !important;
+}
+.resultsFilter{
+    justify-content: center;
+    min-height: 60px;
+    gap: 24px;
+    align-items: center;
+    background-color: #ffc107 !important;
+    box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
+}
+
+.resultsFilter > button {
+    color: #fff !important;
+    background-color: #084298 !important;
+}

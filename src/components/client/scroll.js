@@ -9,16 +9,32 @@ import { useCookies } from 'react-cookie';
 import callAPI from '../../utility';
 import './Css.css'
 import moment from 'moment';
+import NavBarClient from '../Book/BookComponent.js';
+
+import CircularProgress from '@mui/material/CircularProgress';
+import Backdrop from '@mui/material/Backdrop';
+
+import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import Promotions from "./promotion";
+import DateSejour from "./DateSejour";
+import BaeCalendar from "../../calendar/calendar.js";
+
+const Item = styled(Paper)(({ theme }) => ({
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  }));
 
 
-import Datee from "./date";
-import DateSejour from "./DateSejour"
 
 function TestCookie(){
     const [cookies, setCookie] = useCookies(['name']);
     let pp = JSON.stringify({user: 'Norck', play: 999, totalPP: 1000, topPlays:['ascension to heaven', 'big black', 'atama no taisou']});
     setCookie('pp', pp, '/');
-    //console.log(cookies.pp);
     return(
         null
     );
@@ -43,6 +59,10 @@ class Scroll extends React.Component{
             open: false,
             err: null,
             email: "",
+            reload: true,
+            openCalendar: false,
+            openChangeNbGuest: false,
+            openLoad: false
         };
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
     }
@@ -58,8 +78,20 @@ class Scroll extends React.Component{
         currentState.changeDateSejour = true;
         currentState.dateSejour.debut = "";
         currentState.dateSejour.fin = "";
+        currentState.listTypeChambre = [];
         //currentState.openChangeDateSejour = true;
         this.setState(currentState);
+    }
+
+    setResult(res){
+        console.log(res);
+        let temp = {...this.state};
+        temp.listTypeChambre = res.list;
+        this.setState(temp);
+    }
+
+    componentDidMount(){
+        callAPI('get', '/TCTarif/all', {}, this.setResult);
     }
 
     getConvert(number , value){
@@ -80,7 +112,6 @@ class Scroll extends React.Component{
         current.dateSejour.fin = dateFin;
         //console.log(current.itineraires[current.itineraires.length - 1]);
         if(current.dateSejour.debut != null && current.dateSejour.fin != null){
-            current.showFiltre = true;
             current.openChangeDateSejour = false;
             current.changeDateSejour = false;
             try{
@@ -101,8 +132,6 @@ class Scroll extends React.Component{
                         tarifReserves: []
                     });
             }
-        }else{
-            current.showFiltre = false;
         }
         
         return this.setState(current);
@@ -138,22 +167,17 @@ class Scroll extends React.Component{
         }
       
     }
-    setReservationEnCours(res){
-        if(res.status == 401){// Acces non autorise
-            console.log("Access non autorise");
-            this.handleChange("open", true);
-        }else if(res.status == 200){
-            let currentState = JSON.parse(JSON.stringify(this.state));
-            currentState.reservationEnCours = res.reservation;
-            try{
-                currentState.itineraires = res.reservation.itineraires; 
-            }catch(err){
-                console.log(err);
-                currentState.itineraires = [];
-            }
-            console.log(currentState.itineraires);
-            this.setState(currentState);
+    setReservationEnCours(reservation){
+        console.log(reservation);
+        let currentState = JSON.parse(JSON.stringify(this.state));
+        currentState.reservationEnCours = reservation;
+        currentState.reload = true;
+        if(reservation === null){
+            currentState.itineraires = [];
+        }else{
+            currentState.itineraires = reservation.itineraires;
         }
+        this.setState(currentState);
     }
 
     validerReservation(){
@@ -167,32 +191,35 @@ class Scroll extends React.Component{
         current.reservation.push(this.state.reservation.length);
         this.setState(current);
     }
-
     
     render(){
         return(
             <div>
-                <TestCookie />
-                <div className="scroll-bg" >
-                    <div style ={{ width :"fit-content" , margin :"0 auto"}}>
-                        <Datee context = {this} style = {{marginLeft : "50px"}}/><hr/>
-                    </div >
-                    <div class="row">
-                        <div className="col">
-                            <div className="scroll-div">
-                                <div className="scroll-object">
-                                    <DateSejour context= {this} /><hr/>
-                                    <DChambre context = {this} />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col">
-                            <div className="divRight">
-                                <Fact context = {this} />
-                               </div>
-                        </div>
-                    </div>
+                <div style={{filter: "blur(" + (this.state.openLoad ? "2" : "0") + "px)"}}>
+                    <NavBarClient context={this} />
+                    <Box sx={{ flexGrow: 1, padding :"5px" }}>
+                        <Grid container spacing={2}>
+                            <Grid item xs={3}>
+                                <Item>
+                                <Promotions /></Item>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <Item>
+                                <DChambre context = {this} /></Item>
+                            </Grid>
+                            <Grid item xs={3}>
+                                <Item>
+                                <Fact context = {this} /></Item>
+                            </Grid>
+                        </Grid>
+                    </Box>
                 </div>
+                <Backdrop
+                    sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                    open={this.state.openLoad}
+                >
+                    <CircularProgress color="inherit" />
+                </Backdrop>
             </div>
         );
     }

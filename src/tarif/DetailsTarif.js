@@ -20,6 +20,7 @@ const utility = require('./utility.js');
 
 
 
+
 function DetailsTarif(){
     const [errors, setErrors] = useState([]);
     const [isLeadHour, setIsLeadHour] = useState(true);

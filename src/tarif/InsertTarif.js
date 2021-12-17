@@ -48,10 +48,11 @@ function InsertTarif(){
         current.chambresAtrb = res.listType;
         current.politiqueAnnulAtrb = res.listPolitique;
         setPlanTarifaire(current);
+        console.log(current);
     }
 
     useEffect(() => {
-        callAPI('get', '/typeChambre/TPAvecPA', {}, setListTypeChambre);
+        callAPI('get', '/TCTarif/TPAvecPA', {}, setListTypeChambre);
       }, []);
 
     function tryRedirect(res){
@@ -64,6 +65,7 @@ function InsertTarif(){
     }
 
     function insert(e){
+        e.preventDefault();
         const current = utility.getPlan(planTarifaire, isLeadHour, lead);
         callAPI('post', '/planTarifaire/insert', current, tryRedirect);
     }

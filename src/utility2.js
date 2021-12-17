@@ -11,6 +11,7 @@ export function setValue(obj, field, value){
                     save.push(obj[field[0]]);
                 }
             }
+           
             
         }else{
             try{
@@ -33,6 +34,5 @@ export function setValue(obj, field, value){
         }
     }
     obj[field[0]] = save[0];
-    console.log(obj);
     return obj;
 }

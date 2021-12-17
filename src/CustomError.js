@@ -1,8 +1,10 @@
+import Alert from '@mui/material/Alert';
+
 function CustomError(props){
     if(props.errors.length > 0){
         return(
         <div className="erreur">
-        <p><strong>{ props.errors[0].message }</strong></p>
+            <Alert severity="error">{ props.errors[0].message }</Alert>
         </div>);
     }else{
         return(

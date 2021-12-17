@@ -12,6 +12,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../partenaire/typeChambre.css';
 
 import ListTarif from './ListTarif.js';
+import ListT from './LTarif.js';
 import CalendarComponent from './CalendarComponent';
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -63,7 +64,8 @@ function Tarif() {
                     </Tabs>
                 </Box>
                 <TabPanel value={value} index={0}>
-                  <ListTarif />
+                  {/*<ListTarif />*/}
+                  <ListT />
                 </TabPanel>
                 <TabPanel className="calendarTab" value={value} index={1}>
                     <CalendarComponent/>

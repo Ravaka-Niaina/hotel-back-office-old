@@ -15,6 +15,7 @@ export const getToday = () => moment().toDate();
 export const getReadableWeekday = (date) => moment(date).format('dddd');
 
 export const getReadableMonthDate = (date) => moment(date).format('MMMM Do');
+export const getReadableMonth = (date) => moment(date).format('MMMM');
 
 export const getMonthDayYear = (date) => moment(date).format('MM-DD-YYYY');
 

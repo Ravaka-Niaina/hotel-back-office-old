@@ -1,4 +1,4 @@
-import React , { useState} from 'react';
+import React , { useState, useEffect } from 'react';
 import styles from '../CalendarComponent.module.css';
 import {Box} from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -6,7 +6,7 @@ import callAPI from '../../utility';
 const utility = require('../utility.js');
 
 const CloseLine = (props) => {
-    const [opened, setOpened] = useState(!props.closed);
+    const [opened, setOpened] = useState(props.closed ? false : true);
     const theme = createTheme({
         palette: {
             primary: {
@@ -15,20 +15,22 @@ const CloseLine = (props) => {
             },
         },
     })
-    // useEffect( () => {
-    //     setopened(props.close);
-    // })
+    useEffect( () => {
+        setOpened(!props.closed);
+    })
     function closeTypeChambre(){
+        props.setOpenLoad(true);
         const data = {
             _id: props.idTypeChambre, 
             dateDebut: utility.getDate(props.statusDay.date),
             dateFin: utility.getDate(props.statusDay.date)
         };
         console.log(data);
-        callAPI('post', '/typeChambre/close', data, function(res){console.log(res); window.location.reload()} );
+        callAPI('post', '/typeChambre/close', data, function(res){console.log(res); props.getPrix()} );
     }
     return (
         <>
+
         <ThemeProvider
             theme={theme}
             >

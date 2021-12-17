@@ -45,6 +45,7 @@ function List(props){
         });
     return list;
 }
+
 function ListTarif() {
     const [state, setState] = useState({
       status: '',
@@ -53,7 +54,6 @@ function ListTarif() {
     });
 
     function setListPlanTarifaire(data){
-        console.log(data);
         let currentState = JSON.parse(JSON.stringify(state));
         currentState.list = data.list;
         setState(currentState);
@@ -61,7 +61,7 @@ function ListTarif() {
 
     useEffect(() => {
         axios({
-            method: 'post',
+            method: 'get',
             url: process.env.REACT_APP_BACK_URL + "/planTarifaire",
             withCredentials: true
         })

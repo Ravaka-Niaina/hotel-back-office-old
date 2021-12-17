@@ -4,10 +4,10 @@ import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Link} from 'react-router-dom'
 import { NorthWest } from '@mui/icons-material';
-import Filtre from './Filtre';
 import TextField from '@mui/material/TextField';
 import callAPI from '../../utility';
 import { ReactComponent as airConditioner } from '../../public/air-conditioner-svgrepo-com.svg';
+import Filtre from './Filtre.js';
 
 function ListConditionAnnulation(props){
     let services = props.politiqueAnnulAtrb.map(condition =>{
@@ -77,6 +77,14 @@ function getDate(date){
 
 function ListTarif(props){
 
+    function setReservationEnCours(res){
+        if(res.status === 200){
+            props.context.setReservationEnCours(res.reservation);
+        }else{
+            console.log(res);
+        }
+    }
+
     function addReservation(e ,id, nom, idTypeChambre){
         if(props.context.state.itineraires.length > 0){
             let itineraires = JSON.parse(JSON.stringify(props.context.state.itineraires));
@@ -87,14 +95,15 @@ function ListTarif(props){
                 guests: props.context.state.guests,
                 idTypeChambre : idTypeChambre
             });
+            console.log(itineraires);
             axios({
                 method: 'post',
                 url: process.env.REACT_APP_BACK_URL + '/reservation/insert',
                 withCredentials: true,
                 data: {itineraires: itineraires}
             })
-            .then(res => {                                                  
-                props.context.setReservationEnCours(res.data)})
+            .then(res => {
+                setReservationEnCours(res.data)})
             .catch(err => console.log(err));
         }
     }
@@ -209,10 +218,8 @@ class DChambre extends React.Component{
                     <div class="col"></div>
                 </div>
                 <div class="row">
-                    <div class="col">
-                        <ul>
+                    <div className="equipement" style ={{diplay : "flex"}}>
                             <Equipements equipements={typeChambre.equipements}/>
-                        </ul>
                     </div>
                     <div class="col">
                         <ListTarif context={this.props.context} tarifs={typeChambre.tarifs} idTypeChambre={typeChambre._id} />
@@ -229,12 +236,11 @@ class DChambre extends React.Component{
             } 
         return (
             <div>
-                <Filtre context={this.props.context} />
-                <hr/>
+                { this.props.context.state.showFiltre ? <Filtre context={this.props.context} /> : null }
                  {listChambre}
             </div>
         );
-        this.addReservation()
+        //this.addReservation()
     }
 }
 export default DChambre

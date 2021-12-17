@@ -162,7 +162,8 @@ export function handlePhotoChange(context, event){
 }
 
 export function Font(props){
-    return props.font.startsWith("https://") ?
+    console.log(props.font);
+    /*return props.font.startsWith("https://") ?
         <img src={props.font} style={{maxWidth:'20px', maxHeight: '200px', width: 'auto', height: 'auto', padding: '0 0'}}/>
-        : <i class={props.font}></i>
+        : <i class={props.font}></i>*/
 }

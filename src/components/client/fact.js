@@ -81,7 +81,6 @@ function Reservations(props){
 function Itineraires(props){
     let itineraires = [];
     for(let i = 0; i < props.context.state.itineraires.length; i++){
-        console.log("misy itineraire");
         itineraires.push(
             <div>
                 <div class="row mb-4">
@@ -147,29 +146,6 @@ class Fact extends React.Component{
                 emailVide = false;
             }
             
-            /*
-            console.log("id = " + idVide + " , email = " + emailVide);
-                axios({
-                    method: 'post',
-                    url: process.env.REACT_APP_BACK_URL + '/reservation/applyWithEmail',
-                    withCredentials: true,
-                    data: {_id: this.props.context.state.reservationEnCours._id, email: this.props.context.state.email}
-                })
-                .then(res => {       
-                    console.log(res);  
-                    if(res.data.status != 200){
-                        try{
-                            this.props.context.handleChange("resultApplyReservation", res.data.errors[0].message);
-                        }catch(err){
-                            this.props.context.handleChange("resultApplyReservation", res.data.errors[0]);
-                        }
-                    }else{
-                        this.props.context.handleChange("resultApplyReservation", res.data.message);
-                        this.props.context.setReservationEnCours({status: 200, reservation: null});
-                        this.props.context.handleChange("open", false);
-                    }
-                }).catch(err => console.log(err));
-            */
         }catch(err2){console.log(err2)}
     }
 
@@ -181,12 +157,8 @@ class Fact extends React.Component{
             data: {}
         })
         .then(res => {  
-            console.log(res); 
-            try{
-                res.data.reservation = res.data.reservation[0];
-            }catch(err2){ 
-                this.props.context.setReservationEnCours(res.data)
-            }
+            console.log(res.data.reservation[0]); 
+            this.props.context.setReservationEnCours(res.data.reservation[0]);
         }).catch(err => console.log(err));
     }
 
@@ -200,14 +172,15 @@ class Fact extends React.Component{
             withCredentials: true,
             data: data
         })
-        .then(res => {   
+        .then(res => { 
             console.log(res);                                               
-            context.setReservationEnCours(res.data)})
+            context.setReservationEnCours(res.data.reservation)})
         .catch(err => console.log(err));
     }
 
     render(){
         let valider = null;
+        console.log(this.props.context.state);
         for(let i = 0; i < this.props.context.state.itineraires.length; i++){
             for(let u = 0; u < this.props.context.state.itineraires[i].tarifReserves.length; u++){
                 if(this.props.context.state.itineraires[i].tarifReserves[u].etat == undefined
