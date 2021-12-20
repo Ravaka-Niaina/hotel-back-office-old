@@ -29,20 +29,19 @@ const styles = {
 function InsertPlanTarifaire(){
     const [errors, setErrors] = useState([]);
     const [planTarifaire, setPlanTarifaire] = useState({
+        error: {
+            nom: null,
+            description: null,
+            dateReservation: {debut: null, fin: null},
+            dateSejour: {debut: null, fin: null},
+
+        },
         nom: '',
         description: '',
         dateReservation: {debut: '', fin: ''},
         dateSejour: {debut: '', fin: ''},
-        LeadDay: [
-            {_id: 1, label: 'Lundi', checked: false},
-            {_id: 2, label: 'Mardi', checked: false},
-            {_id: 3, label: 'Mercredi', checked: false},
-            {_id: 4, label: 'Jeudi', checked: false},
-            {_id: 5, label: 'Vendredi', checked: false},
-            {_id: 6, label: 'Samedi', checked: false},
-            {_id: 7, label: 'Dimanche', checked: false}
-        ],
-        LeadHour: {min: '', max: ''}, // [{min: number, max: number}]
+        isLeadDay: true,
+        lead: {min: '', max: ''},
         chambresAtrb: [],
         politiqueAnnulAtrb: [
 
@@ -182,13 +181,24 @@ function InsertPlanTarifaire(){
                                             <label className="form-label-mt4" style={{textDecoration: 'underline'}} >Lead day: </label>
                                         </div>
                                         <div>
-                                            <FormGroup>
-                                                <utility.LeadDay 
-                                                    days={planTarifaire.LeadDay} 
-                                                    planTarifaire={planTarifaire}
-                                                    setPlanTarifaire={setPlanTarifaire}
-                                                    handleCheckBoxChange={utility.handleCheckBoxChange} />
-                                            </FormGroup>
+                                        <TextField 
+                                            id="standard-basic"
+                                            variant="standard"
+                                            label="Min"
+                                            style={{width: '200px'}}
+                                            type="text"
+                                            value={planTarifaire.lead.min}
+                                            onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "lead", "min")}
+                                        />
+                                        <TextField 
+                                            id="standard-basic"
+                                            variant="standard"
+                                            label="Max"
+                                            style={{width: '200px'}}
+                                            type="text"
+                                            value={planTarifaire.lead.max}
+                                            onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "lead", "max")}
+                                        />
                                         </div>
                                     </div>
                                     <div style={{marginTop:'30px'}}>
