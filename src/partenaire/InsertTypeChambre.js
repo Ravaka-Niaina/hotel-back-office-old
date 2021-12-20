@@ -47,6 +47,25 @@ const infoForm = {
     { field: "Remboursable", type: "Radio", options: [{label: "Oui", value: "yes", checked: true}, {value: "no", checked: false}], error: null }
   ]
 }
+/*
+[
+  {field: "nom", error: "Nom efa misy"},
+  {field: "etage", error}
+]
+
+const infoForm = {
+  title: "Ajouter Type chambre",
+  urlSubmit: "/typeChambre/insert",
+  urlRedirectSuccess: "/typeChambre",
+  infoFields: [
+    { field: "nom", type: "String", value: "", error: null, required: true, maxCharacters: 50 },
+    { field: "chambreTotal", type: "Integer", value: "", error: null, required: true },
+    { field: "etage", type: "Integer", required: true, min: 1, max: 50 },
+
+  ]
+};
+*/
+
 
 const disposition = [
   ["id", "nom"],
