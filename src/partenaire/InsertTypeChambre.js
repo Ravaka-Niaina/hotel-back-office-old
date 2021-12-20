@@ -82,6 +82,15 @@ function InsertTypeCHambre(){
   let [state, setState] = useState(
     {
       errors: [],
+      error: {
+        nom: null,
+        nbAdulte: null,
+        nbEnfant: null,
+        chambreTotal:null,
+        etage:null,
+        superficie:null,
+        description:null,
+      },
       nom: '',
       nbAdulte: '',
       nbEnfant: '',
@@ -124,7 +133,7 @@ function InsertTypeCHambre(){
 
   useEffect(() => {
     callAPI('post', '/planTarifaire', {}, setPlanTarifaire);
-    //callAPI('get', '/equipement', {}, setListEquipement);
+    callAPI('get', '/equipement', {}, setListEquipement);
   }, []); 
 
   function handleCheckBoxPlanTarifaire(e, index){
@@ -141,15 +150,24 @@ function InsertTypeCHambre(){
   }
 
   function tryRedirect(res){
+    console.log(res);
+    let currentState = JSON.parse(JSON.stringify(state));
+    let keys = Object.keys(currentState.error);
+    keys.map((k) => {
+      currentState.error[k] = null;
+    });
     if(res.status === 200){
       history.push('/typeChambre');
     }else if(res.status === 401){//Unauthorized
       history.push('/login');
     }else{
-      let currentState = JSON.parse(JSON.stringify(state));
-      currentState.errors = res.errors;
-      setState(currentState);
+      console.log(res.errors);
+      let keys = Object.keys(res.errors);
+      keys.map((k) => {
+        currentState.error[k] = res.errors[k];
+      });
     }
+    setState(currentState);
   }
 
   function insert(e){
@@ -172,6 +190,7 @@ function InsertTypeCHambre(){
         }
       }
       toSend.planTarifaire = selectedPlan;
+      console.log(toSend);
       axios({
           method: 'post',
           url: process.env.REACT_APP_BACK_URL + "/typeChambre/insert",
@@ -185,6 +204,7 @@ function InsertTypeCHambre(){
   function handleInputChange(event, inputName){
       const currentState = JSON.parse(JSON.stringify(state));
       currentState[inputName] = event.target.value;
+      currentState.error[inputName] = null;
       setState(currentState);
   }
 
@@ -267,6 +287,7 @@ function InsertTypeCHambre(){
                 <CustomError errors={state.errors} />
                 <form className="needs-validation" className='forms' style={{marginTop:'15px'}}>
                     <div style={{marginTop:'40px'}} id='input-group1'>
+                      
                       <TextField 
                       id="outlined-basic"
                       variant="outlined"
@@ -279,6 +300,8 @@ function InsertTypeCHambre(){
                       style={{width:'370px'}}
                       type="text" 
                       value={state.nom} onChange={(e) => handleInputChange(e, "nom")}
+                      error={state.error.nom === null ? false : true}
+                      helperText={state.error.nom === null ? null : state.error.nom}
                       />
                     <TextField 
                       id="outlined-basic"
@@ -292,9 +315,10 @@ function InsertTypeCHambre(){
                       type="number"
                       style={{width:'370px',marginLeft:'123px'}}
                       value={state.chambreTotal} onChange={(e) => handleInputChange(e, "chambreTotal")}
+                      error={state.error.chambreTotal === null ? false : true}
+                      helperText={state.error.chambreTotal === null ? null : state.error.chambreTotal}
                       />
                      </div>
-
                      <div style={{marginTop:'40px'}} id='input-group1'>
                       <TextField 
                       id="outlined-basic"
@@ -308,6 +332,8 @@ function InsertTypeCHambre(){
                       type="number"
                       style={{width:'370px'}}
                       value={state.etage} onChange={(e) => handleInputChange(e, "etage")}
+                      error={state.error.etage === null ? false : true}
+                      helperText={state.error.etage === null ? null : state.error.etage}
                       />
                       <TextField 
                       id="outlined-basic"
@@ -321,6 +347,8 @@ function InsertTypeCHambre(){
                       type="number" 
                       style={{width:'370px',marginLeft:'123px'}}
                       value={state.superficie} onChange={(e) => handleInputChange(e, "superficie")}
+                      error={state.error.superficie === null ? false : true}
+                      helperText={state.error.superficie === null ? null : state.error.superficie}
                       />
                     </div>
                     
@@ -371,6 +399,8 @@ function InsertTypeCHambre(){
                       value={state.nbAdulte}
                       onChange={(e) => handleInputChange(e, "nbAdulte")}
                       style={{width:'370px'}}
+                      error={state.error.nbAdulte === null ? false : true}
+                      helperText={state.error.nbAdulte === null ? null : state.error.nbAdulte}
                       />
                       <TextField 
                       id="outlined-basic"
@@ -385,6 +415,8 @@ function InsertTypeCHambre(){
                       value={state.nbEnfant}
                       onChange={(e) => handleInputChange(e, "nbEnfant")}
                       style={{width:'370px',marginLeft:'123px'}}
+                      error={state.error.nbEnfant === null ? false : true}
+                      helperText={state.error.nbEnfant === null ? null : state.error.nbEnfant}
                       />
                     </div>
 
@@ -408,7 +440,10 @@ function InsertTypeCHambre(){
                              }
                       style={{width:'100%',height:'50px',marginTop:'5px'}}
                       value={state.description}
-                      onChange={(e) => handleInputChange(e, "description")} />
+                      onChange={(e) => handleInputChange(e, "description")} 
+                      error={state.error.description === null ? false : true}
+                      helperText={state.error.description === null ? null : state.error.description}
+                    />
                     <div style={{marginTop:'40px'}}>
                         <div>
                             <label className="form-label-mt4" 
@@ -448,7 +483,8 @@ function InsertTypeCHambre(){
                               type="text" 
                               name="Font" 
                               value={newIcon.font}
-                              onChange={(e) => handleNewIconChange(e, "font")}/>
+                              onChange={(e) => handleNewIconChange(e, "font")}
+                              />
                               <TextField 
                               id="outlined-basic"
                               variant="outlined"
