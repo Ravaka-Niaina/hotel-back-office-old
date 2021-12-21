@@ -280,6 +280,7 @@ class DetailsTypeCHambre extends React.Component{
         this.setState(currentState);
     }
 
+    
     render(){
         let list = null;
         list = this.state.tarifs.map(tarif => {
@@ -381,7 +382,8 @@ class DetailsTypeCHambre extends React.Component{
                       value={this.state.typeChambre.superficie} onChange={(e) =>this.handleInputChange(e, "superficie")}
                       />
                     </div>
-                                
+
+
                                 {
                                     //console.log('yes')
                                 }

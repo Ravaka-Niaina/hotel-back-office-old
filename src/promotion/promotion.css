@@ -33,7 +33,7 @@
 }
 
 
-.entete {
+.enteteP {
     margin-left: 2%;
     margin-top: 30px;
     margin-bottom: 20px;
@@ -87,13 +87,14 @@ margin-top: 15px;
     margin-top: 15px;
     }
 
+
 #litleLabel{
 color: black;
 font-family: 'Roboto', sans-serif;
 font-size: 14px;
 }
 
-input#dateD {
+input#dateDebutS {
     width: 200px;
     min-width: 0px;
     background-color: transparent;
@@ -101,7 +102,7 @@ input#dateD {
     font-family: 'Roboto';
 }
 
-input#dateF {
+input#dateFinS {
     width: 200px;
     min-width: 0px;
     background-color: transparent;

@@ -1,521 +1,570 @@
-// import { TextField } from "@mui/material";
-import CustomError from '../CustomError';
-import axios from "axios";
-import React, {useEffect} from "react";
-import Navbar from "../Navbar/Navbar";
-import Sidebar from "../Sidebar/Sidebar";
-import { Checkbox } from "@mui/material";
-import '../partenaire/typeChambre.css';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
-import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
-import { useHistory } from 'react-router-dom'
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
+
+import React from 'react';
+import axios from 'axios';
+import Select from 'react-select'
 import {Link} from 'react-router-dom';
-import FormControl from '@mui/material/FormControl';
-import OutlinedInput from '@mui/material/OutlinedInput';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Input from '@mui/material/Input';
 import InputLabel from '@mui/material/InputLabel';
-
-import FormGroup from '@mui/material/FormGroup';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import callAPI from '../utility';
+import "./promotion.css";
+import InputAdornment from '@mui/material/InputAdornment';
 
-import { useState } from 'react';
-import {FileInput, Preview, Videos, Font} from '../partenaire/utilityTypeChambre.js';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormLabel from '@mui/material/FormLabel';
+import { withStyles } from "@material-ui/core/styles";
 
-function PlanTarifaire(props){
-  let i = -1;
-  let list = props.planTarifaire.map(tarif => {
-      i++;
-      let u = i;
-      return(
-        <FormControlLabel 
-          checked={tarif.checked}
-          control={<Checkbox/>}
-          onChange={(e) => props.handleCheckBoxPlanTarifaire(e, u)}
-          label={<span id='litleLabel'>
-          {tarif.nom}
-                </span>}
-          style={{marginLeft:"20px",marginTop:'15px'}}
-        />
-      );
-  })
-  return list;
+
+export default class InsertPromotion extends React.Component {
+  // state = {
+  //   name: '',
+  // }
+
+  constructor(props){
+    super(props);
+    this.state = {
+      typeChambres: [],
+      tarifs: [],
+      HideShowP: false,
+      HideShowE: false,
+      leadDay: false,
+      leadHour: false,
+        promotion: {
+          errors: [],
+          nom: '',
+          planTarifaire: [],
+          typeChambre: [],
+          remisePourcentage: '',
+          remiseEuro: '',
+          dateDebutS: '',
+          dateFinS: '',
+          lundi: '',
+          mardi: '',
+          mercredi: '',
+          jeudi: '',
+          vendredi: '',
+          samedi: '',
+          dimanche: '',
+          sejourMin:'',
+          premierJour:'',
+          dernierJour:'',
+          leadDayMin:'',
+          leadDayMax:'',
+          leadHourMin:'',
+          leadHourMax:''
+        },
+    };
 }
 
+  // handleChange = event => {
+  //   this.setState({ name: event.target.value });
+  // }
 
-function Equipements(props){
-  let i = -1;
-    let equipements = props.equipements.map(equipement => {
-        i++;
-        let u = i;
-        return(
-          <div style={{height:"40px"}}>
-            <FormControlLabel
-              checked={equipement.checked}
-              control={<Checkbox/>}
-              label=""
-              onChange={(e) => props.handleCheckBoxEquipement(e, u)}
-              style={{marginLeft:"20px"}}
-            />
-            <Font font={equipement.font} />
-            <span id='litleLabel' style={{marginLeft:'8px'}}>
-            {equipement.nom}
-            </span>
-          </div>
-          
-        );
+  async getTypeChambres(){
+    axios.get(process.env.REACT_APP_BACK_URL + '/TCTarif')
+    .then(res => {
+      const typeChambres ={typeChambres: res.data.list} ;
+      
+      this.setState( typeChambres );
+      console.log(this.state);
     })
-  return equipements;
+  }
+
+    async getTarifs(){
+    axios.get(process.env.REACT_APP_BACK_URL + '/planTarifaire')
+    .then(res => {
+      const tarifs ={tarifs: res.data.list} ;
+      
+      this.setState( tarifs );
+      console.log(this.state);
+    })
+  }
+
+  handleInputChange(event, inputName){
+    const currentState = JSON.parse(JSON.stringify(this.state));
+    currentState.promotion[inputName] = event.target.value;
+    this.setState(currentState);
 }
 
+//Une fonction qui gérera notre valeur sélectionnée
+// handleSelectChange(event, selectName){
+//   const currentState = JSON.parse(JSON.stringify(this.state));
+//   currentState.promotion[selectName] = {_id:event.value};
+//   this.setState(currentState)
+//  }
 
-
-function InsertTypeCHambre(){
-  const noImage = '/no-image.jpg';
-  let [val, setVal] = useState(1);
-  let [newIcon, setNewIcon] = useState({font: "", nom: ""});
-  let [errInsertEq, setErrInsertEq] = useState(null);
-  let [state, setState] = useState(
-    {
-      errors: [],
-      nom: '',
-      nbAdulte: '',
-      nbEnfant: '',
-      photo: [],
-      
-      chambreTotal:'',
-      etage:'',
-      superficie:'',
-      description:'',
-      planTarifaire: [],
-      equipements: [],
-      preview: [noImage],
-      videos: []
-    }
-  );
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-
-  const history = useHistory();
-  
-  function setPlanTarifaire(res){
-    console.log(res);
-    let current = JSON.parse(JSON.stringify(state));
-    for(let i = 0; i < res.list.length; i++){
-      res.list[i].checked = false;
-    }
-    current.planTarifaire = res.list;
-    state = current;
-    //setState(current);
-  }
-
-  
-  function setListEquipement(res){
-    let current = JSON.parse(JSON.stringify(state));
-    current.equipements = res.equipements;
-    setState(current);
-  }
-
-  useEffect(() => {
-    callAPI('post', '/planTarifaire', {}, setPlanTarifaire);
-    callAPI('get', '/equipement', {}, setListEquipement);
-  }, []); 
-
-  function handleCheckBoxPlanTarifaire(e, index){
-    let current = JSON.parse(JSON.stringify(state));
-    current.planTarifaire[index].checked = e.target.checked;
-    setState(current);
-  }
-
-  function handleCheckBoxEquipement(e, index){
-    let current = JSON.parse(JSON.stringify(state));
-    current.equipements[index].checked = e.target.checked;
-    setState(current);
-    
-  }
-
-  function tryRedirect(res){
-    if(res.status === 200){
-      history.push('/typeChambre');
-    }else if(res.status === 401){//Unauthorized
-      history.push('/login');
-    }else{
-      let currentState = JSON.parse(JSON.stringify(state));
-      currentState.errors = res.errors;
-      setState(currentState);
-    }
-  }
-
-  function insert(e){
-      e.preventDefault();
-      console.log('Envoie en attente...');
-      let toSend = JSON.parse(JSON.stringify(state));
-
-      let selectedEquip = [];
-      for(let i = 0; i < state.equipements.length; i++){
-        if(state.equipements[i].checked){
-          selectedEquip.push(state.equipements[i]._id);
-        }
-      }
-      toSend.equipements = selectedEquip;
-      
-      let selectedPlan = [];
-      for(let i = 0; i < state.planTarifaire.length; i++){
-        if(state.planTarifaire[i].checked){
-          selectedPlan.push(state.planTarifaire[i]._id);
-        }
-      }
-      toSend.planTarifaire = selectedPlan;
-      axios({
-          method: 'post',
-          url: process.env.REACT_APP_BACK_URL + "/typeChambre/insert",
-          withCredentials: true,
-          data: toSend
+  handleSubmit = event => {
+    event.preventDefault();
+    axios.post(process.env.REACT_APP_BACK_URL + `/promotion/create`,  this.state.promotion )
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
+          alert('success message ...');
       })
-      .then(res => tryRedirect(res.data))
-      .catch(err => console.log(err));
   }
 
-  function handleInputChange(event, inputName){
-      const currentState = JSON.parse(JSON.stringify(state));
-      currentState[inputName] = event.target.value;
-      setState(currentState);
-  }
-
-  function handleVideoChange(e){
-    let currentState = JSON.parse(JSON.stringify(state));
-    currentState.videos = [];
-    for(let i = 0; i < e.target.files.length; i++){
-      currentState.videos.push({});
-    }
-    setState(currentState);
-  }
-
-  function handlePhotoChange(e){
-    let currentState = JSON.parse(JSON.stringify(state));
-    currentState.photo = [];
-    currentState.preview = [];
-    let finished = 0;
-    for(let i = 0; i < e.target.files.length; i++){
-      const u = i;
-      const img = e.target.files[i];
-      const r = /^image/;
-      if(r.test(img.type)){
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-          currentState.photo[u] = evt.target.result;
-          currentState.preview[u] = evt.target.result;
-          finished++;
-          if(finished === e.target.files.length){
-            setState(currentState);
-          }
-        }
-        reader.readAsDataURL(img);
-      }else{
-        currentState.preview = [noImage];
-        setState(currentState);
-      }
-    }
-  }
-
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
-
-  function handleNewIconChange(e, fieldName){
-    let currentState = JSON.parse(JSON.stringify(newIcon));
-    currentState[fieldName] = e.target.value;
-    setNewIcon(currentState);
-  }
-
-  function setListEquipement2(res){
-    if(res.status == 200){
-      setNewIcon({font: "", nom: ""});
-      setErrInsertEq(null);
-      let current = JSON.parse(JSON.stringify(state));
-      current.equipements = res.equipements;
-      setState(current);
-      setOpen(false);
-    }else{
-      setErrInsertEq(res.message);
-    }
-  }
-
-  function addEquipement(){
-    callAPI('post', '/equipement/insert', {icon: newIcon}, setListEquipement2);
-  }
-
-  return (
-    <div> 
-        <Navbar/>
-              <div className="jumbotron">
-                <h4 className="" id='title1'>Ajouter Type chambre</h4>
-                <CustomError errors={state.errors} />
-                <form className="needs-validation" className='forms' style={{marginTop:'15px'}}>
-                    <div style={{marginTop:'40px'}} id='input-group1'>
-                      <TextField 
-                      id="outlined-basic"
-                      variant="outlined"
-                      size='small'
-                      label={
-                      <p id='libel'>
-                      Nom
-                      </p>
-                            } 
-                      style={{width:'370px'}}
-                      type="text" 
-                      value={state.nom} onChange={(e) => handleInputChange(e, "nom")}
-                      />
-                    <TextField 
-                      id="outlined-basic"
-                      variant="outlined"
-                      size='small'
-                      label={
-                        <p id='libel'>
-                            Chambre total
-                        </p>
-                             } 
-                      type="number"
-                      style={{width:'370px',marginLeft:'123px'}}
-                      value={state.chambreTotal} onChange={(e) => handleInputChange(e, "chambreTotal")}
-                      />
-                     </div>
-
-                     <div style={{marginTop:'40px'}} id='input-group1'>
-                      <TextField 
-                      id="outlined-basic"
-                      variant="outlined"
-                      size='small'
-                      label={
-                        <p id='libel'>
-                            Etage
-                        </p>
-                             } 
-                      type="number"
-                      style={{width:'370px'}}
-                      value={state.etage} onChange={(e) => handleInputChange(e, "etage")}
-                      />
-                      <TextField 
-                      id="outlined-basic"
-                      variant="outlined"
-                      size='small'
-                      label={
-                        <p id='libel'>
-                            Superficie
-                        </p>
-                             } 
-                      type="number" 
-                      style={{width:'370px',marginLeft:'123px'}}
-                      value={state.superficie} onChange={(e) => handleInputChange(e, "superficie")}
-                      />
-                    </div>
-                    
-                    
-                    <div style={{marginTop:'15px'}}>
-                        <label className="form-label mt-4" style={{textDecoration:'underline'}} id='bigLabel'>Photos  </label>
-                      </div>
-                      <div className="row">
-                          <Preview preview={state.preview} />
-                      </div>
-                      <div className="row">
-                          <FileInput 
-                            id='InputFile'
-                            style={{marginTop: '5px'}}
-                            value=""
-                            handlePhotoChange={handlePhotoChange} />
-                      </div>
-
-                    <div style={{marginTop:'15px'}}>
-                      <div className="row">
-                      <div style={{marginTop:'10px'}}>
-                        <label className="form-label mt-4" style={{textDecoration:'underline'}} id='bigLabel'>Videos  </label>
-                      </div>
-                      </div>
-                      <div className="row">
-                        <Videos state={state} setState={setState} />
-                      </div>
-                    </div>
-
-                    <div style={{marginTop:'10px'}}>
-                      <label className="form-label mt-4" 
-                      style={{textDecoration:'underline'}}
-                      id='bigLabel'>
-                        Occupation 
-                      </label>
-                    </div>
-                    <div style={{marginTop:'5px'}}>
-                      <TextField 
-                      id="outlined-basic"
-                      variant="outlined"
-                      size='small' 
-                      label={
-                        <p id='libel'>
-                            Adulte
-                        </p>
-                             }
-                      type="number"
-                      value={state.nbAdulte}
-                      onChange={(e) => handleInputChange(e, "nbAdulte")}
-                      style={{width:'370px'}}
-                      />
-                      <TextField 
-                      id="outlined-basic"
-                      variant="outlined"
-                      size='small'
-                      label={
-                        <p id='libel'>
-                            Enfant
-                        </p>
-                             }  
-                      type="number" 
-                      value={state.nbEnfant}
-                      onChange={(e) => handleInputChange(e, "nbEnfant")}
-                      style={{width:'370px',marginLeft:'123px'}}
-                      />
-                    </div>
-
-                    <div style={{marginTop:'15px'}}>
-                      <div style={{}}>
-                      <label className="form-label mt-4" 
-                      style={{textDecoration:'underline'}}
-                      id='bigLabel'>
-                        Description
-                      </label>
-                    </div>
-                    <TextField id="outlined-basic" variant="outlined" type='text'
-                      placeholder=""
-                      multiline
-                      rows={2}
-                      rowsMax={4}
-                      label={
-                        <p id='libel'>
-                            Description
-                        </p>
-                             }
-                      style={{width:'100%',height:'50px',marginTop:'5px'}}
-                      value={state.description}
-                      onChange={(e) => handleInputChange(e, "description")} />
-                    <div style={{marginTop:'40px'}}>
-                        <div>
-                            <label className="form-label-mt4" 
-                            style={{textDecoration: 'underline'}} 
-                            id='bigLabel'>
-                              Equipements
-                            </label>
-                      </div>
-                      <FormGroup>
-                        <Equipements  equipements={state.equipements} handleCheckBoxEquipement={handleCheckBoxEquipement} />
-                      </FormGroup>
-                      <Button onClick={handleOpen}>Ajouter equipement</Button>
-                      <Modal
-                        open={open}
-                        onClose={handleClose}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                      >
-                        <Box sx={style}>
-                          <Typography id="modal-modal-title" variant="h6" component="h2" align="center">
-                            Ajouter nouveau equipement
-                          </Typography>
-                          {
-                            errInsertEq != null ?
-                            <p style={{backgroundColor: "red"}}>{errInsertEq}</p>
-                            : null
-                          }
-                          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                          <div style={{marginLeft:'14px'}}>
-                            <TextField 
-                              id="outlined-basic"
-                              variant="outlined"
-                              size='small'
-                              className="form-control" 
-                              label="Font" 
-                              style={{width:"300px"}}
-                              type="text" 
-                              name="Font" 
-                              value={newIcon.font}
-                              onChange={(e) => handleNewIconChange(e, "font")}/>
-                              <TextField 
-                              id="outlined-basic"
-                              variant="outlined"
-                              size='small'
-                              className="form-control" 
-                              label="Nom" 
-                              style={{width:"300px",marginTop:'10px'}}
-                              type="text" 
-                              name="Nom" 
-                              value={newIcon.nom}
-                              onChange={(e) => handleNewIconChange(e, "nom")}/>
-                            </div>
-                              <br/>
-                              <div style={{margin:'0 auto', width:'fit-content', marginTop:'20px'}}>
-                                <Button variant="contained" onClick={(e) => addEquipement()}>Ajouter equipement</Button>
-                              </div>
-                          </Typography>
-                        </Box>
-                      </Modal>
-                    </div>
-                    <div style={{marginTop:'15px'}}>
-                      <div>
-                          <label className="form-label-mt4" 
-                          style={{textDecoration: 'underline'}} 
-                          id='bigLabel'>
-                            Plan tarifaire attribué
-                          </label>
-                      </div>
-                      <FormGroup>
-                        <PlanTarifaire planTarifaire={state.planTarifaire} handleCheckBoxPlanTarifaire={handleCheckBoxPlanTarifaire}/>
-                      </FormGroup>
-                    </div>
-                    </div>
-                  
-
-                    <div className="pied" style={{marginTop:'30px'}}>   
-                     <div class="bouton-aligne">  
-                  <Button  
-                  variant="contained" 
-                  type='submit' 
-                  id='btn1'
-                  onClick={(e) => insert(e)}
-                  style={{backgroundColor:'#2ac4ea' }}>
-                  <span style={{color:'white'}}>Ajouter</span>
-                  </Button>
-                     </div>
-                     <div class="bouton-aligne">
-                      <Link to={'/typeChambre'} style={{textDecoration:'none'}}>
-                        <Button variant="outlined" 
-                        id="btn2">
-                  <span style={{color:'#1976d2'}}>Retour</span>
-                        </Button>
-                      </Link>
-                     </div>
-                    </div>
-
-                  {/* <div style={{marginTop:'50px'}}>
-                    <Button 
-                    variant="contained" 
-                    color="success" 
-                    onClick={(e) => insert(e)}
-                    style={{textDecoration:'none'}}>
-                      <span style={{color:'white'}}>Créer</span>
-                    </Button>
-                        </div> */}
-                </form>
-              </div>
-            </div>
-  );
+  componentDidMount(){
+    this.getTarifs()
+    this.getTypeChambres()
 }
+
+  render() {
+    return (
+<div className="block">
+ <form onSubmit={this.handleSubmit}>
+<h4 className='entete'>Ajouter une nouvelle promotion</h4>
+  <div className="block1">
+  <h5>Détails de la promotion</h5>
+   <div className="form-group" style={{marginTop:"15px"}}>
+<label>
+À quels plans tarifaires cette promotion s'appliquera-t-elle ?
+</label>
+<p>Sélectionnez au moins 1 plan tarifaire</p>
+<div className="form-group"  style={{marginTop:"1px"}}>
+{this.state.tarifs.map((tarif) => (  
+<p>
+  <Checkbox   
+  value={tarif.nom}
+  name="tarif"  
+  onChange={(e) => this.handleInputChange(e, "tarif")}
+  />
+  {tarif.nom}
+  </p>  
+              ))}  
+  </div>
+   </div>
+
+<label>
+Quelles chambres ?
+</label>
+<p>Sélectionnez au moins 1 type de chambre</p>
+  <div className="form-group"  style={{marginTop:"5px"}}>
+{this.state.typeChambres.map((typeChambre) => (  
+<p>
+  <Checkbox   
+  value={typeChambre.nom}
+  name="typeChambre"  
+  onChange={(e) => this.handleInputChange(e, "typeChambre")}
+  />
+  {typeChambre.nom}
+  </p>  
+              ))}
+     
+  </div>
+
+<hr style={{width:'95%'}}></hr>
+
+  <div className="form-group" style={{marginTop:"15px"}}>
+<label>
+Quelle remise voulez-vous offrir ?
+</label>
+
+<FormControl component="fieldset">
+  <FormLabel component="legend"></FormLabel>
+  <RadioGroup
+    aria-label=""
+    defaultValue=""
+    name="radio-buttons-group"
+  >
+    <FormControlLabel 
+    value="female" 
+    control={<Radio />} 
+    label={<p id='label'>Pourcentage</p>} 
+    onClick={() => this.setState({HideShowE :false,HideShowP :true})}/>
+    <FormControlLabel 
+    value="male" 
+    control={<Radio />} 
+    label={<p id='label'>Euro</p>} 
+    onClick={() => this.setState({HideShowP :false,HideShowE :true})}/>
+  </RadioGroup>
+</FormControl>
+
+{
+this.state.HideShowP ?
+<TextField 
+id="outlined-basic" 
+label="" 
+variant="outlined" 
+className="form-control" 
+InputProps={{
+startAdornment: <InputAdornment position="start">
+    <strong>%</strong>
+</InputAdornment>,
+}}
+style={{width:"100px",marginTop:"15px"}}
+size="small"
+type="number" 
+name="remisePourcentage" 
+onChange={(e) => this.handleInputChange(e, "remisePourcentage")}
+/>
+: null
+}
+
+{
+this.state.HideShowE ?
+<TextField 
+id="outlined-basic" 
+label="" 
+variant="outlined" 
+className="form-control" 
+InputProps={{
+startAdornment: <InputAdornment position="start">
+    <strong>£</strong>
+</InputAdornment>,
+}}
+style={{width:"130px"}}
+size="small"
+type="number" 
+name="remiseEuro" 
+onChange={(e) => this.handleInputChange(e, "remiseEuro")}
+/>
+: null
+}
+
+  </div>
+  </div>
+  <div className='block2' style={{marginTop:"30px"}}>
+<h5>Dates de séjour</h5>
+<label style={{marginTop:"5px"}}>
+Quand les clients peuvent-ils profiter de cette promotion ?
+</label>
+<p>Sélectionnez au moins 1 date</p>
+  <div className="form-group" style={{marginTop:"25px"}}>
+   <p>
+   <input
+    type='date'
+    id='dateDebutS'
+    style={{width:"200px"}}
+    name="dateDebutS" 
+    value={this.state.dateDebutS}
+    onChange={(e) => this.handleInputChange(e, "dateDebutS")}
+    
+    /> 
+
+{/* <TextField id="outlined-basic" 
+label="" 
+variant="outlined" 
+className="form-control"  
+style={{width:"200px"}}
+type="date" 
+name="dateDebutS" 
+onChange={(e) => this.handleInputChange(e, "dateDebutS")}
+size="small"
+/> */}
+
+<input
+    type='date'
+    id='dateFinS'
+    style={{width:"200px",marginLeft:'20px'}}
+    type="date" 
+    name="dateFinS" 
+    value={this.state.dateFinS}
+    onChange={(e) => this.handleInputChange(e, "dateFinS")}
+    /> 
+
+  {/* <TextField id="outlined-basic" 
+label="" 
+variant="outlined" 
+className="form-control"  
+style={{width:"200px",marginLeft:'20px'}}
+type="date" 
+name="dateFinS" 
+onChange={(e) => this.handleInputChange(e, "dateFinS")}
+size="small"
+/> */}
+   </p>
+  </div>
+
+   <div className="form-group" style={{marginTop:"30px"}}>
+<label>
+Sejour minimum
+</label>
+<input
+    type='number'
+    id='sejourMin'
+    style={{width:"300px",marginTop:"15px"}}
+    name="sejourMin" 
+    value={this.state.sejourMin}
+    onChange={(e) => this.handleInputChange(e, "sejourMin")} 
+    />
+
+{/* <TextField 
+id="outlined-basic" 
+label=""
+variant="outlined"
+className="form-control" 
+style={{width:"400px",height:'20px'}}
+size="small"
+type="text" 
+name="sejourMin" 
+onChange={(e) => this.handleInputChange(e, "sejourMin")} 
+style={{marginTop:"15px"}}
+/> */}
+   </div>
   
-  export default InsertTypeCHambre;
+   <div className="form-group" style={{marginTop:"40px"}}>
+<label>
+Lead hour ou day 
+</label>
+<FormControl component="fieldset">
+  <FormLabel component="legend"></FormLabel>
+  <RadioGroup
+    aria-label=""
+    defaultValue=""
+    name="radio-buttons-group"
+  >
+    <FormControlLabel 
+    value="mal" 
+    control={<Radio />}  
+    label={<p id='label'>Day</p>}
+    onClick={() => this.setState({leadHour :false,leadDay :true})}/>
+    <FormControlLabel 
+    value="female" 
+    control={<Radio />} 
+    label={<p id='label'>Hour</p>} 
+    onClick={() => this.setState({leadDay :false,leadHour :true})}/>
+  </RadioGroup>
+</FormControl>
+
+{
+  this.state.leadDay ?
+<TextField 
+id="outlined-basic" 
+label="Min" 
+variant="outlined" 
+className="form-control" 
+style={{width:"130px"}}
+placeholder='Jour'
+size="small"
+type="number" 
+name="leadDayMin" 
+value={this.state.leadDayMin}
+onChange={(e) => this.handleInputChange(e, "leadDayMin")}
+/>
+:null
+}
+
+{
+  this.state.leadDay ?
+<TextField 
+id="outlined-basic" 
+label="Max" 
+variant="outlined" 
+className="form-control" 
+style={{width:"130px",marginTop:'15px'}}
+placeholder='Jour'
+size="small"
+type="number" 
+name="leadDayMax"
+value={this.state.leadDayMax}
+onChange={(e) => this.handleInputChange(e, "leadDayMax")}
+/>
+:null
+}
+
+{
+  this.state.leadHour ?
+<TextField 
+id="outlined-basic" 
+label="Min" 
+variant="outlined" 
+className="form-control" 
+style={{width:"130px"}}
+placeholder='Heure'
+size="small"
+type="number" 
+name="leadHourMax" 
+value={this.state.leadHourMax}
+onChange={(e) => this.handleInputChange(e, "leadHourMax")}
+/>
+:null
+}
+
+{
+  this.state.leadHour ?
+<TextField 
+id="outlined-basic" 
+label="Max" 
+variant="outlined" 
+className="form-control" 
+style={{width:"130px",marginTop:'15px'}}
+placeholder='Heure'
+size="small"
+type="number" 
+name="leadHourMin"
+value={this.state.leadHourMin} 
+onChange={(e) => this.handleInputChange(e, "leadHourMin")}
+/>
+:null
+}
+
+  </div> 
+
+  <div className="form-group" style={{marginTop:"40px"}}>
+<label id='bigLabel'>
+Nombre de jour d'attribution de la promotion
+</label>
+
+<div className="form-group" style={{marginTop:"25px"}}>
+<p>
+<TextField id="outlined-basic" 
+label="" 
+variant="outlined" 
+className="form-control"  
+style={{width:"200px"}}
+type="text" 
+name="premierJour" 
+InputProps={{
+  endAdornment: <InputAdornment position="end">
+      premier jour
+  </InputAdornment>,
+  }}
+value={this.state.premierJour}
+onChange={(e) => this.handleInputChange(e, "premierJour")}
+size="small"
+/>
+
+  <TextField id="outlined-basic" 
+label="" 
+variant="outlined" 
+className="form-control"  
+style={{width:"200px",marginLeft:'20px'}}
+type="text" 
+name="dernierJour"
+InputProps={{
+  endAdornment: <InputAdornment position="end">
+      dernier jour
+  </InputAdornment>,
+  }} 
+value={this.state.dernierJour}
+onChange={(e) => this.handleInputChange(e, "dernierJour")}
+size="small"
+/>
+   </p>
+   </div>
+  </div>
+
+  <div className="form-group" style={{marginTop:"15px"}}>
+<label>
+Tarif réduit disponible uniquement pendant :
+</label>
+   <p>
+   <FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Lundi</p>}
+value="1"
+name="lundi"  
+onChange={(e) => this.handleInputChange(e, "lundi")}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Mardi</p>}
+value="1"
+name="mardi"  
+onChange={(e) => this.handleInputChange(e, "mardi")}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Mercredi</p>}
+value="1"
+name="mercredi"   
+onChange={(e) => this.handleInputChange(e, "mercredi")}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Jeudi</p>} 
+value="1"
+name="jeudi"  
+onChange={(e) => this.handleInputChange(e, "jeudi")}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Vendredi</p>} 
+value="1"
+name="vendredi"  
+onChange={(e) => this.handleInputChange(e, "vendredi")}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Samedi</p>} 
+value="1"
+name="samedi"  
+onChange={(e) => this.handleInputChange(e, "samedi")}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Dimanche</p>} 
+value="1"
+name="dimanche"  
+onChange={(e) => this.handleInputChange(e, "dimanche")}
+/>
+   </p> 
+  </div>
+
+  </div>
+
+  <div className="block3">
+   <div className="form-group" style={{}}>
+<h5>Nom de la promotion </h5>
+<label>
+Comment voulez-vous nommer cette promotion ?
+</label>
+
+<input
+    type='text'
+    id='nom'
+    style={{width:"400px",marginTop:"15px"}} 
+    name="nom" 
+    onChange={(e) => this.handleInputChange(e, "nom")} 
+    value={this.state.nom}
+    /> 
+
+{/* <TextField 
+id="outlined-basic" 
+label=""
+variant="outlined"
+className="form-control" 
+style={{width:"400px"}}
+size="small"
+type="text" 
+name="nom" 
+onChange={(e) => this.handleInputChange(e, "nom")} 
+style={{marginTop:"15px"}}
+/> */}
+   </div>     
+   </div>    
+    
+  <div className="pied" style={{marginTop:'25px'}}>   
+   <div class="bouton-aligne">  
+<Button  
+variant="contained" 
+type='submit' 
+style={{textDecoration:'none',color:'black'}}>
+<span style={{color:'white'}}>Ajouter</span>
+</Button>
+   </div>
+   <div class="bouton-aligne">
+    <Link to={'/promotion'} style={{textDecoration:'none'}}>
+       <Button variant="outlined" 
+       id="btn2">
+<span style={{color:'#1976d2'}}>Retour</span>
+       </Button>
+    </Link>
+   </div>
+  </div>
+ </form>
+</div>
+    )
+  }
+}
