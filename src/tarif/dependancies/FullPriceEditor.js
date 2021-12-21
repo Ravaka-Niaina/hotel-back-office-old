@@ -62,6 +62,8 @@ function InputPrix(props){
                     }}
                     value={props.prix[i]}
                     onChange={(e) => props.handleChangePrix(i, e.target.value)}
+                    error={props.error.versions[i] === null ? false : true}
+                    helperText={props.error.versions[i] === null ? null : props.error.versions[i].prix}
                 />
                 <br/>
             </>
@@ -82,10 +84,10 @@ const FullPriceEditor = (props) => {
         p: 4,
 
         position:'absolute',
-            overflow:'scroll',
-            overflowX: 'hidden',
-            height: '100%',
-            display:'block'
+        overflow:'scroll',
+        overflowX: 'hidden',
+        height: '100%',
+        display:'block'
     };
     const [value, setValue] = React.useState('open');
     const [tarifs, setTarifs] = React.useState([]);
@@ -103,6 +105,17 @@ const FullPriceEditor = (props) => {
     const [toSell, setToSell] = React.useState(0);
     const [isTypeChambreOpen, setIsTypeChambreOpen] = React.useState("open");
     const [isTarifOpen, setIsTarifOpen] = React.useState("open");
+    const guestsMax = props.typechambre.nbAdulte + props.typechambre.nbEnfant;
+    let versions = {};
+    for(let i = 0; i < guestsMax; i++){
+        versions[i] = null;
+    }
+    const [error, setError] = React.useState({
+        idTarif: null,
+        idTypeChambre: null,
+        tarif: null,
+        versions: versions
+    });
 
     function setAllDays(checked){
         for(let i = 0; i < days.length; i++){
@@ -111,7 +124,6 @@ const FullPriceEditor = (props) => {
         setDays(days);
     }
 
-    const guestsMax = props.typechambre.nbAdulte + props.typechambre.nbEnfant;
     const history = useHistory();
 
     useEffect( () => {
@@ -165,13 +177,32 @@ const FullPriceEditor = (props) => {
 
     function refresh(res){
         console.log(res);
+        let tempError = {...error};
+        
+        const keysError = Object.keys(tempError);
+        keysError.map((k) => {
+            if(k === "versions"){
+                let keysVersions = Object.keys(tempError.versions);
+                keysVersions.map((k) => {
+                    tempError.versions[k] = null;
+                });
+            }else{
+                tempError[k] = null;
+            }
+        });
+        
         if(res.status === 200){
             console.log("Redirection en cours...");
             props.getPrix();
         }else{
             console.log("prix non configuré");
+            const keys = Object.keys(res.errors);
+            keys.map((k) => {
+                tempError[k] = res.errors[k];
+            });
             props.setOpenLoad(false);
         }
+        setError(tempError);
     }
 
     function savePrix(forTypeChambre, forTarif){
@@ -341,8 +372,9 @@ const FullPriceEditor = (props) => {
                 <br/>
                 <FormControl component="fieldset">
                 {/*<InputLabel variant="outlined">Rate</InputLabel>*/}
-                { rates }
                 <FormLabel component="legend">Plan tarifaire</FormLabel>
+                { error.tarif === null ? null : <div style={{color: "#D32F2F", font: "13px Roboto,Helvetica,Arial,sans-serif"}}><span>{error.tarif}</span></div> }
+                { rates }
                 <RadioGroup
                     aria-label="gender"
                     name="controlled-radio-buttons-group"
@@ -355,7 +387,7 @@ const FullPriceEditor = (props) => {
                 </RadioGroup>
                 </FormControl>
                 <br/>
-                <InputPrix guestsMax={guestsMax} prix={prix} handleChangePrix={handleChangePrix} />
+                <InputPrix guestsMax={guestsMax} prix={prix} handleChangePrix={handleChangePrix} error={error} setError={setError} />
                 
                 <Stack direction="row" spacing={2}>
                     <Button variant="contained" onClick={(e) => savePrix(false, true)}>

@@ -103,7 +103,6 @@ class Scroll extends React.Component{
             value = "0" + value;
         }
         return value;
-
     }
    
     getDateAndConvert(dateDebut , dateFin){

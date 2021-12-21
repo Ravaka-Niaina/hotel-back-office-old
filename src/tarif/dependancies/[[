@@ -1,0 +1,6 @@
+let dividende = 13;
+let diviseur = 6;
+
+let quotient = dividende / diviseur;
+quotient = Number.parseInt(quotient)
+let reste = 
