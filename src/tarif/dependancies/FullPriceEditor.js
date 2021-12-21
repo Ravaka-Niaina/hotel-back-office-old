@@ -21,6 +21,13 @@ const getDaysBetweenDates = function(startDate, endDate) {
 };
 
 const DatePicker = (props) => {
+    const removeError = () => {
+        console.log("arrrrrrghh");
+        let temp = {...props.error};
+        temp.dateDebut = null;
+        temp.dateFin = null;
+        props.setError(temp);
+    };
     return(
         <LocalizationProvider dateAdapter={AdapterMoment}>
         <DateRangePicker
@@ -32,9 +39,17 @@ const DatePicker = (props) => {
             }}
             renderInput={(startProps, endProps) => (
             <React.Fragment>
-                <TextField {...startProps} />
+                <TextField 
+                    {...startProps} 
+                    error={props.error.dateDebut === null ? false : true}
+                    helperText={props.error.dateDebut === null ? null : props.error.dateDebut}
+                    onChange={(e) => removeError()} />
                 <Box sx={{ mx: 2 }}> to </Box>
-                <TextField {...endProps} />
+                <TextField 
+                    {...endProps} 
+                    error={props.error.dateFin === null ? false : true}
+                    helperText={props.error.dateFin === null ? null : props.error.dateFin}
+                    onChange={(e) => removeError()} />
             </React.Fragment>
             )}
         />
@@ -63,7 +78,7 @@ function InputPrix(props){
                     value={props.prix[i]}
                     onChange={(e) => props.handleChangePrix(i, e.target.value)}
                     error={props.error.versions[i] === null ? false : true}
-                    helperText={props.error.versions[i] === null ? null : props.error.versions[i].prix}
+                    helperText={props.error.versions[i] === null ? null : props.error.versions[i]}
                 />
                 <br/>
             </>
@@ -113,9 +128,20 @@ const FullPriceEditor = (props) => {
     const [error, setError] = React.useState({
         idTarif: null,
         idTypeChambre: null,
+        dateDebut: null,
+        dateFin: null,
+        days: null,
+        toSell: null,
         tarif: null,
-        versions: versions
+        versions: versions,
+        noVersion: null
     });
+
+    function removeAnError(field){
+        let temp = {...error};
+        temp[field] = null;
+        setError(temp);
+    }
 
     function setAllDays(checked){
         for(let i = 0; i < days.length; i++){
@@ -159,6 +185,11 @@ const FullPriceEditor = (props) => {
         let temp = JSON.parse(JSON.stringify(prix));
         temp[i] = value;
         setPrix(temp);
+
+        let tempError = {...error};
+        tempError.noVersion = null;
+        tempError.versions[i] = null;
+        setError(tempError);
     }
 
 
@@ -171,7 +202,6 @@ const FullPriceEditor = (props) => {
                 onChange={(e) => handleRateChange(i, e.target.checked)}
                 control={<Checkbox checked={tarifs[i].checked} />}
             />
-            //<MenuItem value={i + 1}>{tarifs[i].nom}</MenuItem>
         );
     }
 
@@ -182,7 +212,7 @@ const FullPriceEditor = (props) => {
         const keysError = Object.keys(tempError);
         keysError.map((k) => {
             if(k === "versions"){
-                let keysVersions = Object.keys(tempError.versions);
+                const keysVersions = Object.keys(tempError.versions);
                 keysVersions.map((k) => {
                     tempError.versions[k] = null;
                 });
@@ -198,7 +228,15 @@ const FullPriceEditor = (props) => {
             console.log("prix non configuré");
             const keys = Object.keys(res.errors);
             keys.map((k) => {
-                tempError[k] = res.errors[k];
+                if( k === "versions"){
+                    const keysVersions = Object.keys(res.errors.versions);
+                    keysVersions.map((kv) => {
+                        const details = Object.keys(res.errors.versions[kv]);
+                        tempError.versions[kv] = res.errors.versions[kv][details[0]];
+                    })
+                }else{
+                    tempError[k] = res.errors[k];
+                }
             });
             props.setOpenLoad(false);
         }
@@ -262,6 +300,12 @@ const FullPriceEditor = (props) => {
         let temp = JSON.parse(JSON.stringify(tarifs));
         temp[i].checked = checked;
         setTarifs(temp);
+
+        if(error.tarfi !== null){
+            let tempError = {...error};
+            tempError.tarif = null;
+            setError(tempError);
+        }
     }
 
     let inputDays = [];
@@ -330,10 +374,16 @@ const FullPriceEditor = (props) => {
             <Box sx={style}
                 className={styles.fullpopper}
             >   
-                <DatePicker interval={interval} setInterval={handleIntervalChange} minDate={minDate} />
+                <DatePicker 
+                    interval={interval} 
+                    setInterval={handleIntervalChange} 
+                    minDate={minDate}
+                    error={error}
+                    setError={setError} />
                 <br/>
                 <div>
                     {inputDays}
+                    { error.days === null ? null : <div style={{color: "#D32F2F", font: "13px Roboto,Helvetica,Arial,sans-serif"}}><span>{error.days}</span></div> }
                 </div>
                 <br/>
                 <span>{props.typechambre.nom}</span>
@@ -361,7 +411,9 @@ const FullPriceEditor = (props) => {
                     }}
                     value={toSell}
                     type="number"
-                    onChange={(e) => setToSell(Number.parseInt(e.target.value))}
+                    onChange={(e) => {removeAnError("toSell"); setToSell(Number.parseInt(e.target.value))}}
+                    error={error.toSell === null ? false : true}
+                    helperText={error.toSell === null ? null : error.toSell}
                 />
                 <br/>
                 <Stack direction="row" spacing={2}>
@@ -387,6 +439,7 @@ const FullPriceEditor = (props) => {
                 </RadioGroup>
                 </FormControl>
                 <br/>
+                { error.noVersion === null ? null : <div style={{color: "#D32F2F", font: "13px Roboto,Helvetica,Arial,sans-serif"}}><span>{error.noVersion}</span></div> }
                 <InputPrix guestsMax={guestsMax} prix={prix} handleChangePrix={handleChangePrix} error={error} setError={setError} />
                 
                 <Stack direction="row" spacing={2}>
