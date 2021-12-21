@@ -109,6 +109,7 @@ class DetailsTypeCHambre extends React.Component{
                 etage:null,
                 superficie:null,
                 description:null,
+                photo: null
             },
             typeChambre: {
                 _id: '',
@@ -230,6 +231,7 @@ class DetailsTypeCHambre extends React.Component{
 
     handlePhotoChange(e){
         let currentState = JSON.parse(JSON.stringify(this.state));
+        currentState.error.photo = null;
         currentState.typeChambre.photo = [];
         currentState.previewPhoto = [];
         let finished = 0;
@@ -420,6 +422,7 @@ class DetailsTypeCHambre extends React.Component{
                                     value=""
                                     handlePhotoChange={this.handlePhotoChange} />
                             </div>
+                            {this.state.error.photo === null ? null : <div style={{color: "#D32F2F", font: "13px Roboto,Helvetica,Arial,sans-serif"}}><span>{this.state.error.photo}</span></div>}
                         </div>
 
                         <div style={{marginTop:'15px'}}>

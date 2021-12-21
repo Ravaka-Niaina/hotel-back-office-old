@@ -27,11 +27,9 @@ export function LeadDay(props){
     
 export function ChambresAtrb(props){
     let i = -1;
-    console.log(props.chambresAtrb);
     let list = props.chambresAtrb.map(chambre => {
         i++;
         let u = i;
-        console.log(chambre.checked);
         return(
             <FormControlLabel
                 checked={chambre.checked}
@@ -67,9 +65,8 @@ export function PolitiqueAnnulAtrb(props){
     return list;
 }
 
-export function getPlan(planTarifaire, isLeadHour, lead){
+export function getPlan(planTarifaire){
     let current = JSON.parse(JSON.stringify(planTarifaire));
-    current.lead = {isLeadHour: isLeadHour, valeur: lead};
     let listChambres = [];
     for(let i = 0; i < current.chambresAtrb.length; i++){
         if(current.chambresAtrb[i].checked){
@@ -89,17 +86,42 @@ export function getPlan(planTarifaire, isLeadHour, lead){
     return current;
 }
 
-export function handleInputChange1(planTarifaire, setPlanTarifaire, e, name){
+export function handleIsLeadHourChange(planTarifaire, setPlanTarifaire, value){
+    let temp = {...planTarifaire};
+    temp.isLeadHour = value;
+    setPlanTarifaire(temp);
+}
+
+export function handleInputChange1(planTarifaire, setPlanTarifaire, error, setError, e, name){
     let current = JSON.parse(JSON.stringify(planTarifaire));
     current[name] = e.target.value;
     setPlanTarifaire(current); 
+
+    let tempErr = {...error};
+    tempErr[name] = null;
+    setError(tempErr);
 }
 
-export function handleInputChange2(planTarifaire, setPlanTarifaire, e, name1, name2){
+function toUpperCase0(string){
+    string = string.split("");
+    string[0] = string[0].toUpperCase();
+    let newString = "";
+    string.map((s) => {
+        newString = newString + s;
+    });
+    return newString;
+}
+
+export function handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, name1, name2){
     console.log(e.target.value);
     let current = JSON.parse(JSON.stringify(planTarifaire));
     current[name1][name2] = e.target.value;
     setPlanTarifaire(current); 
+
+    let tempErr = {...error};
+    tempErr[name1 + toUpperCase0(name2)] = null;
+    console.log(name1 + toUpperCase0(name2));
+    setError(tempErr);
 }
     
 export function handleInputChange3(planTarifaire, setPlanTarifaire, e, name1, name2, name3){

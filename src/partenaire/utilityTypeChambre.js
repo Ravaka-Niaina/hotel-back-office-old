@@ -112,9 +112,9 @@ export function Preview(props){
     return list;
   }
 
-export const FileInput = ({value, handlePhotoChange, text, accepts}) => {
+export const FileInput = ({value, handlePhotoChange, text, accepts, error}) => {
     if(!text){
-        text = <p id='bigLabel'>Cliquez pour choisir une photo...</p>;
+        text =<p id='bigLabel'>Cliquez pour choisir une photo...</p>;
     }
     if(!accepts){
         accepts = "image/*"

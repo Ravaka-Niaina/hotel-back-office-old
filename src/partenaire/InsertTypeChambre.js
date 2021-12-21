@@ -90,6 +90,7 @@ function InsertTypeCHambre(){
         etage:null,
         superficie:null,
         description:null,
+        photo: null
       },
       nom: '',
       nbAdulte: '',
@@ -365,6 +366,7 @@ function InsertTypeCHambre(){
                             style={{marginTop: '5px'}}
                             value=""
                             handlePhotoChange={handlePhotoChange} />
+                            {state.error.photo === null ? null : <div style={{color: "#D32F2F", font: "13px Roboto,Helvetica,Arial,sans-serif"}}><span>{state.error.photo}</span></div>}
                       </div>
 
                     <div style={{marginTop:'15px'}}>
