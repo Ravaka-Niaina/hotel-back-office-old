@@ -21,7 +21,7 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-import GETaPI from "../APiGet.js";
+import CallAPI from "../utility.js";
 import ModalLTChambre from "./ModalLTChambre.js";
 import  Navbar  from "../Navbar/Navbar";
 import { Link } from 'react-router-dom';
@@ -224,11 +224,20 @@ export default function EnhancedTable() {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [rowsPerPage, setRowsPerPage] = React.useState(2);
   const [list, setList] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [indiceU, setId] = React.useState("");
   
+  const [nbrPage, setNbrPage] = React.useState(0);
+  const [pageCurrent, setPageCurrent] = React.useState(1);
+  const [count, setCount] = React.useState(1);
+
+  const handleChangePagination =(e , value) =>{
+    console.log(value);
+    setPageCurrent(value);
+    CallAPI("post" ,'/typeChambre/TC' ,{PageCurrent : value , content : rowsPerPage} , setTypeChambre)
+  }
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -236,18 +245,19 @@ export default function EnhancedTable() {
     setOrderBy(property);
   };
 
-  function setPlanTarifaire(data){
+  function setTypeChambre(data){
     console.log(data);
     rows = [];
-    for(let i = 0; i < data.list.length; i++){
-      rows.push(data.list[i]);  
+    for(let i = 0; i < data.typeChambre.length; i++){
+      rows.push(data.typeChambre[i]);  
     }
-    setList(data.list);
-    //return rows;
+    setList(data.typeChambre);
+    setNbrPage(data.nbrPage); 
+    setCount(data.count);
   }
 
   useEffect(() => {
-    GETaPI('get', '/TCTarif',setPlanTarifaire);
+    CallAPI('post', '/typeChambre/TC',{PageCurrent : pageCurrent ,content : rowsPerPage},setTypeChambre);
 
   }, []);
 
@@ -274,9 +284,11 @@ export default function EnhancedTable() {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (event) => {
+  const handleChangeRowsPerPage = (event , value) => {
     setRowsPerPage(parseInt(event.target.value, 10));
+    setPageCurrent(1);
     setPage(0);
+    CallAPI("post" ,'/typeChambre/TC' ,{content : event.target.value ,pageCurrent : 1} , setTypeChambre)
   };
 
   const handleChangeDense = (event) => {
@@ -379,12 +391,11 @@ export default function EnhancedTable() {
           </Table>
         </TableContainer>
         <TablePagination style={{backgroundColor : '#2F4050',color:'white' }}
-          rowsPerPageOptions={[5, 10, 25]}
+          rowsPerPageOptions={[2, 4, 10]}
           component="div"
-          count={rows.length}
+          count={count}
           rowsPerPage={rowsPerPage}
           page={page}
-          onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
@@ -396,7 +407,7 @@ export default function EnhancedTable() {
           />
         </div>
         <div style={{float : "right"}}>
-          <Pagination  />
+        <Pagination pagine={nbrPage} pageCurrent = {pageCurrent}  handleChangePagination = {handleChangePagination}/>
         </div>
       </div>
     </Box>
