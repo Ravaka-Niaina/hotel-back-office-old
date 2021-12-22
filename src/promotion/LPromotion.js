@@ -337,7 +337,7 @@ export default function EnhancedTable() {
                       <TableCell align="left">{row.remiseEuro}</TableCell>
                       <TableCell align="left">{row.dateDebutS} au {row.dateFinS} </TableCell>
                       <TableCell align="rigth">
-                        <Link to={'/'}> 
+                        <Link to={'/promotion/detail/' + row._id}> 
                           <EditIcon style={{color : "green"}} />
                         </Link> 
                           <DeleteIcon style={{color : "red"}}/>

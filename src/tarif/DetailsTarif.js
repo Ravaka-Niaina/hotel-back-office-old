@@ -143,7 +143,10 @@ function DetailsTarif(){
                                                 <TextField
                                                 label="Début"
                                                 type='date'
-                                                id='dateD1'
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                    }}
+                                                size='small'
                                                 value={planTarifaire.dateReservation.debut}
                                                 onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "dateReservation", "debut")}
                                                 error={error.dateReservationDebut === null ? false : true}
@@ -155,7 +158,10 @@ function DetailsTarif(){
                                                 <TextField
                                                 label="Fin"
                                                 type='date'
-                                                id='dateF1'
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                    }}
+                                                size='small'
                                                 value={planTarifaire.dateReservation.fin}
                                                 onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "dateReservation", "fin")}
                                                 error={error.dateReservationFin === null ? false : true}
@@ -165,16 +171,19 @@ function DetailsTarif(){
                                             </div>
                                         </div>
                                     </div>
-                                    <div style={{marginTop:'0px'}}>
+                                    <div style={{marginTop:'20px'}}>
                                         <div>
                                             <label className="" style={{textDecoration: 'underline',marginLeft:'0px'}} id='bigLabel'>Date de séjour </label>
                                         </div>
-                                        <div className="row" style={{marginTop:'10px'}}>
+                                        <div className="row" style={{marginTop:'15px'}}>
                                             <div className="col">
                                                     <TextField
                                                     label="Début"
                                                     type='date'
-                                                    id='dateD2'
+                                                    InputLabelProps={{
+                                                        shrink: true,
+                                                        }}
+                                                    size='small'
                                                     value={planTarifaire.dateSejour.debut}
                                                     onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "dateSejour", "debut")}
                                                     error={error.dateSejourDebut === null ? false : true}
@@ -186,7 +195,10 @@ function DetailsTarif(){
                                                     <TextField
                                                     label="Fin"
                                                     type='date'
-                                                    id='dateF2'
+                                                    InputLabelProps={{
+                                                        shrink: true,
+                                                        }}
+                                                    size='small'
                                                     value={planTarifaire.dateSejour.fin}
                                                     onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "dateSejour", "fin")}
                                                     error={error.dateSejourFin === null ? false : true}
@@ -195,7 +207,7 @@ function DetailsTarif(){
                                             </div>
                                         </div>
                                     </div>
-                                    <div style={{marginTop:'0px'}}>
+                                    <div style={{marginTop:'20px'}}>
                                         <div>
                                             <label className="" style={{textDecoration: 'underline',fontFamily:'Roboto',fontSize:'15px',marginLeft:'0px'}} >
                                                 Lead { planTarifaire.isLeadHour ? "hour" : "day"} 
@@ -206,11 +218,12 @@ function DetailsTarif(){
                                             defaultValue="hour"
                                             name="radio-buttons-group"
                                         >
-                                            <div className ="row">
+                                            <div className ="row" style={{marginTop:'15px'}}>
                                                 <div className ="col">
                                                     <TextField
                                                     label="Min"
                                                     type='number'
+                                                    size='small'
                                                     id='lead'
                                                     value={planTarifaire.lead.min}
                                                     placeholder='Hour/Date'
@@ -223,6 +236,7 @@ function DetailsTarif(){
                                                     <TextField
                                                     label="Max"
                                                     type='number'
+                                                    size='small'
                                                     id='lead'
                                                     value={planTarifaire.lead.max}
                                                     placeholder='Hour/Date'
@@ -254,7 +268,7 @@ function DetailsTarif(){
                                             </div>
                                         </RadioGroup>
                                     </div>
-                                    <div style={{marginTop:'0px'}}>
+                                    <div style={{marginTop:'20px'}}>
                                         <div>
                                             <label className="" style={{textDecoration: 'underline'}} id='bigLabel'>Chambres attribuées </label>
                                         </div>
