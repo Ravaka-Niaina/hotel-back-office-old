@@ -61,7 +61,6 @@ export default class PromotionList extends React.Component {
                                             <TableCell align="center"><strong>Nom</strong></TableCell>
                                             <TableCell align="center"><strong>Remise</strong></TableCell>
                                             <TableCell align="center"><strong>Date Sejour</strong></TableCell>
-                                            
                                         </TableRow>
                                         </TableHead>
                                         <TableBody>

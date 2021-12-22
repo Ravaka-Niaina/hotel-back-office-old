@@ -18,61 +18,61 @@ import {Link} from 'react-router-dom';
 import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
-
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import callAPI from '../utility';
 
 import { useState } from 'react';
 import {FileInput, Preview, Videos, Font} from './utilityTypeChambre.js';
+import HtmlForm from '../HtmlForm';
 
-function PlanTarifaire(props){
-  let i = -1;
-  let list = props.planTarifaire.map(tarif => {
-      i++;
-      let u = i;
-      return(
-        <FormControlLabel 
-          checked={tarif.checked}
-          control={<Checkbox/>}
-          onChange={(e) => props.handleCheckBoxPlanTarifaire(e, u)}
-          label={<span id='litleLabel'>
-          {tarif.nom}
-                </span>}
-          style={{marginLeft:"20px",marginTop:'15px'}}
-        />
-      );
-  })
-  return list;
+const infoForm = {
+  title: "Creer type chambre",
+  urlSubmit: "/typeChambre/testInsert",
+  urlRedirectSuccess: "/typeChambre",
+  infoFields: [
+    { field: "id", type: "String", value: "", error: null, required: true, maxCharacters: 5},
+    { field: "nom", type: "String", value: "", error: null, required: true},
+    { field: "nbAdulte", type: "Integer", value: "", error: null, required: true, min: 0, max: 20 },
+    { field: "creation", type: "Date", value: "", error: null, required: true },
+    { field: "Password", type: "Password", value: "", error: null, required: true},
+    { label: "Equipements", field: "Eqpt", type: "Checkbox", options: [
+      {label: "Television", value: "TV", checked: false}, 
+      {value: "Wifi", checked: false}, 
+      {label: "Climatiseur", value: "clim", checked: false}]
+      , error: null, minToSelect: 1
+    },
+    { field: "Remboursable", type: "Radio", options: [{label: "Oui", value: "yes", checked: true}, {value: "no", checked: false}], error: null }
+  ]
 }
+/*
+[
+  {field: "nom", error: "Nom efa misy"},
+  {field: "etage", error}
+]
+
+const infoForm = {
+  title: "Ajouter Type chambre",
+  urlSubmit: "/typeChambre/insert",
+  urlRedirectSuccess: "/typeChambre",
+  infoFields: [
+    { field: "nom", type: "String", value: "", error: null, required: true, maxCharacters: 50 },
+    { field: "chambreTotal", type: "Integer", value: "", error: null, required: true },
+    { field: "etage", type: "Integer", required: true, min: 1, max: 50 },
+
+  ]
+};
+*/
 
 
-function Equipements(props){
-  let i = -1;
-    let equipements = props.equipements.map(equipement => {
-        i++;
-        let u = i;
-        return(
-          <div style={{height:"40px"}}>
-            <FormControlLabel
-              checked={equipement.checked}
-              control={<Checkbox/>}
-              label=""
-              onChange={(e) => props.handleCheckBoxEquipement(e, u)}
-              style={{marginLeft:"20px"}}
-            />
-            <Font font={equipement.font} />
-            <span id='litleLabel' style={{marginLeft:'8px'}}>
-            {equipement.nom}
-            </span>
-          </div>
-          
-        );
-    })
-  return equipements;
-}
-
-
+const disposition = [
+  ["id", "nom"],
+  ["nbAdulte", "creation"],
+  ["Password"],
+  ["Eqpt", "Remboursable"]
+];
 
 function InsertTypeCHambre(){
   const noImage = '/no-image.jpg';
@@ -112,27 +112,10 @@ function InsertTypeCHambre(){
   const handleClose = () => setOpen(false);
 
   const history = useHistory();
-  
-  function setPlanTarifaire(res){
-    console.log(res);
-    let current = JSON.parse(JSON.stringify(state));
-    for(let i = 0; i < res.list.length; i++){
-      res.list[i].checked = false;
-    }
-    current.planTarifaire = res.list;
-    state = current;
-    //setState(current);
-  }
-
-  
-  function setListEquipement(res){
-    console.log(res);
-    let current = JSON.parse(JSON.stringify(state));
-    current.equipements = res.equipements;
-    setState(current);
-  }
+  const [htmlForm, setHtmlForm] = useState(null);
 
   useEffect(() => {
+<<<<<<< HEAD
     callAPI('post', '/planTarifaire', {}, setPlanTarifaire);
     callAPI('get', '/equipement', {}, setListEquipement);
   }, []); 
@@ -555,6 +538,15 @@ function InsertTypeCHambre(){
                 </form>
               </div>
             </div>
+=======
+    setHtmlForm(new HtmlForm(infoForm, disposition, state, setState, history));
+  }, []);
+  
+  return (
+    <div>
+      {htmlForm !== null ? htmlForm.generateForm() : null}
+    </div>
+>>>>>>> b0bd3f7e14b5385f06a1e68724ed62f381a11fbf
   );
 }
   
