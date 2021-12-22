@@ -57,7 +57,7 @@ const BookComponent = (props) => {
               fullwidth={false}
               size="small"
               id="outlined-number"
-              label="Check-out"
+              label="Check-out" 
               value={props.context.state.dateSejour.fin}
               InputProps={{
                   startAdornment: <InputAdornment position="start"><EventNote/></InputAdornment>,

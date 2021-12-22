@@ -18,6 +18,8 @@ import {Link} from 'react-router-dom';
 import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -46,6 +48,19 @@ function PlanTarifaire(props){
   return list;
 }
 
+function openEditEquipement(equipement, newIcon, setNewIcon, handleOpen){
+  const eq = {...equipement};
+  let icon = {...newIcon};
+  icon._id = eq._id;
+  icon.nom = eq.nom;
+  icon.font = eq.font;
+  setNewIcon(icon);
+  handleOpen();
+}
+
+function deleteEquipement(equipement, setListEquipement2){
+  callAPI('post', '/equipement/delete', {id: equipement._id}, setListEquipement2);
+}
 
 function Equipements(props){
   let i = -1;
@@ -53,23 +68,36 @@ function Equipements(props){
         i++;
         let u = i;
         return(
-          <div style={{height:"40px"}}>
-            <FormControlLabel
-              checked={equipement.checked}
-              control={<Checkbox/>}
-              label=""
-              onChange={(e) => props.handleCheckBoxEquipement(e, u)}
-              style={{marginLeft:"20px"}}
-            />
-            <Font font={equipement.font} />
-            <span id='litleLabel' style={{marginLeft:'8px'}}>
-            {equipement.nom}
-            </span>
-          </div>
+          <tr>
+            <td style={{width: "25px"}}>
+              <FormControlLabel
+                checked={equipement.checked}
+                control={<Checkbox/>}
+                label=""
+                onChange={(e) => props.handleCheckBoxEquipement(e, u)}
+                style={{marginLeft:"20px"}}
+              />
+            </td>
+            <td>
+              <Font font={equipement.font} />
+            </td>
+            <td>
+              {equipement.nom}
+            </td>
+            <td>
+            <EditIcon style={{color : "green"}} onClick={(e) => openEditEquipement(equipement, props.newIcon, props.setNewIcon, props.handleOpen)} />
+            </td>
+            <td>
+              <DeleteIcon style={{color : "red"}} onClick={(e) => deleteEquipement(equipement, props.setListEquipement2)} />
+            </td>
+          </tr>
           
         );
     })
-  return equipements;
+    const table = <table style={{width: "400px"}}>
+      {equipements}
+    </table>
+  return table;
 }
 
 
@@ -77,7 +105,7 @@ function Equipements(props){
 function InsertTypeCHambre(){
   const noImage = '/no-image.jpg';
   let [val, setVal] = useState(1);
-  let [newIcon, setNewIcon] = useState({font: "", nom: ""});
+  let [newIcon, setNewIcon] = useState({_id: null, font: "", nom: ""});
   let [errInsertEq, setErrInsertEq] = useState(null);
   let [state, setState] = useState(
     {
@@ -108,6 +136,11 @@ function InsertTypeCHambre(){
     }
   );
   const [open, setOpen] = React.useState(false);
+  const [errorFont, setErrorFont] = React.useState({
+    autre: null,
+    font: null,
+    nom: null
+  })
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -261,23 +294,45 @@ function InsertTypeCHambre(){
     let currentState = JSON.parse(JSON.stringify(newIcon));
     currentState[fieldName] = e.target.value;
     setNewIcon(currentState);
+    
+    let tempError = {...errorFont};
+    tempError[fieldName] = null;
+    setErrorFont(tempError);
   }
 
   function setListEquipement2(res){
-    if(res.status == 200){
+    console.log(res);
+    if(res.status === 200){
       setNewIcon({font: "", nom: ""});
-      setErrInsertEq(null);
-      let current = JSON.parse(JSON.stringify(state));
+      let current = {...state};
       current.equipements = res.equipements;
       setState(current);
       setOpen(false);
     }else{
-      setErrInsertEq(res.message);
+      let temp = {...errorFont};
+      let errKeys = Object.keys(res.errors);
+      errKeys.map((k) => {
+        temp[k] = res.errors[k];
+      });
+      setErrorFont(temp);
     }
   }
 
   function addEquipement(){
-    callAPI('post', '/equipement/insert', {icon: newIcon}, setListEquipement2);
+    if(newIcon._id === null){
+      callAPI('post', '/equipement/insert', {icon: newIcon}, setListEquipement2);
+    }else{
+      callAPI('post', '/equipement/update', {icon: newIcon}, setListEquipement2);
+    }
+  }
+
+  function openAjouterEquipement(){
+    let temp = {...newIcon};
+    temp._id = null;
+    temp.font = "";
+    temp.nom = "";
+    setNewIcon(temp);
+    handleOpen();
   }
 
   return (
@@ -288,7 +343,6 @@ function InsertTypeCHambre(){
                 <CustomError errors={state.errors} />
                 <form className="needs-validation" className='forms' style={{marginTop:'15px'}}>
                     <div style={{marginTop:'40px'}} id='input-group1'>
-                      
                       <TextField 
                       id="outlined-basic"
                       variant="outlined"
@@ -366,7 +420,7 @@ function InsertTypeCHambre(){
                             style={{marginTop: '5px'}}
                             value=""
                             handlePhotoChange={handlePhotoChange} />
-                            {state.error.photo === null ? null : <div style={{color: "#D32F2F", font: "13px Roboto,Helvetica,Arial,sans-serif"}}><span>{state.error.photo}</span></div>}
+                            {state.error.photo === null ? null : <div className="customError"><span>{state.error.photo}</span></div>}
                       </div>
 
                     <div style={{marginTop:'15px'}}>
@@ -455,9 +509,16 @@ function InsertTypeCHambre(){
                             </label>
                       </div>
                       <FormGroup>
-                        <Equipements  equipements={state.equipements} handleCheckBoxEquipement={handleCheckBoxEquipement} />
+                        <Equipements  
+                          equipements={state.equipements} 
+                          handleCheckBoxEquipement={handleCheckBoxEquipement}
+                          newIcon={newIcon}
+                          setNewIcon={setNewIcon}
+                          handleOpen={handleOpen}
+                          setListEquipement2={setListEquipement2}
+                        />
                       </FormGroup>
-                      <Button onClick={handleOpen}>Ajouter equipement</Button>
+                      <Button onClick={openAjouterEquipement}>Ajouter equipement</Button>
                       <Modal
                         open={open}
                         onClose={handleClose}
@@ -466,13 +527,9 @@ function InsertTypeCHambre(){
                       >
                         <Box sx={style}>
                           <Typography id="modal-modal-title" variant="h6" component="h2" align="center">
-                            Ajouter nouveau equipement
+                            {newIcon._id === null ? "Ajouter nouveau equipement" : "Modifier equipement"}
                           </Typography>
-                          {
-                            errInsertEq != null ?
-                            <p style={{backgroundColor: "red"}}>{errInsertEq}</p>
-                            : null
-                          }
+                          {errorFont.autre === null ? null : <div className="customError"><span>{errorFont.autre}</span></div>}
                           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                           <div style={{marginLeft:'14px'}}>
                             <TextField 
@@ -486,6 +543,8 @@ function InsertTypeCHambre(){
                               name="Font" 
                               value={newIcon.font}
                               onChange={(e) => handleNewIconChange(e, "font")}
+                              error={errorFont.font === null ? false : true}
+                              helperText={errorFont.font === null ? null : errorFont.font}
                               />
                               <TextField 
                               id="outlined-basic"
@@ -497,11 +556,14 @@ function InsertTypeCHambre(){
                               type="text" 
                               name="Nom" 
                               value={newIcon.nom}
-                              onChange={(e) => handleNewIconChange(e, "nom")}/>
+                              onChange={(e) => handleNewIconChange(e, "nom")}
+                              error={errorFont.nom === null ? false : true}
+                              helperText={errorFont.nom === null ? null : errorFont.nom}
+                              />
                             </div>
                               <br/>
                               <div style={{margin:'0 auto', width:'fit-content', marginTop:'20px'}}>
-                                <Button variant="contained" onClick={(e) => addEquipement()}>Ajouter equipement</Button>
+                                <Button variant="contained" onClick={(e) => addEquipement()}>{newIcon._id === null ? "Ajouter equipement" : "Modifier equipement"}</Button>
                               </div>
                           </Typography>
                         </Box>

@@ -13,7 +13,7 @@ import callAPI from '../utility.js';
 import Navbar from '../Navbar/Navbar.js'
 import { useParams, useHistory, Link } from 'react-router-dom'
 import "./global.css";
-import axios from "axios";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 
 function Global(){
     const [datePrice , setDatePrice] = useState([{ date:"" , pourcentage: ""}]);
@@ -23,15 +23,32 @@ function Global(){
     const[description, setDescription] = useState('');
     const[show , setShow] = useState(false);
     const[message  , setMessage] = useState("");
-    const [griseAdd , setGrise] = useState(false);
-
-    const { _id } = useParams();        
+    const [griseAdd , setGrise] = useState(true);
+    const { _id } = useParams();      
+    let [state , setState] = useState (
+        {
+            description : null ,
+            type : null,
+            pourcentage : null,
+            vide : null
+        }
+    );   
   
     
        
     let history = useHistory();
     const functionAppel=(res)=>{
-        console.log(res.status);
+        console.log(res);
+        if(res.errors != null){
+                let err = Object.keys(res.errors);
+                let duplic = JSON.parse(JSON.stringify(state));
+                for(let indice = 0 ; indice<err.length ; indice++){
+                duplic[err[indice]] = res.errors[err[indice]];
+            }
+            setState(duplic);
+            console.log(duplic);
+        }
+        
         if(res.status == 500){
             setMessage(res.message);
         }else if(res.status == 200 ){
@@ -44,19 +61,34 @@ function Global(){
     }
     /* handle input change*/
     const handleInputChange = (e, index) => {
+        let existeVide = false;
+        let temp = 0;
         const { name, value } = e.target;
         const list = [...datePrice];
-        list[index][name] = value;
-        setDatePrice(list);
+        setGrise(false);
 
-        let temp = 0;
+        const errorS =JSON.parse(JSON.stringify(state));
+        errorS.pourcentage = null;
+        setState(errorS);
+        
+        if(value < 0){
+            list[index][name] = 0;
+        }else{
+            list[index][name] = value;
+        }
+        setDatePrice(list);
+        
         for (let i = 0; i < list.length ; i++){
             if(list[i].pourcentage != null){
                 let convert = Number.parseFloat(list[i].pourcentage); 
                 temp += convert;  
             }
+            if((list[i].pourcentage +"").trim() === "" || (list[i].date  +"").trim() === ""){
+                existeVide = true; 
+            }
         }
-        if(temp > 100 ){
+
+        if(temp > 100 || existeVide){
             setGrise(true);
         }else{
             setGrise(false);
@@ -70,6 +102,12 @@ function Global(){
    const handleInputChange2 = (e , indice ,fieldname) => {
     const current = JSON.parse(JSON.stringify(datePrice));
     current[indice][fieldname] = e.target.value;
+
+    let errorS = {...state};
+    errorS.type = null;
+    errorS.vide = null;
+    setState(errorS);
+
     setDatePrice(current);
    }
    const handleRemoveClick = index => {
@@ -98,6 +136,7 @@ function Global(){
     // handle click event of the Add button
     const handleAddClick = () => {
         setDatePrice([...datePrice, { date: "", pourcentage: ""}]);
+        setGrise(true);
     };
 
     const handlechangeType = (e) => {
@@ -108,6 +147,7 @@ function Global(){
         if(e.target.value.trim() === ""){
             setNom("");
         }else{
+            setMessage("");
             setNom(e.target.value);
         }
     }
@@ -115,6 +155,9 @@ function Global(){
         if(e.target.value.trim() === ""){
             setDescription("");
         }else{
+            let errorS = JSON.parse(JSON.stringify(state));
+            errorS.description = null;
+            setState(errorS)
             setDescription(e.target.value);
         }
     }
@@ -174,14 +217,15 @@ function Global(){
       }
 
       const update = () => {
+        let id1 = _id 
         for(let i = 0 ; i < datePrice.length ; i++){
             datePrice[i].date = Number.parseInt(datePrice[i].date);
             datePrice[i].pourcentage = Number.parseInt(datePrice[i].pourcentage); 
         }
         if(show){
-            callAPI('post' , "/politique/updateP/"+ _id ,{nom : nom ,description : description, type : dateTime , datePrice : datePrice , remboursable : true}, functionAppel)
+            callAPI('post' , "/politique/updateP/"+ _id ,{ id : id1 , nom : nom ,description : description, type : dateTime , datePrice : datePrice , remboursable : true}, functionAppel)
         }else{
-            callAPI('post' , "/politique/updateP/"+_id ,{nom : nom ,description : description,  remboursable : false}, functionAppel)
+            callAPI('post' , "/politique/updateP/"+_id ,{ id : id1 , nom : nom ,description : description,  remboursable : false}, functionAppel)
         }
       }
 
@@ -199,10 +243,9 @@ function Global(){
                 <TextField 
                     id="outlined-size-small"
                     size="small" label = {dateTime}
-                    type="number"
-                    name="date"
-                    required
-                    value = {x.date}
+                    type="number" helperText = {(state.type)||(state.vide)}
+                    error = {(state.type !== null ? true : false)||(state.vide !== null ? true : false) }
+                    name="date" required  value = {x.date}
                     onChange={e => handleInputChange2(e, i , "date")}
                 />
                 <TextField 
@@ -213,18 +256,22 @@ function Global(){
                     disabled
                 />
                 <TextField
-                    id="outlined-size-small"
-                    size="small"
-                    name="pourcentage"
-                    type="number"
+                    id="outlined-size-small" helperText = {(state.pourcentage) }
+                    size="small"  name="pourcentage"  
+                    error = {(state.pourcentage !== null ? true : false) }
+                    type="number" label="pourcentage"
                     value = {x.pourcentage}
-                    label="pourcentage"
                     required
-                    onChange={e => handleInputChange(e, i)}
+                    onChange={e => handleInputChange(e, i , "pourcentage")}
                 />    
                 {
                     datePrice.length !== 1 && 
                     <DeleteForeverIcon  style={{color : 'red'}} onClick={() => handleRemoveClick(i)} /> 
+                }
+                {
+                    datePrice.length - 1 === i &&
+                    (griseAdd ? <AddCircleIcon color="primary"  /> : 
+                        <AddCircleIcon color="primary" onClick={() =>handleAddClick(i)}/>) 
                 }
                 </div><br/> 
             </div> 
@@ -264,54 +311,46 @@ function Global(){
                                             </div><br/> 
                                             {date} 
                                            <br/>
-                                        <div>
-                                            <input
-                                                style={{width : "70px" , borderStyle: "none" , backgroundColor : "white" , minWidth : "0px"}}
-                                                disabled 
-                                            />
-                                            <TextField 
-                                                id="outlined-size-small"
-                                                size="small"
-                                                name="pourcentage"
-                                                type="number"
-                                                placeholder="dateSejour"
-                                                disabled
-                                            />
-                                            <TextField 
-                                                id="outlined-size-small"
-                                                placeholder="Pourcentage :"
-                                                size="small"
-                                                style={{width : "130px" , backgroundColor : "gainsboro" , fontSize :"10px"}}
-                                                disabled
-                                            />
-                                            <TextField
-                                                id="outlined-size-small"
-                                                size="small"
-                                                name="pourcentage"
-                                                type="number"
-                                                value={valueP}
-                                                disabled
-                                            />    
-                                        </div>
-                                        { 
-                                            griseAdd ?
-                                            <Button variant="contained" endIcon={<AddIcon />} disabled
-                                                    onClick={handleAddClick}><span style ={{color : "white"}} >Add</span>
-                                            </Button>  : 
-                                             <Button variant="contained" endIcon={<AddIcon />} 
-                                                    onClick={handleAddClick}><span style ={{color : "white"}} >Add</span>
-                                            </Button>
-                                        }  
+                                            <div>
+                                                <input
+                                                    style={{width : "70px" , borderStyle: "none" , backgroundColor : "#F6F8FC" , minWidth : "0px"}}
+                                                    disabled 
+                                                />
+                                                <TextField 
+                                                    id="outlined-size-small"
+                                                    size="small"
+                                                    name="pourcentage"
+                                                    type="number"
+                                                    placeholder="dateSejour"
+                                                    disabled
+                                                />
+                                                <TextField 
+                                                    id="outlined-size-small"
+                                                    placeholder="Pourcentage :"
+                                                    size="small"
+                                                    style={{width : "130px" , backgroundColor : "gainsboro" , fontSize :"10px"}}
+                                                    disabled
+                                                />
+                                                <TextField
+                                                    id="outlined-size-small"
+                                                    size="small"
+                                                    name="pourcentage"
+                                                    type="number"
+                                                    value={valueP}
+                                                    disabled
+                                                />    
+                                            </div>
                                         </div>
                                     :  ""
                                 } <br/>
-                                {message !== "" ? <Alert severity="error">{message}</Alert> : " " }<br/> 
+
                                 <div style = {{marginTop :"15px"}}> 
                                     <label id='bigLabel' style={{marginRight:'10px',textDecoration:'underline'}}>Nom politique : </label><br/> 
                                         <TextField
                                                 id="outlined-size-small"
-                                                size="small" 
-                                                label ={<p id='litleLabel'>nom</p>}
+                                                size="small" label ="nom"
+                                                error = {message ? true : false}
+                                                helperText={message}
                                                 name="nom"
                                                 type="text"
                                                 style={{marginTop:'15px'}}
@@ -323,10 +362,10 @@ function Global(){
                                     <label id='bigLabel' style={{textDecoration:'underline'}}>Description : </label>
                                         <TextField
                                                 id="outlined-size-small"
-                                                size="small" 
-                                                label ={<p id='litleLabel'>description</p>}
-                                                multiline
-                                                rows={2}
+                                                size="small" label ="description"
+                                                multiline helperText = {(state.description)}
+                                                error = {(state.description !== null ? true : false)}
+                                                rows={2} 
                                                 rowsMax={4}
                                                 style={{width:'100%',height:'50px',marginTop:'15px'}}
                                                 name="description"

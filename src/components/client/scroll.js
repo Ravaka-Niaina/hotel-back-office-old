@@ -103,7 +103,6 @@ class Scroll extends React.Component{
             value = "0" + value;
         }
         return value;
-
     }
    
     getDateAndConvert(dateDebut , dateFin){
@@ -202,15 +201,18 @@ class Scroll extends React.Component{
                         <Grid container spacing={2}>
                             <Grid item xs={3}>
                                 <Item>
-                                <Promotions /></Item>
+                                    <Promotions />
+                                </Item>
                             </Grid>
                             <Grid item xs={6}>
                                 <Item>
-                                <DChambre context = {this} /></Item>
+                                    <DChambre context = {this} />
+                                </Item>
                             </Grid>
                             <Grid item xs={3}>
                                 <Item>
-                                <Fact context = {this} /></Item>
+                                    <Fact context = {this} />
+                                </Item>
                             </Grid>
                         </Grid>
                     </Box>

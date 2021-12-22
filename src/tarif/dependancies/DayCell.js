@@ -47,7 +47,7 @@ const DayCell = (props) => {
                     <div style={{height: "10px", backgroundColor: (props.closed ? "#FF0000" : "#64E986"), marginTop: "-12px"}}></div>
                     {props.day}
                     <div style={{fontSize: "12px"}}>
-                        <span>{'x' + props.nbPers}</span>
+                    <span>{'x' + props.nbPers}</span><img src="/user.png" style={{width:'12px', marginTop: "-4px"}} />
                     </div>
                 </div>
                 : (props.day != null ? props.day + ((props.isprice) ? ' Є' : '') : '')}
