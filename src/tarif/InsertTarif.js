@@ -36,7 +36,9 @@ function InsertTarif(){
         dateSejourDebut: null, 
         dateSejourFin: null,
         leadMin: null, 
-        leadMax: null
+        leadMax: null,
+        chambresAtrb: null,
+        politiqueAnnulAtrb: null
     });
     const [planTarifaire, setPlanTarifaire] = useState({
         nom: '',
@@ -232,19 +234,6 @@ function InsertTarif(){
                                             <div className ="row" style={{marginTop:'15px'}}>
                                                 <div className ="col">
                                                     <TextField
-                                                    label="Min"
-                                                    type='number'
-                                                    id='lead'
-                                                    size='small'
-                                                    value={planTarifaire.lead.min}
-                                                    placeholder='Hour/Date'
-                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "lead", "min")}
-                                                    error={error.leadMin === null ? false : true}
-                                                    helperText={error.leadMin === null ? null : error.leadMin}
-                                                    /> 
-                                                </div>
-                                                <div className ="col">
-                                                    <TextField
                                                     label="Max"
                                                     type='number'
                                                     id='lead'
@@ -254,6 +243,19 @@ function InsertTarif(){
                                                     onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "lead", "max")}
                                                     error={error.leadMax === null ? false : true}
                                                     helperText={error.leadMax === null ? null : error.leadMax}
+                                                    /> 
+                                                </div>
+                                                <div className ="col">
+                                                    <TextField
+                                                    label="Min"
+                                                    type='number'
+                                                    id='lead'
+                                                    size='small'
+                                                    value={planTarifaire.lead.min}
+                                                    placeholder='Hour/Date'
+                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "lead", "min")}
+                                                    error={error.leadMin === null ? false : true}
+                                                    helperText={error.leadMin === null ? null : error.leadMin}
                                                     /> 
                                                 </div>
                                                 <div className ="col">
@@ -289,6 +291,7 @@ function InsertTarif(){
                                                 planTarifaire={planTarifaire}
                                                 setPlanTarifaire={setPlanTarifaire}
                                                 handleCheckBoxChange={utility.handleCheckBoxChange} />
+                                            {error.chambresAtrb === null ? null : <div className="customError"><span>{error.chambresAtrb}</span></div>}
                                         </div>
                                     </div>
                                     <div style={{marginTop:'20px'}}>
@@ -300,6 +303,7 @@ function InsertTarif(){
                                             planTarifaire={planTarifaire}
                                             setPlanTarifaire={setPlanTarifaire}
                                             handleCheckBoxChange={utility.handleCheckBoxChange} />
+                                        {error.PolitiqueAnnulAtrb === null ? null : <div className="customError"><span>{error.PolitiqueAnnulAtrb}</span></div>}
                                     </div>
                                 </Box>
 
