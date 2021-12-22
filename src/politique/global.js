@@ -32,11 +32,7 @@ function Global(){
             pourcentage : null,
             vide : null
         }
-    ); 
-  
-    const [griseAdd , setGrise] = useState(false);
-
-    const { _id } = useParams();        
+    );   
   
     
        

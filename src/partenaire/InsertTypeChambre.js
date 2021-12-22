@@ -115,7 +115,6 @@ function InsertTypeCHambre(){
   const [htmlForm, setHtmlForm] = useState(null);
 
   useEffect(() => {
-<<<<<<< HEAD
     callAPI('post', '/planTarifaire', {}, setPlanTarifaire);
     callAPI('get', '/equipement', {}, setListEquipement);
   }, []); 
@@ -538,15 +537,6 @@ function InsertTypeCHambre(){
                 </form>
               </div>
             </div>
-=======
-    setHtmlForm(new HtmlForm(infoForm, disposition, state, setState, history));
-  }, []);
-  
-  return (
-    <div>
-      {htmlForm !== null ? htmlForm.generateForm() : null}
-    </div>
->>>>>>> b0bd3f7e14b5385f06a1e68724ed62f381a11fbf
   );
 }
   
