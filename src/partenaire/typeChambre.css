@@ -109,4 +109,9 @@ div.bouton-aligne{
 .error{
     color: #D32F2F;
 }
+
+.customError {
+    color: #D32F2F; 
+    font: 13px Roboto,Helvetica,Arial,sans-serif;
+}
     
