@@ -133,6 +133,7 @@ import Calendrier from "./partenaire/Calendrier/Calendrier";
 import  Devis  from "./front_client/devis";
 import  guest  from "./partenaire/guest.js";
 import  hideShow  from "./hideShow.js";
+import  DetailsPromotion  from "./promotion/DetailsPromotion";
 
 
 import DropDown from './pagination/pagination.js';
@@ -232,6 +233,7 @@ function App(){
 
         <Route path="/promotion" exact component={PromotionList} />
         <Route path="/promotion/create" exact component={InsertPromotion} />
+        <Route path="/promotion/detail/:_id" exact component={DetailsPromotion} />
         <Route path="/" exact component={home} />
 
         <Route path="/client" exact component={AppClient} />

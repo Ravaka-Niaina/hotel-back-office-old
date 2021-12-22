@@ -34,6 +34,12 @@ function Global(){
         }
     ); 
   
+    const [griseAdd , setGrise] = useState(false);
+
+    const { _id } = useParams();        
+  
+    
+       
     let history = useHistory();
     const functionAppel=(res)=>{
         console.log(res);
@@ -278,25 +284,22 @@ function Global(){
 
         return (
             <>
-            <Navbar currentPage={4}/>
-            <div className="container" style={{marginTop : "100px"}}>
-                <div className ="row">
-                    <div className ="col-md-2"></div>
-                        <div className ="col-md-8" style ={{boxShadow : '0 0 20px 0 rgb(0 0 0 / 20%), 0 5px 5px 0 rgb(0 0 0 / 25%)'}} ><br/>
-                            <h4 style={{textAlign : 'center'}}>Politique d'annulation</h4><hr/>
-                            <strong>Concellation preference</strong><br/>
-                            <span>Y a-t-il une période pendant laquelle le client peut annuler gratuitement?</span><br/>
+            <Navbar currentPage={2}/>
+                        <div className ="politiqueContent">
+                            <h4 className='entete'>Politique d'annulation</h4><hr/>
+                            <label>Concellation preference</label><br/>
+                            <span id='litleLabel'>Y a-t-il une période pendant laquelle le client peut annuler gratuitement?</span><br/>
                             <RadioGroup
                                 aria-label="gender"
                                 value={show}
                                 name="radio-buttons-group"
                             >
-                                <FormControlLabel value="true" label="oui" 
+                                <FormControlLabel value="true" label={<p id='label'>oui</p>} 
                                     control={<Radio onClick = {(e) => setShow(true) }/>}/>
-                                <FormControlLabel value="false"  label="non"
+                                <FormControlLabel value="false"  label={<p id='label'>non</p>}
                                     control={<Radio onClick = {(e) => setShow(false) }/>}/>
                             </RadioGroup>
-                            <strong>precisez les conditions</strong>
+                            <label>precisez les conditions</label>
                                 {
                                     show ? 
                                         <div style = {{marginTop : "20px"}}>
@@ -304,9 +307,9 @@ function Global(){
                                                 <FormControl component="fieldset">
                                                 <RadioGroup row aria-label="gender" name="row-radio-buttons-group"  value={dateTime}>
                                                 <FormControlLabel value="jour" control={<Radio size="small"/>} 
-                                                        label="jour" onClick={(e) => handlechangeType(e)}/>
+                                                        label={<p id='litleLabel'>jour</p>} onClick={(e) => handlechangeType(e)}/>
                                                     <FormControlLabel value="heure" control={<Radio size="small" />} 
-                                                        label="heure" onClick={(e) => handlechangeType(e)}/>
+                                                        label={<p id='litleLabel'>heure</p>} onClick={(e) => handlechangeType(e)}/>
                                                 </RadioGroup>
                                                 </FormControl>
                                             </div><br/> 
@@ -346,7 +349,7 @@ function Global(){
                                 } <br/>
 
                                 <div style = {{marginTop :"15px"}}> 
-                                    <strong >Nom politique : </strong>
+                                    <label id='bigLabel' style={{marginRight:'10px',textDecoration:'underline'}}>Nom politique : </label><br/> 
                                         <TextField
                                                 id="outlined-size-small"
                                                 size="small" label ="nom"
@@ -354,12 +357,13 @@ function Global(){
                                                 helperText={message}
                                                 name="nom"
                                                 type="text"
+                                                style={{marginTop:'15px'}}
                                                 value = {nom}
                                                 onChange={e => handleInputChangeInputNom(e)}
                                             />
                                 </div>
                                 <div style = {{marginTop :"15px"}}> 
-                                    <strong >Description : </strong>
+                                    <label id='bigLabel' style={{textDecoration:'underline'}}>Description : </label>
                                         <TextField
                                                 id="outlined-size-small"
                                                 size="small" label ="description"
@@ -367,7 +371,7 @@ function Global(){
                                                 error = {(state.description !== null ? true : false)}
                                                 rows={2} 
                                                 rowsMax={4}
-                                                style={{width:'100%',height:'50px'}}
+                                                style={{width:'100%',height:'50px',marginTop:'15px'}}
                                                 name="description"
                                                 type="text"
                                                 value = {description}
@@ -381,10 +385,16 @@ function Global(){
                                            <> 
                                                {
                                                     nom == "" ? 
-                                                    <Button variant="contained" color="success" onClick={(e) => insert()} disabled>
+                                                    <Button 
+                                                    variant="contained" 
+                                                    onClick={(e) => insert()} disabled>
                                                         Sauvegarder
                                                     </Button> :
-                                                    <Button variant="contained" color="success" onClick={(e) => insert()} >
+                                                    <Button 
+                                                    variant="contained" 
+                                                    style={{backgroundColor:'#2ac4ea' }}
+                                                    id='btn1' 
+                                                    onClick={(e) => insert()} >
                                                         Sauvegarder
                                                     </Button>
                                                 }
@@ -395,23 +405,27 @@ function Global(){
                                                      <Button variant="contained" color="success" onClick={(e) => update()} disabled >
                                                         modifier
                                                     </Button> : 
-                                                    <Button variant="contained" color="success" onClick={(e) => update()} >
-                                                        modifier
+                                                    <Button variant="contained" 
+                                                    style={{backgroundColor:'#FA8072'}}
+                                                    onClick={(e) => update()} >
+                                                        <span style={{color:'white'}}>modifier</span>
                                                     </Button>
 
                                                 }   
                                             </> 
                                             
                                         }
-                                            <Link to ="/politique/list">
-                                                <Button variant="contained" style={{marginLeft : "2px"}}>retour</Button>
+                                            <Link to ="/politique/list" style={{textDecoration:'none'}}>
+                                                <Button 
+                                                variant="outlined" 
+                                                id='btn2' 
+                                                style={{marginLeft : "2px"}}>
+                                                    retour
+                                                </Button>
                                             </Link>
                                     </div> <br/>
                                               
                         </div>
-                        <div className ="col-md-2"></div>
-                </div>
-            </div>
             </>
         );
     

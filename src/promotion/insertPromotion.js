@@ -1,172 +1,261 @@
 
-import React from 'react';
-import axios from 'axios';
-import Select from 'react-select'
-import {Link} from 'react-router-dom';
+// import { TextField } from "@mui/material";
+import CustomError from '../CustomError';
+import axios from "axios";
+import React, {useEffect} from "react";
+import { Checkbox } from "@mui/material";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Checkbox from '@mui/material/Checkbox';
+import { useHistory } from 'react-router-dom'
+import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import callAPI from '../utility';
+
+import {Link} from 'react-router-dom';
+import FormControl from '@mui/material/FormControl';
 import "./promotion.css";
 import InputAdornment from '@mui/material/InputAdornment';
 
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormLabel from '@mui/material/FormLabel';
-import { withStyles } from "@material-ui/core/styles";
 
 
-export default class InsertPromotion extends React.Component {
-  // state = {
-  //   name: '',
-  // }
+import { useState } from 'react';
 
-  constructor(props){
-    super(props);
-    this.state = {
-      typeChambres: [],
-      tarifs: [],
-      HideShowP: false,
-      HideShowE: false,
-      HideShowJ: false,
-      HideShowH: false,
-        promotion: {
-            nom: '',
-            tarif: '',
-            typeChambre: '',
-            remisePourcentage: '',
-            remiseEuro: '',
-            dateDebutS: '',
-            dateFinS: '',
-            lundi: '',
-            mardi: '',
-            mercredi: '',
-            jeudi: '',
-            vendredi: '',
-            samedi: '',
-            dimanche: '',
-            novembre: '',
-            decembre: '',
-            janvier: '',
-            fevrier: '',
-            mars: '',
-            avril: '',
-            sejourMin:'',
-            leadHour:'',
-            leadDay:'',
-            premierJour:'',
-            dernierJour:''
+function PlanTarifaire(props){
+  let i = -1;
+  let list = props.planTarifaire.map(tarif => {
+      i++;
+      let u = i;
+      return(
+        <FormControlLabel 
+          checked={tarif.checked}
+          control={<Checkbox/>}
+          onChange={(e) => props.handleCheckBoxPlanTarifaire(e, u)}
+          label={<span id='label'>{tarif.nom}</span>}
+          style={{marginLeft:"20px"}}
+        />
+      );
+  })
+  return list;
+}
+
+function TypeChambre(props){
+  console.log(props.typeChambre);
+  let i = -1;
+  let typeChambre = props.typeChambre.map(typeC => {
+      i++;
+      let u = i;
+      return(
+        <FormControlLabel 
+          checked={typeC.checked}
+          control={<Checkbox/>}
+          onChange={(e) => props.handleCheckBoxTypeChambre(e, u)}
+          label={<span id='label'>{typeC.nom}</span>}
+          style={{marginLeft:"20px"}}
+        />
+      );
+  })
+  return typeChambre;
+}
+
+
+function InsertPromotion(){
+  const noImage = '/no-image.jpg';
+  let [val, setVal] = useState(1);
+  let [newIcon, setNewIcon] = useState({font: "", nom: ""});
+  let [errInsertEq, setErrInsertEq] = useState(null);
+  const [visibleP, setVisibleP] = React.useState(false);
+  const [visibleE, setVisibleE] = React.useState(false);
+  const [visibleLD, setVisibleLD] = React.useState(false);
+  const [visibleLH, setVisibleLH] = React.useState(false);
+  let [state, setState] = useState(
+    {
+        errors: [],
+        error: {
+          nom: null,
+          dateDebutS: null,
+          dateFinS: null,
+          sejourMin:null,
+          premierJour:null,
+          dernierJour:null
         },
-    };
-}
+        nom: '',
+        planTarifaire: [],
+        typeChambre: [],
+        remisePourcentage: '',
+        remiseEuro: '',
+        dateDebutS: '',
+        dateFinS: '',
+        lundi: '',
+        mardi: '',
+        mercredi: '',
+        jeudi: '',
+        vendredi: '',
+        samedi: '',
+        dimanche: '',
+        sejourMin:'',
+        premierJour:'',
+        dernierJour:'',
+        leadDayMin:'',
+        leadDayMax:'',
+        leadHourMin:'',
+        leadHourMax:''
+    }
+  );
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
-  // handleChange = event => {
-  //   this.setState({ name: event.target.value });
-  // }
-
-  async getTypeChambres(){
-    axios.get(process.env.REACT_APP_BACK_URL + '/typechambre')
-    .then(res => {
-      const typeChambres ={typeChambres: res.data.list} ;
-      
-      this.setState( typeChambres );
-      console.log(this.state);
-    })
+  const history = useHistory();
+  
+  function setPlanTarifaire(res){
+    console.log(res);
+    let current = JSON.parse(JSON.stringify(state));
+    for(let i = 0; i < res.list.length; i++){
+      res.list[i].checked = false;
+    }
+    current.planTarifaire = res.list;
+    state = current;
+    //setState(current);
   }
 
-    async getTarifs(){
-    axios.get(process.env.REACT_APP_BACK_URL + '/planTarifaire')
-    .then(res => {
-      const tarifs ={tarifs: res.data.list} ;
-      
-      this.setState( tarifs );
-      console.log(this.state);
-    })
-  }
-
-  handleInputChange(event, inputName){
-    const currentState = JSON.parse(JSON.stringify(this.state));
-    currentState.promotion[inputName] = event.target.value;
-    this.setState(currentState);
+  function setListTypeChambre(res){
+    console.log(res);
+    let current = JSON.parse(JSON.stringify(state));
+    for(let i = 0; i < res.list.length; i++){
+      res.list[i].checked = false;
+    }
+    current.typeChambre = res.list;
+    state = current;
 }
 
 
-//Une fonction qui gérera notre valeur sélectionnée
-// handleSelectChange(event, selectName){
-//   const currentState = JSON.parse(JSON.stringify(this.state));
-//   currentState.promotion[selectName] = {_id:event.value};
-//   this.setState(currentState)
-//  }
 
-  handleSubmit = event => {
-    event.preventDefault();
-    axios.post(process.env.REACT_APP_BACK_URL + `/promotion/create`,  this.state.promotion )
-      .then(res => {
-        console.log(res);
-        if(res.data.status == 200){
-          console.log("Should redirect now...");
-          this.props.history.push('/promotion');
-        }else{
-          console.log(res.data.message);
+  function setListEquipement(res){
+    let current = JSON.parse(JSON.stringify(state));
+    current.equipements = res.equipements;
+    setState(current);
+  }
+
+  useEffect(() => {
+    callAPI('post', '/TCTarif', {}, setListTypeChambre);
+    callAPI('post', '/planTarifaire', {}, setPlanTarifaire);
+    callAPI('get', '/equipement', {}, setListEquipement);
+  }, []); 
+
+  function handleCheckBoxPlanTarifaire(e, index){
+    let current = JSON.parse(JSON.stringify(state));
+    current.planTarifaire[index].checked = e.target.checked;
+    setState(current);
+  }
+
+  function handleCheckBoxTypeChambre(e, index){
+    let current = JSON.parse(JSON.stringify(state));
+    current.typeChambre[index].checked = e.target.checked;
+    setState(current);
+  }
+
+  function handleCheckBoxEquipement(e, index){
+    let current = JSON.parse(JSON.stringify(state));
+    current.equipements[index].checked = e.target.checked;
+    setState(current);
+    
+  }
+
+  function tryRedirect(res){
+    console.log(res);
+    let currentState = JSON.parse(JSON.stringify(state));
+    let keys = Object.keys(currentState.error);
+    keys.map((k) => {
+      currentState.error[k] = null;
+    });
+    if(res.status === 200){
+      history.push('/promotion');
+    }else if(res.status === 401){//Unauthorized
+      history.push('/login');
+    }else{
+      console.log(res.errors);
+      let keys = Object.keys(res.errors);
+      keys.map((k) => {
+        currentState.error[k] = res.errors[k];
+      });
+    }
+    setState(currentState);
+  }
+
+  function insert(e){
+      e.preventDefault();
+      console.log('Envoie en attente...');
+      let toSend = JSON.parse(JSON.stringify(state));
+
+      let selectedEquip = [];
+      for(let i = 0; i < state.equipements.length; i++){
+        if(state.equipements[i].checked){
+          selectedEquip.push(state.equipements[i]._id);
         }
+      }
+      toSend.equipements = selectedEquip;
+      
+      let selectedPlan = [];
+      for(let i = 0; i < state.planTarifaire.length; i++){
+        if(state.planTarifaire[i].checked){
+          selectedPlan.push(state.planTarifaire[i]._id);
+        }
+      }
+      toSend.planTarifaire = selectedPlan;
+
+      let selectedTypeC = [];
+      for(let i = 0; i < state.typeChambre.length; i++){
+        if(state.typeChambre[i].checked){
+          selectedTypeC.push(state.typeChambre[i]._id);
+        }
+      }
+      toSend.typeChambre = selectedTypeC;
+      axios({
+          method: 'post',
+          url: process.env.REACT_APP_BACK_URL + "/promotion/create",
+          withCredentials: true,
+          data: toSend
       })
+      .then(res => tryRedirect(res.data))
+      .catch(err => console.log(err));
   }
 
-  componentDidMount(){
-    this.getTarifs()
-    this.getTypeChambres()
-}
-
-  render() {
-    return (
+  function handleInputChange(event, inputName){
+      const currentState = JSON.parse(JSON.stringify(state));
+      currentState[inputName] = event.target.value;
+      currentState.error[inputName] = null;
+      setState(currentState);
+  }
+  
+  return (
 <div className="block">
- <form onSubmit={this.handleSubmit}>
-<h4 className='entete'>Ajouter une nouvelle promotion</h4>
+<form>
+<h4 className='enteteP'>Ajouter une nouvelle promotion</h4>
   <div className="block1">
-  <h6>Détails de la promotion</h6>
+  <h5>Détails de la promotion</h5>
    <div className="form-group" style={{marginTop:"15px"}}>
 <label id='bigLabel'>
 À quels plans tarifaires cette promotion s'appliquera-t-elle ?
 </label>
-<p id='litleLabel'>Sélectionnez au moins 1 plan tarifaire</p>
+<p id='litleLabel' style={{marginLeft:"15px",marginTop:'5px'}}>Sélectionnez au moins 1 plan tarifaire</p>
 <div className="form-group"  style={{marginTop:"1px"}}>
-{this.state.tarifs.map((tarif) => (  
-<p>
-  <Checkbox   
-  value={tarif.nom}
-  name="tarif"  
-  onChange={(e) => this.handleInputChange(e, "tarif")}
-  />
-  <span id='litleLabel'>
-    {tarif.nom}
-  </span>
-  </p>  
-              ))}  
+<FormGroup>
+<PlanTarifaire planTarifaire={state.planTarifaire} handleCheckBoxPlanTarifaire={handleCheckBoxPlanTarifaire}/>
+</FormGroup> 
   </div>
    </div>
-
 <label id='bigLabel'>
 Quelles chambres ?
 </label>
-<p id='litleLabel'>Sélectionnez au moins 1 type de chambre</p>
+<p id='litleLabel' style={{marginLeft:"15px",marginTop:'5px'}}>Sélectionnez au moins 1 type de chambre</p>
   <div className="form-group"  style={{marginTop:"5px"}}>
-{this.state.typeChambres.map((typeChambre) => (  
-<p>
-  <Checkbox   
-  value={typeChambre.nom}
-  name="typeChambre"  
-  onChange={(e) => this.handleInputChange(e, "typeChambre")}
-  />
-  <span id='litleLabel'>
-    {typeChambre.nom}
-  </span>
-  </p>  
-              ))}
-     
+  <FormGroup>
+<TypeChambre typeChambre={state.typeChambre} handleCheckBoxTypeChambre={handleCheckBoxTypeChambre}/>
+</FormGroup>    
   </div>
 
 <hr style={{width:'95%'}}></hr>
@@ -187,17 +276,18 @@ Quelle remise voulez-vous offrir ?
     value="male" 
     control={<Radio />} 
     label={<p id='label'>Pourcentage</p>} 
-    onClick={() => this.setState({HideShowE :false,HideShowP :true})}/>
+    onClick={() => {setVisibleP(true);setVisibleE(false)}}/>
     <FormControlLabel 
     value="female" 
     control={<Radio />} 
     label={<p id='label'>Euro</p>} 
-    onClick={() => this.setState({HideShowP :false,HideShowE :true})}/>
+    onClick={() => {setVisibleE(true);setVisibleP(false)}}
+    />
   </RadioGroup>
 </FormControl>
 
 {
-this.state.HideShowP ?
+visibleP &&
 <TextField 
 id="outlined-basic" 
 label="" 
@@ -212,13 +302,12 @@ style={{width:"100px",marginTop:"15px"}}
 size="small"
 type="number" 
 name="remisePourcentage" 
-onChange={(e) => this.handleInputChange(e, "remisePourcentage")}
+onChange={(e) => handleInputChange(e, "remisePourcentage")}
 />
-: null
 }
 
 {
-this.state.HideShowE ?
+  visibleE &&
 <TextField 
 id="outlined-basic" 
 label="" 
@@ -233,57 +322,55 @@ style={{width:"130px"}}
 size="small"
 type="number" 
 name="remiseEuro" 
-onChange={(e) => this.handleInputChange(e, "remiseEuro")}
+onChange={(e) => handleInputChange(e, "remiseEuro")}
 />
-: null
 }
 
   </div>
+
   </div>
   <div className='block2' style={{marginTop:"30px"}}>
-<h6>Dates de séjour</h6>
+<h5>Dates de séjour</h5>
 <label style={{marginTop:"5px"}} id='bigLabel'>
 Quand les clients peuvent-ils profiter de cette promotion ?
 </label>
-<p id='litleLabel'>Sélectionnez au moins 1 date</p>
+<p id='litleLabel' style={{marginLeft:"15px",marginTop:'5px'}}>Sélectionnez au moins 1 date</p>
   <div className="form-group" style={{marginTop:"25px"}}>
    <p>
-<input
-type='date'
-id='dateD'
-name="dateDebutS" 
-onChange={(e) => this.handleInputChange(e, "dateDebutS")}
-style={{width:"200px"}}
-/> 
 
-{/* <TextField id="outlined-basic" 
-label="" 
+<TextField id="outlined-basic" 
+label="Date debut" 
+InputLabelProps={{
+shrink: true,
+}}
 variant="outlined" 
 className="form-control"  
 style={{width:"200px"}}
 type="date" 
 name="dateDebutS" 
-onChange={(e) => this.handleInputChange(e, "dateDebutS")}
+value={state.dateDebutS}
+onChange={(e) => handleInputChange(e, "dateDebutS")}
 size="small"
-/> */}
-
-<input
-type='date'
-id='dateF'
-name="dateFinS" 
-onChange={(e) => this.handleInputChange(e, "dateFinS")}
-style={{width:"200px",marginLeft:'20px'}}
+error={state.error.dateDebutS === null ? false : true}
+helperText={state.error.dateDebutS === null ? null : state.error.dateDebutS}
 />
-  {/* <TextField id="outlined-basic" 
-label="" 
+
+<TextField id="outlined-basic" 
+label="Date fin" 
+InputLabelProps={{
+  shrink: true,
+  }}
 variant="outlined" 
 className="form-control"  
 style={{width:"200px",marginLeft:'20px'}}
 type="date" 
 name="dateFinS" 
-onChange={(e) => this.handleInputChange(e, "dateFinS")}
+value={state.dateFinS}
+onChange={(e) => handleInputChange(e, "dateFinS")}
 size="small"
-/> */}
+error={state.error.dateFinS === null ? false : true}
+helperText={state.error.dateFinS === null ? null : state.error.dateFinS}
+/>
    </p>
   </div>
 
@@ -292,29 +379,33 @@ size="small"
 Sejour minimum
 </label>
 
-<input
-type='number'
-id='sejourMin'
-name="sejourMin" 
-onChange={(e) => this.handleInputChange(e, "sejourMin")} 
-style={{marginTop:"15px"}}
-/>
+{/* <input
+    type='number'
+    id='sejourMin'
+    style={{width:"300px",marginTop:"15px"}}
+    name="sejourMin" 
+    value={state.sejourMin}
+    onChange={(e) => handleInputChange(e, "sejourMin")} 
+    />  */}
 
-{/* <TextField 
+<TextField 
 id="outlined-basic" 
-label=""
+label="Sejour minimum"
 variant="outlined"
 className="form-control" 
-style={{width:"400px",height:'20px'}}
+style={{width:"200px"}}
 size="small"
-type="text" 
+type="number" 
 name="sejourMin" 
-onChange={(e) => this.handleInputChange(e, "sejourMin")} 
+value={state.sejourMin}
+onChange={(e) => handleInputChange(e, "sejourMin")} 
 style={{marginTop:"15px"}}
-/> */}
+error={state.error.sejourMin === null ? false : true}
+helperText={state.error.sejourMin === null ? null : state.error.sejourMin}
+/> 
    </div>
   
-  <div className="form-group" style={{marginTop:"40px"}}>
+ <div className="form-group" style={{marginTop:"40px"}}>
 <label id='bigLabel'>
 Lead hour ou day 
 </label>
@@ -329,69 +420,80 @@ Lead hour ou day
     value="mal" 
     control={<Radio />}  
     label={<p id='label'>Day</p>}
-    onClick={() => this.setState({HideShowH :false,HideShowJ :true})}/>
+    onClick={() => {setVisibleLD(true);setVisibleLH(false)}}/>
     <FormControlLabel 
     value="female" 
     control={<Radio />} 
     label={<p id='label'>Hour</p>} 
-    onClick={() => this.setState({HideShowJ :false,HideShowH :true})}/>
+    onClick={() => {setVisibleLH(true);setVisibleLD(false)}}/>
   </RadioGroup>
 </FormControl>
 
 {
-this.state.HideShowJ ?
-<input
-type='number'
-id='leadDay'
-name="leadDay" 
-placeholder='Jour'
-onChange={(e) => this.handleInputChange(e, "leadDay")}
-style={{width:"130px"}}
-/>
-
-/* <TextField 
+  visibleLD &&
+<TextField 
 id="outlined-basic" 
-label="" 
+label="Min" 
 variant="outlined" 
 className="form-control" 
 style={{width:"130px"}}
 placeholder='Jour'
 size="small"
 type="number" 
-name="leadDay" 
-onChange={(e) => this.handleInputChange(e, "leadDay")}
-/> */
-
-: null
+name="leadDayMin" 
+onChange={(e) => handleInputChange(e, "leadDayMin")}
+/>
 }
 
 {
-this.state.HideShowH ?
-<input
-type='number'
-id='leadHour'
-name="leadHour" 
-placeholder='Heure'
-onChange={(e) => this.handleInputChange(e, "leadHour")}
-style={{width:"130px"}}
-/>
-
-/* <TextField 
+  visibleLD &&
+<TextField 
 id="outlined-basic" 
-label="" 
+label="Max" 
+variant="outlined" 
+className="form-control" 
+style={{width:"130px",marginTop:'15px'}}
+placeholder='Jour'
+size="small"
+type="number" 
+name="leadDayMax" 
+onChange={(e) => handleInputChange(e, "leadDayMax")}
+/>
+}
+
+{
+  visibleLH &&
+<TextField 
+id="outlined-basic" 
+label="Min" 
 variant="outlined" 
 className="form-control" 
 style={{width:"130px"}}
 placeholder='Heure'
 size="small"
 type="number" 
-name="leadHour" 
-onChange={(e) => this.handleInputChange(e, "leadHour")}
-/> */
-: null
+name="leadHourMax" 
+onChange={(e) => handleInputChange(e, "leadHourMax")}
+/>
 }
 
-  </div>
+{
+  visibleLH &&
+<TextField 
+id="outlined-basic" 
+label="Max" 
+variant="outlined" 
+className="form-control" 
+style={{width:"130px",marginTop:'15px'}}
+placeholder='Heure'
+size="small"
+type="number" 
+name="leadHourMin" 
+onChange={(e) => handleInputChange(e, "leadHourMin")}
+/>
+}
+
+  </div> 
 
   <div className="form-group" style={{marginTop:"40px"}}>
 <label id='bigLabel'>
@@ -401,35 +503,31 @@ Nombre de jour d'attribution de la promotion
 <div className="form-group" style={{marginTop:"25px"}}>
 <p>
 <TextField id="outlined-basic" 
-label="" 
+label="Premier jour" 
 variant="outlined" 
 className="form-control"  
 style={{width:"200px"}}
-type="text" 
+type="number" 
 name="premierJour" 
-InputProps={{
-  endAdornment: <InputAdornment position="end">
-      premier jour
-  </InputAdornment>,
-  }}
-onChange={(e) => this.handleInputChange(e, "premierJour")}
+value={state.premierJour}
+onChange={(e) => handleInputChange(e, "premierJour")}
 size="small"
+error={state.error.premierJour === null ? false : true}
+helperText={state.error.premierJour === null ? null : state.error.premierJour}
 />
 
   <TextField id="outlined-basic" 
-label="" 
+label="Dernier jour" 
 variant="outlined" 
 className="form-control"  
 style={{width:"200px",marginLeft:'20px'}}
-type="text" 
+type="number" 
 name="dernierJour"
-InputProps={{
-  endAdornment: <InputAdornment position="end">
-      dernier jour
-  </InputAdornment>,
-  }} 
-onChange={(e) => this.handleInputChange(e, "dernierJour")}
+value={state.dernierJour}
+onChange={(e) => handleInputChange(e, "dernierJour")}
 size="small"
+error={state.error.dernierJour === null ? false : true}
+helperText={state.error.dernierJour === null ? null : state.error.dernierJour}
 />
    </p>
    </div>
@@ -438,54 +536,63 @@ size="small"
   <div className="form-group" style={{marginTop:"15px"}}>
 <label id='bigLabel'>
 Tarif réduit disponible uniquement pendant :
+
 </label>
    <p>
 <FormControlLabel 
-control={<Checkbox />} 
-label={<p id='label'>Novembre</p>}
-value="1"
-name="novembre"  
-onChange={(e) => this.handleInputChange(e, "novembre")}
-/> 
-
-<FormControlLabel 
 control={<Checkbox/>} 
-label={<p id='label'>Decembre</p>}
+label={<p id='label'>Lundi</p>}
 value="1"
-name="decembre"  
-onChange={(e) => this.handleInputChange(e, "decembre")}
+name="lundi"  
+onChange={(e) => handleInputChange(e, "lundi")}
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
-label={<p id='label'>Janvier</p>}
+label={<p id='label'>Mardi</p>}
 value="1"
-name="janvier"  
-onChange={(e) => this.handleInputChange(e, "janvier")}
+name="mardi"  
+onChange={(e) => handleInputChange(e, "mardi")}
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
-label={<p id='label'>Fevrier</p>}
+label={<p id='label'>Mercredi</p>}
 value="1"
-name="fevrier"  
-onChange={(e) => this.handleInputChange(e, "fevrier")}
+name="mercredi"   
+onChange={(e) => handleInputChange(e, "mercredi")}
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
-label={<p id='label'>Mars</p>}
+label={<p id='label'>Jeudi</p>} 
 value="1"
-name="mars"  
-onChange={(e) => this.handleInputChange(e, "mars")}
+name="jeudi"  
+onChange={(e) => handleInputChange(e, "jeudi")}
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
-label={<p id='label'>Avril</p>} 
+label={<p id='label'>Vendredi</p>} 
 value="1"
-name="avril"  
-onChange={(e) => this.handleInputChange(e, "avril")}
+name="vendredi"  
+onChange={(e) => handleInputChange(e, "vendredi")}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Samedi</p>} 
+value="1"
+name="samedi"  
+onChange={(e) => handleInputChange(e, "samedi")}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Dimanche</p>} 
+value="1"
+name="dimanche"  
+onChange={(e) => handleInputChange(e, "dimanche")}
 />
    </p> 
   </div>
@@ -494,46 +601,45 @@ onChange={(e) => this.handleInputChange(e, "avril")}
 
   <div className="block3">
    <div className="form-group" style={{}}>
-<h6>Nom de la promotion </h6>
+<h5>Nom de la promotion </h5>
 <label id='bigLabel'>
 Comment voulez-vous nommer cette promotion ?
 </label>
-<input
-type='text'
-id='nom'
-name="nom" 
-onChange={(e) => this.handleInputChange(e, "nom")} 
-style={{marginTop:"15px",width:"400px"}}
-/>
 
-{/* <TextField 
+<TextField 
 id="outlined-basic" 
-label=""
+label="Nom"
 variant="outlined"
 className="form-control" 
 style={{width:"400px"}}
 size="small"
 type="text" 
 name="nom" 
-onChange={(e) => this.handleInputChange(e, "nom")} 
+onChange={(e) => handleInputChange(e, "nom")} 
+value={state.nom}
 style={{marginTop:"15px"}}
-/> */}
+error={state.error.nom === null ? false : true}
+helperText={state.error.nom === null ? null : state.error.nom}
+/> 
    </div>     
    </div>    
-    
+
+
   <div className="pied" style={{marginTop:'25px'}}>   
-   <div class="bouton-aligne">
+   <div class="bouton-aligne">  
 <Button  
 variant="contained" 
 type='submit' 
-style={{textDecoration:'none',color:'black',backgroundColor:'#2ac4ea'}}>
+style={{textDecoration:'none',color:'black'}}
+onClick={(e) => insert(e)}>
 <span style={{color:'white'}}>Ajouter</span>
 </Button>
    </div>
    <div class="bouton-aligne">
     <Link to={'/promotion'} style={{textDecoration:'none'}}>
        <Button variant="outlined" 
-       id="btn2">
+       id="btn2"
+       >
 <span style={{color:'#1976d2'}}>Retour</span>
        </Button>
     </Link>
@@ -541,6 +647,7 @@ style={{textDecoration:'none',color:'black',backgroundColor:'#2ac4ea'}}>
   </div>
  </form>
 </div>
-    )
-  }
+  );
 }
+  
+  export default InsertPromotion;

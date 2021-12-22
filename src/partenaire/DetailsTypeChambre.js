@@ -299,6 +299,7 @@ class DetailsTypeCHambre extends React.Component{
         this.setState(currentState);
     }
 
+    
     render(){
         let list = null;
         list = this.state.tarifs.map(tarif => {

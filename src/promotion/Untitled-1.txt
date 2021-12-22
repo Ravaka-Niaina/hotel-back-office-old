@@ -1,0 +1,43 @@
+  <div className="form-group" style={{marginTop:"40px"}}>
+<label>
+Cochez les jours de la semaine pour appliquer du calendrier de cette promotion
+</label>
+
+{
+this.state.leadDay ?
+<label>
+Lead Day
+</label>
+
+: null
+}
+
+{
+this.state.leadHour ?
+<label>
+Lead Hour
+</label>
+: null
+}
+
+<FormControl component="fieldset">
+  <FormLabel component="legend"></FormLabel>
+  <RadioGroup
+    aria-label=""
+    defaultValue=""
+    name="radio-buttons-group"
+  >
+    <FormControlLabel 
+    value="female" 
+    control={<Radio />}  
+    label={<p id='label'>lead Day</p>}
+    onClick={() => this.setState({leadHour :false,leadDay :true})}/>
+    <FormControlLabel 
+    value="male" 
+    control={<Radio />} 
+    label={<p id='label'>lead Hour</p>} 
+    onClick={() => this.setState({leadDay :false,leadHour :true})}/>
+  </RadioGroup>
+</FormControl>
+
+  </div>
