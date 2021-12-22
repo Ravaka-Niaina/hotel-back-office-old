@@ -269,22 +269,35 @@ const FullPriceEditor = (props) => {
                 tabIdTarif.push(tarifs[i]._id);
             }
         }
-        const data = {
-            tabIdTarif: tabIdTarif,
-            idTypeChambre: props.typechambre._id,
-            days: usedDays,
-            versions: versions,
-            minSejour: 1,
-            dateDebut: interval[0].format("YYYY-MM-DD"),
-            dateFin: interval[1].format("YYYY-MM-DD"),
-            toSell: toSell,
-            isTypeChambreOpen: isTypeChambreOpen === "open" ? true : false,
-            isTarifOpen: isTarifOpen === "open" ? true : false,
-            forTypeChambre: forTypeChambre,
-            forTarif: forTarif
-        };
-        console.log(data);
-        callAPI('post', '/TCTarif/configPrix', data, refresh);
+        const dateOublie = "Vous avez oublié de choisir une date";
+        console.log(interval[0]);
+        console.log(interval[1]);
+        let tempError = {...error};
+        if(interval[0] === null){
+            tempError.dateDebut = dateOublie;
+        }
+        if(interval[1] === null){
+            tempError.dateFin = dateOublie;
+        }
+        setError(tempError);
+        if(interval[0] !== null && interval[1] !== null){
+            const data = {
+                tabIdTarif: tabIdTarif,
+                idTypeChambre: props.typechambre._id,
+                days: usedDays,
+                versions: versions,
+                minSejour: 1,
+                dateDebut: interval[0].format("YYYY-MM-DD"),
+                dateFin: interval[1].format("YYYY-MM-DD"),
+                toSell: toSell,
+                isTypeChambreOpen: isTypeChambreOpen === "open" ? true : false,
+                isTarifOpen: isTarifOpen === "open" ? true : false,
+                forTypeChambre: forTypeChambre,
+                forTarif: forTarif
+            };
+            console.log(data);
+            callAPI('post', '/TCTarif/configPrix', data, refresh);
+        }
     }
     
     function handleDayChange(i, checked){
