@@ -21,6 +21,13 @@ const getDaysBetweenDates = function(startDate, endDate) {
 };
 
 const DatePicker = (props) => {
+    const removeError = () => {
+        console.log("arrrrrrghh");
+        let temp = {...props.error};
+        temp.dateDebut = null;
+        temp.dateFin = null;
+        props.setError(temp);
+    };
     return(
         <LocalizationProvider dateAdapter={AdapterMoment}>
         <DateRangePicker
@@ -32,9 +39,17 @@ const DatePicker = (props) => {
             }}
             renderInput={(startProps, endProps) => (
             <React.Fragment>
-                <TextField {...startProps} />
+                <TextField 
+                    {...startProps} 
+                    error={props.error.dateDebut === null ? false : true}
+                    helperText={props.error.dateDebut === null ? null : props.error.dateDebut}
+                    onChange={(e) => removeError()} />
                 <Box sx={{ mx: 2 }}> to </Box>
-                <TextField {...endProps} />
+                <TextField 
+                    {...endProps} 
+                    error={props.error.dateFin === null ? false : true}
+                    helperText={props.error.dateFin === null ? null : props.error.dateFin}
+                    onChange={(e) => removeError()} />
             </React.Fragment>
             )}
         />
@@ -62,6 +77,8 @@ function InputPrix(props){
                     }}
                     value={props.prix[i]}
                     onChange={(e) => props.handleChangePrix(i, e.target.value)}
+                    error={props.error.versions[i] === null ? false : true}
+                    helperText={props.error.versions[i] === null ? null : props.error.versions[i]}
                 />
                 <br/>
             </>
@@ -82,10 +99,10 @@ const FullPriceEditor = (props) => {
         p: 4,
 
         position:'absolute',
-            overflow:'scroll',
-            overflowX: 'hidden',
-            height: '100%',
-            display:'block'
+        overflow:'scroll',
+        overflowX: 'hidden',
+        height: '100%',
+        display:'block'
     };
     const [value, setValue] = React.useState('open');
     const [tarifs, setTarifs] = React.useState([]);
@@ -103,6 +120,28 @@ const FullPriceEditor = (props) => {
     const [toSell, setToSell] = React.useState(0);
     const [isTypeChambreOpen, setIsTypeChambreOpen] = React.useState("open");
     const [isTarifOpen, setIsTarifOpen] = React.useState("open");
+    const guestsMax = props.typechambre.nbAdulte + props.typechambre.nbEnfant;
+    let versions = {};
+    for(let i = 0; i < guestsMax; i++){
+        versions[i] = null;
+    }
+    const [error, setError] = React.useState({
+        idTarif: null,
+        idTypeChambre: null,
+        dateDebut: null,
+        dateFin: null,
+        days: null,
+        toSell: null,
+        tarif: null,
+        versions: versions,
+        noVersion: null
+    });
+
+    function removeAnError(field){
+        let temp = {...error};
+        temp[field] = null;
+        setError(temp);
+    }
 
     function setAllDays(checked){
         for(let i = 0; i < days.length; i++){
@@ -111,7 +150,6 @@ const FullPriceEditor = (props) => {
         setDays(days);
     }
 
-    const guestsMax = props.typechambre.nbAdulte + props.typechambre.nbEnfant;
     const history = useHistory();
 
     useEffect( () => {
@@ -147,6 +185,11 @@ const FullPriceEditor = (props) => {
         let temp = JSON.parse(JSON.stringify(prix));
         temp[i] = value;
         setPrix(temp);
+
+        let tempError = {...error};
+        tempError.noVersion = null;
+        tempError.versions[i] = null;
+        setError(tempError);
     }
 
 
@@ -159,19 +202,45 @@ const FullPriceEditor = (props) => {
                 onChange={(e) => handleRateChange(i, e.target.checked)}
                 control={<Checkbox checked={tarifs[i].checked} />}
             />
-            //<MenuItem value={i + 1}>{tarifs[i].nom}</MenuItem>
         );
     }
 
     function refresh(res){
         console.log(res);
+        let tempError = {...error};
+        
+        const keysError = Object.keys(tempError);
+        keysError.map((k) => {
+            if(k === "versions"){
+                const keysVersions = Object.keys(tempError.versions);
+                keysVersions.map((k) => {
+                    tempError.versions[k] = null;
+                });
+            }else{
+                tempError[k] = null;
+            }
+        });
+        
         if(res.status === 200){
             console.log("Redirection en cours...");
             props.getPrix();
         }else{
             console.log("prix non configuré");
+            const keys = Object.keys(res.errors);
+            keys.map((k) => {
+                if( k === "versions"){
+                    const keysVersions = Object.keys(res.errors.versions);
+                    keysVersions.map((kv) => {
+                        const details = Object.keys(res.errors.versions[kv]);
+                        tempError.versions[kv] = res.errors.versions[kv][details[0]];
+                    })
+                }else{
+                    tempError[k] = res.errors[k];
+                }
+            });
             props.setOpenLoad(false);
         }
+        setError(tempError);
     }
 
     function savePrix(forTypeChambre, forTarif){
@@ -200,22 +269,35 @@ const FullPriceEditor = (props) => {
                 tabIdTarif.push(tarifs[i]._id);
             }
         }
-        const data = {
-            tabIdTarif: tabIdTarif,
-            idTypeChambre: props.typechambre._id,
-            days: usedDays,
-            versions: versions,
-            minSejour: 1,
-            dateDebut: interval[0].format("YYYY-MM-DD"),
-            dateFin: interval[1].format("YYYY-MM-DD"),
-            toSell: toSell,
-            isTypeChambreOpen: isTypeChambreOpen === "open" ? true : false,
-            isTarifOpen: isTarifOpen === "open" ? true : false,
-            forTypeChambre: forTypeChambre,
-            forTarif: forTarif
-        };
-        console.log(data);
-        callAPI('post', '/TCTarif/configPrix', data, refresh);
+        const dateOublie = "Vous avez oublié de choisir une date";
+        console.log(interval[0]);
+        console.log(interval[1]);
+        let tempError = {...error};
+        if(interval[0] === null){
+            tempError.dateDebut = dateOublie;
+        }
+        if(interval[1] === null){
+            tempError.dateFin = dateOublie;
+        }
+        setError(tempError);
+        if(interval[0] !== null && interval[1] !== null){
+            const data = {
+                tabIdTarif: tabIdTarif,
+                idTypeChambre: props.typechambre._id,
+                days: usedDays,
+                versions: versions,
+                minSejour: 1,
+                dateDebut: interval[0].format("YYYY-MM-DD"),
+                dateFin: interval[1].format("YYYY-MM-DD"),
+                toSell: toSell,
+                isTypeChambreOpen: isTypeChambreOpen === "open" ? true : false,
+                isTarifOpen: isTarifOpen === "open" ? true : false,
+                forTypeChambre: forTypeChambre,
+                forTarif: forTarif
+            };
+            console.log(data);
+            callAPI('post', '/TCTarif/configPrix', data, refresh);
+        }
     }
     
     function handleDayChange(i, checked){
@@ -231,6 +313,12 @@ const FullPriceEditor = (props) => {
         let temp = JSON.parse(JSON.stringify(tarifs));
         temp[i].checked = checked;
         setTarifs(temp);
+
+        if(error.tarfi !== null){
+            let tempError = {...error};
+            tempError.tarif = null;
+            setError(tempError);
+        }
     }
 
     let inputDays = [];
@@ -299,10 +387,16 @@ const FullPriceEditor = (props) => {
             <Box sx={style}
                 className={styles.fullpopper}
             >   
-                <DatePicker interval={interval} setInterval={handleIntervalChange} minDate={minDate} />
+                <DatePicker 
+                    interval={interval} 
+                    setInterval={handleIntervalChange} 
+                    minDate={minDate}
+                    error={error}
+                    setError={setError} />
                 <br/>
                 <div>
                     {inputDays}
+                    { error.days === null ? null : <div style={{color: "#D32F2F", font: "13px Roboto,Helvetica,Arial,sans-serif"}}><span>{error.days}</span></div> }
                 </div>
                 <br/>
                 <span>{props.typechambre.nom}</span>
@@ -330,7 +424,9 @@ const FullPriceEditor = (props) => {
                     }}
                     value={toSell}
                     type="number"
-                    onChange={(e) => setToSell(Number.parseInt(e.target.value))}
+                    onChange={(e) => {removeAnError("toSell"); setToSell(Number.parseInt(e.target.value))}}
+                    error={error.toSell === null ? false : true}
+                    helperText={error.toSell === null ? null : error.toSell}
                 />
                 <br/>
                 <Stack direction="row" spacing={2}>
@@ -341,8 +437,9 @@ const FullPriceEditor = (props) => {
                 <br/>
                 <FormControl component="fieldset">
                 {/*<InputLabel variant="outlined">Rate</InputLabel>*/}
-                { rates }
                 <FormLabel component="legend">Plan tarifaire</FormLabel>
+                { error.tarif === null ? null : <div style={{color: "#D32F2F", font: "13px Roboto,Helvetica,Arial,sans-serif"}}><span>{error.tarif}</span></div> }
+                { rates }
                 <RadioGroup
                     aria-label="gender"
                     name="controlled-radio-buttons-group"
@@ -355,7 +452,8 @@ const FullPriceEditor = (props) => {
                 </RadioGroup>
                 </FormControl>
                 <br/>
-                <InputPrix guestsMax={guestsMax} prix={prix} handleChangePrix={handleChangePrix} />
+                { error.noVersion === null ? null : <div style={{color: "#D32F2F", font: "13px Roboto,Helvetica,Arial,sans-serif"}}><span>{error.noVersion}</span></div> }
+                <InputPrix guestsMax={guestsMax} prix={prix} handleChangePrix={handleChangePrix} error={error} setError={setError} />
                 
                 <Stack direction="row" spacing={2}>
                     <Button variant="contained" onClick={(e) => savePrix(false, true)}>

@@ -65,7 +65,6 @@ function Equipements(props){
 }
 
 function PlanTarifaire(props){
-     console.log(props.planTarifaire);
     let i = -1;
     let list = props.planTarifaire.map(tarif => {
         i++;
@@ -102,6 +101,16 @@ class DetailsTypeCHambre extends React.Component{
             errInsertEq: null,
             open: false,
             errors: [],
+            error: {
+                nom: null,
+                nbAdulte: null,
+                nbEnfant: null,
+                chambreTotal:null,
+                etage:null,
+                superficie:null,
+                description:null,
+                photo: null
+            },
             typeChambre: {
                 _id: '',
                 nom: '',
@@ -144,15 +153,23 @@ class DetailsTypeCHambre extends React.Component{
 
     tryRedirect(res){
         console.log(res);
+        let currentState = JSON.parse(JSON.stringify(this.state));
+        let keys = Object.keys(currentState.error);
+        keys.map((k) => {
+            currentState.error[k] = null;
+        });
         if(res.status === 200){
           this.props.history.push('/typeChambre');
         }else if(res.status === 401){//Unauthorized
             this.props.history.push('/login');
         }else{
-          let currentState = JSON.parse(JSON.stringify(this.state));
           currentState.errors = res.errors;
-          this.setState(currentState);
+          keys = Object.keys(res.errors);
+          keys.map((k) => {
+              currentState.error[k] = res.errors[k];
+          });
         }
+        this.setState(currentState);
     }
 
     setTarifs(res){
@@ -208,11 +225,13 @@ class DetailsTypeCHambre extends React.Component{
     handleInputChange(event, inputName){
         const currentState = JSON.parse(JSON.stringify(this.state));
         currentState.typeChambre[inputName] = event.target.value;
+        currentState.error[inputName] = null;
         this.setState(currentState);
     }
 
     handlePhotoChange(e){
         let currentState = JSON.parse(JSON.stringify(this.state));
+        currentState.error.photo = null;
         currentState.typeChambre.photo = [];
         currentState.previewPhoto = [];
         let finished = 0;
@@ -335,8 +354,10 @@ class DetailsTypeCHambre extends React.Component{
                       </p>
                             } 
                       style={{width:'370px'}}
-                      type="text" 
+                      type="text"
                       value={this.state.typeChambre.nom} onChange={(e) => this.handleInputChange(e, "nom")}
+                      error={this.state.error.nom === null ? false : true}
+                      helperText={this.state.error.nom === null ? null : this.state.error.nom}
                       />
                     <TextField 
                       id="outlined-basic"
@@ -350,6 +371,8 @@ class DetailsTypeCHambre extends React.Component{
                       type="number"
                       style={{width:'370px',marginLeft:'123px'}}
                       value={this.state.typeChambre.chambreTotal} onChange={(e) => this.handleInputChange(e, "chambreTotal")}
+                      error={this.state.error.chambreTotal === null ? false : true}
+                      helperText={this.state.error.chambreTotal === null ? null : this.state.error.chambreTotal}
                       />
                      </div>
 
@@ -366,6 +389,8 @@ class DetailsTypeCHambre extends React.Component{
                       type="number"
                       style={{width:'370px'}}
                       value={this.state.typeChambre.etage} onChange={(e) => this.handleInputChange(e, "etage")}
+                      error={this.state.error.etage === null ? false : true}
+                      helperText={this.state.error.etage === null ? null : this.state.error.etage}
                       />
                       <TextField 
                       id="outlined-basic"
@@ -379,36 +404,39 @@ class DetailsTypeCHambre extends React.Component{
                       type="number" 
                       style={{width:'370px',marginLeft:'123px'}}
                       value={this.state.typeChambre.superficie} onChange={(e) =>this.handleInputChange(e, "superficie")}
+                      error={this.state.error.superficie === null ? false : true}
+                      helperText={this.state.error.superficie === null ? null : this.state.error.superficie}
                       />
                     </div>
                                 
-                                {
-                                    //console.log('yes')
-                                }
-                                <div style={{marginTop:'15px'}}>
-                                    <div className="row">
-                                        <Preview preview={this.state.previewPhoto} />
-                                    </div>
-                                    <div className="row">
-                                        <FileInput 
-                                            style={{marginTop: '5px'}}
-                                            value=""
-                                            handlePhotoChange={this.handlePhotoChange} />
-                                    </div>
-                                </div>
-
-                                <div style={{marginTop:'15px'}}>
-                                    <div className="row">
-                                    <div style={{marginTop:'10px'}}>
-                                        <label className="form-label mt-4" style={{textDecoration:'underline'}} id='bigLabel'> Videos  </label>
-                                    </div>
-                                    </div>
-                                    <div className="row">
-                                        <Videos state={this.state} setState={this.setState} context={this} />
-                                    </div>
-                                </div>
-
+                        {
+                            //console.log('yes')
+                        }
+                        <div style={{marginTop:'15px'}}>
+                            <div className="row">
+                                <Preview preview={this.state.previewPhoto} />
                             </div>
+                            <div className="row">
+                                <FileInput 
+                                    style={{marginTop: '5px'}}
+                                    value=""
+                                    handlePhotoChange={this.handlePhotoChange} />
+                            </div>
+                            {this.state.error.photo === null ? null : <div style={{color: "#D32F2F", font: "13px Roboto,Helvetica,Arial,sans-serif"}}><span>{this.state.error.photo}</span></div>}
+                        </div>
+
+                        <div style={{marginTop:'15px'}}>
+                            <div className="row">
+                            <div style={{marginTop:'10px'}}>
+                                <label className="form-label mt-4" style={{textDecoration:'underline'}} id='bigLabel'> Videos  </label>
+                            </div>
+                            </div>
+                            <div className="row">
+                                <Videos state={this.state} setState={this.setState} context={this} />
+                            </div>
+                        </div>
+
+                    </div>
 
                             <div style={{marginTop:'10px'}}>
                                 <label className="form-label mt-4" style={{textDecoration:'underline'}} id='bigLabel'>Occupation  </label>
@@ -422,7 +450,10 @@ class DetailsTypeCHambre extends React.Component{
                                 type="number" 
                                 style={{width:'370px'}}
                                 value={this.state.typeChambre.nbAdulte} 
-                                onChange={(e) => this.handleInputChange(e, "nbAdulte")}/>
+                                onChange={(e) => this.handleInputChange(e, "nbAdulte")}
+                                error={this.state.error.nbAdulte === null ? false : true}
+                                helperText={this.state.error.nbAdulte === null ? null : this.state.error.nbAdulte} />
+                                
                                 <TextField 
                                 id="outlined-basic"
                                 variant="outlined"
@@ -430,7 +461,10 @@ class DetailsTypeCHambre extends React.Component{
                                 label="Enfant" 
                                 type="number" 
                                 style={{width:'370px',marginLeft:'123px' }}
-                                    value={this.state.typeChambre.nbEnfant} onChange={(e) => this.handleInputChange(e, "nbEnfant")}/>
+                                    value={this.state.typeChambre.nbEnfant} onChange={(e) => this.handleInputChange(e, "nbEnfant")}
+                                error={this.state.error.nbEnfant === null ? false : true}
+                                helperText={this.state.error.nbEnfant === null ? null : this.state.error.nbEnfant}    
+                                />
                             </div>
                             <div style={{marginTop:'15px'}}>
                                 <div style={{}}>
@@ -447,6 +481,8 @@ class DetailsTypeCHambre extends React.Component{
                                     rowsMax={4}
                                     style={{width:'100%',height:'50px',marginTop:'5px'}}
                                     value={this.state.typeChambre.description} onChange={(e) => this.handleInputChange(e, "description")}
+                                    error={this.state.error.description === null ? false : true}
+                                    textHelper={this.state.error.description === null ? null : this.state.error.description}
                                 />
                             </div>
 

@@ -65,6 +65,7 @@ class Scroll extends React.Component{
             openLoad: false
         };
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
+        this.setResult = this.setResult.bind(this);
     }
     
     handleChange(fieldName, value){
@@ -84,10 +85,11 @@ class Scroll extends React.Component{
     }
 
     setResult(res){
-        console.log(res);
+        console.log("here");
         let temp = {...this.state};
         temp.listTypeChambre = res.list;
         this.setState(temp);
+        console.log(res);
     }
 
     componentDidMount(){
@@ -101,7 +103,6 @@ class Scroll extends React.Component{
             value = "0" + value;
         }
         return value;
-
     }
    
     getDateAndConvert(dateDebut , dateFin){
@@ -183,7 +184,6 @@ class Scroll extends React.Component{
     validerReservation(){
         callAPI('post', '/reservation/apply', {_id: this.state.reservationEnCours._id}, this.setReservationEnCours);
     }
-
     incrementReservation(){
         console.log('STATE ITANY-------------');
         console.log(this.state);
