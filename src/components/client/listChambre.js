@@ -132,8 +132,8 @@ function ListTarif(props){
                                             {/*<ListServiceTarif services={tarif.services} />*/}
                                         </div>
 
-                                        <div class="col"> 
-                                            <strong style={{fontSize:'20px'}}>&nbsp;{tarif.prix + " "}
+                                        <div class="col">
+                                            <strong style={{fontSize:'20px'}}>&nbsp;{tarif.minPrix.beforeProm + " "}
                                             </strong><span style={{fontSize:'14px'}}>Per Night</span><br/>
                                             <span style={{fontSize:'10px'}} >including Taxes & Fees</span>
                                         </div>
