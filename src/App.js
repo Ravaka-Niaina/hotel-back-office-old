@@ -112,7 +112,7 @@ import CalendarComponent from './tarif/CalendarComponent';
 import Paiement from "./paiement";
 
 import InsertChambre from './partenaire/chambre/InsertChambre.js';
-import  AppClient  from "./components/client/scroll";
+import  AppClient  from "./components/Book/dependencies/scroll";
 import  test  from "./components/client/Cookies";
 
 

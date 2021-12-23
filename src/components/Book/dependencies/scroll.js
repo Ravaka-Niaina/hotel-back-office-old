@@ -2,14 +2,12 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DChambre from './listChambre'
-import Fact from './fact'
-import { instanceOf } from 'prop-types';
-import { withCookies, Cookies } from 'react-cookie';
+import Fact from '../../client/fact'
 import { useCookies } from 'react-cookie';
-import callAPI from '../../utility';
+import callAPI from '../../../utility';
 import './Css.css'
 import moment from 'moment';
-import NavBarClient from '../Book/BookComponent.js';
+import NavBarClient from '../BookComponent.js';
 
 import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
@@ -18,9 +16,9 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import Promotions from "./promotion";
-import DateSejour from "./DateSejour";
-import BaeCalendar from "../../calendar/calendar.js";
+import Promotions from "../../client/promotion";
+
+import styles from '../Book.module.css';
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -204,10 +202,8 @@ class Scroll extends React.Component{
                                     <Promotions />
                                 </Item>
                             </Grid>
-                            <Grid item xs={6}>
-                                <Item>
-                                    <DChambre context = {this} />
-                                </Item>
+                            <Grid className={styles.tarifChambre} item xs={6}>
+                                <DChambre context = {this} />
                             </Grid>
                             <Grid item xs={3}>
                                 <Item>

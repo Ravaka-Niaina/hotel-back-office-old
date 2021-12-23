@@ -2,15 +2,19 @@ import React, {useEffect , useState} from 'react'
 import GETaPI from "../../APiGet.js";
 
 function Promotions(props){
-    let promo = props.context.map(prom => {
-        return(
-            <div>
-                <li>  <strong>nom :</strong> {prom.nom}</li>
-                <li><strong>Remise : </strong> {prom.remiseEuro}</li>
-                <li style={{fontSize : "12px"}}> <strong>Sejour : </strong> {prom.dateDebutS} - {prom.dateFinS}</li>
-            </div>
-        )
-    })
+    let promo = "Aucun promotion pour le moment";
+    if(props.context != null && props.context != null){
+        promo = props.context.map(prom => {
+            return(
+                <div>
+                    <li>  <strong>nom :</strong> {prom.nom}</li>
+                    <li><strong>Remise : </strong> {prom.remiseEuro}</li>
+                    <li style={{fontSize : "12px"}}> <strong>Sejour : </strong> {prom.dateDebutS} - {prom.dateFinS}</li>
+                </div>
+            )
+        })
+    }
+    
     return  promo   
 }
 
