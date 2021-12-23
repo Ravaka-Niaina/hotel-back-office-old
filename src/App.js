@@ -112,7 +112,7 @@ import CalendarComponent from './tarif/CalendarComponent';
 import Paiement from "./paiement";
 
 import InsertChambre from './partenaire/chambre/InsertChambre.js';
-import  AppClient  from "./components/client/scroll";
+import  AppClient  from "./components/Book/dependencies/scroll";
 import  test  from "./components/client/Cookies";
 
 
@@ -133,6 +133,7 @@ import Calendrier from "./partenaire/Calendrier/Calendrier";
 import  Devis  from "./front_client/devis";
 import  guest  from "./partenaire/guest.js";
 import  hideShow  from "./hideShow.js";
+import  DetailsPromotion  from "./promotion/DetailsPromotion";
 
 
 import DropDown from './pagination/pagination.js';
@@ -234,6 +235,7 @@ function App(){
 
         <Route path="/promotion" exact component={PromotionList} />
         <Route path="/promotion/create" exact component={InsertPromotion} />
+        <Route path="/promotion/detail/:_id" exact component={DetailsPromotion} />
         <Route path="/" exact component={home} />
 
         <Route path="/client" exact component={AppClient} />

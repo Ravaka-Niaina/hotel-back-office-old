@@ -22,7 +22,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import CallAPI from "../utility.js";
-import ModalLTChambre from "./ModalLTChambre.js";
 import  Navbar  from "../Navbar/Navbar";
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
@@ -326,7 +325,6 @@ export default function EnhancedTable() {
       
       <br/><br/>
       <Paper sx={{ width: '100%', mb: 2 }}>
-      <ModalLTChambre open={open} id = {indiceU} setO = {closeModal}/>
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}

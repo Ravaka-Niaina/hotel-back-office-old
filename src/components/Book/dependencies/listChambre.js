@@ -2,12 +2,19 @@
 import React from 'react';
 import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Link} from 'react-router-dom'
-import { NorthWest } from '@mui/icons-material';
-import TextField from '@mui/material/TextField';
-import callAPI from '../../utility';
-import { ReactComponent as airConditioner } from '../../public/air-conditioner-svgrepo-com.svg';
-import Filtre from './Filtre.js';
+import styles from '../Book.module.css';
+import Filtre from '../../client/Filtre.js';
+import {PersonOutline, LiveTv, Wifi, AcUnit, Iron, HotTub} from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
+import {Button, Paper} from '@mui/material';
+import { styled } from '@mui/material/styles';
+
+const Item = styled(Paper)(({ theme }) => ({
+    ...theme.typography.body2,
+    padding: theme.spacing(1),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  }));
 
 function ListConditionAnnulation(props){
     let services = props.politiqueAnnulAtrb.map(condition =>{
@@ -109,47 +116,46 @@ function ListTarif(props){
     }
     let tarifs = props.tarifs.map(tarif => {
              return (
-                    <div>
-                        <div class="row">
-                            <div class="col" style={{marginTop:'-10px'}} >
-                                <ul style ={{marginLeft : "10%"}}>
-                                    <li style={ {  listStyle : 'none' , width : '500px',
-                                                    padding :"1px" ,border : '5px solid gainsboro'} }>
-                                        <div className="row mb-4" style={{margin:"10px"}}>
-                                        <div class="col"> 
-                                            <strong style={{fontSize:'13px'}}>
-                                                <u>{tarif.nom}</u>
-                                            </strong><br/>
+                    <div className={styles.listTarif}>
+                        <ul>
+                            <li>
+                                <div className="row">
+                                <div class="col"> 
+                                    <strong>
+                                        <u>{tarif.nom}</u>
+                                    </strong><br/>
 
-                                            {tarif.conditionsAnnulation !== "" 
-                                                ?   <span style={{fontSize:'12px' , color : 'green'}}>
-                                                        <i class="fa fa-check" aria-hidden="true">
-                                                            &nbsp;&nbsp;{tarif.conditionsAnnulation} 
-                                                        </i>
-                                                    </span> : ""
-                                            } <br/>
+                                    {tarif.conditionsAnnulation !== "" 
+                                        ?   <span>
+                                                <i class="fa fa-check" aria-hidden="true">
+                                                    {/* &nbsp;&nbsp;{tarif.conditionsAnnulation}  */}
+                                                </i>
+                                                &nbsp;&nbsp;Refundable rates
+                                            </span> : ""
+                                    } <br/>
 
-                                            {/*<ListServiceTarif services={tarif.services} />*/}
-                                        </div>
-
-                                        <div class="col"> 
-                                            <strong style={{fontSize:'20px'}}>&nbsp;{tarif.prix + " "}
-                                            </strong><span style={{fontSize:'14px'}}>Per Night</span><br/>
-                                            <span style={{fontSize:'10px'}} >including Taxes & Fees</span>
-                                        </div>
-                                        <div class="col"> 
-                                            <button className="btn btn-primary btn-sm" 
-                                                style={{marginTop:'7px' , marginLeft:'10px'}} 
-                                                onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre)}>+
-                                            </button>
-                                        </div>
-                                        </div>
-                                    </li><br/>
-                                </ul> 
-                            </div>
-                        <div class="col"></div> 
-                    </div>
-                </div> 
+                                    {/*<ListServiceTarif services={tarif.services} />*/}
+                                </div>
+                                <div class="col"> 
+                                    <span>&nbsp;{"150 EUR "}</span>
+                                    <span>&nbsp;{"130 EUR "}</span>
+                                </div>
+                                <div class="col">
+                                    <span>Per Night</span>
+                                    <span>including Taxes & Fees</span>
+                                </div>
+                                <div class="col"> 
+                                    <Button variant="contained"
+                                        onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre)}
+                                        endIcon={<AddIcon/>}
+                                    >
+                                    Book
+                                    </Button>
+                                </div>
+                                </div>
+                            </li><br/>
+                        </ul>
+                     </div> 
         ) ;
     });
     return tarifs;
@@ -195,39 +201,47 @@ class DChambre extends React.Component{
     render(){
         let listChambre = this.props.context.state.listTypeChambre.map(typeChambre => { 
             return (
-            <div className="DChambre1">
-                <div class="Chambre1">
+            <Item>
+            <div className={styles.listChambre}>
+                <div>
                 <div class="row mb-4">
-                    <div className="col">
-                        <img style={{width:'300px', height: '150px'}} src={ process.env.REACT_APP_BACK_URL + "/" + typeChambre.photo[0]} />
+                    <div class="col">
+                        <div style={{ backgroundImage: 'url(' + process.env.REACT_APP_BACK_URL + "/" + typeChambre.photo[0].replace("\\","/") + ")" }}></div>
                     </div>
                     <div class="col">
-                      <span style={{fontSize:'30px'}}> {typeChambre.nom} </span><br/>
-                        <span style={{fontSize:'12px'}}>Sleeps 4 | 1 Double | 90 to 102m²</span><br/>
-                        <span style={{fontSize:'12px'}}>Capacité max : 
+                        <span>{typeChambre.nom}</span><br/>
+                        <span><PersonOutline/> max : 
                             {typeChambre.nbAdulte} Adultes +
-                            {typeChambre.nbEnfant} enfants de moins de 12 ans.
-                        </span><br/> <br/>
-                    <Link  to ="/detail">   
-                        <li style={ {marginLeft : 10 , listStyle : 'none' , color : 'blue'} }>
-                            <u>Detail de la Chambre</u>
-                        </li>
-                    </Link>
-                    
+                            {typeChambre.nbEnfant} enfants
+                        </span>
+                        <span>{typeChambre.description.substring(0,85) + "..."}</span>
+                        <div className={styles.equipements}>
+                            <div>
+                                <LiveTv/>
+                            </div>
+                            <div>
+                                <Wifi/>
+                            </div>
+                            <div>
+                                <AcUnit/>
+                            </div>
+                            <div>
+                                <HotTub/>
+                            </div>
+                            <div>
+                                <Iron/>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col"></div>
                 </div>
                 <div class="row">
-                    <div className="equipement" style ={{diplay : "flex"}}>
-                            <Equipements equipements={typeChambre.equipements}/>
-                    </div>
                     <div class="col">
                         <ListTarif context={this.props.context} tarifs={typeChambre.tarifs} idTypeChambre={typeChambre._id} />
                     </div>
-                    <div class="col"></div>
                 </div>  
             </div>      
         </div>
+        </Item>
             )
         }); 
         if(this.props.context.state.guests.nbEnfant == 0 

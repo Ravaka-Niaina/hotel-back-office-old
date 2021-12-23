@@ -112,9 +112,9 @@ export function Preview(props){
     return list;
   }
 
-export const FileInput = ({value, handlePhotoChange, text, accepts}) => {
+export const FileInput = ({value, handlePhotoChange, text, accepts, error}) => {
     if(!text){
-        text = <p id='bigLabel'>Cliquez pour choisir une photo...</p>;
+        text =<p id='bigLabel'>Cliquez pour choisir une photo...</p>;
     }
     if(!accepts){
         accepts = "image/*"
@@ -163,7 +163,7 @@ export function handlePhotoChange(context, event){
 
 export function Font(props){
     console.log(props.font);
-    /*return props.font.startsWith("https://") ?
+    return props.font.startsWith("https://") ?
         <img src={props.font} style={{maxWidth:'20px', maxHeight: '200px', width: 'auto', height: 'auto', padding: '0 0'}}/>
-        : <i class={props.font}></i>*/
+        : <i class={props.font}></i>
 }

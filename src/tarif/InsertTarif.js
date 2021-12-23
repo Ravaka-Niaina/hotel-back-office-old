@@ -28,13 +28,26 @@ const utility = require('./utility.js');
 
 function InsertTarif(){
     const [errors, setErrors] = useState([]);
-    const [isLeadHour, setIsLeadHour] = useState(true);
-    const [lead, setLead] = useState("");
+    const [error, setError] = useState({
+        nom: null,
+        description: null,
+        dateReservationDebut: null,
+        dateReservationFin: null,
+        dateSejourDebut: null, 
+        dateSejourFin: null,
+        leadMin: null, 
+        leadMax: null,
+        chambresAtrb: null,
+        politiqueAnnulAtrb: null
+    });
     const [planTarifaire, setPlanTarifaire] = useState({
         nom: '',
         description: '',
+        isDateReservAuto: false,
         dateReservation: {debut: '', fin: ''},
         dateSejour: {debut: '', fin: ''},
+        isLeadHour: true,
+        lead: {min: '', max: ''},
         chambresAtrb: [],
         politiqueAnnulAtrb: [
 
@@ -56,17 +69,36 @@ function InsertTarif(){
       }, []);
 
     function tryRedirect(res){
+        let temp = {...error};
+        temp = {
+            nom: null,
+            description: null,
+            dateReservationDebut: null,
+            dateReservationFin: null,
+            dateSejourDebut: null, 
+            dateSejourFin: null,
+            leadMin: null, 
+            leadMax: null
+        };
         console.log(res);
         if(res.status === 200){
             history.push('/tarif');
         }else{
-            setErrors(res.errors);
+            let keys = Object.keys(res.errors);
+            if(keys.length === 0){
+                history.push('/tarif');
+            }
+            keys.map((k) => {
+                temp[k] = res.errors[k];
+            });
         }
+        setError(temp);
     }
 
     function insert(e){
         e.preventDefault();
-        const current = utility.getPlan(planTarifaire, isLeadHour, lead);
+        const current = utility.getPlan(planTarifaire);
+        console.log(current);
         callAPI('post', '/planTarifaire/insert', current, tryRedirect);
     }
 
@@ -87,13 +119,11 @@ function InsertTarif(){
                                             style={{width: '300px'}}
                                             type="text"
                                             size='small'
-                                            label={
-                                            <p id='libel'>
-                                                Nom
-                                            </p>
-                                                 }
+                                            label="Nom"
                                             value={planTarifaire.nom}
-                                            onChange={(e) => utility.handleInputChange1(planTarifaire, setPlanTarifaire, e, "nom")}
+                                            onChange={(e) => utility.handleInputChange1(planTarifaire, setPlanTarifaire, error, setError, e, "nom")}
+                                            error={error.nom === null ? false : true}
+                                            helperText={error.nom === null ? null : error.nom}
                                         />
                                     </div>
                                     <div style={{marginTop:'20px'}}>
@@ -105,11 +135,7 @@ function InsertTarif(){
                                             multiline
                                             rows={2}
                                             rowsMax={4}
-                                            label={
-                                                <p id='libel'>
-                                                    Déscription
-                                                </p>
-                                                     }
+                                            label="Déscription"
                                             style={{
                                             width:'100%',
                                             height:'50px',
@@ -117,63 +143,82 @@ function InsertTarif(){
                                                   }}
                                             type="text"
                                             value={planTarifaire.description}
-                                            onChange={(e) => utility.handleInputChange1(planTarifaire, setPlanTarifaire, e, "description")}
+                                            onChange={(e) => utility.handleInputChange1(planTarifaire, setPlanTarifaire, error, setError, e, "description")}
+                                            error={error.description === null ? false : true}
+                                            helperText={error.description === null ? null : error.description}
                                         />
                                     </div>
-                                    <div style={{marginTop:'40px'}}>
+                                    <div style={{marginTop:'60px'}}>
                                         <div>
                                             <label className="" style={{textDecoration: 'underline'}} id='bigLabel'>Date de réservation </label> 
                                         </div>
-                                            <div className="row" style={{marginTop:'10px'}}>
+                                            <div className="row" style={{marginTop:'20px'}}>
+                                                <utility.DateReservAuto planTarifaire={planTarifaire} setPlanTarifaire={setPlanTarifaire} />
                                                 <div className="col">
-                                                    <label style={{marginRight: '10px'}} id='litleLabel'>Début :</label>
-
-                                                    <input
+                                                    <TextField
+                                                    label="Début"
                                                     type='date'
-                                                    id='dateD1'
+                                                    InputLabelProps={{
+                                                        shrink: true,
+                                                        }}
+                                                    size='small'
                                                     value={planTarifaire.dateReservation.debut}
-                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "dateReservation", "debut")}
-    
+                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "dateReservation", "debut")}
+                                                    error={error.dateReservationDebut === null ? false : true}
+                                                    helperText={error.dateReservationDebut === null ? null : error.dateReservationDebut}
                                                     /> 
 
                                                 </div>
                                                 <div className="col">
-                                                    <label style={{marginRight: '10px'}} id='litleLabel'>Fin :</label> 
-
-                                                    <input
+                                                    <TextField
+                                                    label="Fin"
                                                     type='date'
-                                                    id='dateF1'
+                                                    InputLabelProps={{
+                                                        shrink: true,
+                                                        }}
+                                                    size='small'
                                                     value={planTarifaire.dateReservation.fin}
-                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "dateReservation", "fin")}
+                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "dateReservation", "fin")}
+                                                    error={error.dateReservationFin === null ? false : true}
+                                                    helperText={error.dateReservationFin === null ? null : error.dateReservationFin}
                                                     /> 
 
                                                 </div>
                                             </div>
                                     </div>
-                                    <div style={{marginTop:'0px'}}>
+                                    <div style={{marginTop:'10px'}}>
                                         <div>
                                             <label className="" style={{textDecoration: 'underline',marginLeft:'0px'}} id='bigLabel'>Date de séjour </label> 
                                         </div>
-                                        <div className="row" style={{marginTop:'10px'}}>
+                                        <div className="row" style={{marginTop:'15px'}}>
                                             <div className="col">
-                                                <label style={{marginRight: '10px'}} id='litleLabel'>Début :</label> 
-
-                                                    <input
+                                                    <TextField
+                                                    label="Début"
                                                     type='date'
-                                                    id='dateD2'
+                                                    InputLabelProps={{
+                                                        shrink: true,
+                                                        }}
+                                                    size='small'
                                                     value={planTarifaire.dateSejour.debut}
-                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "dateSejour", "debut")}
+                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "dateSejour", "debut")}
+                                                    error={error.dateSejourDebut === null ? false : true}
+                                                    helperText={error.dateSejourDebut === null ? null : error.dateSejourDebut}
                                                     /> 
 
                                             </div>
                                             <div className="col">
-                                                <label style={{marginRight: '10px'}} id='litleLabel'>Fin :</label>
-
-                                                    <input
+                                                    <TextField
+                                                    label="Fin"
                                                     type='date'
-                                                    id='dateF2'
+                                                    InputLabelProps={{
+                                                        shrink: true,
+                                                        }}
+                                                    size='small'
                                                     value={planTarifaire.dateSejour.fin}
-                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, e, "dateSejour", "fin")}
+                                                    onChange={(e) => { 
+                                                        utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "dateSejour", "fin", true)}}
+                                                    error={error.dateSejourFin === null ? false : true}
+                                                    helperText={error.dateSejourFin === null ? null : error.dateSejourFin}
                                                     /> 
                                             </div>
                                         </div>
@@ -181,7 +226,7 @@ function InsertTarif(){
                                     <div style={{marginTop:'0px'}}>
                                         <div>
                                             <label className="" style={{textDecoration: 'underline',fontFamily:'Roboto',fontSize:'15px',marginLeft:'0px'}} >
-                                                Lead { isLeadHour ? "hour" : "day"} 
+                                                Lead { planTarifaire.isLeadHour ? "hour" : "day"} 
                                             </label>
                                         </div>
                                         <RadioGroup
@@ -189,21 +234,37 @@ function InsertTarif(){
                                             defaultValue="hour"
                                             name="radio-buttons-group"
                                         >
-                                            <div className ="row">
+                                            <div className ="row" style={{marginTop:'15px'}}>
                                                 <div className ="col">
-                                                    <input
-                                                    type='text'
+                                                    <TextField
+                                                    label="Max"
+                                                    type='number'
                                                     id='lead'
-                                                    value={lead}
+                                                    size='small'
+                                                    value={planTarifaire.lead.max}
                                                     placeholder='Hour/Date'
-                                                    onChange={(e) => setLead(e.target.value)}
+                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "lead", "max")}
+                                                    error={error.leadMax === null ? false : true}
+                                                    helperText={error.leadMax === null ? null : error.leadMax}
                                                     /> 
-
+                                                </div>
+                                                <div className ="col">
+                                                    <TextField
+                                                    label="Min"
+                                                    type='number'
+                                                    id='lead'
+                                                    size='small'
+                                                    value={planTarifaire.lead.min}
+                                                    placeholder='Hour/Date'
+                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "lead", "min")}
+                                                    error={error.leadMin === null ? false : true}
+                                                    helperText={error.leadMin === null ? null : error.leadMin}
+                                                    /> 
                                                 </div>
                                                 <div className ="col">
                                                     <FormControlLabel 
                                                     value="hour" 
-                                                    onClick={(e) => setIsLeadHour(true)} 
+                                                    onClick={(e) => utility.handleIsLeadHourChange(planTarifaire, setPlanTarifaire, true)} 
                                                     control={<Radio />} 
                                                     label={
                                                     <span id='litleLabel'>
@@ -213,7 +274,7 @@ function InsertTarif(){
                                                 <div className ="col">
                                                     <FormControlLabel  
                                                     value="day" 
-                                                    onClick={(e) => setIsLeadHour(false)} 
+                                                    onClick={(e) => utility.handleIsLeadHourChange(planTarifaire, setPlanTarifaire, false)} 
                                                     control={<Radio />} 
                                                     label={
                                                         <span id='litleLabel'>
@@ -223,7 +284,7 @@ function InsertTarif(){
                                             </div>
                                         </RadioGroup>
                                     </div>
-                                    <div style={{marginTop:'0px'}}>
+                                    <div style={{marginTop:'20px'}}>
                                         <div>
                                             <label className="" style={{textDecoration: 'underline'}} id='bigLabel'>Chambres attribuées </label> 
                                         </div>
@@ -233,6 +294,7 @@ function InsertTarif(){
                                                 planTarifaire={planTarifaire}
                                                 setPlanTarifaire={setPlanTarifaire}
                                                 handleCheckBoxChange={utility.handleCheckBoxChange} />
+                                            {error.chambresAtrb === null ? null : <div className="customError"><span>{error.chambresAtrb}</span></div>}
                                         </div>
                                     </div>
                                     <div style={{marginTop:'20px'}}>
@@ -244,6 +306,7 @@ function InsertTarif(){
                                             planTarifaire={planTarifaire}
                                             setPlanTarifaire={setPlanTarifaire}
                                             handleCheckBoxChange={utility.handleCheckBoxChange} />
+                                        {error.PolitiqueAnnulAtrb === null ? null : <div className="customError"><span>{error.PolitiqueAnnulAtrb}</span></div>}
                                     </div>
                                 </Box>
 
