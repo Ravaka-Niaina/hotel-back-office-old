@@ -41,8 +41,8 @@ function Global(){
                 let err = Object.keys(res.errors);
                 let duplic = JSON.parse(JSON.stringify(state));
                 for(let indice = 0 ; indice<err.length ; indice++){
-                duplic[err[indice]] = res.errors[err[indice]];
-            }
+                    duplic[err[indice]] = res.errors[err[indice]];
+                }
             setState(duplic);
             console.log(duplic);
         }

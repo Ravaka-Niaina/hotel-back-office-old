@@ -147,6 +147,8 @@ import Cookies from 'universal-cookie';
 import  ListTChambre  from "./dataTable/datatable.js";
 import  BookComponent from "./components/Book/BookComponent.js";
 
+import  Historique from "./historique/header.js";
+
 
 /*
 function  Boucleroute(props){
@@ -255,6 +257,7 @@ function App(){
         <Route path="/politique/list" exact component={ListPolitique} />
         <Route path="/politique/testData" exact component={testData} />
 
+
         <Route path="/calendrier" exact component={Calendrier} />
     
         <Route path="/cookie" exact component={test} />
@@ -273,6 +276,8 @@ function App(){
 
         <Route path="/CalendarClient" exact component={BasicDateRangePicker} />
         <Route path="/book" exact component={BookComponent} />
+
+        <Route path="/historique" exact component={Historique} />
       </Router>
     </div>
   );
