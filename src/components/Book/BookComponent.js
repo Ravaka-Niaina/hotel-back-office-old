@@ -5,6 +5,7 @@ import {Button, TextField, Box, InputAdornment, ToggleButtonGroup, ToggleButton,
 import {EventNote, ExpandMore, ManageSearch, Search, ArrowDropDown, PersonOutline} from '@mui/icons-material';
 import FiltreAdulteEnfant from '../client/FiltreAdulteEnfant';
 import BaeCalendar from "../../calendar/calendar.js";
+import Guest from "./guest.js";
 
 const BookComponent = (props) => {
   const [groupby, setGroupBy] = React.useState('a');
@@ -111,13 +112,8 @@ const BookComponent = (props) => {
           <ToggleButton size="small" value="a">Type chambre</ToggleButton>
           <ToggleButton size="small" value="b">Plan tarifaires</ToggleButton>
         </ToggleButtonGroup>
-        {props.context.state.openCalendar ? 
-            <div style ={{ width :"fit-content" , margin :"0 auto", marginLeft: "-225px", marginTop: "500px", zIndex: "5", position: "absolute", backgroundColor: "white", padding: "10px 10px", borderRadius: "5px"}}>
-                <div style={{backgroundColor: "white"}}>
-                    <BaeCalendar context = {props.context} />
-                </div>
-            </div > : null }
-        { props.context.state.openChangeNbGuest ? <FiltreAdulteEnfant context={props.context} /> : null }
+        <BaeCalendar context = {props.context} changeOpenCalendar={changeOpenCalendar} />
+        <Guest />
     </Box>
   </div>
 )};

@@ -4,8 +4,8 @@ import React , {useState} from "react";
 function Guest (){
     const [state , setState]= useState(
         {
-            nbAdulte : 1,
-            nbEnfant : 0
+          nbAdulte : 1,
+          nbEnfant : 0
         }
     )
     return (
