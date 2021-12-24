@@ -199,7 +199,6 @@ class DChambre extends React.Component{
     }
 
     render(){
-        console.log(this.props.context.state.listTypeChambre);
         let listChambre = this.props.context.state.listTypeChambre.map(typeChambre => { 
             return (
             <Item>

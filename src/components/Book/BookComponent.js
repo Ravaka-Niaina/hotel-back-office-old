@@ -113,7 +113,7 @@ const BookComponent = (props) => {
           <ToggleButton size="small" value="b">Plan tarifaires</ToggleButton>
         </ToggleButtonGroup>
         <BaeCalendar context = {props.context} changeOpenCalendar={changeOpenCalendar} />
-        <Guest />
+        <Guest context = {props.context} changeOpenChangeNbGuest={changeOpenChangeNbGuest} />
     </Box>
   </div>
 )};
