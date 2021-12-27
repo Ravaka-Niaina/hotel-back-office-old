@@ -6,6 +6,7 @@ import {EventNote, ExpandMore, ManageSearch, Search, ArrowDropDown, PersonOutlin
 import FiltreAdulteEnfant from '../client/FiltreAdulteEnfant';
 import BaeCalendar from "../../calendar/calendar.js";
 import Guest from "./guest.js";
+import callAPI from '../../utility';
 
 const BookComponent = (props) => {
   const [groupby, setGroupBy] = React.useState('a');
@@ -27,10 +28,27 @@ const BookComponent = (props) => {
         props.context.setState(temp);
     }
 
-    function changeOpenFiltre(){
-        let temp = {...props.context.state};
-        temp.showFiltre = !temp.showFiltre;
-        props.context.setState(temp);
+    function setResult(res){
+        let currentState = {...props.context.state};
+        currentState.listTypeChambre = res.list;
+        props.context.setState(currentState);
+    }
+
+    function applyFilter(){
+        if((props.context.state.guests.nbEnfant !== 0 || props.context.state.guests.nbAdulte !== 0)
+            && (props.context.state.dateSejour.debut !== "" && props.context.state.dateSejour.fin !== "")){
+                props.context.handleChange("errFiltre", null);
+                const data = {
+                    filtres: props.context.state.filtres, 
+                    guests: props.context.state.guests, 
+                    dateDebut: props.context.state.dateSejour.debut,
+                    dateFin: props.context.state.dateSejour.fin
+                }
+                console.log(data);
+                callAPI('post', '/TCTarif/', data, setResult);
+        }else{
+            this.props.context.handleChange("errFiltre", 'Veuillez remplir les champs Adulte, Enfant, Debut sejour et fin sejour au moins');
+        }
     }
 
   return(
@@ -86,13 +104,13 @@ const BookComponent = (props) => {
               }}
               onClick={(e) => changeOpenChangeNbGuest()}
           />
-          <Button variant="outlined" startIcon={<Search />}>
+          <Button variant="outlined" startIcon={<Search />} onClick={(e) => applyFilter()}>
               Search
           </Button>
       </Box>
     </Box>
     <Box sx={{ display: { xs: 'none', md: 'flex'}}} className={styles.resultsFilter}>
-        <Button variant="outlined" startIcon={<ManageSearch />} onClick={(e) => changeOpenFiltre()}>
+        <Button variant="outlined" startIcon={<ManageSearch />} onClick={(e) => props.context.changeOpenFiltre()}>
             Filter
         </Button>
         <Typography
@@ -112,9 +130,9 @@ const BookComponent = (props) => {
           <ToggleButton size="small" value="a">Type chambre</ToggleButton>
           <ToggleButton size="small" value="b">Plan tarifaires</ToggleButton>
         </ToggleButtonGroup>
-        <BaeCalendar context = {props.context} changeOpenCalendar={changeOpenCalendar} />
-        <Guest context = {props.context} changeOpenChangeNbGuest={changeOpenChangeNbGuest} />
     </Box>
+    <BaeCalendar context = {props.context} changeOpenCalendar={changeOpenCalendar} />
+    <Guest context = {props.context} changeOpenChangeNbGuest={changeOpenChangeNbGuest} />
   </div>
 )};
 

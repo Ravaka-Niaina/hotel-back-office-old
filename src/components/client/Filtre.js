@@ -18,7 +18,7 @@ import PersonIcon from '@mui/icons-material/Person';
 
 import callAPI from '../../utility';
 
-import './filtre.css';
+import styles from './filtre.css';
 
 import Typography from '@mui/material/Typography';
 import Popper from '@mui/material/Popper';
@@ -214,34 +214,6 @@ class Filtre extends React.Component{
             nbAdulte:this.props.context.state.guests.nbAdulte,
             nbEnfant:this.props.context.state.guests.nbEnfant
         };
-        this.setResult = this.setResult.bind(this);
-    }
-
-    setResult(res){
-        let currentState = JSON.parse(JSON.stringify(this.props.context.state));
-        currentState.listTypeChambre = res.list;
-        this.props.context.setState(currentState);
-    }
-    applyFilter(){
-        console.log({filtres: this.state.filtres, guests: this.props.context.state.guests});
-        
-        if((this.props.context.state.guests.nbEnfant !== 0 || this.props.context.state.guests.nbAdulte !== 0)
-            && (this.props.context.state.dateSejour.debut !== "" && this.props.context.state.dateSejour.fin !== "")){
-                this.props.context.handleChange("errFiltre", null);
-                console.log('filtre en cours...');
-                console.log(this.state.filtres);
-                console.log(this.props.context.state.guests);
-                const data = {
-                    filtres: this.state.filtres, 
-                    guests: this.props.context.state.guests, 
-                    dateDebut: this.props.context.state.dateSejour.debut,
-                    dateFin: this.props.context.state.dateSejour.fin
-                }
-                console.log(data);
-                callAPI('post', '/TCTarif/', data, this.setResult);
-        }else{
-            this.props.context.handleChange("errFiltre", 'Veuillez remplir les champs Adulte, Enfant, Debut sejour et fin sejour au moins');
-        }
     }
 
     handleFiltreChange(event){
@@ -331,11 +303,11 @@ class Filtre extends React.Component{
                 <div className="form-content" style = {{marginTop : "20px", backgroundColor: "white", width: "700px"}}>
                     <form>
                         <FormGroup>
+                        <div><Button style={{width: "fit-content", float: "right"}} onClick={(e) => this.props.context.changeOpenFiltre()}>X</Button></div>
                             <div class="row">
                                 <ListFiltres filtre={this.state.filtres} handleChange={this.handleChange} handleRadioChange={this.handleRadioChange} />
-                                <div className="apply">
-                                    <strong>{ this.props.context.state.listTypeChambre.length }</strong><span id='litleLabel'>matching rooms</span>
-                                    <Button style={{marginLeft: '10px'}} onClick={(e) =>  this.applyFilter()} variant="contained">APPLY</Button>
+                                <div className="apply" style={{marginLeft: "20px"}}>
+                                    <strong>{ this.props.context.state.listTypeChambre.length }</strong><span id='litleLabel'> matching rooms</span>
                                 </div>
                             </div>
                         </FormGroup>

@@ -183,11 +183,15 @@ class Scroll extends React.Component{
         callAPI('post', '/reservation/apply', {_id: this.state.reservationEnCours._id}, this.setReservationEnCours);
     }
     incrementReservation(){
-        console.log('STATE ITANY-------------');
-        console.log(this.state);
         let current = JSON.parse(JSON.stringify(this.state));
         current.reservation.push(this.state.reservation.length);
         this.setState(current);
+    }
+
+    changeOpenFiltre(){
+        let temp = {...this.state};
+        temp.showFiltre = !temp.showFiltre;
+        this.setState(temp);
     }
     
     render(){
