@@ -5,6 +5,7 @@ import { styled } from '@mui/material/styles';
 import styles from './skeletonTarifDispo.module.css';
 
 const prix = {width: 475, height: 50};
+const heightText = 30;
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -23,10 +24,9 @@ const SkeletonTarifDispo = () => {
                             <Skeleton variant="rectangular" width={320} height={160} />
                         </div>
                         <div className="col">
-
                             <Skeleton variant="text" height={40} />
-                            <Skeleton variant="text" />
-                            <Skeleton variant="text" />
+                            <Skeleton variant="text" height={heightText} />
+                            <Skeleton variant="text" height={heightText} />
                             <div></div>
                             <Skeleton variant="rectangle" width={150} height={30} />
                         </div>
