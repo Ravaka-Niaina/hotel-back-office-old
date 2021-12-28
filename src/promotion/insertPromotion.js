@@ -77,14 +77,16 @@ function InsertPromotion(){
         errors: [],
         error: {
           nom: null,
-          dateDebutS: null,
-          dateFinS: null,
           sejourMin:null,
           premierJour:null,
           dernierJour:null,
           leadMin: null, 
           leadMax: null,
-          remise:null
+          remise:null,
+          typeChambre:null,
+          planTarifaire:null,
+          dateDebutS: null,
+          dateFinS: null,
         },
         nom: '',
         planTarifaire: [],
@@ -280,6 +282,7 @@ function InsertPromotion(){
 <div className="form-group"  style={{marginTop:"1px"}}>
 <FormGroup>
 <PlanTarifaire planTarifaire={state.planTarifaire} handleCheckBoxPlanTarifaire={handleCheckBoxPlanTarifaire}/>
+{state.error.planTarifaire === null ? null : <div className="customError"><span>{state.error.planTarifaire}</span></div>}
 </FormGroup> 
   </div>
    </div>
@@ -289,7 +292,11 @@ Quelles chambres ?
 <p id='litleLabel' style={{marginLeft:"15px",marginTop:'5px'}}>Sélectionnez au moins 1 type de chambre</p>
   <div className="form-group"  style={{marginTop:"5px"}}>
   <FormGroup>
-<TypeChambre typeChambre={state.typeChambre} handleCheckBoxTypeChambre={handleCheckBoxTypeChambre}/>
+<TypeChambre 
+typeChambre={state.typeChambre} 
+handleCheckBoxTypeChambre={handleCheckBoxTypeChambre}
+/>
+{state.error.typeChambre === null ? null : <div className="customError"><span>{state.error.typeChambre}</span></div>}
 </FormGroup>    
   </div>
 

@@ -116,7 +116,7 @@ import  AppClient  from "./components/client/scroll";
 import  test  from "./components/client/Cookies";
 
 
-import  PromotionList  from "./promotion/LPromotion.js";
+import  PromotionList  from "./promotion/promotionList";
 import  InsertPromotion  from "./promotion/insertPromotion.js";
 import Global from "./politique/global.js";
 import ListPolitique from "./politique/LPolitique.js"
@@ -133,7 +133,7 @@ import Calendrier from "./partenaire/Calendrier/Calendrier";
 import  Devis  from "./front_client/devis";
 import  guest  from "./partenaire/guest.js";
 import  hideShow  from "./hideShow.js";
-import  DetailsPromotion  from "./promotion/DetailsPromotion";
+import  DetailsPromotion  from "./promotion/DetailsPromotion.js";
 
 
 import DropDown from './pagination/pagination.js';
