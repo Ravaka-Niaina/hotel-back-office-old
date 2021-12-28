@@ -160,7 +160,7 @@ class Fact extends React.Component{
         })
         .then(res => {  
             console.log(res.data.reservation[0]); 
-            this.props.context.setReservationEnCours(res.data.reservation[0]);
+            this.props.context.setReservationEnCours(res.data.reservation[0], true);
         }).catch(err => console.log(err));
     }
 

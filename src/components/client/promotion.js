@@ -23,11 +23,11 @@ function Promotions(props){
 
 function Promotion (props){
     const [promotion , setPromotion] = useState([]);
-    const [responseOK, setResponseOK] = useState(false);
+    const [isPromReceived, setIsPromReceived] = useState(false);
     function functionAppelList(data){
         console.log(data);
         setPromotion(data.promotions);
-        //setResponseOK(true);
+        setIsPromReceived(true);
     }
 
     useEffect(() => {
@@ -36,7 +36,7 @@ function Promotion (props){
 
     return (
         <div>
-            {responseOK ? 
+            {isPromReceived ? 
                 <Promotions context = {promotion}/> :
                 <Stack spacing={1}>
                     <Skeleton variant="rectangular" width={300} height={118} />
