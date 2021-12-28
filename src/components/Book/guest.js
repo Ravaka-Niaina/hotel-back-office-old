@@ -1,71 +1,74 @@
 
 import React , {useState} from "react";
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField'
 
-function Guest (){
-    const [state , setState]= useState(
-        {
-            nbAdulte : 1,
-            nbEnfant : 0
-        }
-    )
-    return (
-        <PopupState variant="popper" popupId="demo-popup-popper">
-      {(popupState) => (
-        <div>
-          <Button {...bindToggle(popupState)} id='toggle'>
-            <span></span>
-          </Button>
-            <div className='client'>
-                <div id='client' className='guests'>
-                    <p>
-                        <PersonIcon id='PersonIcon'/>
-                        <span id='guests'>Guests</span><br/>
-                        <span id='NbGuest'>{this.state.nbAdulte} Adult, {this.state.nbEnfant} children</span>
-                    </p>
-                </div>
-            </div>
-          <Popper {...bindPopper(popupState)} transition>
-            {({ TransitionProps }) => (
-              <Fade {...TransitionProps} timeout={350}>
-                <Paper id='modal1'>
-                <span id="adultes">Adultes</span><div class='guest1' id='adulte1' onClick={this.DecrAdulte}><p id='moins'>-</p></div>
-                          <div class='guest1'>
-                          <input value={this.state.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")} class='adulte' type=""/>
-                          </div>
-                    <div class='guest1' id='adulte11' onClick={this.IncrAdulte}><p id='add'>+</p></div>
-                          <br/>
-                          <span id="enfants">Enfants</span><div class='guest2' id='enfant1' onClick={this.DecrEnfant}><p id='moins'>-</p></div>
-                          <div class='guest2'>
-                          <input value={this.state.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")} class='enfant' type=""/>
-                          </div>
-        <div class='guest2' id='enfant11' onClick={this.IncrEnfant}>
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
+function incrementGuests(context, categ, i){
+  let temp = {...context.state};
+  temp.guests[categ] = temp.guests[categ] + i;
+  if(temp.guests[categ] < 0){
+    temp.guests[categ] = 0;
+  }
+  console.log(temp.guests);
+  context.setState(temp);
+}
+
+function changeManuallyGuests(context, value, categ){
+  let temp = {...context.state};
+  temp.guests[categ] = value;
+  if(temp.guests[categ] < 0){
+    temp.guests[categ] = 0;
+  }
+  context.setState(temp);
+}
+
+const Guest = ({context, changeOpenChangeNbGuest}) => {
+  return (
+    <Modal
+      open={context.openChangeNbGuest}
+      onClose={changeOpenChangeNbGuest}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
+      <Box sx={style}>
+        <span id="adultes">Adultes</span><div class='guest1' id='adulte1' onClick={(e) => incrementGuests(context, "nbAdulte", -1)}><p id='moins'>-</p></div>
+        <div class='guest1'>
+          <TextField  
+            type="number"
+            value={context.state.guests.nbAdulte}
+            onChange={(e) => changeManuallyGuests(context,e.target.value, "nbAdulte")}
+            className='adulte'
+          />
+        </div>
+        <div class='guest1' id='adulte11' onClick={(e) => incrementGuests(context, "nbAdulte", 1)}><p id='add'>+</p></div>
+        <br/>
+        <span id="enfants">Enfants</span><div class='guest2' id='enfant1' onClick={(e) => incrementGuests(context, "nbEnfant", -1)}><p id='moins'>-</p></div>
+        <div class='guest2'>
+          <TextField 
+            type="number"
+            value={context.state.guests.nbEnfant}
+            onChange={(e) => changeManuallyGuests(context,e.target.value, "nbEnfant")}
+            className='enfant'
+          />
+        </div>
+        <div class='guest2' id='enfant11' onClick={(e) => incrementGuests(context, "nbEnfant", 1)}>
             <p id='add'>+</p>
         </div>
-                {
-                    this.state.showAge ?
-                    <select value="" name="" class="age">
-                    <option value="">0</option>
-                    <option value="">1</option>
-                    <option value="">2</option>
-                    <option value="">3</option>
-                    <option value="">4</option>
-                    <option value="">5</option>
-                    <option value="">6</option>
-                    <option value="">7</option>
-                    <option value="">8</option>
-                    <option value="">9</option>
-                    <option value="">10</option>
-                    <option value="">11</option>
-                    </select>
-                    : null
-                    }
-                </Paper>
-              </Fade>
-            )}
-          </Popper>
-        </div>
-      )}
-    </PopupState>
-    );
+      </Box>
+    </Modal>
+  );
 }
 export default Guest;

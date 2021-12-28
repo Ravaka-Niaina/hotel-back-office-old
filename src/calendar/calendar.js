@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { getToday } from './utils/moment-utils';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
 import './bae-calendar.scss';
 
 import CalendarHeader from './components/calendar-header';
@@ -20,7 +22,21 @@ const themes = {
   rouge: 'rouge-theme',
 };
 
-const BaeCalendar = ({ theme, activeDates, onDateSelect, context }) => {
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  pt: 2,
+  px: 4,
+  pb: 3,
+};
+
+const BaeCalendar = ({ theme, activeDates, onDateSelect, context, changeOpenCalendar }) => {
   const presetActiveDates = useRef(presetDateTracker(activeDates || []));
 
   let today = new Date();
@@ -79,37 +95,46 @@ const BaeCalendar = ({ theme, activeDates, onDateSelect, context }) => {
 
   return (
     <div style={{width: "fit-content", margin: "0 auto"}}>
-      <MonthIndicator 
-        selectDate={selectDate} setSelectDate={setSelectDate} 
-        monthLater={monthLater} setMonthLater={setMonthLater} 
-        getPrix={getPrix} />
-      <div className={`bae-calendar-container ${themes[theme]}`}>
-        <CalendarHeader selectDate={selectDate} />
-        <WeekdayIndicator />
-        <DateIndicator
-          activeDates={presetActiveDates.current}
-          selectDate={selectDate}
-          setSelectDate={setSelectDate}
-          bornes={bornes}
-          setBornes={setBornes}
-          prix={prix}
-          context={context}
-        />
-      </div>
-      <div style={{width: "20px", height: "20px", display: "inline-block"}}></div>
-      <div className={`bae-calendar-container ${themes[theme]}`}>
-        <CalendarHeader selectDate={monthLater} />
-        <WeekdayIndicator />
-        <DateIndicator
-          activeDates={presetActiveDates.current}
-          selectDate={monthLater}
-          setSelectDate={setMonthLater}
-          bornes={bornes}
-          setBornes={setBornes}
-          prix={prix}
-          context={context}
-        />
-      </div>
+      <Modal
+        open={context.state.openCalendar}
+        onClose={changeOpenCalendar}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box sx={{ ...style, width: 850 }}>
+          <MonthIndicator 
+          selectDate={selectDate} setSelectDate={setSelectDate} 
+          monthLater={monthLater} setMonthLater={setMonthLater} 
+          getPrix={getPrix} />
+          <div className={`bae-calendar-container ${themes[theme]}`}>
+            <CalendarHeader selectDate={selectDate} />
+            <WeekdayIndicator />
+            <DateIndicator
+              activeDates={presetActiveDates.current}
+              selectDate={selectDate}
+              setSelectDate={setSelectDate}
+              bornes={bornes}
+              setBornes={setBornes}
+              prix={prix}
+              context={context}
+            />
+          </div>
+          <div style={{width: "20px", height: "20px", display: "inline-block"}}></div>
+          <div className={`bae-calendar-container ${themes[theme]}`}>
+            <CalendarHeader selectDate={monthLater} />
+            <WeekdayIndicator />
+            <DateIndicator
+              activeDates={presetActiveDates.current}
+              selectDate={monthLater}
+              setSelectDate={setMonthLater}
+              bornes={bornes}
+              setBornes={setBornes}
+              prix={prix}
+              context={context}
+            />
+          </div>
+        </Box>
+      </Modal>
     </div>
   );
 };

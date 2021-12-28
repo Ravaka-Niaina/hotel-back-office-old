@@ -1,8 +1,35 @@
 import { Checkbox } from "@mui/material";
 
 import FormControlLabel from '@mui/material/FormControlLabel';
+import {Radio,RadioGroup} from '@mui/material';
 
 import './insertTarif.css';
+
+export function mirrorDateReservationFin(planTarifaire, setPlanTarifaire, value, error, setError){
+    if(planTarifaire.isDateReservAuto){
+        let copy = {...planTarifaire};
+        copy.dateReservation.fin = value;
+        setPlanTarifaire(copy);
+
+        
+    }
+}
+
+export function DateReservAuto(props){
+    return(
+        <FormControlLabel
+            checked={props.planTarifaire.isDateReservAuto}
+            control={<Checkbox/>}
+            onChange={(e) => {
+                let copy = {...props.planTarifaire};
+                copy.isDateReservAuto = !copy.isDateReservAuto;
+                copy.dateReservation.fin = copy.dateSejour.fin;
+                props.setPlanTarifaire(copy);
+            }}
+            label="A partir d'aujourd'hui"
+        />
+    );
+};
 
 export function LeadDay(props){
     let i = -1;
@@ -44,6 +71,15 @@ export function ChambresAtrb(props){
     })
     return list;
 }
+
+function changePolitiqueChecked(planTarifaire, setPlanTarifaire, u){
+    let copy = {...planTarifaire};
+    for(let i = 0; i < copy.politiqueAnnulAtrb.length; i++){
+        copy.politiqueAnnulAtrb[i].checked = false;
+    }
+    copy.politiqueAnnulAtrb[u].checked = true;
+    setPlanTarifaire(copy);
+}
     
 export function PolitiqueAnnulAtrb(props){
     let i = -1;
@@ -51,18 +87,24 @@ export function PolitiqueAnnulAtrb(props){
         i++;
         let u = i;
         return(
-            <FormControlLabel 
-                checked={politique.checked}
-                control={<Checkbox/>}
-                onChange={(e) => props.handleCheckBoxChange(props.planTarifaire, props.setPlanTarifaire, e, "politiqueAnnulAtrb", u, "checked")}
-                label={<span id='litleLabel'>
-                {politique.nom}
-                      </span>}
-                style={{marginLeft:"20px"}}
-            />
+            
+                <FormControlLabel 
+                    checked={politique.checked}
+                    control={<Radio />}
+                    onChange={(e) => changePolitiqueChecked(props.planTarifaire, props.setPlanTarifaire,u)}
+                    label={<span id='litleLabel'>
+                    {politique.nom}
+                        </span>}
+                    style={{marginLeft:"20px"}}
+                />
         );
     })
-    return list;
+    let radios = <RadioGroup
+        aria-label="gender" 
+        name="politiqueAnnulAtrb">
+            {list}
+    </RadioGroup>
+    return radios;
 }
 
 export function getPlan(planTarifaire){
@@ -112,15 +154,19 @@ function toUpperCase0(string){
     return newString;
 }
 
-export function handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, name1, name2){
-    console.log(e.target.value);
+export function handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, name1, name2, isDateSejourFin){
     let current = JSON.parse(JSON.stringify(planTarifaire));
     current[name1][name2] = e.target.value;
-    setPlanTarifaire(current); 
 
     let tempErr = {...error};
     tempErr[name1 + toUpperCase0(name2)] = null;
-    console.log(name1 + toUpperCase0(name2));
+
+    if(isDateSejourFin && current.isDateReservAuto){
+        current.dateReservation.fin = e.target.value;
+        tempErr.dateReservationFin = null;
+    }
+
+    setPlanTarifaire(current); 
     setError(tempErr);
 }
     

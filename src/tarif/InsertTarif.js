@@ -43,6 +43,7 @@ function InsertTarif(){
     const [planTarifaire, setPlanTarifaire] = useState({
         nom: '',
         description: '',
+        isDateReservAuto: false,
         dateReservation: {debut: '', fin: ''},
         dateSejour: {debut: '', fin: ''},
         isLeadHour: true,
@@ -152,6 +153,7 @@ function InsertTarif(){
                                             <label className="" style={{textDecoration: 'underline'}} id='bigLabel'>Date de réservation </label> 
                                         </div>
                                             <div className="row" style={{marginTop:'20px'}}>
+                                                <utility.DateReservAuto planTarifaire={planTarifaire} setPlanTarifaire={setPlanTarifaire} />
                                                 <div className="col">
                                                     <TextField
                                                     label="Début"
@@ -213,7 +215,8 @@ function InsertTarif(){
                                                         }}
                                                     size='small'
                                                     value={planTarifaire.dateSejour.fin}
-                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "dateSejour", "fin")}
+                                                    onChange={(e) => { 
+                                                        utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "dateSejour", "fin", true)}}
                                                     error={error.dateSejourFin === null ? false : true}
                                                     helperText={error.dateSejourFin === null ? null : error.dateSejourFin}
                                                     /> 

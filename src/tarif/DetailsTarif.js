@@ -26,6 +26,7 @@ function DetailsTarif(){
     const [error, setError] = useState({
         nom: null,
         description: null,
+        isDateReservAuto: false,
         dateReservationDebut: null,
         dateReservationFin: null,
         dateSejourDebut: null, 
@@ -36,6 +37,7 @@ function DetailsTarif(){
     const [planTarifaire, setPlanTarifaire] = useState({
         nom: '',
         description: '',
+        isDateReservAuto: false,
         dateReservation: {debut: '', fin: ''},
         dateSejour: {debut: '', fin: ''},
         isLeadHour: true,
@@ -139,7 +141,7 @@ function DetailsTarif(){
                                             <label className="" style={{textDecoration: 'underline'}} id='bigLabel'>Date de réservation </label>
                                         </div>
                                         <div className="row" style={{marginTop:'10px'}}>
-                                            <div className="col">
+                                        <utility.DateReservAuto planTarifaire={planTarifaire} setPlanTarifaire={setPlanTarifaire} />                                            <div className="col">
                                                 <TextField
                                                 label="Début"
                                                 type='date'
@@ -200,7 +202,7 @@ function DetailsTarif(){
                                                         }}
                                                     size='small'
                                                     value={planTarifaire.dateSejour.fin}
-                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "dateSejour", "fin")}
+                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "dateSejour", "fin", true)}
                                                     error={error.dateSejourFin === null ? false : true}
                                                     helperText={error.dateSejourFin === null ? null : error.dateSejourFin}
                                                     /> 

@@ -2,7 +2,7 @@ import React from 'react';
 import styles from '../CalendarComponent.module.css';
 import moment from 'moment';
 
-let monthsName = ["Jan", "Feb", "Mac", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+let monthsName = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
 
 const DateRangeLine = (props) => {
     var months = [];
