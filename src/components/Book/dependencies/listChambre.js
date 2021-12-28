@@ -5,11 +5,13 @@ import styles from '../Book.module.css';
 import {PersonOutline, LiveTv, Wifi, AcUnit, Iron, HotTub} from '@mui/icons-material';
 import {Paper} from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Button from '@mui/material/Button';
 
 import Filtre from '../../client/Filtre.js';
 import {Font} from '../../../partenaire/utilityTypeChambre.js';
 import ListTarif from './listTarif.js';
 import SkeletonTarifDispo from './skeletons/skeletonTarifDispo.js';
+import DetailsTypeChambre from './detailsTypeChambre.js';
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -69,6 +71,19 @@ function Equipements(props){
 class DChambre extends React.Component{
     constructor(props){
         super(props);
+        this.state = {
+            showDetailsTypeChambre: false
+        };
+    }
+    showDetailsTC(){
+        let temp = {...this.state};
+        temp.showDetailsTypeChambre = true;
+        this.setState(temp);
+    }
+    closeDetailsTC(){
+        let temp = {...this.state};
+        temp.showDetailsTypeChambre = false;
+        this.setState(temp);
     }
 
     setListTypeChambre(data){   
@@ -120,6 +135,7 @@ class DChambre extends React.Component{
                                         {typeChambre.nbEnfant} enfants
                                     </span>
                                     <span>{typeChambre.description.substring(0,85) + "..."}</span>
+                                    <Button className={styles.btnVoirDetails} onClick={(e) => this.showDetailsTC()}>Voir détails</Button>
                                     <div className={styles.equipements}>
                                         {
                                             typeChambre.equipements.map(equipement => {
@@ -156,7 +172,7 @@ class DChambre extends React.Component{
                         </div>      
                     </div>
                     </Item>
-                
+                    <DetailsTypeChambre context={this} typeChambre={typeChambre}/>
             </div>
             )
         }); 

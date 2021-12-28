@@ -228,3 +228,7 @@ body{
     width: fit-content;
     margin: auto 0;
 }
+
+.btnVoirDetails{
+    border-bottom: #fff !important;
+}
