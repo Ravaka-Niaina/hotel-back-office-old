@@ -64,9 +64,11 @@ class Scroll extends React.Component{
         };
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
         this.setResult = this.setResult.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
     
     handleChange(fieldName, value){
+        console.log("ok");
         let current = JSON.parse(JSON.stringify(this.state));
         current[fieldName] = value;
         this.setState(current);
@@ -80,6 +82,12 @@ class Scroll extends React.Component{
         currentState.listTypeChambre = [];
         //currentState.openChangeDateSejour = true;
         this.setState(currentState);
+    }
+
+    removeErr(){
+        let temp = {...this.sate};
+        temp.err = null;
+        this.setState(temp);
     }
 
     setResult(res){
