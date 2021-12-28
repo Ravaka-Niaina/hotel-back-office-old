@@ -9,13 +9,14 @@ import { styled } from '@mui/material/styles';
 import Filtre from '../../client/Filtre.js';
 import {Font} from '../../../partenaire/utilityTypeChambre.js';
 import ListTarif from './listTarif.js';
+import SkeletonTarifDispo from './skeletons/skeletonTarifDispo.js';
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     padding: theme.spacing(1),
     textAlign: 'center',
     color: theme.palette.text.secondary,
-  }));
+}));
 
 function ListConditionAnnulation(props){
     let services = props.politiqueAnnulAtrb.map(condition =>{
@@ -101,61 +102,74 @@ class DChambre extends React.Component{
         this.props.context.setState(currentState);
     }
 
-    render(){
+    printExistingTypeChambre(){
         let listChambre = this.props.context.state.listTypeChambre.map(typeChambre => {
             return (
-            <Item>
-            <div className={styles.listChambre}>
                 <div>
-                <div class="row mb-4">
-                    <div class="col">
-                        <div style={{ backgroundImage: 'url(' + process.env.REACT_APP_BACK_URL + "/" + typeChambre.photo[0].replace("\\","/") + ")" }}></div>
+                    <Item>
+                        <div className={styles.listChambre}>
+                            <div>
+                            <div class="row mb-4">
+                                <div class="col">
+                                    <div style={{ backgroundImage: 'url(' + process.env.REACT_APP_BACK_URL + "/" + typeChambre.photo[0].replace("\\","/") + ")" }}></div>
+                                </div>
+                                <div class="col">
+                                    <span>{typeChambre.nom}</span><br/>
+                                    <span><PersonOutline/> max : 
+                                        {typeChambre.nbAdulte} Adultes +
+                                        {typeChambre.nbEnfant} enfants
+                                    </span>
+                                    <span>{typeChambre.description.substring(0,85) + "..."}</span>
+                                    <div className={styles.equipements}>
+                                        {
+                                            typeChambre.equipements.map(equipement => {
+                                                return(
+                                                    <Font font={equipement.font} />
+                                                );
+                                            })
+                                        }
+                                        {/*
+                                        <div>
+                                            <LiveTv/>
+                                        </div>
+                                        <div>
+                                            <Wifi/>
+                                        </div>
+                                        <div>
+                                            <AcUnit/>
+                                        </div>
+                                        <div>
+                                            <HotTub/>
+                                        </div>
+                                        <div>
+                                            <Iron/>
+                                        </div>
+                                        */}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <ListTarif context={this.props.context} tarifs={typeChambre.tarifs} idTypeChambre={typeChambre._id} />
+                                </div>
+                            </div>  
+                        </div>      
                     </div>
-                    <div class="col">
-                        <span>{typeChambre.nom}</span><br/>
-                        <span><PersonOutline/> max : 
-                            {typeChambre.nbAdulte} Adultes +
-                            {typeChambre.nbEnfant} enfants
-                        </span>
-                        <span>{typeChambre.description.substring(0,85) + "..."}</span>
-                        <div className={styles.equipements}>
-                            {
-                                typeChambre.equipements.map(equipement => {
-                                    return(
-                                        <Font font={equipement.font} />
-                                    );
-                                })
-                            }
-                            {/*
-                            <div>
-                                <LiveTv/>
-                            </div>
-                            <div>
-                                <Wifi/>
-                            </div>
-                            <div>
-                                <AcUnit/>
-                            </div>
-                            <div>
-                                <HotTub/>
-                            </div>
-                            <div>
-                                <Iron/>
-                            </div>
-                            */}
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <ListTarif context={this.props.context} tarifs={typeChambre.tarifs} idTypeChambre={typeChambre._id} />
-                    </div>
-                </div>  
-            </div>      
-        </div>
-        </Item>
+                    </Item>
+                
+            </div>
             )
         }); 
+        return listChambre;
+    }
+
+    render(){
+        let listChambre = this.props.context.state.isListTarifDispoReceived ? 
+            this.printExistingTypeChambre() : 
+            <div> 
+                <SkeletonTarifDispo />
+                <SkeletonTarifDispo /> 
+            </div>
         if(this.props.context.state.guests.nbEnfant == 0 
             && this.props.context.state.guests.nbAdulte == 0){
                 listChambre = null;
@@ -166,7 +180,6 @@ class DChambre extends React.Component{
                  {listChambre}
             </div>
         );
-        //this.addReservation()
     }
 }
 export default DChambre

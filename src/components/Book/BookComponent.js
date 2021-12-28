@@ -31,6 +31,7 @@ const BookComponent = (props) => {
     function setResult(res){
         let currentState = {...props.context.state};
         currentState.listTypeChambre = res.list;
+        currentState.isListTarifDispoReceived = true;
         props.context.setState(currentState);
     }
 
@@ -45,6 +46,7 @@ const BookComponent = (props) => {
                     dateFin: props.context.state.dateSejour.fin
                 }
                 console.log(data);
+                props.context.handleChange("isListTarifDispoReceived", false);
                 callAPI('post', '/TCTarif/', data, setResult);
         }else{
             this.props.context.handleChange("errFiltre", 'Veuillez remplir les champs Adulte, Enfant, Debut sejour et fin sejour au moins');

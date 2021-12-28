@@ -60,7 +60,9 @@ class Scroll extends React.Component{
             reload: true,
             openCalendar: false,
             openChangeNbGuest: false,
-            openLoad: false
+            openLoad: false,
+            isListTarifDispoReceived: false,
+            isFactureReceived: false
         };
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
         this.setResult = this.setResult.bind(this);
@@ -94,6 +96,7 @@ class Scroll extends React.Component{
         console.log("here");
         let temp = {...this.state};
         temp.listTypeChambre = res.list;
+        temp.isListTarifDispoReceived = true;
         this.setState(temp);
         console.log(res);
     }

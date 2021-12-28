@@ -12,6 +12,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 
 import {setValue} from '../../../src/utility2.js';
 
+import SkeletonFacture from '../Book/dependencies/skeletons/skeletonFacture.js';
+
 
 import './filtre.css';
 
@@ -178,7 +180,7 @@ class Fact extends React.Component{
         .catch(err => console.log(err));
     }
 
-    render(){
+    printFacture(){
         let valider = null;
         for(let i = 0; i < this.props.context.state.itineraires.length; i++){
             for(let u = 0; u < this.props.context.state.itineraires[i].tarifReserves.length; u++){
@@ -246,6 +248,14 @@ class Fact extends React.Component{
                 </Modal>
 
                 {valider}
+            </div>
+        );
+    }
+
+    render(){
+        return(
+            <div>
+                {this.props.context.state.isFactureReceived ? this.printFacture() : <SkeletonFacture />}
             </div>
         );
     }

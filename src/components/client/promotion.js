@@ -1,6 +1,9 @@
 import React, {useEffect , useState} from 'react'
 import GETaPI from "../../APiGet.js";
 
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
+
 function Promotions(props){
     let promo = "Aucun promotion pour le moment";
     if(props.context != null && props.context != null){
@@ -20,10 +23,11 @@ function Promotions(props){
 
 function Promotion (props){
     const [promotion , setPromotion] = useState([]);
-
+    const [responseOK, setResponseOK] = useState(false);
     function functionAppelList(data){
         console.log(data);
         setPromotion(data.promotions);
+        //setResponseOK(true);
     }
 
     useEffect(() => {
@@ -32,7 +36,12 @@ function Promotion (props){
 
     return (
         <div>
-             <Promotions context = {promotion}/>
+            {responseOK ? 
+                <Promotions context = {promotion}/> :
+                <Stack spacing={1}>
+                    <Skeleton variant="rectangular" width={300} height={118} />
+                </Stack>
+            }
         </div>
 
     );
