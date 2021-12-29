@@ -26,26 +26,21 @@ const style = {
 };
 
 const PhotoTC = (props) => {
-    const [prev, setPrev] = React.useState(1);
-    const [next, setNext] = React.useState(props.photos.length > 1 ? 2 : 1);
+    const [current, setCurrent] = React.useState(1);
 
     let photos = [];
     let btnChangePhoto = [];
 
     const viewPrevious = () => {
-        console.log("prev = " + prev);
-            const p = Number.parseInt(prev) - 1;
-            const n = Number.parseInt(next) - 1;
-            setPrev(p);
-            setNext(n);
+        if(current > 1){
+            setCurrent(current - 1);
+        }
     };
 
     const viewNext = () => {
-        console.log("next = " + next);
-            const p = Number.parseInt(prev) + 1;
-            const n = Number.parseInt(next) + 1;
-            setPrev(p);
-            setNext(n);
+        if(current < props.photo.length){
+            setCurrent(current + 1);
+        }
     };
     for(let i = 0; i < props.photos.length; i++){
         btnChangePhoto.push(<a href={"#TC" + (i + 1)}><button>{i + 1}</button></a>);
