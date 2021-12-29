@@ -149,6 +149,8 @@ import  ListTChambre  from "./dataTable/datatable.js";
 import  BookComponent from "./components/Book/BookComponent.js";
 
 import  Historique from "./historique/header.js";
+import  HistoriqueTC from "./historique/dependancies/TChambre.js";
+import  HistoriqueMPL from "./historique/dependancies/modifPlanT.js";
 
 
 /*
@@ -280,6 +282,8 @@ function App(){
         <Route path="/book" exact component={BookComponent} />
 
         <Route path="/historique" exact component={Historique} />
+        <Route path="/historique/TC" exact component={HistoriqueTC} />
+        <Route path="/historique/MPL" exact component={HistoriqueMPL} />
       </Router>
     </div>
   );

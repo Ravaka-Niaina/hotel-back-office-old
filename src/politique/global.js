@@ -65,7 +65,7 @@ function Global(){
         let temp = 0;
         const { name, value } = e.target;
         const list = [...datePrice];
-        setGrise(false);
+       // setGrise(false);
 
         const errorS =JSON.parse(JSON.stringify(state));
         errorS.pourcentage = null;
@@ -109,15 +109,32 @@ function Global(){
     setState(errorS);
 
     setDatePrice(current);
+    let existeVide = false;
+    for (let i = 0; i < current.length ; i++){
+        if((current[i].pourcentage +"").trim() === "" || (current[i].date  +"").trim() === ""){
+            existeVide = true; 
+        }
+    }
+    if(existeVide){
+        setGrise(true);
+    }else{
+        setGrise(false); 
+    }
    }
    const handleRemoveClick = index => {
+       let existeVide = false;
         const list = JSON.parse(JSON.stringify(datePrice));
         if(list[index].pourcentage !== null){
             let convert = Number.parseFloat(list[index].pourcentage);
             let convertValue = Number.parseFloat(valueP);
             setVal(convertValue+convert);
         }
-        if(valueP > 100){
+        for (let i = 0; i < list.length ; i++){
+            if((list[i].pourcentage +"").trim() === "" || (list[i].date  +"").trim() === ""){
+                existeVide = true; 
+            }
+        }
+        if(valueP > 100 || existeVide){
             setGrise(true);
         }else{
             setGrise(false);
@@ -125,14 +142,6 @@ function Global(){
         list.splice(index , 1);
         setDatePrice(list);
    }
-    /*const handleRemoveClick = index => {
-        const list = [...datePrice];
-        list.splice(index, 1);
-        setDatePrice(list);
-        
-        
-    };*/
-    
     // handle click event of the Add button
     const handleAddClick = () => {
         setDatePrice([...datePrice, { date: "", pourcentage: ""}]);
@@ -280,7 +289,7 @@ function Global(){
 
         return (
             <>
-            <Navbar currentPage={2}/>
+            <Navbar currentPage={4}/>
                         <div className ="politiqueContent">
                             <h4 className='entete'>Politique d'annulation</h4><hr/>
                             <label>Concellation preference</label><br/>

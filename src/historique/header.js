@@ -1,12 +1,13 @@
 import React from 'react';
 import Navbar  from "../Navbar/Navbar";
 import {ToggleButtonGroup, ToggleButton, Typography} from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const HeaderHistorique = (props) => {
-  const [groupby, setGroupBy] = React.useState('a');
+  const [value, setValue] = React.useState(0);
   const handleGroupByChange = (event, g) => {
     if(g !== null){
-      setGroupBy(g);
+      setValue(g);
     }
   };
 
@@ -14,11 +15,11 @@ const HeaderHistorique = (props) => {
   <div>
     <Navbar currentPage={5}/><br/><br/>
     <div style={{  width :"fit-content" , margin : "0 auto" , heigth : "100px"}} >
-        <ToggleButtonGroup color="primary" value={groupby}onChange={handleGroupByChange}>
-            <ToggleButton size="small" value="a">Politique</ToggleButton>
-            <ToggleButton size="small" value="b">Plan tarifaires</ToggleButton>
-            <ToggleButton size="small" value="c">Promotion</ToggleButton>
-            <ToggleButton size="small" value="d">Ouverture</ToggleButton>
+        <ToggleButtonGroup color="primary" value={props.currentPage} onChange={handleGroupByChange}>
+            <ToggleButton size="small" value="0" component={Link} to="/historique/TC">Type Chambre</ToggleButton>
+            <ToggleButton size="small" value="1" component={Link} to="/historique/MPL">Modif Plan tarifaires</ToggleButton>
+            <ToggleButton size="small" value="2">Promotion</ToggleButton>
+            <ToggleButton size="small" value="3">Ouverture</ToggleButton>
         </ToggleButtonGroup>
     </div>
   </div>
