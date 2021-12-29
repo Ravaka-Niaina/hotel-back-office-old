@@ -4,12 +4,10 @@ import axios from "axios";
 import React, {useEffect} from "react";
 import {Link} from 'react-router-dom';
 
-import  Navbar  from "../Navbar/Navbar"
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
 
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
@@ -22,7 +20,8 @@ import Checkbox from '@mui/material/Checkbox';
 import {setValue} from '../../src/utility2.js';
 import callAPI from '../utility';
 
-import {FileInput, Preview, Videos, Font} from '../partenaire/utilityTypeChambre.js';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
 
 
 const Input = styled('input')({
@@ -30,24 +29,44 @@ const Input = styled('input')({
 });
 
 function PlanTarifaire(props){
-  let i = -1;
-  let list = props.planTarifaire.map(tarif => {
-      i++;
-      let u = i;
-      return(
-        <FormControlLabel 
-          checked={tarif.checked}
-          control={<Checkbox/>}
-          onChange={(e) => props.handleCheckBoxPlanTarifaire(e, u)}
-          label={<span id='litleLabel'>
-          {tarif.nom}
-                </span>}
-          style={{marginLeft:"20px"}}
-        />
-      );
-  })
-  return list;
-}
+  console.log(props.planTarifaire);
+    let i = -1;
+    let list = props.planTarifaire.map(tarif => {
+        i++;
+        let u = i;
+        return(
+          <FormControlLabel 
+            checked={tarif.checked}
+            control={<Checkbox/>}
+            onChange={(e) => props.handleCheckBoxPlanTarifaire(e, u)}
+            label={<span id='litleLabel'>
+            {tarif.nom}
+                  </span>}
+            style={{marginLeft:"20px"}}
+          />
+        );
+    })
+    return list;
+  }
+
+  function TypeChambre(props){
+    console.log(props.typeChambre);
+    let i = -1;
+    let list = props.typeChambre.map(typeC => {
+        i++;
+        let u = i;
+        return(
+          <FormControlLabel 
+            checked={typeC.checked}
+            control={<Checkbox/>}
+            onChange={(e) => props.handleCheckBoxTypeChambre(e, u)}
+            label={<span id='label'>{typeC.nom}</span>}
+            style={{marginLeft:"20px"}}
+          />
+        );
+    })
+    return list;
+  }
 
 class DetailsPromotions extends React.Component{
     changeState(tabFieldName, value){
@@ -94,15 +113,20 @@ class DetailsPromotions extends React.Component{
               premierJour:'',
               dernierJour:'',
               equipements:[]
+              ,isLeadHour: true
+              ,lead: {min: '', max: ''}
+              ,remise:''
             }
+            ,isRemiseEuro: true
             , tarifs: []
             , typeChambres : []
             , previewPhoto: [this.noImage]
         }
         this.handleCheckBoxPlanTarifaire = this.handleCheckBoxPlanTarifaire.bind(this);
-        this.handleCheckBoxEquipement = this.handleCheckBoxEquipement.bind(this);
+        this.handleCheckBoxTypeChambre = this.handleCheckBoxTypeChambre.bind(this);
         this.setDetailsPromotion = this.setDetailsPromotion.bind(this);
         this.setTarifs = this.setTarifs.bind(this);
+        this.setListTypeChambre = this.setListTypeChambre.bind(this);
     }
 
     setDetailsPromotion(data){
@@ -125,47 +149,73 @@ class DetailsPromotions extends React.Component{
         }
     }
 
-
     setTarifs(res){
         console.log(res);
+        
         if(res.status === 200){
             let currentState = JSON.parse(JSON.stringify(this.state));
+            for(let i = 0; i < res.list.length; i++){
+                for(let u = 0; u < currentState.promotion.planTarifaire.length; u++ ){
+                    if(res.list[i]._id == currentState.promotion.planTarifaire[u]){
+                        res.list[i].checked = true;
+                        break;
+                    }
+                    console.log("nadalo");
+                     res.list[i].checked = false;
+                }
+            }
             currentState.tarifs = res.list;
             this.setState(currentState);
-        }
+            console.log(currentState);
+        }    
     }
 
-    
+setListTypeChambre(res){
+      if(res.status === 200){
+        let currentState = JSON.parse(JSON.stringify(this.state));
+        console.log(currentState);
+        for(let i = 0; i < res.list.length; i++){
+            for(let u = 0; u < currentState.promotion.typeChambre.length; u++ ){
+                if(res.list[i]._id == currentState.promotion.typeChambre[u]){
+                    res.list[i].checked = true;
+                    break;
+                }
+                console.log("nadalo");
+                 res.list[i].checked = false;
+            }
+        }
+        currentState.typeChambres = res.list;
+        this.setState(currentState);
+        console.log(currentState);
+    }
+  }
+
     componentDidMount(){
-        // axios({
-        //     method: 'get',
-        //     url: process.env.REACT_APP_BACK_URL +
-        //         "/promotion/detail/" + this.props.match.params._id + '?id',
-        //     withCredentials: true
-        // })
-        // .then(res => this.setDetailsPromotion(res.data))
-        // .catch(err => console.log(err));
         callAPI('get', '/promotion/detail/'+this.props.match.params._id, {}, this.setDetailsPromotion);
+         callAPI('post', '/planTarifaire', {}, this.setTarifs);
+         callAPI('post', '/TCTarif', {}, this.setListTypeChambre);
     }
 
     update(e){
         e.preventDefault();
         console.log(this.state.promotion);
         let toSend = JSON.parse(JSON.stringify(this.state.promotion));
-        let equipements = [];
-        for(let i = 0; i < this.state.promotion.equipements.length; i++){
-            if(this.state.promotion.equipements[i].checked){
-                equipements.push(this.state.promotion.equipements[i]._id);
-            }
-        }
-        toSend.equipements = equipements;
         let planTarifaire = [];
-        for(let i = 0; i < this.state.promotion.planTarifaire.length; i++){
-            if(this.state.promotion.planTarifaire[i].checked){
-                planTarifaire.push(this.state.promotion.planTarifaire[i]._id);
+        for(let i = 0; i < this.state.tarifs.length; i++){
+            if(this.state.tarifs[i].checked){
+                planTarifaire.push(this.state.tarifs[i]._id);
             }
         }
         toSend.planTarifaire = planTarifaire;
+
+        let typeChambre = [];
+        for(let i = 0; i < this.state.typeChambres.length; i++){
+            if(this.state.typeChambres[i].checked){
+              typeChambre.push(this.state.typeChambres[i]._id);
+            }
+        }
+        toSend.typeChambre = typeChambre;
+
         console.log(toSend);
         axios({
             method: 'post',
@@ -183,39 +233,32 @@ class DetailsPromotions extends React.Component{
         currentState.promotion[inputName] = event.target.value;
         this.setState(currentState);
     }
-    /*
-    handlePhotoChange(event){
-        let currentState = JSON.parse(JSON.stringify(this.state));
-        if(event.target.files[0]){
-            let img = event.target.files[0];
-            const r = /^image/;
-            if(r.test(img.type)){
-                const reader = new FileReader();
-                reader.onload = (evt) => {
-                    currentState.typeChambre.photo = evt.target.result;
-                    currentState.previewPhoto = evt.target.result;
-                    this.setState(currentState);
-                }
-                reader.readAsDataURL(img);
-            }else{
-                currentState.previewPhoto = this.noImage;
-                this.setState(currentState);
+
+    handleInputRemiseChange( e, name1){
+      console.log(e.target.value);
+      let current = JSON.parse(JSON.stringify(this.state));
+      current.promotion[name1] = e.target.value;
+      this.setState(current)
+      }
+
+    handleIsRemiseEuroChange(value){
+        let temp = {...this.state};
+        temp.isRemiseEuro = value;
+        this.setState(temp);
             }
-        }
-    }
-    */
 
     handleCheckBoxPlanTarifaire(e, index){
         let current = JSON.parse(JSON.stringify(this.state));
-        current.promotion.planTarifaire[index].checked = e.target.checked;
+        current.tarifs[index].checked = e.target.checked;
         this.setState(current);
     }
-    
-    handleCheckBoxEquipement(e, index){
-        let current = JSON.parse(JSON.stringify(this.state));
-        current.promotion.equipements[index].checked = e.target.checked;
-        this.setState(current);
-    }
+
+    handleCheckBoxTypeChambre(e, index){
+      let current = JSON.parse(JSON.stringify(this.state));
+      current.typeChambres[index].checked = e.target.checked;
+      this.setState(current);
+  }
+
 
     changeStateValue(tabFieldName, value){
         let currentState = setValue(this.state, tabFieldName, value);
@@ -228,7 +271,7 @@ class DetailsPromotions extends React.Component{
         currentState.newIcon[fieldName] = e.target.value;
         this.setState(currentState);
     }
-
+  
     render(){
         return(
 <div className="block">
@@ -253,81 +296,62 @@ Quelles chambres ?
 <p id='litleLabel' style={{textDecoration:'underline',marginLeft:'12px'}}>Sélectionnez au moins 1 type de chambre</p>
   <div className="form-group"  style={{marginTop:"5px"}}>
   <FormGroup>
-{/* <TypeChambre typeChambre={this.state.typeChambre} handleCheckBoxTypeChambre={this.handleCheckBoxTypeChambre}/> */}
+<TypeChambre typeChambre={this.state.typeChambres} handleCheckBoxTypeChambre={this.handleCheckBoxTypeChambre}/>
 </FormGroup>    
   </div>
 
 <hr style={{width:'95%'}}></hr>
 
-  {/* <div className="form-group" style={{marginTop:"15px"}}>
-<label id='bigLabel'>
-Quelle remise voulez-vous offrir ?
-</label>
-
-<FormControl component="fieldset">
-  <FormLabel component="legend"></FormLabel>
-  <RadioGroup
-    aria-label=""
-    defaultValue=""
-    name="radio-buttons-group"
-  >
-    <FormControlLabel 
-    value="male" 
-    control={<Radio />} 
-    label={<p id='label'>Pourcentage</p>} 
-    onClick={() => this.setState({HideShowE :false,HideShowP :true})}/>
-    <FormControlLabel 
-    value="female" 
-    control={<Radio />} 
-    label={<p id='label'>Euro</p>} 
-    onClick={() => this.setState({HideShowP :false,HideShowE :true})}/>
-  </RadioGroup>
-</FormControl>
-
-{
-this.state.HideShowP ?
-<TextField 
-id="outlined-basic" 
-label="" 
-variant="outlined" 
-className="form-control" 
-InputProps={{
-startAdornment: <InputAdornment position="start">
-    <strong>%</strong>
-</InputAdornment>,
-}}
-style={{width:"100px",marginTop:"15px"}}
-size="small"
-type="number" 
-name="remisePourcentage" 
-onChange={(e) => this.handleInputChange(e, "remisePourcentage")}
-/>
-: null
-}
-
-{
-this.state.HideShowE ?
-<TextField 
-id="outlined-basic" 
-label="" 
-variant="outlined" 
-className="form-control" 
-InputProps={{
-startAdornment: <InputAdornment position="start">
-    <strong>£</strong>
-</InputAdornment>,
-}}
-style={{width:"130px"}}
-size="small"
-type="number" 
-name="remiseEuro" 
-onChange={(e) => this.handleInputChange(e, "remiseEuro")}
-/>
-: null
-}
-
-  </div> */}
+<div style={{marginTop:'0px'}}>
+      <div>
+          <label className="" style={{textDecoration: 'underline',fontFamily:'Roboto',fontSize:'15px',marginLeft:'0px'}} >
+              Remise {this.state.isRemiseEuro ? "Euro" : "Pourcentage"} 
+          </label>
+      </div>
+      <RadioGroup
+          aria-label="Pourcentage"
+          defaultValue="euro"
+          name="radio-buttons-group"
+      >
+          <div className ="row" style={{marginTop:'15px'}}>
+              <div className ="col">
+                  <TextField
+                  label="Remise"
+                  type='number'
+                  id=''
+                  size='small'
+                  value={this.state.promotion.remise}
+                  placeholder='Hour/Date'
+                  onChange={(e) => this.handleInputRemiseChange( e, "remise")}
+                  /> 
+              </div>
+              {console.log()}
+              <div className ="col">
+                  <FormControlLabel 
+                  value="euro" 
+                  onClick={(e) => this.handleIsRemiseEuroChange(true)}
+                  control={<Radio />}
+                  label={
+                  <span id='litleLabel'>
+                  Euro
+                  </span>} />
+              </div>
+              <div className ="col">
+                  <FormControlLabel  
+                  value="pourcentage" 
+                  onClick={(e) => this.handleIsRemiseEuroChange(false)} 
+                  control={<Radio />} 
+                  label={
+                      <span id='litleLabel'>
+                        Pourcentage
+                      </span>} /> 
+              </div>
+          </div>
+      </RadioGroup>
   </div>
+
+  </div>
+
   <div className='block2' style={{marginTop:"30px"}}>
 <h6>Dates de séjour</h6>
 <label id='bigLabel' style={{marginTop:"5px"}}>
@@ -381,66 +405,7 @@ style={{marginTop:"15px"}}
 />
    </div>
   
-  {/* <div className="form-group" style={{marginTop:"40px"}}>
-<label id='bigLabel'>
-Lead hour ou day 
-</label>
-<FormControl component="fieldset">
-  <FormLabel component="legend"></FormLabel>
-  <RadioGroup
-    aria-label=""
-    defaultValue=""
-    name="radio-buttons-group"
-  >
-    <FormControlLabel 
-    value="mal" 
-    control={<Radio />}  
-    label={<p id='label'>Day</p>}
-    onClick={() => this.setState({HideShowH :false,HideShowJ :true})}/>
-    <FormControlLabel 
-    value="female" 
-    control={<Radio />} 
-    label={<p id='label'>Hour</p>} 
-    onClick={() => this.setState({HideShowJ :false,HideShowH :true})}/>
-  </RadioGroup>
-</FormControl>
 
-{
-this.state.HideShowJ ?
-<TextField 
-id="outlined-basic" 
-label="" 
-variant="outlined" 
-className="form-control" 
-style={{width:"130px"}}
-placeholder='Jour'
-size="small"
-type="number" 
-name="leadDay" 
-onChange={(e) => this.handleInputChange(e, "leadDay")}
-/>
-
-: null
-}
-
-{
-this.state.HideShowH ?
-<TextField 
-id="outlined-basic" 
-label="" 
-variant="outlined" 
-className="form-control" 
-style={{width:"130px"}}
-placeholder='Heure'
-size="small"
-type="number" 
-name="leadHour" 
-onChange={(e) => this.handleInputChange(e, "leadHour")}
-/>
-: null
-}
-
-  </div> */}
 
   <div className="form-group" style={{marginTop:"40px"}}>
 <label id='bigLabel'>
