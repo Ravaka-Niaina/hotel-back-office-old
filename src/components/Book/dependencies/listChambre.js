@@ -75,29 +75,24 @@ class DChambre extends React.Component{
             showDetailsTypeChambre: false
         };
     }
-    showDetailsTC(){
-        let temp = {...this.state};
-        temp.showDetailsTypeChambre = true;
-        this.setState(temp);
-    }
-    closeDetailsTC(){
-        let temp = {...this.state};
-        temp.showDetailsTypeChambre = false;
-        this.setState(temp);
+    switchShowDetailsTC(indexTypeChambre){
+        let temp = {...this.props.context.state};
+        temp.listTypeChambre[indexTypeChambre].show = !temp.listTypeChambre[indexTypeChambre].show;
+        this.props.context.setState(temp);
     }
 
     setListTypeChambre(data){   
-        let currentState = JSON.parse(JSON.stringify(this.props.context.state));  //mamadika donne ho lasa json
-        currentState.listTypeChambre = data.list;                                         // lasa currentState ilai data (this.state) ilai data
+        let currentState = {...this.props.context.state};
+        currentState.listTypeChambre = data.list;
         this.props.context.setState(currentState);  
         console.log(this.props.context.state);
         this.state= {
             listTypeChambre : []
         }
     }
-// ilai this ary scroll atsoin zan oe enfant ity page ity
+
     setListTypeChambre(data){
-        let currentState = JSON.parse(JSON.stringify(this.props.context.state));  //this.state iani
+        let currentState = JSON.parse(JSON.stringify(this.props.context.state));
         console.log(data);
         currentState.listTypeChambre = data.list;                                         // lasa currentState ilai data (this.state) ilai data
         this.props.context.setState(currentState);  
@@ -117,8 +112,13 @@ class DChambre extends React.Component{
         this.props.context.setState(currentState);
     }
 
+
+
     printExistingTypeChambre(){
+        let i = -1;
         let listChambre = this.props.context.state.listTypeChambre.map(typeChambre => {
+            i++;
+            const u = i;
             return (
                 <div>
                     <Item>
@@ -135,7 +135,7 @@ class DChambre extends React.Component{
                                         {typeChambre.nbEnfant} enfants
                                     </span>
                                     <span>{typeChambre.description.substring(0,85) + "..."}</span>
-                                    <Button className={styles.btnVoirDetails} onClick={(e) => this.showDetailsTC()}>Voir détails</Button>
+                                    <Button className={styles.btnVoirDetails} onClick={(e) => this.switchShowDetailsTC(u)}>Voir détails</Button>
                                     <div className={styles.equipements}>
                                         {
                                             typeChambre.equipements.map(equipement => {
@@ -172,7 +172,7 @@ class DChambre extends React.Component{
                         </div>      
                     </div>
                     </Item>
-                    <DetailsTypeChambre context={this} typeChambre={typeChambre}/>
+                    <DetailsTypeChambre context={this} typeChambre={typeChambre} indexTypeChambre={u} />
             </div>
             )
         }); 
@@ -182,9 +182,9 @@ class DChambre extends React.Component{
     render(){
         let listChambre = this.props.context.state.isListTarifDispoReceived ? 
             this.printExistingTypeChambre() : 
-            <div> 
+            <div>
                 <SkeletonTarifDispo />
-                <SkeletonTarifDispo /> 
+                <SkeletonTarifDispo />
             </div>
         if(this.props.context.state.guests.nbEnfant == 0 
             && this.props.context.state.guests.nbAdulte == 0){

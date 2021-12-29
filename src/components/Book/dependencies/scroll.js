@@ -93,9 +93,11 @@ class Scroll extends React.Component{
     }
 
     setResult(res){
-        console.log("here");
         let temp = {...this.state};
         temp.listTypeChambre = res.list;
+        for(let i = 0; i < temp.listTypeChambre.length; i++){
+            temp.listTypeChambre[i].show = false;
+        }
         temp.isListTarifDispoReceived = true;
         this.setState(temp);
         console.log(res);
