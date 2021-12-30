@@ -4,6 +4,7 @@ import Box from '@mui/material/Box';
 import styles from './detailsTypeChambre.module.css';
 import {Font} from '../../../partenaire/utilityTypeChambre.js';
 import {PersonOutline} from '@mui/icons-material';
+import PhotoTypeChambre from './photoTypeChambre.js';
 
 
 const style = {
@@ -25,45 +26,7 @@ const style = {
     display:'block'
 };
 
-const PhotoTC = (props) => {
-    const [current, setCurrent] = React.useState(1);
-
-    let photos = [];
-    let btnChangePhoto = [];
-
-    const viewPrevious = () => {
-        if(current > 1){
-            setCurrent(current - 1);
-        }
-    };
-
-    const viewNext = () => {
-        if(current < props.photo.length){
-            setCurrent(current + 1);
-        }
-    };
-    for(let i = 0; i < props.photos.length; i++){
-        btnChangePhoto.push(<a href={"#TC" + (i + 1)}><button>{i + 1}</button></a>);
-        photos.push(<section id={"TC" + (i + 1)}><img className={styles.photoTC} src={process.env.REACT_APP_BACK_URL + "/" + props.photos[i]} /></section>);
-    }
-    
-    btnChangePhoto.push(<a href={"#TC" + prev}><button onClick={(e) => viewPrevious()}>Prev</button></a>);
-    btnChangePhoto.push(<a href={"#TC" + next}><button onClick={(e) => viewNext()}>Next</button></a>);
-    
-    return(
-        <div className={styles.photos}>
-            <div>
-                {btnChangePhoto}
-            </div>
-            <div>
-                {photos}
-            </div>
-        </div>
-    );
-};
-
 const DetailsTypeChambre = (props) => {
-    console.log(props.typeChambre);
     return(
         <Modal
             open={props.typeChambre.show}
@@ -74,7 +37,7 @@ const DetailsTypeChambre = (props) => {
             <Box sx={{ ...style, width: 850 }}>
                 <div className="row">
                     <div className="col">
-                        <PhotoTC photos={props.typeChambre.photo}/>
+                        <PhotoTypeChambre photos={props.typeChambre.photo}/>
                     </div>
                     <div className="col">
                         <h3>{props.typeChambre.nom}</h3>

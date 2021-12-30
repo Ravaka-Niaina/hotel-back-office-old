@@ -12,6 +12,7 @@ import {Font} from '../../../partenaire/utilityTypeChambre.js';
 import ListTarif from './listTarif.js';
 import SkeletonTarifDispo from './skeletons/skeletonTarifDispo.js';
 import DetailsTypeChambre from './detailsTypeChambre.js';
+import PhotoTypeChambre from './photoTypeChambre.js';
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -112,8 +113,6 @@ class DChambre extends React.Component{
         this.props.context.setState(currentState);
     }
 
-
-
     printExistingTypeChambre(){
         let i = -1;
         let listChambre = this.props.context.state.listTypeChambre.map(typeChambre => {
@@ -126,7 +125,7 @@ class DChambre extends React.Component{
                             <div>
                             <div class="row mb-4">
                                 <div class="col">
-                                    <div style={{ backgroundImage: 'url(' + process.env.REACT_APP_BACK_URL + "/" + typeChambre.photo[0].replace("\\","/") + ")" }}></div>
+                                    <PhotoTypeChambre photos={typeChambre.photo}/>
                                 </div>
                                 <div class="col">
                                     <span>{typeChambre.nom}</span><br/>
