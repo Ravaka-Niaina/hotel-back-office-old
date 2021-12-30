@@ -1,7 +1,6 @@
 import axios from "axios";
 
 export default function callAPI(method, url, data, callback){
-    console.log(process.env.REACT_APP_BACK_URL + url);
     axios({
         method: method,      
         url: process.env.REACT_APP_BACK_URL + url,

@@ -46,17 +46,7 @@ const DetailsTypeChambre = (props) => {
                                     <ul>
                                         {props.typeChambre.equipements.map(equipement => {
                                             return(
-                                                <li><Font font={equipement.font} /><span>{equipement.nom}</span></li>
-                                            );
-                                        })}
-                                    </ul>
-                                </div>
-                                <div>
-                                    <h4>Tarifs:</h4>
-                                    <ul>
-                                        {props.typeChambre.tarifs.map( tarif => {
-                                            return(
-                                                <li>{tarif.nom}</li>
+                                                <li><Font font={equipement.font} /> <span>{equipement.nom}</span></li>
                                             );
                                         })}
                                     </ul>

@@ -2,73 +2,77 @@
 import React , {useState} from "react";
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField'
+import TextField from '@mui/material/TextField';
+import { styled } from '@mui/material/styles';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import {FormControl,FormControlLabel} from '@mui/material';
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#f5f5f9',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: '1px solid #dadde9',
+  },
+}));
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
+  marginTop: 10,
+  marginBottom: 5
 };
 
-function incrementGuests(context, categ, i){
-  let temp = {...context.state};
-  temp.guests[categ] = temp.guests[categ] + i;
-  if(temp.guests[categ] < 0){
-    temp.guests[categ] = 0;
-  }
-  console.log(temp.guests);
-  context.setState(temp);
-}
+const Guest = ({context, occupancy}) => {
 
-function changeManuallyGuests(context, value, categ){
-  let temp = {...context.state};
-  temp.guests[categ] = value;
-  if(temp.guests[categ] < 0){
-    temp.guests[categ] = 0;
+  function changeNbGuests(categ, value){
+    let temp = {...context.state};
+    temp.listTypeChambre = [];
+    temp.guests[categ] = value;
+    if(temp.guests[categ] < 0){
+      temp.guests[categ] = 0;
+    }
+    context.setState(temp);
   }
-  context.setState(temp);
-}
 
-const Guest = ({context, changeOpenChangeNbGuest}) => {
   return (
-    <Modal
-      open={context.openChangeNbGuest}
-      onClose={changeOpenChangeNbGuest}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-    >
-      <Box sx={style}>
-        <span id="adultes">Adultes</span><div class='guest1' id='adulte1' onClick={(e) => incrementGuests(context, "nbAdulte", -1)}><p id='moins'>-</p></div>
-        <div class='guest1'>
-          <TextField  
-            type="number"
-            value={context.state.guests.nbAdulte}
-            onChange={(e) => changeManuallyGuests(context,e.target.value, "nbAdulte")}
-            className='adulte'
-          />
-        </div>
-        <div class='guest1' id='adulte11' onClick={(e) => incrementGuests(context, "nbAdulte", 1)}><p id='add'>+</p></div>
-        <br/>
-        <span id="enfants">Enfants</span><div class='guest2' id='enfant1' onClick={(e) => incrementGuests(context, "nbEnfant", -1)}><p id='moins'>-</p></div>
-        <div class='guest2'>
-          <TextField 
-            type="number"
-            value={context.state.guests.nbEnfant}
-            onChange={(e) => changeManuallyGuests(context,e.target.value, "nbEnfant")}
-            className='enfant'
-          />
-        </div>
-        <div class='guest2' id='enfant11' onClick={(e) => incrementGuests(context, "nbEnfant", 1)}>
-            <p id='add'>+</p>
-        </div>
-      </Box>
-    </Modal>
+    <HtmlTooltip
+      title={
+        <React.Fragment>
+          <FormControl component="fieldset" style={style}>
+            <TextField
+              fullwidth={false}
+              size="small"
+              id="outlined-number"
+              label="Adulte" 
+              value={context.state.guests.nbAdulte}
+              type="number"
+              InputLabelProps={{
+                shrink: true,
+            }}
+              onChangeCapture={(e) => changeNbGuests("nbAdulte", e.target.value)}
+            />
+            <br/>
+            <TextField
+              fullwidth={false}
+              size="small"
+              id="outlined-number"
+              label="Enfant" 
+              value={context.state.guests.nbEnfant}
+              type="number"
+              InputLabelProps={{
+                shrink: true,
+            }}
+              onChangeCapture={(e) => changeNbGuests("nbEnfant", e.target.value)}
+            />
+          </FormControl>
+        </React.Fragment>
+      }
+      placement="bottom-start"
+        >
+          {occupancy}  
+    </HtmlTooltip>
   );
 }
 export default Guest;
