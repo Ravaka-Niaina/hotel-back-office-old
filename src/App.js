@@ -22,7 +22,7 @@ import  AppClient  from "./components/Book/dependencies/scroll";
 import  test  from "./components/client/Cookies";
 
 
-import  PromotionList  from "./promotion/promotionList";
+import  PromotionList  from "./promotion/LPromotion";
 import  InsertPromotion  from "./promotion/insertPromotion.js";
 import Global from "./politique/global.js";
 import ListPolitique from "./politique/LPolitique.js"

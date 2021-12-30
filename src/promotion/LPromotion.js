@@ -334,7 +334,7 @@ export default function EnhancedTable() {
                       </TableCell>
                       <TableCell >{row.tarif}</TableCell>
                       <TableCell align="left">{row.typeChambre}</TableCell>
-                      <TableCell align="left">{row.remiseEuro}</TableCell>
+                      <TableCell align="left">{row.remise}</TableCell>
                       <TableCell align="left">{row.dateDebutS} au {row.dateFinS} </TableCell>
                       <TableCell align="rigth">
                         <Link to={'/promotion/detail/' + row._id}> 

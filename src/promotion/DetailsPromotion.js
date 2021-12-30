@@ -83,8 +83,21 @@ class DetailsPromotions extends React.Component{
             val: 1,
             newIcon: {font: "", nom: ""},
             errInsertEq: null,
-            open: false,
-            errors: [],
+            open: false
+            ,errors: [],
+            error: {
+              nom: null,
+              sejourMin:null,
+              premierJour:null,
+              dernierJour:null,
+              leadMin: null, 
+              leadMax: null,
+              remise:null,
+              typeChambre:null,
+              planTarifaire:null,
+              dateDebutS: null,
+              dateFinS: null,
+            },
             promotion: {
               nom: '',
               planTarifaire: [],
@@ -107,11 +120,11 @@ class DetailsPromotions extends React.Component{
               leadDayMax:'',
               leadHourMin:'',
               leadHourMax:''
-              ,isLeadHour: true
               ,lead: {min: '', max: ''}
               ,remise:''
             }
             ,isRemiseEuro: true
+            ,isLeadHour: true
             , tarifs: []
             , typeChambres : []
             , previewPhoto: [this.noImage]
@@ -131,22 +144,42 @@ class DetailsPromotions extends React.Component{
         console.log(this.state.promotion);
     }
 
-    tryRedirect(res){
-        console.log(res);
-        if(res.status === 200){
-          this.props.history.push('/promotion');
-        }else if(res.status === 401){//Unauthorized
-            this.props.history.push('/login');
-        }else{
-          let currentState = JSON.parse(JSON.stringify(this.state));
-          currentState.errors = res.errors;
-          this.setState(currentState);
-        }
+    // tryRedirect(res){
+    //     console.log(res);
+    //     if(res.status === 200){
+    //       this.props.history.push('/promotion');
+    //     }else if(res.status === 401){//Unauthorized
+    //         this.props.history.push('/login');
+    //     }else{
+    //       let currentState = JSON.parse(JSON.stringify(this.state));
+    //       currentState.errors = res.errors;
+    //       this.setState(currentState);
+    //     }
+    // }
+
+     tryRedirect(res){
+      console.log(res);
+      let currentState = JSON.parse(JSON.stringify(this.state));
+      let keys = Object.keys(currentState.error);
+      keys.map((k) => {
+        currentState.error[k] = null;
+      });
+      if(res.status === 200){
+        this.props.history.push('/promotion');
+      }else if(res.status === 401){//Unauthorized
+        this.props.history.push('/login');
+      }else{
+        currentState.errors = res.errors;
+        keys = Object.keys(res.errors);
+        keys.map((k) => {
+            currentState.error[k] = res.errors[k];
+        });
+      }
+      this.setState(currentState);
     }
 
     setTarifs(res){
-        console.log(res);
-        
+        console.log(res);      
         if(res.status === 200){
             let currentState = JSON.parse(JSON.stringify(this.state));
             for(let i = 0; i < res.list.length; i++){
@@ -226,6 +259,7 @@ setListTypeChambre(res){
     handleInputChange(event, inputName){
         const currentState = JSON.parse(JSON.stringify(this.state));
         currentState.promotion[inputName] = event.target.value;
+        currentState.error[inputName] = null;
         this.setState(currentState);
     }
 
@@ -241,6 +275,19 @@ setListTypeChambre(res){
         temp.isRemiseEuro = value;
         this.setState(temp);
             }
+
+    handleInputChange2( e, name1, name2){
+      console.log(e.target.value);
+      let current = JSON.parse(JSON.stringify(this.state));
+      current.promotion[name1][name2] = e.target.value;
+      this.setState(current)
+      }
+      
+    handleIsLeadHourChange(value){
+      let temp = {...this.state};
+      temp.isLeadHour = value;
+      this.setState(temp);
+          }
 
     handleCheckBoxPlanTarifaire(e, index){
         let current = JSON.parse(JSON.stringify(this.state));
@@ -260,7 +307,6 @@ setListTypeChambre(res){
         this.setState(currentState);
     }
 
-
     handleNewEqChange(e, fieldName){
         let currentState = JSON.parse(JSON.stringify(this.state));
         currentState.newIcon[fieldName] = e.target.value;
@@ -272,6 +318,7 @@ setListTypeChambre(res){
 <div className="block">
 <form>
 <h4 className='entete'>Ajouter une nouvelle promotion</h4>
+<CustomError errors={this.state.errors} />
   <div className="block1">
   <h6>Détails de la promotion</h6>
    <div className="form-group" style={{marginTop:"15px"}}>
@@ -282,6 +329,7 @@ setListTypeChambre(res){
 <div className="form-group"  style={{marginTop:"1px"}}>
 <FormGroup>
 <PlanTarifaire planTarifaire={this.state.tarifs} handleCheckBoxPlanTarifaire={this.handleCheckBoxPlanTarifaire}/>
+{this.state.error.planTarifaire === null ? null : <div className="customError"><span>{this.state.error.planTarifaire}</span></div>}
 </FormGroup> 
   </div>    
    </div>
@@ -292,6 +340,7 @@ Quelles chambres ?
   <div className="form-group"  style={{marginTop:"5px"}}>
   <FormGroup>
 <TypeChambre typeChambre={this.state.typeChambres} handleCheckBoxTypeChambre={this.handleCheckBoxTypeChambre}/>
+{this.state.error.typeChambre === null ? null : <div className="customError"><span>{this.state.error.typeChambre}</span></div>}
 </FormGroup>    
   </div>
 
@@ -318,7 +367,9 @@ Quelles chambres ?
                   value={this.state.promotion.remise}
                   placeholder='Hour/Date'
                   onChange={(e) => this.handleInputRemiseChange( e, "remise")}
-                  /> 
+                  error={this.state.error.remise === null ? false : true}
+                  helperText={this.state.error.remise === null ? null : this.state.error.remise}
+                  />
               </div>
               {console.log()}
               <div className ="col">
@@ -356,7 +407,10 @@ Quand les clients peuvent-ils profiter de cette promotion ?
   <div className="form-group" style={{marginTop:"25px"}}>
    <p>
 <TextField id="outlined-basic" 
-label="" 
+label="Date debut" 
+InputLabelProps={{
+shrink: true,
+}}
 variant="outlined" 
 className="form-control"  
 style={{width:"200px"}}
@@ -364,11 +418,16 @@ type="date"
 name="dateDebutS" 
 value={this.state.promotion.dateDebutS}
 onChange={(e) => this.handleInputChange(e, "dateDebutS")}
+error={this.state.error.dateDebutS === null ? false : true}
+helperText={this.state.error.dateDebutS === null ? null : this.state.error.dateDebutS}
 size="small"
 />
 
   <TextField id="outlined-basic" 
-label="" 
+label="Date fin" 
+InputLabelProps={{
+  shrink: true,
+  }}
 variant="outlined" 
 className="form-control"  
 style={{width:"200px",marginLeft:'20px'}}
@@ -376,6 +435,8 @@ type="date"
 name="dateFinS" 
 value={this.state.promotion.dateFinS}
 onChange={(e) => this.handleInputChange(e, "dateFinS")}
+error={this.state.error.dateFinS === null ? false : true}
+helperText={this.state.error.dateFinS === null ? null : this.state.error.dateFinS}
 size="small"
 />
    </p>
@@ -387,7 +448,7 @@ Sejour minimum
 </label>
 <TextField 
 id="outlined-basic" 
-label=""
+label="Sejour minimum"
 variant="outlined"
 className="form-control" 
 style={{width:"400px",height:'20px'}}
@@ -397,11 +458,71 @@ name="sejourMin"
 value={this.state.promotion.sejourMin}
 onChange={(e) => this.handleInputChange(e, "sejourMin")} 
 style={{marginTop:"15px"}}
+error={this.state.error.sejourMin === null ? false : true}
+helperText={this.state.error.sejourMin === null ? null : this.state.error.sejourMin}
 />
    </div>
+
+   <div style={{marginTop:'0px'}}>
+      <div>
+          <label className="" style={{textDecoration: 'underline',fontFamily:'Roboto',fontSize:'15px',marginLeft:'0px'}} >
+              Lead { this.state.isLeadHour ? "hour" : "day"} 
+          </label>
+      </div>
+      <RadioGroup
+          aria-label="Lead"
+          defaultValue="hour"
+          name="radio-buttons-group"
+      >
+          <div className ="row" style={{marginTop:'15px'}}>
+              <div className ="col">
+                  <TextField
+                  label="Min"
+                  type='number'
+                  size='small'
+                  value={this.state.promotion.lead.min}
+                  placeholder='Hour/Date'
+                  onChange={(e) => this.handleInputChange2( e, "lead", "min")}
+                  error={this.state.error.leadMin === null ? false : true}
+                  helperText={this.state.error.leadMin === null ? null : this.state.error.leadMin}
+                  /> 
+              </div>
+              <div className ="col">
+                  <TextField
+                  label="Max"
+                  type='number'
+                  size='small'
+                  value={this.state.promotion.lead.max}
+                  placeholder='Hour/Date'
+                  onChange={(e) => this.handleInputChange2( e, "lead", "max")}
+                  error={this.state.error.leadMax === null ? false : true}
+                  helperText={this.state.error.leadMax === null ? null : this.state.error.leadMax}
+                  /> 
+              </div>
+              <div className ="col">
+                  <FormControlLabel 
+                  value="hour" 
+                  onClick={(e) => this.handleIsLeadHourChange(true)} 
+                  control={<Radio />} 
+                  label={
+                  <span id='litleLabel'>
+                  Hour
+                  </span>} />
+              </div>
+              <div className ="col">
+                  <FormControlLabel  
+                  value="day" 
+                  onClick={(e) => this.handleIsLeadHourChange(false)} 
+                  control={<Radio />} 
+                  label={
+                      <span id='litleLabel'>
+                        Day
+                      </span>} /> 
+              </div>
+          </div>
+      </RadioGroup>
+  </div>
   
-
-
   <div className="form-group" style={{marginTop:"40px"}}>
 <label id='bigLabel'>
 Nombre de jour d'attribution de la promotion
@@ -410,94 +531,96 @@ Nombre de jour d'attribution de la promotion
 <div className="form-group" style={{marginTop:"25px"}}>
 <p>
 <TextField id="outlined-basic" 
-label="" 
+label="Premier jour" 
 variant="outlined" 
 className="form-control"  
 style={{width:"200px"}}
-type="text" 
+type="number" 
 name="premierJour" 
-InputProps={{
-  endAdornment: <InputAdornment position="end">
-      premier jour
-  </InputAdornment>,
-  }}
 value={this.state.promotion.premierJour}
 onChange={(e) => this.handleInputChange(e, "premierJour")}
 size="small"
+error={this.state.error.premierJour === null ? false : true}
+helperText={this.state.error.premierJour === null ? null : this.state.error.premierJour}
 />
 
   <TextField id="outlined-basic" 
-label="" 
+label="Dernier jour" 
 variant="outlined" 
 className="form-control"  
 style={{width:"200px",marginLeft:'20px'}}
-type="text" 
+type="number" 
 name="dernierJour"
-InputProps={{
-  endAdornment: <InputAdornment position="end">
-      dernier jour
-  </InputAdornment>,
-  }} 
 value={this.state.promotion.dernierJour}
 onChange={(e) => this.handleInputChange(e, "dernierJour")}
 size="small"
+error={this.state.error.dernierJour === null ? false : true}
+helperText={this.state.error.dernierJour === null ? null : this.state.error.dernierJour}
 />
    </p>
    </div>
   </div>
 
-  <div className="form-group" style={{marginTop:"15px"}}>
+   <div className="form-group" style={{marginTop:"15px"}}>
 <label id='bigLabel'>
 Tarif réduit disponible uniquement pendant :
 
 </label>
    <p>
 <FormControlLabel 
-control={<Checkbox />} 
-label={<p id='label'>Novembre</p>}
-value="1"
-name="novembre" 
-onChange={(e) => this.handleInputChange(e, "decembre")}
-/> 
-
-<FormControlLabel 
 control={<Checkbox/>} 
-label={<p id='label'>Decembre</p>}
+label={<p id='label'>Lundi</p>}
 value="1"
-name="decembre"  
-onChange={(e) => this.handleInputChange(e, "decembre")}
+name="lundi"  
+control={<Checkbox defaultChecked />}
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
-label={<p id='label'>Janvier</p>}
+label={<p id='label'>Mardi</p>}
 value="1"
-name="janvier"  
-onChange={(e) => this.handleInputChange(e, "janvier")}
+name="mardi"  
+control={<Checkbox defaultChecked />}
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
-label={<p id='label'>Fevrier</p>}
+label={<p id='label'>Mercredi</p>}
 value="1"
-name="fevrier"   
-onChange={(e) => this.handleInputChange(e, "fevrier")}
+name="mercredi"   
+control={<Checkbox defaultChecked />}
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
-label={<p id='label'>Mars</p>}
+label={<p id='label'>Jeudi</p>} 
 value="1"
-name="mars"  
-onChange={(e) => this.handleInputChange(e, "mars")}
+name="jeudi"  
+control={<Checkbox defaultChecked />}
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
-label={<p id='label'>Avril</p>} 
+label={<p id='label'>Vendredi</p>} 
 value="1"
-name="avril"  
-onChange={(e) => this.handleInputChange(e, "avril")}
+name="vendredi"  
+control={<Checkbox defaultChecked />}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Samedi</p>} 
+value="1"
+name="samedi"  
+control={<Checkbox defaultChecked />}
+/>
+
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Dimanche</p>} 
+value="1"
+name="dimanche"  
+control={<Checkbox defaultChecked />}
 />
    </p> 
   </div>
@@ -512,7 +635,7 @@ Comment voulez-vous nommer cette promotion ?
 </label>
 <TextField 
 id="outlined-basic" 
-label=""
+label="Nom"
 variant="outlined"
 className="form-control" 
 style={{width:"400px"}}
@@ -522,6 +645,8 @@ name="nom"
 onChange={(e) => this.handleInputChange(e, "nom")} 
 value={this.state.promotion.nom}
 style={{marginTop:"15px"}}
+error={this.state.error.nom === null ? false : true}
+helperText={this.state.error.nom === null ? null : this.state.error.nom}
 />
    </div>     
    </div>    
@@ -531,7 +656,7 @@ style={{marginTop:"15px"}}
 <Button  
 variant="contained" 
 type='submit' 
-style={{textDecoration:'none',backgroundColor:'#2ac4ea'}}
+style={{backgroundColor:'#FA8072'}}
 onClick={(e) => this.update(e)}>
 <span style={{color:'white'}}>Modifier</span>
 </Button>
