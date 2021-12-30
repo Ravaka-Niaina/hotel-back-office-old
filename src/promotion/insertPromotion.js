@@ -176,6 +176,7 @@ function InsertPromotion(){
     
   }
 
+  
   function tryRedirect(res){
     console.log(res);
     let currentState = JSON.parse(JSON.stringify(state));
@@ -395,6 +396,7 @@ onChange={(e) => handleInputChange(e, "remiseEuro")}
                   error={state.error.remise === null ? false : true}
                   helperText={state.error.remise === null ? null : state.error.remise}
                   /> 
+                  {console.log(state.error.remise)}
               </div>
               <div className ="col">
                   <FormControlLabel 

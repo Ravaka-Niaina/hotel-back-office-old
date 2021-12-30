@@ -86,7 +86,6 @@ class DetailsPromotions extends React.Component{
             open: false,
             errors: [],
             promotion: {
-              errors: [],
               nom: '',
               planTarifaire: [],
               typeChambre: [],
@@ -101,18 +100,13 @@ class DetailsPromotions extends React.Component{
               vendredi: '',
               samedi: '',
               dimanche: '',
-              novembre: '',
-              decembre: '',
-              janvier: '',
-              fevrier: '',
-              mars: '',
-              avril: '',
               sejourMin:'',
-              leadHour:'',
-              leadDay:'',
               premierJour:'',
               dernierJour:'',
-              equipements:[]
+              leadDayMin:'',
+              leadDayMax:'',
+              leadHourMin:'',
+              leadHourMax:''
               ,isLeadHour: true
               ,lead: {min: '', max: ''}
               ,remise:''
@@ -127,6 +121,7 @@ class DetailsPromotions extends React.Component{
         this.setDetailsPromotion = this.setDetailsPromotion.bind(this);
         this.setTarifs = this.setTarifs.bind(this);
         this.setListTypeChambre = this.setListTypeChambre.bind(this);
+        this.handleIsRemiseEuroChange = this.handleIsRemiseEuroChange.bind(this);
     }
 
     setDetailsPromotion(data){
@@ -309,7 +304,7 @@ Quelles chambres ?
           </label>
       </div>
       <RadioGroup
-          aria-label="Pourcentage"
+          aria-label="euro"
           defaultValue="euro"
           name="radio-buttons-group"
       >
