@@ -25,7 +25,7 @@ const HtmlTooltip = styled(({ className, ...props }) => (
   },
 }));
 
-const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBornes, prix, context, closeOnce }) => {
+const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBornes, prix, context, closeOnce, applyFilter }) => {
   
   const changeDate = (day) => {
     context.state.listTypeChambre = [];
@@ -36,10 +36,12 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
       temp.debut = day;
       temp.fin = day;
       temp.isDebut = false;
+      context.handleChange("listTypeChambre", []);
     }else{
       temp.fin = day;
       temp.isDebut = true;
       closeOnce();
+      applyFilter();
     }
     setBornes(temp);
     const dates = [temp.debut, temp.fin];
