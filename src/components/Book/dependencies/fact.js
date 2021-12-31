@@ -10,7 +10,7 @@ import ModeNightIcon from '@mui/icons-material/ModeNight';
 
 import {setValue} from '../../../utility2.js';
 
-import SkeletonFacture from '../Book/dependencies/skeletons/skeletonFacture.js';
+import SkeletonFacture from './/skeletons/skeletonFacture.js';
 
 
 import '../../client/filtre.css';
@@ -76,9 +76,9 @@ function Reservations(props){
                         <Card className={styles.stay}>
                         <CardContent>
                             <div>
-                                <span><BedIcon/>Double affaires</span>
+                                <span><BedIcon/>{tarif.nomTypeChambre}</span>
                                 <span><ModeNightIcon/>5 nuit(s)</span>
-                                <span><LocalOfferIcon/>Petit déjeuner - Non remboursable</span>
+                                <span><LocalOfferIcon/>{tarif.nomTarif}</span>
                             </div>
                         </CardContent>
                         <div><span>Prix : 500 EUR</span></div>

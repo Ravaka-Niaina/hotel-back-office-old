@@ -26,7 +26,7 @@ body{
 }
 
 .filter2 {
-    background-color: #084298;
+    background-color: rgba(128,128,128,1);
 }
 
 .filter2 > div > div{
@@ -254,6 +254,7 @@ body{
 
 .btnVoirDetails{
     border-bottom: #fff !important;
+}
 /* promotions */
 .promotion{
     margin-bottom: 14px;
