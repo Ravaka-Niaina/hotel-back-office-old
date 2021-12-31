@@ -2,7 +2,7 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DChambre from './listChambre'
-import Fact from '../../client/fact'
+import Fact from './fact'
 import { useCookies } from 'react-cookie';
 import callAPI from '../../../utility';
 import './Css.css'
@@ -16,7 +16,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import Promotions from "../../client/promotion";
+import Promotions from "./promotion";
 
 import styles from '../Book.module.css';
 
@@ -202,17 +202,14 @@ class Scroll extends React.Component{
                     <Box sx={{ flexGrow: 1, padding :"5px" }}>
                         <Grid container spacing={2}>
                             <Grid item xs={3}>
-                                <Item>
-                                    <Promotions />
-                                </Item>
+                                <span className={styles.sidetitle}>Promotions</span>
+                                <Promotions />
                             </Grid>
                             <Grid className={styles.tarifChambre} item xs={6}>
                                 <DChambre context = {this} />
                             </Grid>
-                            <Grid item xs={3}>
-                                <Item>
-                                    <Fact context = {this} />
-                                </Item>
+                            <Grid className={styles.reservation} item xs={3}>
+                                <Fact context = {this} />
                             </Grid>
                         </Grid>
                     </Box>

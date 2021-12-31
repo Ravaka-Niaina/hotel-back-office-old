@@ -1,19 +1,21 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from "axios";
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import TextField from '@mui/material/TextField'
 
 import EditIcon from '@mui/icons-material/Edit';
 import CancelIcon from '@mui/icons-material/Cancel';
+import BedIcon from '@mui/icons-material/Bed';
+import LocalOfferIcon from '@mui/icons-material/LocalOffer';
+import ModeNightIcon from '@mui/icons-material/ModeNight';
 
-import {setValue} from '../../../src/utility2.js';
+import {setValue} from '../../../utility2.js';
 
 
-import './filtre.css';
+import '../../client/filtre.css';
+
+import styles from '../Book.module.css';
+
+import {Card, CardContent, Typography, CardActions, Button, Box, Modal, TextField, IconButton} from '@mui/material';
 
 function PrintDateSejour(props){
     // itineraire, borne, handleChange, label
@@ -55,20 +57,34 @@ function Reservations(props){
             const u = i;
             if(tarif.etat == 1 || tarif.etat == undefined){
                 return (
-                    <div className ="row" style = {{margin : "0 auto"}}> 
-                        <div className ="col">
-                            <strong >{tarif.nomTarif}</strong>
-                        </div>
-                        <div className ="col">
-                        <EditIcon style={{color : "green"}} /><span id="edit">edit </span> &nbsp;&nbsp;
-                        <CancelIcon style={{color : "red"}}/><span id="remove" onClick={(e) => 
-                            props.annulerReservation(props.context, 
-                                props.context.state.reservationEnCours._id, props.indexItineraire, u)}
-                        >remove</span>
+                    // <div className ="row" style = {{margin : "0 auto"}}> 
+                    //     <div className ="col">
+                    //         <strong >{tarif.nomTarif}</strong>
+                    //     </div>
+                    //     <div className ="col">
+                    //     <EditIcon style={{color : "green"}} /><span id="edit">edit </span> &nbsp;&nbsp;
+                    //     <CancelIcon style={{color : "red"}}/><span id="remove" onClick={(e) => 
+                    //         props.annulerReservation(props.context, 
+                    //             props.context.state.reservationEnCours._id, props.indexItineraire, u)}
+                    //     >remove</span>
                         
-                        </div>
+                    //     </div>
                         
-                    </div>
+                    // </div>
+                        <Card className={styles.stay}>
+                        <CardContent>
+                            <div>
+                                <span><BedIcon/>Double affaires</span>
+                                <span><ModeNightIcon/>5 nuit(s)</span>
+                                <span><LocalOfferIcon/>Petit déjeuner - Non remboursable</span>
+                            </div>
+                        </CardContent>
+                        <div><span>Prix : 500 EUR</span></div>
+                        <CardActions>
+                            <Button size="small">Modifier</Button>
+                            <Button size="small">Annuler</Button>
+                        </CardActions>
+                        </Card>
                     );
                 }
             }
@@ -82,35 +98,50 @@ function Itineraires(props){
     let itineraires = [];
     for(let i = 0; i < props.context.state.itineraires.length; i++){
         itineraires.push(
-            <div>
-                <div class="row mb-4">
-                    <div class="col">
-                        <span id='litleLabel'> Check in : </span>
-                        <PrintDateSejour 
-                            id='litleLabel'
-                            label="Check in" 
-                            context={props.context} 
-                            index={i}
-                            borne="debut" />
-                    </div>
+            // <div>
+            //     <div class="row mb-4">
+            //         <div class="col">
+            //             <span id='litleLabel'> Check in : </span>
+            //             <PrintDateSejour 
+            //                 id='litleLabel'
+            //                 label="Check in" 
+            //                 context={props.context} 
+            //                 index={i}
+            //                 borne="debut" />
+            //         </div>
                     
-                    <div class="col" id="locA">
-                        <span id='litleLabel'>Check out : </span>
-                        <PrintDateSejour
-                            id='litleLabel'  
-                            label="Check out"
-                            context={props.context}
-                            index={i}
-                            borne="fin" />
-                    </div>
-                    <p>
-                    <Button size='small' variant="contained" color="success" onClick={(e) => props.context.setState( setValue( props.context.state, ["itineraires", i, "edit"], true ) )}>
-                        Modifier
-                    </Button>
+            //         <div class="col" id="locA">
+            //             <span id='litleLabel'>Check out : </span>
+            //             <PrintDateSejour
+            //                 id='litleLabel'  
+            //                 label="Check out"
+            //                 context={props.context}
+            //                 index={i}
+            //                 borne="fin" />
+            //         </div>
+            //         <p>
+            //         <Button size='small' variant="contained" color="success" onClick={(e) => props.context.setState( setValue( props.context.state, ["itineraires", i, "edit"], true ) )}>
+            //             Modifier
+            //         </Button>
+            //         </p>
+            //     </div>
+            //     <Reservations context={props.context} indexItineraire={i} annulerReservation={props.annulerReservation} />
+            // </div>
+            <Box className={styles.sidetitle}>
+                <Card><p>
+                    Check in : <span>2021-12-15</span>
                     </p>
-                </div>
+                    <p>
+                    Check out : <span>2021-12-15</span>
+                    </p>
+                </Card>
                 <Reservations context={props.context} indexItineraire={i} annulerReservation={props.annulerReservation} />
-            </div>
+                <Card>
+                    <p>
+                    Total : <span>1500 EUR</span>
+                    </p>
+                </Card>
+            </Box>
         );
     }
     return itineraires;
@@ -184,7 +215,7 @@ class Fact extends React.Component{
             for(let u = 0; u < this.props.context.state.itineraires[i].tarifReserves.length; u++){
                 if(this.props.context.state.itineraires[i].tarifReserves[u].etat == undefined
                     || this.props.context.state.itineraires[i].tarifReserves[u].etat == 1){
-                    valider = (<p style={{textAlign:'center',paddingBottom:'12px'}}><Button size='medium' variant="outlined"  onClick={(e) => this.validerReservation()}>Valider réservation</Button></p>);
+                    valider = (<p style={{textAlign:'center',paddingBottom:'12px'}}><Button size='medium' variant="contained"  onClick={(e) => this.validerReservation()}>Valider réservation</Button></p>);
                     break;
                 }
             }
@@ -194,8 +225,7 @@ class Fact extends React.Component{
         }
         return(
             <div>
-                <div class="row" style={{textAlign:'center'}}>
-                    <h3>Your Stay</h3>
+                <div style={{textAlign:'center'}}>
                     <Itineraires context={this.props.context} annulerReservation={this.annulerReservation} />
                     <p id='bigLabel'>TOTAL : </p>
                     {this.props.context.state.changeDateSejour ? 
