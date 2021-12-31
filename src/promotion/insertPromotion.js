@@ -24,6 +24,7 @@ import FormLabel from '@mui/material/FormLabel';
 
 import { useState } from 'react';
 
+
 function PlanTarifaire(props){
   let i = -1;
   let list = props.planTarifaire.map(tarif => {
@@ -76,11 +77,16 @@ function InsertPromotion(){
         errors: [],
         error: {
           nom: null,
-          dateDebutS: null,
-          dateFinS: null,
           sejourMin:null,
           premierJour:null,
-          dernierJour:null
+          dernierJour:null,
+          leadMin: null, 
+          leadMax: null,
+          remise:null,
+          typeChambre:null,
+          planTarifaire:null,
+          dateDebutS: null,
+          dateFinS: null,
         },
         nom: '',
         planTarifaire: [],
@@ -103,6 +109,11 @@ function InsertPromotion(){
         leadDayMax:'',
         leadHourMin:'',
         leadHourMax:''
+
+        ,isLeadHour: true
+        ,lead: {min: '', max: ''}
+        ,isRemiseEuro: true
+        ,remise:'',
     }
   );
   const [open, setOpen] = React.useState(false);
@@ -141,7 +152,7 @@ function InsertPromotion(){
   }
 
   useEffect(() => {
-    callAPI('post', '/TCTarif', {}, setListTypeChambre);
+    callAPI('post', '/TypeChambre/TC', {}, setListTypeChambre);
     callAPI('post', '/planTarifaire', {}, setPlanTarifaire);
     callAPI('get', '/equipement', {}, setListEquipement);
   }, []); 
@@ -165,6 +176,7 @@ function InsertPromotion(){
     
   }
 
+  
   function tryRedirect(res){
     console.log(res);
     let currentState = JSON.parse(JSON.stringify(state));
@@ -230,6 +242,32 @@ function InsertPromotion(){
       currentState.error[inputName] = null;
       setState(currentState);
   }
+
+  function handleInputChange2( e, name1, name2){
+    console.log(e.target.value);
+    let current = JSON.parse(JSON.stringify(state));
+    current[name1][name2] = e.target.value;
+    setState(current)
+    }
+
+    function handleInputRemiseChange( e, name1){
+      console.log(e.target.value);
+      let current = JSON.parse(JSON.stringify(state));
+      current[name1] = e.target.value;
+      setState(current)
+      }
+    
+  function handleIsLeadHourChange(value){
+    let temp = {...state};
+    temp.isLeadHour = value;
+    setState(temp);
+        }
+
+  function handleIsRemiseEuroChange(value){
+    let temp = {...state};
+    temp.isRemiseEuro = value;
+    setState(temp);
+        }
   
   return (
 <div className="block">
@@ -245,6 +283,7 @@ function InsertPromotion(){
 <div className="form-group"  style={{marginTop:"1px"}}>
 <FormGroup>
 <PlanTarifaire planTarifaire={state.planTarifaire} handleCheckBoxPlanTarifaire={handleCheckBoxPlanTarifaire}/>
+{state.error.planTarifaire === null ? null : <div className="customError"><span>{state.error.planTarifaire}</span></div>}
 </FormGroup> 
   </div>
    </div>
@@ -254,13 +293,17 @@ Quelles chambres ?
 <p id='litleLabel' style={{marginLeft:"15px",marginTop:'5px'}}>Sélectionnez au moins 1 type de chambre</p>
   <div className="form-group"  style={{marginTop:"5px"}}>
   <FormGroup>
-<TypeChambre typeChambre={state.typeChambre} handleCheckBoxTypeChambre={handleCheckBoxTypeChambre}/>
+<TypeChambre 
+typeChambre={state.typeChambre} 
+handleCheckBoxTypeChambre={handleCheckBoxTypeChambre}
+/>
+{state.error.typeChambre === null ? null : <div className="customError"><span>{state.error.typeChambre}</span></div>}
 </FormGroup>    
   </div>
 
 <hr style={{width:'95%'}}></hr>
 
-  <div className="form-group" style={{marginTop:"15px"}}>
+  {/* <div className="form-group" style={{marginTop:"15px"}}>
 <label id='bigLabel'>
 Quelle remise voulez-vous offrir ?
 </label>
@@ -326,7 +369,60 @@ onChange={(e) => handleInputChange(e, "remiseEuro")}
 />
 }
 
+
+  </div> */}
+
+<div style={{marginTop:'0px'}}>
+      <div>
+          <label className="" style={{textDecoration: 'underline',fontFamily:'Roboto',fontSize:'15px',marginLeft:'0px'}} >
+              Remise { state.isRemiseEuro ? "Euro" : "Pourcentage"} 
+          </label>
+      </div>
+      <RadioGroup
+          aria-label="Pourcentage"
+          defaultValue="euro"
+          name="radio-buttons-group"
+      >
+          <div className ="row" style={{marginTop:'15px'}}>
+              <div className ="col">
+                  <TextField
+                  label="Remise"
+                  type='number'
+                  id=''
+                  size='small'
+                  value={state.remise.euro}
+                  placeholder='Hour/Date'
+                  onChange={(e) => handleInputRemiseChange( e, "remise")}
+                  error={state.error.remise === null ? false : true}
+                  helperText={state.error.remise === null ? null : state.error.remise}
+                  /> 
+                  {console.log(state.error.remise)}
+              </div>
+              <div className ="col">
+                  <FormControlLabel 
+                  value="euro" 
+                  onClick={(e) => handleIsRemiseEuroChange(true)} 
+                  control={<Radio />} 
+                  label={
+                  <span id='litleLabel'>
+                  Euro
+                  </span>} />
+              </div>
+              <div className ="col">
+                  <FormControlLabel  
+                  value="pourcentage" 
+                  onClick={(e) => handleIsRemiseEuroChange(false)} 
+                  control={<Radio />} 
+                  label={
+                      <span id='litleLabel'>
+                        Pourcentage
+                      </span>} /> 
+              </div>
+          </div>
+      </RadioGroup>
   </div>
+
+
 
   </div>
   <div className='block2' style={{marginTop:"30px"}}>
@@ -404,96 +500,68 @@ error={state.error.sejourMin === null ? false : true}
 helperText={state.error.sejourMin === null ? null : state.error.sejourMin}
 /> 
    </div>
-  
- <div className="form-group" style={{marginTop:"40px"}}>
-<label id='bigLabel'>
-Lead hour ou day 
-</label>
-<FormControl component="fieldset">
-  <FormLabel component="legend"></FormLabel>
-  <RadioGroup
-    aria-label=""
-    defaultValue=""
-    name="radio-buttons-group"
-  >
-    <FormControlLabel 
-    value="mal" 
-    control={<Radio />}  
-    label={<p id='label'>Day</p>}
-    onClick={() => {setVisibleLD(true);setVisibleLH(false)}}/>
-    <FormControlLabel 
-    value="female" 
-    control={<Radio />} 
-    label={<p id='label'>Hour</p>} 
-    onClick={() => {setVisibleLH(true);setVisibleLD(false)}}/>
-  </RadioGroup>
-</FormControl>
 
-{
-  visibleLD &&
-<TextField 
-id="outlined-basic" 
-label="Min" 
-variant="outlined" 
-className="form-control" 
-style={{width:"130px"}}
-placeholder='Jour'
-size="small"
-type="number" 
-name="leadDayMin" 
-onChange={(e) => handleInputChange(e, "leadDayMin")}
-/>
-}
-
-{
-  visibleLD &&
-<TextField 
-id="outlined-basic" 
-label="Max" 
-variant="outlined" 
-className="form-control" 
-style={{width:"130px",marginTop:'15px'}}
-placeholder='Jour'
-size="small"
-type="number" 
-name="leadDayMax" 
-onChange={(e) => handleInputChange(e, "leadDayMax")}
-/>
-}
-
-{
-  visibleLH &&
-<TextField 
-id="outlined-basic" 
-label="Min" 
-variant="outlined" 
-className="form-control" 
-style={{width:"130px"}}
-placeholder='Heure'
-size="small"
-type="number" 
-name="leadHourMax" 
-onChange={(e) => handleInputChange(e, "leadHourMax")}
-/>
-}
-
-{
-  visibleLH &&
-<TextField 
-id="outlined-basic" 
-label="Max" 
-variant="outlined" 
-className="form-control" 
-style={{width:"130px",marginTop:'15px'}}
-placeholder='Heure'
-size="small"
-type="number" 
-name="leadHourMin" 
-onChange={(e) => handleInputChange(e, "leadHourMin")}
-/>
-}
-
-  </div> 
+  <div style={{marginTop:'0px'}}>
+      <div>
+          <label className="" style={{textDecoration: 'underline',fontFamily:'Roboto',fontSize:'15px',marginLeft:'0px'}} >
+              Lead { state.isLeadHour ? "hour" : "day"} 
+          </label>
+      </div>
+      <RadioGroup
+          aria-label="Lead"
+          defaultValue="hour"
+          name="radio-buttons-group"
+      >
+          <div className ="row" style={{marginTop:'15px'}}>
+              <div className ="col">
+                  <TextField
+                  label="Min"
+                  type='number'
+                  id='lead'
+                  size='small'
+                  value={state.lead.min}
+                  placeholder='Hour/Date'
+                  onChange={(e) => handleInputChange2( e, "lead", "min")}
+                  error={state.error.leadMin === null ? false : true}
+                  helperText={state.error.leadMin === null ? null : state.error.leadMin}
+                  /> 
+              </div>
+              <div className ="col">
+                  <TextField
+                  label="Max"
+                  type='number'
+                  id='lead'
+                  size='small'
+                  value={state.lead.max}
+                  placeholder='Hour/Date'
+                  onChange={(e) => handleInputChange2( e, "lead", "max")}
+                  error={state.error.leadMax === null ? false : true}
+                  helperText={state.error.leadMax === null ? null : state.error.leadMax}
+                  /> 
+              </div>
+              <div className ="col">
+                  <FormControlLabel 
+                  value="hour" 
+                  onClick={(e) => handleIsLeadHourChange(true)} 
+                  control={<Radio />} 
+                  label={
+                  <span id='litleLabel'>
+                  Hour
+                  </span>} />
+              </div>
+              <div className ="col">
+                  <FormControlLabel  
+                  value="day" 
+                  onClick={(e) => handleIsLeadHourChange(false)} 
+                  control={<Radio />} 
+                  label={
+                      <span id='litleLabel'>
+                        Day
+                      </span>} /> 
+              </div>
+          </div>
+      </RadioGroup>
+  </div>
 
   <div className="form-group" style={{marginTop:"40px"}}>
 <label id='bigLabel'>
@@ -630,7 +698,7 @@ helperText={state.error.nom === null ? null : state.error.nom}
 <Button  
 variant="contained" 
 type='submit' 
-style={{textDecoration:'none',color:'black'}}
+style={{textDecoration:'none',backgroundColor:'#2ac4ea'}}
 onClick={(e) => insert(e)}>
 <span style={{color:'white'}}>Ajouter</span>
 </Button>

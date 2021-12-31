@@ -24,6 +24,7 @@ const BookComponent = (props) => {
     }
 
     function setResult(res){
+        console.log(res);
         let currentState = {...props.context.state};
         currentState.listTypeChambre = res.list;
         currentState.isListTarifDispoReceived = true;
@@ -31,20 +32,17 @@ const BookComponent = (props) => {
     }
 
     function applyFilter(){
-        if((props.context.state.guests.nbEnfant !== 0 || props.context.state.guests.nbAdulte !== 0)
-            && (props.context.state.dateSejour.debut !== "" && props.context.state.dateSejour.fin !== "")){
-                props.context.handleChange("errFiltre", null);
-                const data = {
-                    filtres: props.context.state.filtres, 
-                    guests: props.context.state.guests, 
-                    dateDebut: props.context.state.dateSejour.debut,
-                    dateFin: props.context.state.dateSejour.fin
-                }
-                console.log(data);
-                props.context.handleChange("isListTarifDispoReceived", false);
-                callAPI('post', '/TCTarif/', data, setResult);
-        }else{
-            this.props.context.handleChange("errFiltre", 'Veuillez remplir les champs Adulte, Enfant, Debut sejour et fin sejour au moins');
+        if((props.context.state.guests.nbEnfant > 0 || props.context.state.guests.nbAdulte > 0)){
+            props.context.handleChange("errFiltre", null);
+            const data = {
+                filtres: props.context.state.filtres, 
+                guests: props.context.state.guests, 
+                dateDebut: props.context.state.dateSejour.debut,
+                dateFin: props.context.state.dateSejour.fin
+            }
+            console.log(data);
+            props.context.handleChange("isListTarifDispoReceived", false);
+            callAPI('post', '/TCTarif/', data, setResult);
         }
     }
 
@@ -53,7 +51,7 @@ const BookComponent = (props) => {
     <Navbar currentPage={0}/>
     <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection:'column' }} className={styles.filter}>
       <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
-          <BaeCalendar context = {props.context} dateSejour={props.context.state.dateSejour} check={
+          <BaeCalendar context = {props.context} applyFilter={applyFilter} dateSejour={props.context.state.dateSejour} check={
             <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection:'column' }} className={styles.filter2}>
                 <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
                     <TextField
@@ -90,7 +88,7 @@ const BookComponent = (props) => {
             </Box>} 
           />
         
-          <Guest context = {props.context} occupancy={
+          <Guest context = {props.context} applyFilter={applyFilter} occupancy={
               <div>
                 <TextField
                     fullwidth={false}

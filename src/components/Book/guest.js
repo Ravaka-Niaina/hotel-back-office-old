@@ -24,16 +24,18 @@ const style = {
   marginBottom: 5
 };
 
-const Guest = ({context, occupancy}) => {
+const Guest = ({context, applyFilter, occupancy}) => {
 
   function changeNbGuests(categ, value){
     let temp = {...context.state};
     temp.listTypeChambre = [];
-    temp.guests[categ] = value;
+    temp.guests[categ] = Number.parseInt(value);
     if(temp.guests[categ] < 0){
       temp.guests[categ] = 0;
     }
+    temp.listTypeChambre = [];
     context.setState(temp);
+    applyFilter();
   }
 
   return (

@@ -34,7 +34,7 @@ const themes = {
   rouge: 'rouge-theme',
 };
 
-const BaeCalendar = ({ theme, activeDates, onDateSelect, context, check }) => {
+const BaeCalendar = ({ theme, applyFilter, activeDates, onDateSelect, context, check }) => {
   const [open, setOpen] = React.useState(false);
   const [firstTime, setFirstTime] = React.useState(true);
 
@@ -124,6 +124,7 @@ const BaeCalendar = ({ theme, activeDates, onDateSelect, context, check }) => {
                   prix={prix}
                   context={context}
                   closeOnce={closeOnce}
+                  applyFilter={applyFilter}
                 />
               </div>
               <div className={`bae-calendar-container ${themes[theme]}`}>
@@ -138,13 +139,13 @@ const BaeCalendar = ({ theme, activeDates, onDateSelect, context, check }) => {
                   prix={prix}
                   context={context}
                   closeOnce={closeOnce}
+                  applyFilter={applyFilter}
                 />
               </div>
             </Box>
         </React.Fragment>
       }
       placement="bottom-start"
-      {/*open={open}*/}
     >
       <div>
         {check}

@@ -7,7 +7,7 @@ body{
 .filter {
     width: 100%;
     height: 100px;
-    background-color: #084298;
+    background-color: rgba(128,128,128,1);
     padding-top: 20px;
 }
 .filter > div{
@@ -21,12 +21,12 @@ body{
 }
 .filter > div > button {
     Background-color: #fff !important;
-    background-color: #ffc107 !important;
     color: #084298 !important;
+    display: none;
 }
 
 .filter2 {
-    background-color: #084298;
+    background-color: rgba(128,128,128,1);
 }
 
 .filter2 > div > div{
@@ -40,13 +40,25 @@ body{
     min-height: 60px;
     gap: 24px;
     align-items: center;
-    background-color: #ffc107 !important;
+    background-color: #f2f2f2 !important;
     box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
 }
 
 .resultsFilter > button {
     color: #fff !important;
-    background-color: #084298 !important;
+    background-color: rgba(128,128,128,1) !important;
+}
+
+.sidetitle{
+    display: block;
+    background-color:#2d899e;
+    color: #fff;
+    text-align: center;
+    padding: 5px;
+}
+
+.reservation .sidetitle{
+    background-color:rgba(128,128,128,1);
 }
 
 /* tarifChambre */
@@ -242,4 +254,93 @@ body{
 
 .btnVoirDetails{
     border-bottom: #fff !important;
+}
+/* promotions */
+.promotion{
+    margin-bottom: 14px;
+    cursor: pointer;
+}
+
+.promotion > div > div:nth-child(2) > span:first-child {
+    font-weight: bold;
+    border-bottom: 1px solid #ffc107;
+}
+
+.promotion > div > div:nth-child(2) > span:nth-child(2){
+    font-size: 14px;
+}
+
+.promotion > div > div:first-child > div {
+    background-color: #fff;
+    color: red;
+    font-size: 14px;
+    border: 1px solid #084298;
+    font-weight: bold;
+}
+
+/** your stay **/
+
+.stay{
+    margin-bottom: 6px;
+}
+
+.stay > div:first-child > div{
+    font-weight: bold;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.stay > div:first-child > div svg{
+    margin-right: 5px;
+}
+
+.stay > div:first-child > span{
+    text-align: left;
+}
+
+.stay > div:last-child button:last-child{
+    color: red;
+}
+
+.stay > div:nth-child(2){
+    text-align: left;
+    margin-left: 14px;
+    font-size: 16px;
+}
+
+.stay > div:last-child{
+    justify-content: flex-end;
+}
+
+.sidetitle{
+    margin-bottom:14px;
+    border-radius: 5px;
+}
+
+.sidetitle > div:first-child{
+    margin-bottom: 6px;
+    background-color: #2d899e;
+    color: #fff;
+}
+
+.sidetitle > div:first-child > p > span{
+   font-weight: 500;
+}
+
+.sidetitle > div:first-child > p,
+.sidetitle > div:last-child > p{
+   font-size: 14px;
+   margin: 6px;
+   text-align: left;
+}
+
+.sidetitle > div:last-child > p > span{
+   font-weight: 500;
+   font-size: 16px;
+}
+
+.sidetitle > div:first-child{
+    display: flex;
+    justify-content:space-evenly;
 }
