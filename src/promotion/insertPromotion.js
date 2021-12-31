@@ -152,7 +152,7 @@ function InsertPromotion(){
   }
 
   useEffect(() => {
-    callAPI('post', '/TCTarif', {}, setListTypeChambre);
+    callAPI('post', '/TypeChambre/TC', {}, setListTypeChambre);
     callAPI('post', '/planTarifaire', {}, setPlanTarifaire);
     callAPI('get', '/equipement', {}, setListEquipement);
   }, []); 
