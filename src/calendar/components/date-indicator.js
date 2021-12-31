@@ -25,12 +25,10 @@ const HtmlTooltip = styled(({ className, ...props }) => (
   },
 }));
 
-const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBornes, prix, context }) => {
+const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBornes, prix, context, closeOnce, applyFilter }) => {
+  
   const changeDate = (day) => {
-
-    console.log("look here");
     context.state.listTypeChambre = [];
-    // context.handleChange("listTypeChambre", []); /* Doesn't work don't know why */
     
     setSelectDate(new Date(day));
     let temp = JSON.parse(JSON.stringify(bornes));
@@ -38,9 +36,12 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
       temp.debut = day;
       temp.fin = day;
       temp.isDebut = false;
+      context.handleChange("listTypeChambre", []);
     }else{
       temp.fin = day;
       temp.isDebut = true;
+      closeOnce();
+      applyFilter();
     }
     setBornes(temp);
     const dates = [temp.debut, temp.fin];

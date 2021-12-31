@@ -1,17 +1,16 @@
-
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from '../Book.module.css';
 import {PersonOutline, LiveTv, Wifi, AcUnit, Iron, HotTub} from '@mui/icons-material';
 import {Paper} from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
 
 import Filtre from '../../client/Filtre.js';
 import {Font} from '../../../partenaire/utilityTypeChambre.js';
 import ListTarif from './listTarif.js';
 import SkeletonTarifDispo from './skeletons/skeletonTarifDispo.js';
 import DetailsTypeChambre from './detailsTypeChambre.js';
+import PhotoTypeChambre from './photoTypeChambre.js';
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -112,8 +111,6 @@ class DChambre extends React.Component{
         this.props.context.setState(currentState);
     }
 
-
-
     printExistingTypeChambre(){
         let i = -1;
         let listChambre = this.props.context.state.listTypeChambre.map(typeChambre => {
@@ -126,7 +123,7 @@ class DChambre extends React.Component{
                             <div>
                             <div class="row mb-4">
                                 <div class="col">
-                                    <div style={{ backgroundImage: 'url(' + process.env.REACT_APP_BACK_URL + "/" + typeChambre.photo[0].replace("\\","/") + ")" }}></div>
+                                    <PhotoTypeChambre photos={typeChambre.photo}/>
                                 </div>
                                 <div class="col">
                                     <span>{typeChambre.nom}</span><br/>
@@ -135,7 +132,7 @@ class DChambre extends React.Component{
                                         {typeChambre.nbEnfant} enfants
                                     </span>
                                     <span>{typeChambre.description.substring(0,85) + "..."}</span>
-                                    <Button className={styles.btnVoirDetails} onClick={(e) => this.switchShowDetailsTC(u)}>Voir détails</Button>
+                                    <DetailsTypeChambre context={this} typeChambre={typeChambre} indexTypeChambre={u} />
                                     <div className={styles.equipements}>
                                         {
                                             typeChambre.equipements.map(equipement => {
@@ -172,7 +169,6 @@ class DChambre extends React.Component{
                         </div>      
                     </div>
                     </Item>
-                    <DetailsTypeChambre context={this} typeChambre={typeChambre} indexTypeChambre={u} />
             </div>
             )
         }); 

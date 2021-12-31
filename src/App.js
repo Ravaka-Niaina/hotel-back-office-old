@@ -59,7 +59,6 @@ import  HistoriqueTC from "./historique/dependancies/TChambre.js";
 import  HistoriqueMPL from "./historique/dependancies/modifPlanT.js";
 
 function App(){
-  
   return(
     <div className="App"> 
       <Router>
