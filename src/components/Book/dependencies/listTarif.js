@@ -110,46 +110,38 @@ function ListTarif(props){
                                         <u>{tarif.nom}</u>
                                     </strong>
                                 </div>
-                                <div className="row">
-                                    <div className="col">
-                                        {
-                                            tarif.minPrix.versions ? tarif.minPrix.versions.map(version => {
-                                                return(
-                                                    <div className="row">
-                                                        <div class={styles.nbPers}>
-                                                            <span>X {version.nbPers}</span>
-                                                            <span><PersonOutline/></span>
-                                                            {/*<ListServiceTarif services={tarif.services} />*/}
-                                                        </div>
-                                                        <div class="col"> 
-                                                            { version.prixOriginal ? <span className={styles.beforeProm}>&nbsp;{version.prixOriginal + " EUR "}</span> : null }
-                                                            <span className={styles.afterProm}>&nbsp;{version.prix + " EUR "}</span>
-                                                        </div>
-                                                        <div class="col">
-                                                            <span>Per Night</span>
-                                                            <span>including Taxes & Fees</span>
-                                                        </div>
+                                {
+                                    tarif.minPrix.versions ? tarif.minPrix.versions.map(version => {
+                                        return(
+                                            <div className="row">
+                                                <div className="col">
+                                                    <div class={styles.nbPers}>
+                                                        <span>X {version.nbPers}</span>
+                                                        <span><PersonOutline/></span>
+                                                        {/*<ListServiceTarif services={tarif.services} />*/}
                                                     </div>
-                                                );
-                                            }) : null
-                                        }
-                                    </div>
-                                    <div className={styles.bookNow}>
-                                        { tarif.minPrix.versions ? tarif.minPrix.versions.map(version => {
-                                            return(
-                                                <div className="row">
-                                                    <Button variant="contained"
-                                                        onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre, version)}
-                                                        endIcon={<AddIcon/>}
-                                                        className="bookNow"
-                                                    >
-                                                        Book
-                                                    </Button>
+                                                    <div class="col"> 
+                                                        { version.prixOriginal ? <span className={styles.beforeProm}>&nbsp;{version.prixOriginal + " EUR "}</span> : null }
+                                                        <span className={styles.afterProm}>&nbsp;{version.prix + " EUR "}</span>
+                                                    </div>
+                                                    <div class="col">
+                                                        <span>Per Night</span>
+                                                        <span>including Taxes & Fees</span>
+                                                    </div>
+                                                    <div className={styles.bookNow}>
+                                                        <Button variant="contained"
+                                                            onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre)}
+                                                            endIcon={<AddIcon/>}
+                                                            className="bookNow"
+                                                        >
+                                                            Book
+                                                        </Button>
+                                                    </div>
                                                 </div>
-                                            );
-                                        }): null}
-                                    </div>
-                                </div>
+                                            </div>
+                                        );
+                                    }) : null
+                                }
                             </li><br/>
                         </ul>
                      </div> 
