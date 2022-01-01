@@ -139,7 +139,6 @@ body{
 }
 
 /* list tarif */
-
 .listTarif{
     text-align: left;
 }
@@ -150,15 +149,11 @@ body{
     padding-left: 0;
 }
 
-.listTarif ul > li > div > span > i{
-    color: green;
-}
-
 .listTarif ul > li > div{
     margin: 0;
 }
 
-.listTarif ul > li > div{
+.listTarif ul > li > div > div{
     display:flex;
     flex-direction: column;
     justify-content: center;
@@ -167,55 +162,80 @@ body{
     padding-bottom:8px;
 }
 
-/*
 .listTarif ul > li > div > div:first-child,
 .listTarif ul > li > div > div:nth-child(2){
     align-items: flex-start;
 }
-*/
 
-.listTarif ul > li > div > div > div:first-child{
+.listTarif ul > li > div > div:first-child{
     background-color: #fff;
     border-right: 3px solid #084298;
     color:grey;
 }
 
-.listTarif ul > li > div > div > div{
+.listTarif ul > li > div > div:first-child i{
+    color: green;
+}
+
+.listTarif ul > li > div > div:nth-child(2){
     background-color:#f6f8fd;
     color: #000;
     border-right: 5px solid #fff;
 }
 
-
-.listTarif ul > li > div > div > div{
+.listTarif ul > li > div > div:nth-child(3){
     background-color:#f6f8fd;
-    margin-bottom: 7px;
-    width: 100%;
 }
 
-.nbPers{
-    width: 75px;
-    margin-top: 5px;
+.listTarif ul > li > div > div:nth-child(2) > span{
+    padding-left: 25px;
 }
 
-.nbPers > span{
-    float: left;
-}
-.nbPers > span:last-child{
-    display: block;
-    width: fit-content;
-    margin-top: -2px;
-}
-
-.listTarif ul > li > div > div > div:nth-child(2) > span{
-    display: block;
-}
-.listTarif ul > li > div > div > div:nth-child(3) > span{
-    display: block;
-}
-
-.listTarif ul > li > div > div > div:nth-child(2){
+.listTarif ul > li > div > div:nth-child(2) > span:first-child,
+.listTarif ul > li > div > div:nth-child(2) > span:nth-child(2){
     font-size: 20px;
+}
+
+.listTarif ul > li > div > div:nth-child(2) > span:first-child{
+    color: #084298;
+    text-decoration: line-through;
+}
+
+.listTarif ul > li > div > div:nth-child(2) > span:nth-child(2){
+    color: #c20808;
+    font-weight: bolder;
+}
+
+.listTarif ul > li > div > div:nth-child(3){
+    align-items: flex-start;
+}
+
+.listTarif ul > li > div > div:nth-child(3) > span:first-child{
+    font-size: 12px;
+}
+
+.listTarif ul > li > div > div:nth-child(3) > span:last-child{
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.listTarif ul > li > div:nth-child(3){
+    margin-bottom: 10px;
+}
+
+.listTarif ul > li > div > div:first-child{
+    width: 100px;
+    font-size: 12px;
+}
+
+.listTarif ul > li > div > div:first-child > span{
+    display: inline-block;
+    position: absolute;
+}
+
+.listTarif ul > li > div > div:first-child > span:nth-child(2){
+    margin-left: 20px;
+    margin-top: -3px;
 }
 
 .beforeProm{
@@ -226,19 +246,6 @@ body{
 .afterProm{
     color: #c20808;
     font-weight: bolder;
-}
-
-.listTarif ul > li > div{
-    align-items: flex-start;
-}
-
-.listTarif ul > li > div > div > div > div:nth-child(3) > span:nth-child(1){
-    font-size: 12px;
-}
-
-.listTarif ul > li > div > div > div > div:nth-child(3) > span:last-child{
-    font-size: 14px;
-    font-weight: bold;
 }
 
 .bookNow{

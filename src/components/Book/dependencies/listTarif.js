@@ -113,30 +113,28 @@ function ListTarif(props){
                                 {
                                     tarif.minPrix.versions ? tarif.minPrix.versions.map(version => {
                                         return(
-                                            <div className="row">
-                                                <div className="col">
-                                                    <div class={styles.nbPers}>
-                                                        <span>X {version.nbPers}</span>
-                                                        <span><PersonOutline/></span>
-                                                        {/*<ListServiceTarif services={tarif.services} />*/}
-                                                    </div>
-                                                    <div class="col"> 
-                                                        { version.prixOriginal ? <span className={styles.beforeProm}>&nbsp;{version.prixOriginal + " EUR "}</span> : null }
-                                                        <span className={styles.afterProm}>&nbsp;{version.prix + " EUR "}</span>
-                                                    </div>
-                                                    <div class="col">
-                                                        <span>Per Night</span>
-                                                        <span>including Taxes & Fees</span>
-                                                    </div>
-                                                    <div className={styles.bookNow}>
-                                                        <Button variant="contained"
-                                                            onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre)}
-                                                            endIcon={<AddIcon/>}
-                                                            className="bookNow"
-                                                        >
-                                                            Book
-                                                        </Button>
-                                                    </div>
+                                            <div className="row" style={{marginTop: "5px"}}>
+                                                <div>
+                                                    <span>X {version.nbPers}</span>
+                                                    <span><PersonOutline/></span>
+                                                    {/*<ListServiceTarif services={tarif.services} />*/}
+                                                </div>
+                                                <div class="col"> 
+                                                    { version.prixOriginal ? <span className={styles.beforeProm}>&nbsp;{version.prixOriginal + " EUR "}</span> : null }
+                                                    <span className={styles.afterProm}>&nbsp;{version.prix + " EUR "}</span>
+                                                </div>
+                                                <div class="col">
+                                                    <span>Per Night</span>
+                                                    <span>including Taxes & Fees</span>
+                                                </div>
+                                                <div className={styles.bookNow}>
+                                                    <Button variant="contained"
+                                                        onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre)}
+                                                        endIcon={<AddIcon/>}
+                                                        className="bookNow"
+                                                    >
+                                                        Book
+                                                    </Button>
                                                 </div>
                                             </div>
                                         );
