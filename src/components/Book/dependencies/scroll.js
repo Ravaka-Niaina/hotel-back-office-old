@@ -2,7 +2,7 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DChambre from './listChambre'
-import Fact from './fact'
+import Fact from './fact.js';
 import { useCookies } from 'react-cookie';
 import callAPI from '../../../utility';
 import './Css.css'
@@ -16,7 +16,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import Promotions from "./promotion";
+import Promotions from "../../client/promotion";
 
 import styles from '../Book.module.css';
 
@@ -70,6 +70,7 @@ class Scroll extends React.Component{
     }
     
     handleChange(fieldName, value){
+        console.log("ok");
         let current = JSON.parse(JSON.stringify(this.state));
         current[fieldName] = value;
         this.setState(current);
@@ -217,14 +218,17 @@ class Scroll extends React.Component{
                     <Box sx={{ flexGrow: 1, padding :"5px" }}>
                         <Grid container spacing={2}>
                             <Grid item xs={3}>
-                                <span className={styles.sidetitle}>Promotions</span>
-                                <Promotions />
+                                <Item>
+                                    <Promotions />
+                                </Item>
                             </Grid>
                             <Grid className={styles.tarifChambre} item xs={6}>
                                 <DChambre context = {this} />
                             </Grid>
-                            <Grid className={styles.reservation} item xs={3}>
-                                <Fact context = {this} />
+                            <Grid item xs={3}>
+                                <Item>
+                                    <Fact context = {this} />
+                                </Item>
                             </Grid>
                         </Grid>
                     </Box>

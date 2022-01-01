@@ -1,0 +1,108 @@
+[1mdiff --git a/.env b/.env[m
+[1mindex d577e111..3992c95a 100644[m
+[1m--- a/.env[m
+[1m+++ b/.env[m
+[36m@@ -1,9 +1,9 @@[m
+ #EN LIGNE[m
+[31m-REACT_APP_BACK_URL=https://adr-hotel-back.herokuapp.com[m
+[32m+[m[32m#REACT_APP_BACK_URL=https://adr-hotel-back.herokuapp.com[m
+ [m
+ #ELIGNE ANJA[m
+ #REACT_APP_BACK_URL = https://back-hotel.herokuapp.com[m
+ [m
+ #LOCAL[m
+[31m-#REACT_APP_BACK_URL=http://localhost:3000[m
+[32m+[m[32mREACT_APP_BACK_URL=http://localhost:3000[m
+ #"start" : "react-scripts --openssl-legacy-provider start" , [m
+[1mdiff --git a/src/calendar/calendar.js b/src/calendar/calendar.js[m
+[1mindex 20446955..b6b92ed1 100644[m
+[1m--- a/src/calendar/calendar.js[m
+[1m+++ b/src/calendar/calendar.js[m
+[36m@@ -71,6 +71,7 @@[m [mconst BaeCalendar = ({ theme, applyFilter, activeDates, onDateSelect, context, c[m
+     fin.setDate(1);[m
+ [m
+     const data = {dateDebut: getDate(debut), dateFin: getDate(fin)};[m
+[32m+[m[32m    console.log(data);[m[41m[m
+     callAPI('post', '/TCTarif/disponibiliteTarif', data, populatePrix);[m
+   }[m
+ [m
+[1mdiff --git a/src/components/Book/dependencies/fact.js b/src/components/Book/dependencies/fact.js[m
+[1mindex 19a32ccb..a4232867 100644[m
+[1m--- a/src/components/Book/dependencies/fact.js[m
+[1m+++ b/src/components/Book/dependencies/fact.js[m
+[36m@@ -84,7 +84,9 @@[m [mfunction Reservations(props){[m
+                         <div><span>Prix : 500 EUR</span></div>[m
+                         <CardActions>[m
+                             <Button size="small">Modifier</Button>[m
+[31m-                            <Button size="small">Annuler</Button>[m
+[32m+[m[32m                            <Button size="small" onClick={(e) => props.annulerReservation(props.context, props.context.state.reservationEnCours._id, props.indexItineraire, u)}>[m[41m[m
+[32m+[m[32m                                Annuler[m[41m[m
+[32m+[m[32m                            </Button>[m[41m[m
+                         </CardActions>[m
+                         </Card>[m
+                     );[m
+[36m@@ -189,9 +191,9 @@[m [mclass Fact extends React.Component{[m
+             withCredentials: true,[m
+             data: {}[m
+         })[m
+[31m-        .then(res => {  [m
+[31m-            console.log(res.data.reservation[0]); [m
+[31m-            this.props.context.setReservationEnCours(res.data.reservation[0], true);[m
+[32m+[m[32m        .then(res => {[m[41m[m
+[32m+[m[32m            let reserv = res.data.reservation === null ? null : res.data.reservation[0];[m[41m[m
+[32m+[m[32m            this.props.context.setReservationEnCours(reserv, true);[m[41m[m
+         }).catch(err => console.log(err));[m
+     }[m
+ [m
+[1mdiff --git a/src/components/Book/dependencies/scroll.js b/src/components/Book/dependencies/scroll.js[m
+[1mindex 39121ca2..c629fe61 100644[m
+[1m--- a/src/components/Book/dependencies/scroll.js[m
+[1m+++ b/src/components/Book/dependencies/scroll.js[m
+[36m@@ -2,7 +2,7 @@[m
+ import React from 'react'[m
+ import 'bootstrap/dist/css/bootstrap.min.css';[m
+ import DChambre from './listChambre'[m
+[31m-import Fact from './fact'[m
+[32m+[m[32mimport Fact from './fact.js';[m[41m[m
+ import { useCookies } from 'react-cookie';[m
+ import callAPI from '../../../utility';[m
+ import './Css.css'[m
+[36m@@ -16,7 +16,7 @@[m [mimport { styled } from '@mui/material/styles';[m
+ import Box from '@mui/material/Box';[m
+ import Paper from '@mui/material/Paper';[m
+ import Grid from '@mui/material/Grid';[m
+[31m-import Promotions from "./promotion";[m
+[32m+[m[32mimport Promotions from "../../client/promotion";[m[41m[m
+ [m
+ import styles from '../Book.module.css';[m
+ [m
+[36m@@ -70,6 +70,7 @@[m [mclass Scroll extends React.Component{[m
+     }[m
+     [m
+     handleChange(fieldName, value){[m
+[32m+[m[32m        console.log("ok");[m[41m[m
+         let current = JSON.parse(JSON.stringify(this.state));[m
+         current[fieldName] = value;[m
+         this.setState(current);[m
+[36m@@ -217,14 +218,17 @@[m [mclass Scroll extends React.Component{[m
+                     <Box sx={{ flexGrow: 1, padding :"5px" }}>[m
+                         <Grid container spacing={2}>[m
+                             <Grid item xs={3}>[m
+[31m-                                <span className={styles.sidetitle}>Promotions</span>[m
+[31m-                                <Promotions />[m
+[32m+[m[32m                                <Item>[m[41m[m
+[32m+[m[32m                                    <Promotions />[m[41m[m
+[32m+[m[32m                                </Item>[m[41m[m
+                             </Grid>[m
+                             <Grid className={styles.tarifChambre} item xs={6}>[m
+                                 <DChambre context = {this} />[m
+                             </Grid>[m
+[31m-                            <Grid className={styles.reservation} item xs={3}>[m
+[31m-                                <Fact context = {this} />[m
+[32m+[m[32m                            <Grid item xs={3}>[m[41m[m
+[32m+[m[32m                                <Item>[m[41m[m
+[32m+[m[32m                                    <Fact context = {this} />[m[41m[m
+[32m+[m[32m                                </Item>[m[41m[m
+                             </Grid>[m
+                         </Grid>[m
+                     </Box>[m

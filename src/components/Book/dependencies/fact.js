@@ -84,7 +84,9 @@ function Reservations(props){
                         <div><span>Prix : 500 EUR</span></div>
                         <CardActions>
                             <Button size="small">Modifier</Button>
-                            <Button size="small">Annuler</Button>
+                            <Button size="small" onClick={(e) => props.annulerReservation(props.context, props.context.state.reservationEnCours._id, props.indexItineraire, u)}>
+                                Annuler
+                            </Button>
                         </CardActions>
                         </Card>
                     );
@@ -189,9 +191,9 @@ class Fact extends React.Component{
             withCredentials: true,
             data: {}
         })
-        .then(res => {  
-            console.log(res.data.reservation[0]); 
-            this.props.context.setReservationEnCours(res.data.reservation[0], true);
+        .then(res => {
+            let reserv = res.data.reservation === null ? null : res.data.reservation[0];
+            this.props.context.setReservationEnCours(reserv, true);
         }).catch(err => console.log(err));
     }
 
