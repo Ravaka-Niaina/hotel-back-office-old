@@ -24,7 +24,6 @@ const BookComponent = (props) => {
     }
 
     function setResult(res){
-        console.log(res);
         let currentState = {...props.context.state};
         currentState.listTypeChambre = res.list;
         currentState.isListTarifDispoReceived = true;

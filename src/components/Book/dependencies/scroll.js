@@ -70,7 +70,6 @@ class Scroll extends React.Component{
     }
     
     handleChange(fieldName, value){
-        console.log("ok");
         let current = JSON.parse(JSON.stringify(this.state));
         current[fieldName] = value;
         this.setState(current);

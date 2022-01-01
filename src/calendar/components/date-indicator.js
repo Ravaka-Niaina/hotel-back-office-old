@@ -40,8 +40,12 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
     }else{
       temp.fin = day;
       temp.isDebut = true;
-      closeOnce();
-      applyFilter();
+      //closeOnce();
+      
+      let bigState = {...context.state};
+      bigState.dateSejour = temp;
+      console.log(bigState.dateSejour);
+      context.setState(bigState, () => {applyFilter()});
     }
     setBornes(temp);
     const dates = [temp.debut, temp.fin];

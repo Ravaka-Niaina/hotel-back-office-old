@@ -55,7 +55,6 @@ const BaeCalendar = ({ theme, applyFilter, activeDates, onDateSelect, context, c
     setOpen(false);
     setTimeout(() => setOpen(undefined), 1000);
   }
-  console.log("open = " + open);
 
   function populatePrix(res){
     if(res.status === 200){
