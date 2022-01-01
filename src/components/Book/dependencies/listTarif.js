@@ -135,13 +135,19 @@ function ListTarif(props){
                                         }
                                     </div>
                                     <div className={styles.bookNow}>
-                                        <Button variant="contained"
-                                            onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre)}
-                                            endIcon={<AddIcon/>}
-                                            className="bookNow"
-                                        >
-                                            Book
-                                        </Button>
+                                        { tarif.minPrix.versions ? tarif.minPrix.versions.map(version => {
+                                            return(
+                                                <div className="row">
+                                                    <Button variant="contained"
+                                                        onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre, version)}
+                                                        endIcon={<AddIcon/>}
+                                                        className="bookNow"
+                                                    >
+                                                        Book
+                                                    </Button>
+                                                </div>
+                                            );
+                                        }): null}
                                     </div>
                                 </div>
                             </li><br/>
