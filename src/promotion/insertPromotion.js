@@ -120,33 +120,26 @@ function InsertPromotion(){
   const handleClose = () => setOpen(false);
 
   const history = useHistory();
-  
-  function setPlanTarifaire(res){
-    console.log("List plan tarifaire------------");
-    console.log(res);
-    let current = JSON.parse(JSON.stringify(state));
-    for(let i = 0; i < res.list.length; i++){
-      res.list[i].checked = false;
-    }
-    current.planTarifaire = res.list;
-    state = current;
-    //setState(current);
-  }
 
   function setListTypeChambre(res){
     console.log("List type chambre-----------");
     console.log(res);
     let current = JSON.parse(JSON.stringify(state));
-    for(let i = 0; i < res.list.length; i++){
-      res.list[i].checked = false;
+    for(let i = 0; i < res.listTypeChambre.length; i++){
+      res.listTypeChambre[i].checked = false;
     }
-    current.typeChambre = res.list;
-    state = current;
+    current.typeChambre = res.listTypeChambre;
+
+    for(let i = 0; i < res.listTarif.length; i++){
+      res.listTarif[i].checked = false;
+    }
+    current.planTarifaire = res.listTarif;
+    // state = current;
+    setState(current);
 }
 
   useEffect(() => {
-    callAPI('get', '/TypeChambre/', {}, setListTypeChambre);
-    callAPI('get', '/planTarifaire/sansPagination', {}, setPlanTarifaire);
+    callAPI('get', '/TCTarif/list', {}, setListTypeChambre);
   }, []); 
 
   function handleCheckBoxPlanTarifaire(e, index){
