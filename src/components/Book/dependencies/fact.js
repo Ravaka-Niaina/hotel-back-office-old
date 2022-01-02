@@ -90,10 +90,10 @@ function Itineraires(props){
         itineraires.push(
             <Box className={styles.sidetitle}>
                 <Card><p>
-                    Check in : <span>2021-12-15</span>
+                    Check in : <span>{props.context.state.itineraires[i].dateSejour.debut}</span>
                     </p>
                     <p>
-                    Check out : <span>2021-12-15</span>
+                    Check out : <span>{props.context.state.itineraires[i].dateSejour.fin}</span>
                     </p>
                 </Card>
                 <Reservations context={props.context} indexItineraire={i} annulerReservation={props.annulerReservation} />
