@@ -62,7 +62,6 @@ function TypeChambre(props){
   return typeChambre;
 }
 
-
 function InsertPromotion(){
   const noImage = '/no-image.jpg';
   let [val, setVal] = useState(1);
@@ -123,6 +122,7 @@ function InsertPromotion(){
   const history = useHistory();
   
   function setPlanTarifaire(res){
+    console.log("List plan tarifaire------------");
     console.log(res);
     let current = JSON.parse(JSON.stringify(state));
     for(let i = 0; i < res.list.length; i++){
@@ -134,6 +134,8 @@ function InsertPromotion(){
   }
 
   function setListTypeChambre(res){
+    console.log("List type chambre-----------");
+    console.log(res);
     let current = JSON.parse(JSON.stringify(state));
     for(let i = 0; i < res.list.length; i++){
       res.list[i].checked = false;
