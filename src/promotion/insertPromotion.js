@@ -134,7 +134,6 @@ function InsertPromotion(){
   }
 
   function setListTypeChambre(res){
-    console.log(res);
     let current = JSON.parse(JSON.stringify(state));
     for(let i = 0; i < res.list.length; i++){
       res.list[i].checked = false;
@@ -143,18 +142,9 @@ function InsertPromotion(){
     state = current;
 }
 
-
-
-  function setListEquipement(res){
-    let current = JSON.parse(JSON.stringify(state));
-    current.equipements = res.equipements;
-    setState(current);
-  }
-
   useEffect(() => {
-    callAPI('post', '/TypeChambre/TC', {}, setListTypeChambre);
-    callAPI('post', '/planTarifaire', {}, setPlanTarifaire);
-    callAPI('get', '/equipement', {}, setListEquipement);
+    callAPI('get', '/TypeChambre/', {}, setListTypeChambre);
+    callAPI('get', '/planTarifaire/sansPagination', {}, setPlanTarifaire);
   }, []); 
 
   function handleCheckBoxPlanTarifaire(e, index){
@@ -168,14 +158,6 @@ function InsertPromotion(){
     current.typeChambre[index].checked = e.target.checked;
     setState(current);
   }
-
-  function handleCheckBoxEquipement(e, index){
-    let current = JSON.parse(JSON.stringify(state));
-    current.equipements[index].checked = e.target.checked;
-    setState(current);
-    
-  }
-
   
   function tryRedirect(res){
     console.log(res);
@@ -202,14 +184,6 @@ function InsertPromotion(){
       e.preventDefault();
       console.log('Envoie en attente...');
       let toSend = JSON.parse(JSON.stringify(state));
-
-      let selectedEquip = [];
-      for(let i = 0; i < state.equipements.length; i++){
-        if(state.equipements[i].checked){
-          selectedEquip.push(state.equipements[i]._id);
-        }
-      }
-      toSend.equipements = selectedEquip;
       
       let selectedPlan = [];
       for(let i = 0; i < state.planTarifaire.length; i++){
