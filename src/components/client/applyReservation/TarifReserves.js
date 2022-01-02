@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 
-import {Champs, line} from './commonAssets.js';
+import {Champs, ChampsImportant, line} from './commonAssets.js';
 import InputUtilisateur from './InputUtilisateur.js';
 import Politiques from './Politiques.js';
 import ConfirmAnnulChambre from './ConfirmAnnulChambre.js';
@@ -30,18 +30,22 @@ function TarifReserves(props){
         if(props.reservation.itineraires[props.indexItineraire].tarifReserves[i].dateAnnulation === undefined){
             const u = i;
             console.log("u = " + u);
+            const tarif = props.reservation.itineraires[props.indexItineraire].tarifReserves[i];
             tarifs.push(
                 <div>
                     <h3>Informations Hôtel</h3>
                     <div style={line}>
-                        <Champs label="Nom" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTypeChambre.infoHotel.nom} />
-                        <Champs label="Adresse" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTypeChambre.infoHotel.adresse} />
-                        <Champs label="Email" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTypeChambre.infoHotel.email} />
-                        <Champs label="Téléphone" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTypeChambre.infoHotel.tel} />
+                        <Champs label="Nom" value={tarif.infoTypeChambre.infoHotel.nom} />
+                        <Champs label="Adresse" value={tarif.infoTypeChambre.infoHotel.adresse} />
+                        <Champs label="Email" value={tarif.infoTypeChambre.infoHotel.email} />
+                        <Champs label="Téléphone" value={tarif.infoTypeChambre.infoHotel.tel} />
                     </div>
                     <div style={line}>
-                        <Champs label="Type chambre" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].nomTypeChambre} />
-                        <Champs label="Plan tarifaire" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].nomTarif} />
+                        <Champs label="Type chambre" value={tarif.nomTypeChambre} />
+                        <Champs label="Plan tarifaire" value={tarif.nomTarif} />
+                        <Champs label="Nombre de personnes" value={tarif.nbPers} />
+                        <ChampsImportant label="Prix sans promotion" value={"€ " + tarif.toPay.beforeProm} />
+                        <ChampsImportant label="Prix avec promotion" value={"€ " + tarif.toPay.afterProm} />
                     </div>
                     <InputUtilisateur 
                         reservation={props.reservation}

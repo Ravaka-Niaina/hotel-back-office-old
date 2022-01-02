@@ -23,7 +23,7 @@ function InfoItineraires(props){
                             value={props.reservation.itineraires[u].num === undefined ? "Vide" : props.reservation.itineraires[u].num } />
                         <Champs 
                             label="Nom client" 
-                            value="Ratefiarivony Ravaka" />
+                            value="Ritsy Andriamanantsoa" />
                     </div>
                     <div style={line}>
                         <ChampsImportant label="Check in" value={props.reservation.itineraires[u].dateSejour.debut} />
@@ -48,6 +48,9 @@ function InfoItineraires(props){
     return(
         <div>
             {itineraires}
+
+        {/* Tsy tadidiko hoe inona ito ambany ito */}
+        {/*
         <h3>Nom tarif</h3>
         <TableContainer component={Paper}>
             <Table sx={{ width: 400 }} aria-label="customized table">
@@ -67,6 +70,7 @@ function InfoItineraires(props){
                 </TableBody>
             </Table>
         </TableContainer>
+        */}
         <h3>Paiements</h3>
         <TableContainer component={Paper}>
             <Table sx={{ width: 400 }} aria-label="customized table">

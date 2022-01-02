@@ -186,7 +186,7 @@ function ApplyReservation(props){
                             setAffilie={setAffilie}
                             openLoad={openLoad}
                             setOpenLoad={setOpenLoad} />
-                        <Total />
+                        <Total toPay={reservation.toPay} />
                         <Stack direction="row" spacing={2}>
                             <Button variant="contained">Imprimer</Button>
                             <Button variant="contained">Partager</Button>
