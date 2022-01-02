@@ -196,16 +196,6 @@ body{
     font-size: 20px;
 }
 
-.listTarif ul > li > div > div:nth-child(2) > span:first-child{
-    color: #084298;
-    text-decoration: line-through;
-}
-
-.listTarif ul > li > div > div:nth-child(2) > span:nth-child(2){
-    color: #c20808;
-    font-weight: bolder;
-}
-
 .listTarif ul > li > div > div:nth-child(3){
     align-items: flex-start;
 }

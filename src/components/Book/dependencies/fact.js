@@ -59,20 +59,6 @@ function Reservations(props){
             const u = i;
             if(tarif.etat == 1 || tarif.etat == undefined){
                 return (
-                    // <div className ="row" style = {{margin : "0 auto"}}> 
-                    //     <div className ="col">
-                    //         <strong >{tarif.nomTarif}</strong>
-                    //     </div>
-                    //     <div className ="col">
-                    //     <EditIcon style={{color : "green"}} /><span id="edit">edit </span> &nbsp;&nbsp;
-                    //     <CancelIcon style={{color : "red"}}/><span id="remove" onClick={(e) => 
-                    //         props.annulerReservation(props.context, 
-                    //             props.context.state.reservationEnCours._id, props.indexItineraire, u)}
-                    //     >remove</span>
-                        
-                    //     </div>
-                        
-                    // </div>
                         <Card className={styles.stay}>
                         <CardContent>
                             <div>
@@ -81,7 +67,7 @@ function Reservations(props){
                                 <span><LocalOfferIcon/>{tarif.nomTarif}</span>
                             </div>
                         </CardContent>
-                        <div><span>Prix : 500 EUR</span></div>
+                        <div><span>Prix : {tarif.toPay.afterProm} EUR</span></div>
                         <CardActions>
                             <Button size="small">Modifier</Button>
                             <Button size="small" onClick={(e) => props.annulerReservation(props.context, props.context.state.reservationEnCours._id, props.indexItineraire, u)}>
@@ -102,35 +88,6 @@ function Itineraires(props){
     let itineraires = [];
     for(let i = 0; i < props.context.state.itineraires.length; i++){
         itineraires.push(
-            // <div>
-            //     <div class="row mb-4">
-            //         <div class="col">
-            //             <span id='litleLabel'> Check in : </span>
-            //             <PrintDateSejour 
-            //                 id='litleLabel'
-            //                 label="Check in" 
-            //                 context={props.context} 
-            //                 index={i}
-            //                 borne="debut" />
-            //         </div>
-                    
-            //         <div class="col" id="locA">
-            //             <span id='litleLabel'>Check out : </span>
-            //             <PrintDateSejour
-            //                 id='litleLabel'  
-            //                 label="Check out"
-            //                 context={props.context}
-            //                 index={i}
-            //                 borne="fin" />
-            //         </div>
-            //         <p>
-            //         <Button size='small' variant="contained" color="success" onClick={(e) => props.context.setState( setValue( props.context.state, ["itineraires", i, "edit"], true ) )}>
-            //             Modifier
-            //         </Button>
-            //         </p>
-            //     </div>
-            //     <Reservations context={props.context} indexItineraire={i} annulerReservation={props.annulerReservation} />
-            // </div>
             <Box className={styles.sidetitle}>
                 <Card><p>
                     Check in : <span>2021-12-15</span>
@@ -142,7 +99,7 @@ function Itineraires(props){
                 <Reservations context={props.context} indexItineraire={i} annulerReservation={props.annulerReservation} />
                 <Card>
                     <p>
-                    Total : <span>1500 EUR</span>
+                    Total : <span>{props.context.state.itineraires[i].toPay} EUR</span>
                     </p>
                 </Card>
             </Box>
@@ -193,6 +150,7 @@ class Fact extends React.Component{
         })
         .then(res => {
             let reserv = res.data.reservation === null ? null : res.data.reservation[0];
+            console.log(reserv);
             this.props.context.setReservationEnCours(reserv, true);
         }).catch(err => console.log(err));
     }

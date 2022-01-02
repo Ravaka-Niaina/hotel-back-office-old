@@ -53,7 +53,7 @@ function ListTarif(props){
         }
     }
 
-    function addReservation(e ,id, nom, idTypeChambre){
+    function addReservation(e ,id, nom, idTypeChambre, nbPers){
         if(props.context.state.itineraires.length === 0){
             let temp = {...props.context.state};
             temp.err = "Veuillez d'abord choisir une date de sejour";
@@ -75,7 +75,8 @@ function ListTarif(props){
                 dateSejour: dateSejour,
                 dateReservation: getDate(Date.now()),
                 guests: props.context.state.guests,
-                idTypeChambre : idTypeChambre
+                idTypeChambre : idTypeChambre,
+                nbPers: nbPers
             });
             console.log(itineraires);
             axios({
@@ -129,7 +130,7 @@ function ListTarif(props){
                                                 </div>
                                                 <div className={styles.bookNow}>
                                                     <Button variant="contained"
-                                                        onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre)}
+                                                        onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre, version.nbPers)}
                                                         endIcon={<AddIcon/>}
                                                         className="bookNow"
                                                     >
