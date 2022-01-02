@@ -1,31 +1,40 @@
 import React from 'react';
-import { styled } from '@mui/material/styles';
-import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Modal from '@mui/material/Modal';
 import SimpleImageSlider from "react-simple-image-slider";
+import styles from "./photoTypeChambre.module.css";
 
-const HtmlTooltip = styled(({ className, ...props }) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-  ))(({ theme }) => ({
-    [`& .${tooltipClasses.tooltip}`]: {
-      backgroundColor: '#f5f5f9',
-      color: 'rgba(0, 0, 0, 0.87)',
-      maxWidth: 220,
-      fontSize: theme.typography.pxToRem(12),
-      border: '1px solid #dadde9',
-    },
-  }));
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 'fit-content',
+    bgcolor: 'background.paper',
+    border: '2px solid #E9E9E9 ',
+    borderRadius: '5px',
+    boxShadow: 24
+};
   
   const PhotoTypeChambre = (props) => {
     let images = [];
+    const [open, setOpen] = React.useState(false);
     for(let i = 0; i < props.photos.length; i++){
         images.push({ url: process.env.REACT_APP_BACK_URL + "/" + props.photos[i].replace("\\","/") });
     }
     console.log(props.photos[0]);
     return (
-        <HtmlTooltip
-            title={
-                <React.Fragment>
+        <>
+            <div style={{ backgroundImage: 'url(' + process.env.REACT_APP_BACK_URL + "/" + props.photos[0].replace("\\","/") + ")" }} onClick={(e) => setOpen(!open)}></div>
+            <Modal
+                open={open}
+                onClose={(e) => setOpen(!open)}
+                aria-labelledby="keep-mounted-modal-title"
+                aria-describedby="keep-mounted-modal-description"
+            >
+                <Box sx={style}>
+                    <div className={styles.close}><button onClick={(e) => setOpen(!open)}><span>X</span></button></div>
                     <SimpleImageSlider
                         width={850}
                         height={504}
@@ -33,12 +42,9 @@ const HtmlTooltip = styled(({ className, ...props }) => (
                         showBullets={true}
                         showNavs={true}
                     />
-                </React.Fragment>
-            }
-            placement="bottom-start"
-        >
-            <div style={{ backgroundImage: 'url(' + process.env.REACT_APP_BACK_URL + "/" + props.photos[0].replace("\\","/") + ")" }}></div>
-        </HtmlTooltip>
+                </Box>
+            </Modal>
+        </>
     );
   }
 
