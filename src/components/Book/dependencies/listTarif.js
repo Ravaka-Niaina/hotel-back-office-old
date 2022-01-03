@@ -112,7 +112,7 @@ function ListTarif(props){
                                     </strong>
                                 </div>
                                 {
-                                    tarif.minPrix.versions ? tarif.minPrix.versions.map(version => {
+                                    tarif.minPrix && tarif.minPrix.versions ? tarif.minPrix.versions.map(version => {
                                         return(
                                             <div className="row" style={{marginTop: "5px"}}>
                                                 <div>
