@@ -54,6 +54,7 @@ function ListTarif() {
     });
 
     function setListPlanTarifaire(data){
+        console.log(data);
         let currentState = JSON.parse(JSON.stringify(state));
         currentState.list = data.list;
         setState(currentState);
