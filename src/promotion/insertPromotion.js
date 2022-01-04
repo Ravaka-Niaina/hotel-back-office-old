@@ -62,7 +62,6 @@ function TypeChambre(props){
   return typeChambre;
 }
 
-
 function InsertPromotion(){
   const noImage = '/no-image.jpg';
   let [val, setVal] = useState(1);
@@ -116,40 +115,26 @@ function InsertPromotion(){
   const handleClose = () => setOpen(false);
 
   const history = useHistory();
-  
-  function setPlanTarifaire(res){
-    console.log(res);
-    let current = JSON.parse(JSON.stringify(state));
-    for(let i = 0; i < res.list.length; i++){
-      res.list[i].checked = false;
-    }
-    current.planTarifaire = res.list;
-    state = current;
-    //setState(current);
-  }
 
   function setListTypeChambre(res){
+    console.log("List type chambre-----------");
     console.log(res);
     let current = JSON.parse(JSON.stringify(state));
-    for(let i = 0; i < res.list.length; i++){
-      res.list[i].checked = false;
+    for(let i = 0; i < res.listTypeChambre.length; i++){
+      res.listTypeChambre[i].checked = false;
     }
-    current.typeChambre = res.list;
-    state = current;
+    current.typeChambre = res.listTypeChambre;
+
+    for(let i = 0; i < res.listTarif.length; i++){
+      res.listTarif[i].checked = false;
+    }
+    current.planTarifaire = res.listTarif;
+    // state = current;
+    setState(current);
 }
 
-
-
-  function setListEquipement(res){
-    let current = JSON.parse(JSON.stringify(state));
-    current.equipements = res.equipements;
-    setState(current);
-  }
-
   useEffect(() => {
-    callAPI('post', '/TCTarif', {}, setListTypeChambre);
-    callAPI('post', '/planTarifaire', {}, setPlanTarifaire);
-    callAPI('get', '/equipement', {}, setListEquipement);
+    callAPI('get', '/TCTarif/list', {}, setListTypeChambre);
   }, []); 
 
   function handleCheckBoxPlanTarifaire(e, index){
@@ -163,14 +148,6 @@ function InsertPromotion(){
     current.typeChambre[index].checked = e.target.checked;
     setState(current);
   }
-
-  function handleCheckBoxEquipement(e, index){
-    let current = JSON.parse(JSON.stringify(state));
-    current.equipements[index].checked = e.target.checked;
-    setState(current);
-    
-  }
-
   
   function tryRedirect(res){
     console.log(res);

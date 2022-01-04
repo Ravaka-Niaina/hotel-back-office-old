@@ -1,4 +1,3 @@
-
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from '../Book.module.css';
@@ -9,13 +8,16 @@ import { styled } from '@mui/material/styles';
 import Filtre from '../../client/Filtre.js';
 import {Font} from '../../../partenaire/utilityTypeChambre.js';
 import ListTarif from './listTarif.js';
+import SkeletonTarifDispo from './skeletons/skeletonTarifDispo.js';
+import DetailsTypeChambre from './detailsTypeChambre.js';
+import PhotoTypeChambre from './photoTypeChambre.js';
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     padding: theme.spacing(1),
     textAlign: 'center',
     color: theme.palette.text.secondary,
-  }));
+}));
 
 function ListConditionAnnulation(props){
     let services = props.politiqueAnnulAtrb.map(condition =>{
@@ -68,20 +70,28 @@ function Equipements(props){
 class DChambre extends React.Component{
     constructor(props){
         super(props);
+        this.state = {
+            showDetailsTypeChambre: false
+        };
+    }
+    switchShowDetailsTC(indexTypeChambre){
+        let temp = {...this.props.context.state};
+        temp.listTypeChambre[indexTypeChambre].show = !temp.listTypeChambre[indexTypeChambre].show;
+        this.props.context.setState(temp);
     }
 
     setListTypeChambre(data){   
-        let currentState = JSON.parse(JSON.stringify(this.props.context.state));  //mamadika donne ho lasa json
-        currentState.listTypeChambre = data.list;                                         // lasa currentState ilai data (this.state) ilai data
+        let currentState = {...this.props.context.state};
+        currentState.listTypeChambre = data.list;
         this.props.context.setState(currentState);  
         console.log(this.props.context.state);
         this.state= {
             listTypeChambre : []
         }
     }
-// ilai this ary scroll atsoin zan oe enfant ity page ity
+
     setListTypeChambre(data){
-        let currentState = JSON.parse(JSON.stringify(this.props.context.state));  //this.state iani
+        let currentState = JSON.parse(JSON.stringify(this.props.context.state));
         console.log(data);
         currentState.listTypeChambre = data.list;                                         // lasa currentState ilai data (this.state) ilai data
         this.props.context.setState(currentState);  
@@ -101,61 +111,77 @@ class DChambre extends React.Component{
         this.props.context.setState(currentState);
     }
 
-    render(){
+    printExistingTypeChambre(){
+        let i = -1;
         let listChambre = this.props.context.state.listTypeChambre.map(typeChambre => {
+            i++;
+            const u = i;
             return (
-            <Item>
-            <div className={styles.listChambre}>
                 <div>
-                <div class="row mb-4">
-                    <div class="col">
-                        <div style={{ backgroundImage: 'url(' + process.env.REACT_APP_BACK_URL + "/" + typeChambre.photo[0].replace("\\","/") + ")" }}></div>
+                    <Item>
+                        <div className={styles.listChambre}>
+                            <div>
+                            <div class="row mb-4">
+                                <div class="col">
+                                    <PhotoTypeChambre photos={typeChambre.photo}/>
+                                </div>
+                                <div class="col">
+                                    <span>{typeChambre.nom}</span><br/>
+                                    <span><PersonOutline/> max : 
+                                        {typeChambre.nbAdulte} Adultes +
+                                        {typeChambre.nbEnfant} enfants
+                                    </span>
+                                    <span>{typeChambre.description.substring(0,85) + "..."}</span>
+                                    <DetailsTypeChambre context={this} typeChambre={typeChambre} indexTypeChambre={u} />
+                                    <div className={styles.equipements}>
+                                        {
+                                            typeChambre.equipements.map(equipement => {
+                                                return(
+                                                    <Font font={equipement.font} />
+                                                );
+                                            })
+                                        }
+                                        {/*
+                                        <div>
+                                            <LiveTv/>
+                                        </div>
+                                        <div>
+                                            <Wifi/>
+                                        </div>
+                                        <div>
+                                            <AcUnit/>
+                                        </div>
+                                        <div>
+                                            <HotTub/>
+                                        </div>
+                                        <div>
+                                            <Iron/>
+                                        </div>
+                                        */}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <ListTarif context={this.props.context} tarifs={typeChambre.tarifs} idTypeChambre={typeChambre._id} />
+                                </div>
+                            </div>  
+                        </div>      
                     </div>
-                    <div class="col">
-                        <span>{typeChambre.nom}</span><br/>
-                        <span><PersonOutline/> max : 
-                            {typeChambre.nbAdulte} Adultes +
-                            {typeChambre.nbEnfant} enfants
-                        </span>
-                        <span>{typeChambre.description.substring(0,85) + "..."}</span>
-                        <div className={styles.equipements}>
-                            {
-                                typeChambre.equipements.map(equipement => {
-                                    return(
-                                        <Font font={equipement.font} />
-                                    );
-                                })
-                            }
-                            {/*
-                            <div>
-                                <LiveTv/>
-                            </div>
-                            <div>
-                                <Wifi/>
-                            </div>
-                            <div>
-                                <AcUnit/>
-                            </div>
-                            <div>
-                                <HotTub/>
-                            </div>
-                            <div>
-                                <Iron/>
-                            </div>
-                            */}
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col">
-                        <ListTarif context={this.props.context} tarifs={typeChambre.tarifs} idTypeChambre={typeChambre._id} />
-                    </div>
-                </div>  
-            </div>      
-        </div>
-        </Item>
+                    </Item>
+            </div>
             )
         }); 
+        return listChambre;
+    }
+
+    render(){
+        let listChambre = this.props.context.state.isListTarifDispoReceived ? 
+            this.printExistingTypeChambre() : 
+            <div>
+                <SkeletonTarifDispo />
+                <SkeletonTarifDispo />
+            </div>
         if(this.props.context.state.guests.nbEnfant == 0 
             && this.props.context.state.guests.nbAdulte == 0){
                 listChambre = null;
@@ -166,7 +192,6 @@ class DChambre extends React.Component{
                  {listChambre}
             </div>
         );
-        //this.addReservation()
     }
 }
 export default DChambre

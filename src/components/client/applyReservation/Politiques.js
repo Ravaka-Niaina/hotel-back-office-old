@@ -25,12 +25,12 @@ function Politiques(props){
                         </TableRow>
                         </TableHead>
                         <TableBody>
-                        {props.politiques[u].datePrice.map((row) => (
+                        {props.politiques[u].datePrice ? props.politiques[u].datePrice.map((row) => (
                             <StyledTableRow key={row._id}>
                                 <StyledTableCell align="left">{row.date} {row.jour === "jours" ? "jours" : "heures"}</StyledTableCell>
                                 <StyledTableCell align="left">{row.pourcentage}</StyledTableCell>
                             </StyledTableRow>
-                        ))}
+                        )): null}
                         </TableBody>
                     </Table>
                 </TableContainer>

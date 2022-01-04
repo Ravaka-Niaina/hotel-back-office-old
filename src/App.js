@@ -54,8 +54,11 @@ import Cookies from 'universal-cookie';
 import  ListTChambre  from "./dataTable/datatable.js";
 import  BookComponent from "./components/Book/BookComponent.js";
 
+import  Historique from "./historique/header.js";
+import  HistoriqueTC from "./historique/dependancies/TChambre.js";
+import  HistoriqueMPL from "./historique/dependancies/modifPlanT.js";
+
 function App(){
-  
   return(
     <div className="App"> 
       <Router>
@@ -91,6 +94,7 @@ function App(){
         <Route path="/politique/list" exact component={ListPolitique} />
         <Route path="/politique/testData" exact component={testData} />
 
+
         <Route path="/calendrier" exact component={Calendrier} />
     
         <Route path="/cookie" exact component={test} />
@@ -109,6 +113,10 @@ function App(){
 
         <Route path="/CalendarClient" exact component={BasicDateRangePicker} />
         <Route path="/book" exact component={BookComponent} />
+
+        <Route path="/historique" exact component={Historique} />
+        <Route path="/historique/TC" exact component={HistoriqueTC} />
+        <Route path="/historique/MPL" exact component={HistoriqueMPL} />
       </Router>
     </div>
   );

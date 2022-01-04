@@ -6,6 +6,10 @@ import AddIcon from '@mui/icons-material/Add';
 import {Button} from '@mui/material';
 import styles from '../Book.module.css';
 import {PersonOutline} from '@mui/icons-material';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
 
 const style = {
     position: 'absolute',
@@ -49,19 +53,30 @@ function ListTarif(props){
         }
     }
 
-    function addReservation(e ,id, nom, idTypeChambre){
-        console.log("itineraires = " + props.context.state.itineraires.length);
-        if(props.context.state.itineraires.length){
-            setError("Veuillez d'abord choisir une date de sejour");
+    function addReservation(e ,id, nom, idTypeChambre, nbPers){
+        if(props.context.state.itineraires.length === 0){
+            let temp = {...props.context.state};
+            temp.err = "Veuillez d'abord choisir une date de sejour";
+            props.context.setState(temp);
         }
         if(props.context.state.itineraires.length > 0){
             let itineraires = JSON.parse(JSON.stringify(props.context.state.itineraires));
-            itineraires[itineraires.length - 1].tarifReserves.push({
+            let dateSejour = props.context.state.dateSejour;
+            const lastItineraire = itineraires.length - 1;
+            const lastTarif = itineraires[lastItineraire].tarifReserves.length - 1;
+            if(itineraires[lastItineraire].tarifReserves.length > 0){
+                dateSejour = {
+                    debut: itineraires[itineraires.length - 1].tarifReserves[lastTarif].dateSejour.debut,
+                    fin: itineraires[itineraires.length - 1].tarifReserves[lastTarif].dateSejour.fin
+                };
+            }
+            itineraires[lastItineraire].tarifReserves.push({
                 idTarif: id, 
-                dateSejour: props.context.state.dateSejour,
+                dateSejour: dateSejour,
                 dateReservation: getDate(Date.now()),
                 guests: props.context.state.guests,
-                idTypeChambre : idTypeChambre
+                idTypeChambre : idTypeChambre,
+                nbPers: nbPers
             });
             console.log(itineraires);
             axios({
@@ -96,40 +111,36 @@ function ListTarif(props){
                                         <u>{tarif.nom}</u>
                                     </strong>
                                 </div>
-                                <div className="row">
-                                    <div className="col">
-                                        {
-                                            tarif.minPrix.versions ? tarif.minPrix.versions.map(version => {
-                                                return(
-                                                    <div className="row">
-                                                        <div class={styles.nbPers}>
-                                                            <span>X {version.nbPers}</span>
-                                                            <span><PersonOutline/></span>
-                                                            {/*<ListServiceTarif services={tarif.services} />*/}
-                                                        </div>
-                                                        <div class="col"> 
-                                                            { version.prixOriginal ? <span className={styles.beforeProm}>&nbsp;{version.prixOriginal + " EUR "}</span> : null }
-                                                            <span className={styles.afterProm}>&nbsp;{version.prix + " EUR "}</span>
-                                                        </div>
-                                                        <div class="col">
-                                                            <span>Per Night</span>
-                                                            <span>including Taxes & Fees</span>
-                                                        </div>
-                                                    </div>
-                                                );
-                                            }) : null
-                                        }
-                                    </div>
-                                    <div className={styles.bookNow}>
-                                        <Button variant="contained"
-                                            onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre)}
-                                            endIcon={<AddIcon/>}
-                                            className="bookNow"
-                                        >
-                                            Book
-                                        </Button>
-                                    </div>
-                                </div>
+                                {
+                                    tarif.minPrix && tarif.minPrix.versions ? tarif.minPrix.versions.map(version => {
+                                        return(
+                                            <div className="row" style={{marginTop: "5px"}}>
+                                                <div>
+                                                    <span>X {version.nbPers}</span>
+                                                    <span><PersonOutline/></span>
+                                                    {/*<ListServiceTarif services={tarif.services} />*/}
+                                                </div>
+                                                <div class="col"> 
+                                                    { version.prixOriginal ? <span className={styles.beforeProm}>&nbsp;{version.prixOriginal + " EUR "}</span> : null }
+                                                    <span className={styles.afterProm}>&nbsp;{version.prix + " EUR "}</span>
+                                                </div>
+                                                <div class="col">
+                                                    <span>Per Night</span>
+                                                    <span>including Taxes & Fees</span>
+                                                </div>
+                                                <div className={styles.bookNow}>
+                                                    <Button variant="contained"
+                                                        onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre, version.nbPers)}
+                                                        endIcon={<AddIcon/>}
+                                                        className="bookNow"
+                                                    >
+                                                        Book
+                                                    </Button>
+                                                </div>
+                                            </div>
+                                        );
+                                    }) : null
+                                }
                             </li><br/>
                         </ul>
                      </div> 
@@ -137,15 +148,17 @@ function ListTarif(props){
     });
     tarifs.push(
         <Modal
-        open={error === null ? false : true}
-        onClose={(e) => setError(null)}
-        aria-labelledby="parent-modal-title"
-        aria-describedby="parent-modal-description"
-      >
-        <Box sx={{ ...style, width: 850 }}>
-            <p>{error}</p>
-        </Box>
-      </Modal>
+            open={props.context.state.err === null ? false : true}
+            onClose={(e) => props.context.removeErr()}
+            aria-labelledby="parent-modal-title"
+            aria-describedby="parent-modal-description"
+        >
+            <Box sx={style}>
+                <Alert severity="warning">
+                    <AlertTitle>{props.context.state.err}</AlertTitle>
+                </Alert>
+            </Box>
+        </Modal>
     );
     return tarifs;
 }

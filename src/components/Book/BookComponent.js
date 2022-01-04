@@ -2,11 +2,12 @@ import React from 'react';
 import styles from './Book.module.css';
 import Navbar  from "../../NavbarClient/Navbar";
 import {Button, TextField, Box, InputAdornment, ToggleButtonGroup, ToggleButton, Typography} from '@mui/material';
-import {EventNote, ExpandMore, ManageSearch, Search, ArrowDropDown, PersonOutline} from '@mui/icons-material';
-import FiltreAdulteEnfant from '../client/FiltreAdulteEnfant';
+import {ManageSearch, Search, ArrowDropDown, PersonOutline} from '@mui/icons-material';
 import BaeCalendar from "../../calendar/calendar.js";
 import Guest from "./guest.js";
 import callAPI from '../../utility';
+
+import {EventNote, ExpandMore} from '@mui/icons-material';
 
 const BookComponent = (props) => {
   const [groupby, setGroupBy] = React.useState('a');
@@ -15,12 +16,6 @@ const BookComponent = (props) => {
       setGroupBy(g);
     }
   };
-
-    function changeOpenCalendar(){
-        let temp = {...props.context.state};
-        temp.openCalendar = !temp.openCalendar;
-        props.context.setState(temp);
-    }
 
     function changeOpenChangeNbGuest(){
         let temp = {...props.context.state};
@@ -31,23 +26,22 @@ const BookComponent = (props) => {
     function setResult(res){
         let currentState = {...props.context.state};
         currentState.listTypeChambre = res.list;
+        currentState.isListTarifDispoReceived = true;
         props.context.setState(currentState);
     }
 
     function applyFilter(){
-        if((props.context.state.guests.nbEnfant !== 0 || props.context.state.guests.nbAdulte !== 0)
-            && (props.context.state.dateSejour.debut !== "" && props.context.state.dateSejour.fin !== "")){
-                props.context.handleChange("errFiltre", null);
-                const data = {
-                    filtres: props.context.state.filtres, 
-                    guests: props.context.state.guests, 
-                    dateDebut: props.context.state.dateSejour.debut,
-                    dateFin: props.context.state.dateSejour.fin
-                }
-                console.log(data);
-                callAPI('post', '/TCTarif/', data, setResult);
-        }else{
-            this.props.context.handleChange("errFiltre", 'Veuillez remplir les champs Adulte, Enfant, Debut sejour et fin sejour au moins');
+        if((props.context.state.guests.nbEnfant > 0 || props.context.state.guests.nbAdulte > 0)){
+            props.context.handleChange("errFiltre", null);
+            const data = {
+                filtres: props.context.state.filtres, 
+                guests: props.context.state.guests, 
+                dateDebut: props.context.state.dateSejour.debut,
+                dateFin: props.context.state.dateSejour.fin
+            }
+            console.log(data);
+            props.context.handleChange("isListTarifDispoReceived", false);
+            callAPI('post', '/TCTarif/', data, setResult);
         }
     }
 
@@ -56,54 +50,64 @@ const BookComponent = (props) => {
     <Navbar currentPage={0}/>
     <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection:'column' }} className={styles.filter}>
       <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
-          <TextField
-              fullwidth={false}
-              size="small"
-              id="outlined-number"
-              label="Check-in"
-              value={props.context.state.dateSejour.debut}
-              InputProps={{
-                  startAdornment: <InputAdornment position="start"><EventNote/></InputAdornment>,
-                  endAdornment:<InputAdornment position="end"><ExpandMore/></InputAdornment>,
-                  readOnly: true,
-              }}
-              InputLabelProps={{
-                  shrink: true
-              }}
-              onClick={(e) => changeOpenCalendar()}
+          <BaeCalendar context = {props.context} applyFilter={applyFilter} dateSejour={props.context.state.dateSejour} check={
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection:'column' }} className={styles.filter2}>
+                <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
+                    <TextField
+                        fullwidth={false}
+                        size="small"
+                        id="outlined-number"
+                        label="Check-in"
+                        value={props.context.state.dateSejour.debut}
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start"><EventNote/></InputAdornment>,
+                            endAdornment:<InputAdornment position="end"><ExpandMore/></InputAdornment>,
+                            readOnly: true,
+                        }}
+                        InputLabelProps={{
+                            shrink: true
+                        }}
+                    />
+                    <TextField
+                        fullwidth={false}
+                        size="small"
+                        id="outlined-number"
+                        label="Check-out" 
+                        value={props.context.state.dateSejour.fin}
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start"><EventNote/></InputAdornment>,
+                            endAdornment:<InputAdornment position="end"><ExpandMore/></InputAdornment>,
+                            readOnly: true,
+                        }}
+                        InputLabelProps={{
+                            shrink: true
+                        }}
+                    />
+                </Box>
+            </Box>} 
           />
-          <TextField
-              fullwidth={false}
-              size="small"
-              id="outlined-number"
-              label="Check-out" 
-              value={props.context.state.dateSejour.fin}
-              InputProps={{
-                  startAdornment: <InputAdornment position="start"><EventNote/></InputAdornment>,
-                  endAdornment:<InputAdornment position="end"><ExpandMore/></InputAdornment>,
-                  readOnly: true,
-              }}
-              InputLabelProps={{
-                  shrink: true
-              }}
-              onClick={(e) => changeOpenCalendar()}
-          />
-          <TextField
-              fullwidth={false}
-              size="small" 
-              id="outlined-number"
-              label="Occupancy"
-              value={props.context.state.guests.nbAdulte + " adults - " + props.context.state.guests.nbEnfant + " children"}
-              InputProps={{
-                  startAdornment: <InputAdornment position="start"><PersonOutline/></InputAdornment>,
-                  endAdornment:<InputAdornment position="end"><ArrowDropDown/></InputAdornment>,
-                  readOnly: true,
-              }}
-              InputLabelProps={{
-                  shrink: true
-              }}
-              onClick={(e) => changeOpenChangeNbGuest()}
-          />
+        
+          <Guest context = {props.context} applyFilter={applyFilter} occupancy={
+              <div>
+                <TextField
+                    fullwidth={false}
+                    size="small" 
+                    id="outlined-number"
+                    label="Occupancy"
+                    value={props.context.state.guests.nbAdulte + " adults - " + props.context.state.guests.nbEnfant + " children"}
+                    InputProps={{
+                        startAdornment: <InputAdornment position="start"><PersonOutline/></InputAdornment>,
+                        endAdornment:<InputAdornment position="end"><ArrowDropDown/></InputAdornment>,
+                        readOnly: true,
+                    }}
+                    InputLabelProps={{
+                        shrink: true
+                    }}
+                    onClick={(e) => changeOpenChangeNbGuest()}
+                />
+              </div>
+          } />
+          
           <Button variant="outlined" startIcon={<Search />} onClick={(e) => applyFilter()}>
               Search
           </Button>
@@ -131,8 +135,6 @@ const BookComponent = (props) => {
           <ToggleButton size="small" value="b">Plan tarifaires</ToggleButton>
         </ToggleButtonGroup>
     </Box>
-    <BaeCalendar context = {props.context} changeOpenCalendar={changeOpenCalendar} />
-    <Guest context = {props.context} changeOpenChangeNbGuest={changeOpenChangeNbGuest} />
   </div>
 )};
 

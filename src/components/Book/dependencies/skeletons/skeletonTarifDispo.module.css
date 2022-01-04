@@ -1,0 +1,38 @@
+.photo{
+    width: 320;
+    height: 160;
+}
+
+.squeletonTarifDispo{
+    margin-bottom: 20px;
+    padding: 10px 10px;
+    padding-left: 0;
+}
+
+.squeletonTarifDispo > div{
+    margin-left: 0;
+}
+
+.squeletonTarifDispo > div > div > div{
+    margin-bottom: 0;
+    height: 40px;
+}
+
+.squeletonTarifDispo > div:nth-child(2) > div > div{
+    height: 5px;
+}
+
+.squeletonTarifDispo > div:nth-child(2) > div:nth-child(2){
+    margin-top: 30px;
+    float: right;
+    padding-right: 0;
+}
+
+.bookNow{
+    float: right;
+}
+
+.item{
+    display: block;
+    margin-bottom: 25px;
+}
