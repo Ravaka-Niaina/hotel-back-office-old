@@ -11,11 +11,9 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -30,7 +28,46 @@ import EditIcon from '@mui/icons-material/Edit';
 import Pagination from '../pagination/pagination.js';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import { HTML5_FMT } from 'moment';
+import { styled } from '@mui/material/styles';
+import Alert from '@mui/material/Alert';
 
+//tooltip 
+const LightTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.common.white,
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 11,
+  },
+}));
+
+const BootstrapTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.arrow}`]: {
+    color: theme.palette.common.black,
+  },
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.common.black,
+  },
+}));
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#f5f5f9',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: '1px solid #dadde9',
+  },
+}));
 
 let rows = [];
 function descendingComparator(a, b, orderBy) {
@@ -213,7 +250,7 @@ export default function EnhancedTable() {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(2);
+  const [rowsPerPage, setRowsPerPage] = React.useState(20);
   const [list, setList] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [indiceU, setId] = React.useState("");
@@ -221,6 +258,8 @@ export default function EnhancedTable() {
   const [nbrPage, setNbrPage] = React.useState(0);
   const [pageCurrent, setPageCurrent] = React.useState(1);
   const [count, setCount] = React.useState(1);
+
+  const [message, setMessage] = React.useState("");
 
   const handleChangePagination =(e , value) =>{
     console.log(value);
@@ -244,11 +283,15 @@ export default function EnhancedTable() {
     setList(data.politiqueA); 
     setCount(data.count);
   }
+
+  function suppre(data){
+    setMessage (data.message);
+    CallAPI("post" ,"/politique/list" ,{PageCurrent : pageCurrent ,content : rowsPerPage} , functionAppelList)
+  
+  }
  
   useEffect(() => {
       CallAPI("post" ,"/politique/list" ,{PageCurrent : pageCurrent ,content : rowsPerPage} , functionAppelList)
-  
-    
   }, []);
 
   const handleSelectAllClick = (event) => {
@@ -286,14 +329,17 @@ export default function EnhancedTable() {
 
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
-  // Avoid a layout jump when reaching the last page with empty rows.
+  const suppression = (e,id, nom) => {
+    setMessage('');
+    CallAPI("post" ,"/politique/suppression" ,{id : id , nom : nom} , suppre)
+  }
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
     <>
     <Navbar currentPage={4}/><br/>
-    <Box sx={{ width: '100%', padding :"50px" }}>
+    <Box sx={{ width: '100%', padding :"50px" }} id = "test1">
     <Link to={'/politique'}  style={{float : 'left'}}>
         <Button variant ="contained">Insert Politique</Button> 
     </Link>
@@ -351,9 +397,28 @@ export default function EnhancedTable() {
                       <TableCell align="left">{row.remboursable ? "oui" : "non"}</TableCell>
                       <TableCell align="rigth">
                         <Link to={'/politique/detail/' + row._id}> 
-                          <EditIcon style={{color : "green"}} />
+                          <HtmlTooltip
+                              title={
+                                <React.Fragment>
+                                  <Typography color="green" style={{textDecoration:'underline'}}>Editer</Typography>
+                                  <strong>{row.nom} ?</strong><br/>
+                                  </React.Fragment>
+                              }
+                            > 
+                               <EditIcon style={{color : "green"}} />
+                            </HtmlTooltip> 
                         </Link> 
-                          <DeleteIcon style={{color : "red"}}/>
+                          <HtmlTooltip
+                            title={
+                              <React.Fragment>
+                                <Typography color="error" style={{textDecoration:'underline'}}>Suppression</Typography>
+                                <strong>{row.nom} ?</strong><br/>
+                                <Button variant ="contained" color="error" onClick = {(event) => suppression(event , row._id ,row.nom )}>Supprimer</Button> 
+                              </React.Fragment>
+                            }
+                          > 
+                            <DeleteIcon style={{color : "red" , cursor :'pointer'}} />
+                          </HtmlTooltip> 
                       </TableCell>
                     </TableRow>
                   );
@@ -390,6 +455,9 @@ export default function EnhancedTable() {
         <div style={{float : "right"}}>
           <Pagination pagine={nbrPage} pageCurrent = {pageCurrent}  handleChangePagination = {handleChangePagination}/>
         </div>
+      </div>
+      <div id = "test">
+        {message ? <Alert severity="error" >{message}</Alert> : ""}
       </div>
     </Box>
     </>
