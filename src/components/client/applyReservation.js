@@ -13,6 +13,7 @@ import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Icon from '@mui/material/Icon';
+import { useHistory } from 'react-router-dom';
 
 import Total from './applyReservation/Total.js';
 import InfoItineraires from './applyReservation/InfoItineraires.js';
@@ -48,6 +49,7 @@ function TabPanel(props) {
   };
 
 function ApplyReservation(props){
+    const history = useHistory();
     const [reservation, setReservation] = useState(null);
     const { _id } = useParams();
     const [reservateur, setReservateur] = useState({nom: "", email: "", tel: "", messageParticulier: ""});
@@ -62,10 +64,11 @@ function ApplyReservation(props){
         setOpenLoad(false);
         if(res.status === 200){
             setAlertSuccess(res.message);
+            window.location.href = '#success';
         }else{
             setAlertError(res.errors[0].message);
+            window.location.href = '#error';
         }
-        document.getElementById("content").scrollHeight = document.getElementById("content").scrollTop;
     }
 
     function validerReservation(){
@@ -141,14 +144,18 @@ function ApplyReservation(props){
                     <Box sx={{ bgcolor: 'background.paper', maxWidth: 800, margin: "0 auto"}}>
                         <h1>Détails réservation</h1>
                         {alertSuccess != null ? 
-                            <Stack sx={{ width: '100%' }} spacing={2}>
+                            <div id="success">
+                                <Stack sx={{ width: '100%' }} spacing={2}>
                                 <Alert severity="success">{alertSuccess}</Alert>
-                            </Stack> : null
+                                </Stack>
+                            </div> : null
                         }
-                        {alertError != null ? 
-                            <Stack sx={{ width: '100%' }} spacing={2}>
-                                <Alert severity="error">{alertError}</Alert>
-                            </Stack> : null
+                        {alertError != null ?
+                            <div id="error">
+                                <Stack sx={{ width: '100%' }} spacing={2}>
+                                    <Alert severity="error">{alertError}</Alert>
+                                </Stack>
+                            </div> : null
                         }
                         <h2>Informations sur la personne qui fait la réservation</h2>
                         <Box>
@@ -186,7 +193,7 @@ function ApplyReservation(props){
                             setAffilie={setAffilie}
                             openLoad={openLoad}
                             setOpenLoad={setOpenLoad} />
-                        <Total />
+                        <Total toPay={reservation.toPay} />
                         <Stack direction="row" spacing={2}>
                             <Button variant="contained">Imprimer</Button>
                             <Button variant="contained">Partager</Button>

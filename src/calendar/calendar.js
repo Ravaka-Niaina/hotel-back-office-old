@@ -1,18 +1,32 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { getToday } from './utils/moment-utils';
+import { styled } from '@mui/material/styles';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import './bae-calendar.scss';
+
+import {TextField, Box, InputAdornment} from '@mui/material';
+import {EventNote, ExpandMore} from '@mui/icons-material';
 
 import CalendarHeader from './components/calendar-header';
 import WeekdayIndicator from './components/weekday-indicator';
 import DateIndicator from './components/date-indicator';
 import MonthIndicator from './components/month-indicator';
-// https://uicookies.com/html-calendar/
 
 import { presetDateTracker } from './utils/date-utils';
 
-import {data} from './utils/data.js';
 import callAPI from '../utility.js';
 import {getDate} from '../tarif/utility.js';
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#f5f5f9',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 850,
+    fontSize: theme.typography.pxToRem(12),
+    border: '1px solid #dadde9',
+  },
+}));
 
 const themes = {
   salmon: 'salmon-theme',
@@ -20,7 +34,10 @@ const themes = {
   rouge: 'rouge-theme',
 };
 
-const BaeCalendar = ({ theme, activeDates, onDateSelect, context }) => {
+const BaeCalendar = ({ theme, applyFilter, activeDates, onDateSelect, context, check }) => {
+  const [open, setOpen] = React.useState(false);
+  const [firstTime, setFirstTime] = React.useState(true);
+
   const presetActiveDates = useRef(presetDateTracker(activeDates || []));
 
   let today = new Date();
@@ -33,6 +50,11 @@ const BaeCalendar = ({ theme, activeDates, onDateSelect, context }) => {
   const [bornes, setBornes] = useState({debut: null, fin: null, isDebut: true});
 
   let [prix, setPrix] = useState(null);
+
+  function closeOnce(){
+    setOpen(false);
+    setTimeout(() => setOpen(undefined), 1000);
+  }
 
   function populatePrix(res){
     if(res.status === 200){
@@ -58,6 +80,10 @@ const BaeCalendar = ({ theme, activeDates, onDateSelect, context }) => {
   }
 
   useEffect(() => {
+    if(firstTime){
+      setOpen(undefined);
+      setFirstTime(false);
+    }
     if(context.state.reload){
       getPrix(selectDate, monthLater);
       stopReload();
@@ -67,7 +93,6 @@ const BaeCalendar = ({ theme, activeDates, onDateSelect, context }) => {
       }
       console.log("reload calendar...");
     }
-    
   });
 
   function reload(){
@@ -78,39 +103,53 @@ const BaeCalendar = ({ theme, activeDates, onDateSelect, context }) => {
   }
 
   return (
-    <div style={{width: "fit-content", margin: "0 auto"}}>
-      <MonthIndicator 
-        selectDate={selectDate} setSelectDate={setSelectDate} 
-        monthLater={monthLater} setMonthLater={setMonthLater} 
-        getPrix={getPrix} />
-      <div className={`bae-calendar-container ${themes[theme]}`}>
-        <CalendarHeader selectDate={selectDate} />
-        <WeekdayIndicator />
-        <DateIndicator
-          activeDates={presetActiveDates.current}
-          selectDate={selectDate}
-          setSelectDate={setSelectDate}
-          bornes={bornes}
-          setBornes={setBornes}
-          prix={prix}
-          context={context}
-        />
+    <HtmlTooltip
+      title={
+        <React.Fragment>
+            <MonthIndicator 
+            selectDate={selectDate} setSelectDate={setSelectDate} 
+            monthLater={monthLater} setMonthLater={setMonthLater} 
+            getPrix={getPrix} />
+            <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
+              <div className={`bae-calendar-container ${themes[theme]}`}>
+                <CalendarHeader selectDate={selectDate} />
+                <WeekdayIndicator />
+                <DateIndicator
+                  activeDates={presetActiveDates.current}
+                  selectDate={selectDate}
+                  setSelectDate={setSelectDate}
+                  bornes={bornes}
+                  setBornes={setBornes}
+                  prix={prix}
+                  context={context}
+                  closeOnce={closeOnce}
+                  applyFilter={applyFilter}
+                />
+              </div>
+              <div className={`bae-calendar-container ${themes[theme]}`}>
+                <CalendarHeader selectDate={monthLater} />
+                <WeekdayIndicator />
+                <DateIndicator
+                  activeDates={presetActiveDates.current}
+                  selectDate={monthLater}
+                  setSelectDate={setMonthLater}
+                  bornes={bornes}
+                  setBornes={setBornes}
+                  prix={prix}
+                  context={context}
+                  closeOnce={closeOnce}
+                  applyFilter={applyFilter}
+                />
+              </div>
+            </Box>
+        </React.Fragment>
+      }
+      placement="bottom-start"
+    >
+      <div>
+        {check}
       </div>
-      <div style={{width: "20px", height: "20px", display: "inline-block"}}></div>
-      <div className={`bae-calendar-container ${themes[theme]}`}>
-        <CalendarHeader selectDate={monthLater} />
-        <WeekdayIndicator />
-        <DateIndicator
-          activeDates={presetActiveDates.current}
-          selectDate={monthLater}
-          setSelectDate={setMonthLater}
-          bornes={bornes}
-          setBornes={setBornes}
-          prix={prix}
-          context={context}
-        />
-      </div>
-    </div>
+    </HtmlTooltip>
   );
 };
 

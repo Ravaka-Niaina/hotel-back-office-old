@@ -2,7 +2,7 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DChambre from './listChambre'
-import Fact from '../../client/fact'
+import Fact from './fact.js';
 import { useCookies } from 'react-cookie';
 import callAPI from '../../../utility';
 import './Css.css'
@@ -16,7 +16,7 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import Promotions from "../../client/promotion";
+import Promotions from "./promotion";
 
 import styles from '../Book.module.css';
 
@@ -60,10 +60,13 @@ class Scroll extends React.Component{
             reload: true,
             openCalendar: false,
             openChangeNbGuest: false,
-            openLoad: false
+            openLoad: false,
+            isListTarifDispoReceived: false,
+            isFactureReceived: false
         };
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
         this.setResult = this.setResult.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
     
     handleChange(fieldName, value){
@@ -82,10 +85,19 @@ class Scroll extends React.Component{
         this.setState(currentState);
     }
 
+    removeErr(){
+        let temp = {...this.sate};
+        temp.err = null;
+        this.setState(temp);
+    }
+
     setResult(res){
-        console.log("here");
         let temp = {...this.state};
         temp.listTypeChambre = res.list;
+        for(let i = 0; i < temp.listTypeChambre.length; i++){
+            temp.listTypeChambre[i].show = false;
+        }
+        temp.isListTarifDispoReceived = true;
         this.setState(temp);
         console.log(res);
     }
@@ -166,11 +178,14 @@ class Scroll extends React.Component{
         }
       
     }
-    setReservationEnCours(reservation){
+    setReservationEnCours(reservation, isFactureReceived){
         console.log(reservation);
         let currentState = JSON.parse(JSON.stringify(this.state));
         currentState.reservationEnCours = reservation;
         currentState.reload = true;
+        if(isFactureReceived){
+            currentState.isFactureReceived = true;
+        }
         if(reservation === null){
             currentState.itineraires = [];
         }else{
@@ -183,11 +198,15 @@ class Scroll extends React.Component{
         callAPI('post', '/reservation/apply', {_id: this.state.reservationEnCours._id}, this.setReservationEnCours);
     }
     incrementReservation(){
-        console.log('STATE ITANY-------------');
-        console.log(this.state);
         let current = JSON.parse(JSON.stringify(this.state));
         current.reservation.push(this.state.reservation.length);
         this.setState(current);
+    }
+
+    changeOpenFiltre(){
+        let temp = {...this.state};
+        temp.showFiltre = !temp.showFiltre;
+        this.setState(temp);
     }
     
     render(){

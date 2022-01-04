@@ -1,71 +1,80 @@
 
 import React , {useState} from "react";
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
+import { styled } from '@mui/material/styles';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import {FormControl,FormControlLabel} from '@mui/material';
 
-function Guest (){
-    const [state , setState]= useState(
-        {
-            nbAdulte : 1,
-            nbEnfant : 0
-        }
-    )
-    return (
-        <PopupState variant="popper" popupId="demo-popup-popper">
-      {(popupState) => (
-        <div>
-          <Button {...bindToggle(popupState)} id='toggle'>
-            <span></span>
-          </Button>
-            <div className='client'>
-                <div id='client' className='guests'>
-                    <p>
-                        <PersonIcon id='PersonIcon'/>
-                        <span id='guests'>Guests</span><br/>
-                        <span id='NbGuest'>{this.state.nbAdulte} Adult, {this.state.nbEnfant} children</span>
-                    </p>
-                </div>
-            </div>
-          <Popper {...bindPopper(popupState)} transition>
-            {({ TransitionProps }) => (
-              <Fade {...TransitionProps} timeout={350}>
-                <Paper id='modal1'>
-                <span id="adultes">Adultes</span><div class='guest1' id='adulte1' onClick={this.DecrAdulte}><p id='moins'>-</p></div>
-                          <div class='guest1'>
-                          <input value={this.state.nbAdulte} onChange={(e) => this.changeGuests(e, "nbAdulte")} class='adulte' type=""/>
-                          </div>
-                    <div class='guest1' id='adulte11' onClick={this.IncrAdulte}><p id='add'>+</p></div>
-                          <br/>
-                          <span id="enfants">Enfants</span><div class='guest2' id='enfant1' onClick={this.DecrEnfant}><p id='moins'>-</p></div>
-                          <div class='guest2'>
-                          <input value={this.state.nbEnfant} onChange={(e) => this.changeGuests(e, "nbEnfant")} class='enfant' type=""/>
-                          </div>
-        <div class='guest2' id='enfant11' onClick={this.IncrEnfant}>
-            <p id='add'>+</p>
-        </div>
-                {
-                    this.state.showAge ?
-                    <select value="" name="" class="age">
-                    <option value="">0</option>
-                    <option value="">1</option>
-                    <option value="">2</option>
-                    <option value="">3</option>
-                    <option value="">4</option>
-                    <option value="">5</option>
-                    <option value="">6</option>
-                    <option value="">7</option>
-                    <option value="">8</option>
-                    <option value="">9</option>
-                    <option value="">10</option>
-                    <option value="">11</option>
-                    </select>
-                    : null
-                    }
-                </Paper>
-              </Fade>
-            )}
-          </Popper>
-        </div>
-      )}
-    </PopupState>
-    );
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#f5f5f9',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: '1px solid #dadde9',
+  },
+}));
+
+const style = {
+  marginTop: 10,
+  marginBottom: 5
+};
+
+const Guest = ({context, applyFilter, occupancy}) => {
+
+  function changeNbGuests(categ, value){
+    let temp = {...context.state};
+    temp.listTypeChambre = [];
+    temp.guests[categ] = Number.parseInt(value);
+    if(temp.guests[categ] < 0){
+      temp.guests[categ] = 0;
+    }
+    temp.listTypeChambre = [];
+    context.setState(temp);
+    applyFilter();
+  }
+
+  return (
+    <HtmlTooltip
+      title={
+        <React.Fragment>
+          <FormControl component="fieldset" style={style}>
+            <TextField
+              fullwidth={false}
+              size="small"
+              id="outlined-number"
+              label="Adulte" 
+              value={context.state.guests.nbAdulte}
+              type="number"
+              InputLabelProps={{
+                shrink: true,
+            }}
+              onChangeCapture={(e) => changeNbGuests("nbAdulte", e.target.value)}
+            />
+            <br/>
+            <TextField
+              fullwidth={false}
+              size="small"
+              id="outlined-number"
+              label="Enfant" 
+              value={context.state.guests.nbEnfant}
+              type="number"
+              InputLabelProps={{
+                shrink: true,
+            }}
+              onChangeCapture={(e) => changeNbGuests("nbEnfant", e.target.value)}
+            />
+          </FormControl>
+        </React.Fragment>
+      }
+      placement="bottom-start"
+        >
+          {occupancy}  
+    </HtmlTooltip>
+  );
 }
 export default Guest;

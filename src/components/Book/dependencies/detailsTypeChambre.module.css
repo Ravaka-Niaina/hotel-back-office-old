@@ -1,0 +1,12 @@
+.photos > div:nth-child(2){
+    width: 500px;
+    height: 300px;
+    overflow: scroll;
+    display: block;
+    overflow: hidden;
+}
+.photos > div > section > img{
+    float: top;
+    width: 500px;
+    height: 300px;
+}
