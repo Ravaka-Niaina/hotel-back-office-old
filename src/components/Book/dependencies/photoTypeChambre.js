@@ -19,14 +19,17 @@ const style = {
   
   const PhotoTypeChambre = (props) => {
     let images = [];
+    let photo = "";
     const [open, setOpen] = React.useState(false);
-    for(let i = 0; i < props.photos.length; i++){
-        images.push({ url: process.env.REACT_APP_BACK_URL + "/" + props.photos[i].replace("\\","/") });
+    if (props.photos && props.photos.length){
+        photo = props.photos[0];
+        for(let i = 0; i < props.photos.length; i++){
+            images.push({ url: process.env.REACT_APP_BACK_URL + "/" + props.photos[i].replace("\\","/") });
+        }
     }
-    console.log(props.photos[0]);
     return (
         <>
-            <div style={{ backgroundImage: 'url(' + process.env.REACT_APP_BACK_URL + "/" + props.photos[0].replace("\\","/") + ")" }} onClick={(e) => setOpen(!open)}></div>
+            <div style={{ backgroundImage: 'url(' + process.env.REACT_APP_BACK_URL + "/" + photo.replace("\\","/") + ")" }} onClick={(e) => setOpen(!open)}></div>
             <Modal
                 open={open}
                 onClose={(e) => setOpen(!open)}
