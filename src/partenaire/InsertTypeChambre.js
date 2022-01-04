@@ -145,29 +145,24 @@ function InsertTypeCHambre(){
   const handleClose = () => setOpen(false);
 
   const history = useHistory();
-  
-  function setPlanTarifaire(res){
-    console.log(res);
-    let current = JSON.parse(JSON.stringify(state));
-    for(let i = 0; i < res.list.length; i++){
-      res.list[i].checked = false;
-    }
-    current.planTarifaire = res.list;
-    state = current;
-    //setState(current);
-  }
 
-  
-  function setListEquipement(res){
+  function setInfo(res){
     console.log(res);
     let current = JSON.parse(JSON.stringify(state));
-    current.equipements = res.equipements;
+    for(let i = 0; i < res.listTarif.length; i++){
+      res.listTarif[i].checked = false;
+    }
+    current.planTarifaire = res.listTarif;
+    
+    for(let i = 0; i < res.listEquipement.length; i++){
+      res.listEquipement[i].checked = false;
+    }
+    current.equipements = res.listEquipement;
     setState(current);
   }
 
   useEffect(() => {
-    callAPI('post', '/planTarifaire', {}, setPlanTarifaire);
-    callAPI('get', '/equipement', {}, setListEquipement);
+    callAPI('get', '/TCTarif/infoInsertTypeChambre', {}, setInfo);
   }, []); 
 
   function handleCheckBoxPlanTarifaire(e, index){
