@@ -102,24 +102,20 @@ class DetailsPromotions extends React.Component{
               nom: '',
               planTarifaire: [],
               typeChambre: [],
-              remisePourcentage: '',
-              remiseEuro: '',
               dateDebutS: '',
               dateFinS: '',
-              lundi: '',
-              mardi: '',
-              mercredi: '',
-              jeudi: '',
-              vendredi: '',
-              samedi: '',
-              dimanche: '',
+              weekDays:{
+                lundi: '',
+                mardi: '',
+                mercredi: '',
+                jeudi: '',
+                vendredi: '',
+                samedi: '',
+                dimanche: ''
+                        },
               sejourMin:'',
               premierJour:'',
-              dernierJour:'',
-              leadDayMin:'',
-              leadDayMax:'',
-              leadHourMin:'',
-              leadHourMax:''
+              dernierJour:''
               ,lead: {min: '', max: ''}
               ,remise:''
             }
@@ -567,18 +563,28 @@ Tarif réduit disponible uniquement pendant :
 
 </label>
    <p>
+{console.log(this.state.promotion.weekDays.lundi)}
+{(this.state.promotion.weekDays.lundi == "1")?
 <FormControlLabel 
 control={<Checkbox/>} 
 label={<p id='label'>Lundi</p>}
-value="1"
+value={1}
 name="lundi"  
 control={<Checkbox defaultChecked />}
 />
-
+:
+<FormControlLabel 
+control={<Checkbox/>} 
+label={<p id='label'>Lundi</p>}
+value={1}
+name="lundi"  
+control={<Checkbox/>}
+/>
+} 
 <FormControlLabel 
 control={<Checkbox/>} 
 label={<p id='label'>Mardi</p>}
-value="1"
+value={1}
 name="mardi"  
 control={<Checkbox defaultChecked />}
 />
@@ -586,7 +592,7 @@ control={<Checkbox defaultChecked />}
 <FormControlLabel 
 control={<Checkbox/>} 
 label={<p id='label'>Mercredi</p>}
-value="1"
+value={1}
 name="mercredi"   
 control={<Checkbox defaultChecked />}
 />
@@ -594,7 +600,7 @@ control={<Checkbox defaultChecked />}
 <FormControlLabel 
 control={<Checkbox/>} 
 label={<p id='label'>Jeudi</p>} 
-value="1"
+value={1}
 name="jeudi"  
 control={<Checkbox defaultChecked />}
 />
@@ -602,7 +608,7 @@ control={<Checkbox defaultChecked />}
 <FormControlLabel 
 control={<Checkbox/>} 
 label={<p id='label'>Vendredi</p>} 
-value="1"
+value={1}
 name="vendredi"  
 control={<Checkbox defaultChecked />}
 />
@@ -610,7 +616,7 @@ control={<Checkbox defaultChecked />}
 <FormControlLabel 
 control={<Checkbox/>} 
 label={<p id='label'>Samedi</p>} 
-value="1"
+value={1}
 name="samedi"  
 control={<Checkbox defaultChecked />}
 />
@@ -618,7 +624,7 @@ control={<Checkbox defaultChecked />}
 <FormControlLabel 
 control={<Checkbox/>} 
 label={<p id='label'>Dimanche</p>} 
-value="1"
+value={1}
 name="dimanche"  
 control={<Checkbox defaultChecked />}
 />

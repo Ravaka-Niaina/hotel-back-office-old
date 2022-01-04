@@ -91,26 +91,21 @@ function InsertPromotion(){
         nom: '',
         planTarifaire: [],
         typeChambre: [],
-        remisePourcentage: '',
-        remiseEuro: '',
         dateDebutS: '',
         dateFinS: '',
+        weekDays:{
         lundi: '',
         mardi: '',
         mercredi: '',
         jeudi: '',
         vendredi: '',
         samedi: '',
-        dimanche: '',
+        dimanche: ''
+                },
         sejourMin:'',
         premierJour:'',
         dernierJour:'',
-        leadDayMin:'',
-        leadDayMax:'',
-        leadHourMin:'',
-        leadHourMax:''
-
-        ,isLeadHour: true
+        isLeadHour: true
         ,lead: {min: '', max: ''}
         ,isRemiseEuro: true
         ,remise:'',
@@ -202,15 +197,6 @@ function InsertPromotion(){
       e.preventDefault();
       console.log('Envoie en attente...');
       let toSend = JSON.parse(JSON.stringify(state));
-
-      let selectedEquip = [];
-      for(let i = 0; i < state.equipements.length; i++){
-        if(state.equipements[i].checked){
-          selectedEquip.push(state.equipements[i]._id);
-        }
-      }
-      toSend.equipements = selectedEquip;
-      
       let selectedPlan = [];
       for(let i = 0; i < state.planTarifaire.length; i++){
         if(state.planTarifaire[i].checked){
@@ -608,59 +594,66 @@ Tarif réduit disponible uniquement pendant :
 </label>
    <p>
 <FormControlLabel 
-control={<Checkbox/>} 
+control={<Checkbox/>}
+type='number' 
 label={<p id='label'>Lundi</p>}
-value="1"
+value={1}
 name="lundi"  
-onChange={(e) => handleInputChange(e, "lundi")}
+onChange={(e) => handleInputChange2( e, "weekDays", "lundi")} 
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
+type='number' 
 label={<p id='label'>Mardi</p>}
-value="1"
+value={1}
 name="mardi"  
-onChange={(e) => handleInputChange(e, "mardi")}
+onChange={(e) => handleInputChange2( e, "weekDays", "mardi")} 
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
+type='number' 
 label={<p id='label'>Mercredi</p>}
 value="1"
-name="mercredi"   
-onChange={(e) => handleInputChange(e, "mercredi")}
+name="mercredi" 
+onChange={(e) => handleInputChange2( e, "weekDays", "mercredi")}  
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
+type='number' 
 label={<p id='label'>Jeudi</p>} 
-value="1"
+value={1}
 name="jeudi"  
-onChange={(e) => handleInputChange(e, "jeudi")}
+onChange={(e) => handleInputChange2( e, "weekDays", "jeudi")} 
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
+type='number' 
 label={<p id='label'>Vendredi</p>} 
-value="1"
+value={1}
 name="vendredi"  
-onChange={(e) => handleInputChange(e, "vendredi")}
+onChange={(e) => handleInputChange2( e, "weekDays", "vendredi")} 
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
+type='number' 
 label={<p id='label'>Samedi</p>} 
-value="1"
+value={1}
 name="samedi"  
-onChange={(e) => handleInputChange(e, "samedi")}
+onChange={(e) => handleInputChange2( e, "weekDays", "samedi")} 
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
+type='number' 
 label={<p id='label'>Dimanche</p>} 
-value="1"
+value={1}
 name="dimanche"  
-onChange={(e) => handleInputChange(e, "dimanche")}
+onChange={(e) => handleInputChange2( e, "weekDays", "dimanche")} 
 />
    </p> 
   </div>
