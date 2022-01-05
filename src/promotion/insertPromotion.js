@@ -213,6 +213,13 @@ function InsertPromotion(){
     setState(current)
     }
 
+    function handleInputChange3( e, name1, name2){
+      console.log(e.target.value);
+      let current = JSON.parse(JSON.stringify(state));
+      current[name1][name2] = Number.parseInt(e.target.value);
+      setState(current)
+      }
+
     function handleInputRemiseChange( e, name1){
       console.log(e.target.value);
       let current = JSON.parse(JSON.stringify(state));
@@ -574,63 +581,63 @@ Tarif réduit disponible uniquement pendant :
 control={<Checkbox/>}
 type='number' 
 label={<p id='label'>Lundi</p>}
-value={1}
+value='1'
 name="lundi"  
-onChange={(e) => handleInputChange2( e, "weekDays", "lundi")} 
+onChange={(e) => handleInputChange3( e, "weekDays", "lundi")} 
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
 type='number' 
 label={<p id='label'>Mardi</p>}
-value={1}
+value='1'
 name="mardi"  
-onChange={(e) => handleInputChange2( e, "weekDays", "mardi")} 
+onChange={(e) => handleInputChange3( e, "weekDays", "mardi")} 
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
-type='number' 
+type='number'  
 label={<p id='label'>Mercredi</p>}
-value="1"
+value='1'
 name="mercredi" 
-onChange={(e) => handleInputChange2( e, "weekDays", "mercredi")}  
+onChange={(e) => handleInputChange3( e, "weekDays", "mercredi")}  
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
-type='number' 
+type='number'   
 label={<p id='label'>Jeudi</p>} 
-value={1}
+value='1'
 name="jeudi"  
-onChange={(e) => handleInputChange2( e, "weekDays", "jeudi")} 
+onChange={(e) => handleInputChange3( e, "weekDays", "jeudi")} 
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
 type='number' 
 label={<p id='label'>Vendredi</p>} 
-value={1}
+value='1'
 name="vendredi"  
-onChange={(e) => handleInputChange2( e, "weekDays", "vendredi")} 
+onChange={(e) => handleInputChange3( e, "weekDays", "vendredi")} 
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
-type='number' 
+type='number'  
 label={<p id='label'>Samedi</p>} 
-value={1}
+value='1'
 name="samedi"  
-onChange={(e) => handleInputChange2( e, "weekDays", "samedi")} 
+onChange={(e) => handleInputChange3( e, "weekDays", "samedi")} 
 />
 
 <FormControlLabel 
 control={<Checkbox/>} 
 type='number' 
 label={<p id='label'>Dimanche</p>} 
-value={1}
+value='1'
 name="dimanche"  
-onChange={(e) => handleInputChange2( e, "weekDays", "dimanche")} 
+onChange={(e) => handleInputChange3( e, "weekDays", "dimanche")} 
 />
    </p> 
   </div>

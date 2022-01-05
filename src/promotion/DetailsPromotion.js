@@ -278,6 +278,20 @@ setListTypeChambre(res){
       current.promotion[name1][name2] = e.target.value;
       this.setState(current)
       }
+
+    handleInputChange3( e, name1, name2){
+      console.log(e.target.value);
+      let current = JSON.parse(JSON.stringify(this.state));
+      current.promotion[name1][name2] = Number.parseInt(e.target.value);
+      this.setState(current)
+      }
+
+    // handleInputChange3( e, name1, name2){
+    //     console.log(e.target.value);
+    //     let current = JSON.parse(JSON.stringify(this.state));
+    //     current.promotion[name1][name2] = Number.parseInt(e.target.value);
+    //     this.setState(current)
+    //     }
       
     handleIsLeadHourChange(value){
       let temp = {...this.state};
@@ -563,70 +577,68 @@ Tarif réduit disponible uniquement pendant :
 
 </label>
    <p>
-{console.log(this.state.promotion.weekDays.lundi)}
-{(this.state.promotion.weekDays.lundi == "1")?
-<FormControlLabel 
-control={<Checkbox/>} 
+{console.log(this.state.promotion.weekDays.lundi == 1 ? 'true' : 'false')}
+<FormControlLabel  
 label={<p id='label'>Lundi</p>}
-value={1}
-name="lundi"  
-control={<Checkbox defaultChecked />}
-/>
-:
-<FormControlLabel 
-control={<Checkbox/>} 
-label={<p id='label'>Lundi</p>}
-value={1}
+value='1'
+checked={this.state.promotion.weekDays.lundi === 1 ? true : false}
 name="lundi"  
 control={<Checkbox/>}
+onChange={(e) => this.handleInputChange3( e, "weekDays", "lundi")} 
 />
-} 
-<FormControlLabel 
-control={<Checkbox/>} 
+
+<FormControlLabel  
 label={<p id='label'>Mardi</p>}
-value={1}
+value='1'
+checked={this.state.promotion.weekDays.mardi === 1 ? true : false}
 name="mardi"  
-control={<Checkbox defaultChecked />}
+control={<Checkbox/>}
+onChange={(e) => this.handleInputChange3( e, "weekDays", "mardi")} 
 />
 
-<FormControlLabel 
-control={<Checkbox/>} 
+<FormControlLabel  
 label={<p id='label'>Mercredi</p>}
-value={1}
-name="mercredi"   
-control={<Checkbox defaultChecked />}
+value='1'
+checked={this.state.promotion.weekDays.mercredi === 1 ? true : false}
+name="mercredi"  
+control={<Checkbox/>}
+onChange={(e) => this.handleInputChange3( e, "weekDays", "mercredi")} 
 />
 
-<FormControlLabel 
-control={<Checkbox/>} 
-label={<p id='label'>Jeudi</p>} 
-value={1}
+<FormControlLabel  
+label={<p id='label'>Jeudi</p>}
+value='1'
+checked={this.state.promotion.weekDays.jeudi === 1 ? true : false}
 name="jeudi"  
-control={<Checkbox defaultChecked />}
+control={<Checkbox/>}
+onChange={(e) => this.handleInputChange3( e, "weekDays", "jeudi")} 
 />
 
-<FormControlLabel 
-control={<Checkbox/>} 
-label={<p id='label'>Vendredi</p>} 
-value={1}
+<FormControlLabel  
+label={<p id='label'>Vendredi</p>}
+value='1'
+checked={this.state.promotion.weekDays.vendredi === 1 ? true : false}
 name="vendredi"  
-control={<Checkbox defaultChecked />}
+control={<Checkbox/>}
+onChange={(e) => this.handleInputChange3( e, "weekDays", "vendredi")} 
 />
 
-<FormControlLabel 
-control={<Checkbox/>} 
-label={<p id='label'>Samedi</p>} 
-value={1}
+<FormControlLabel  
+label={<p id='label'>Samedi</p>}
+value='1'
+checked={this.state.promotion.weekDays.samedi === 1 ? true : false}
 name="samedi"  
-control={<Checkbox defaultChecked />}
+control={<Checkbox/>}
+onChange={(e) => this.handleInputChange3( e, "weekDays", "samedi")} 
 />
 
-<FormControlLabel 
-control={<Checkbox/>} 
-label={<p id='label'>Dimanche</p>} 
-value={1}
+<FormControlLabel  
+label={<p id='label'>Dimanche</p>}
+value='1'
+checked={this.state.promotion.weekDays.dimanche === 1 ? true : false}
 name="dimanche"  
-control={<Checkbox defaultChecked />}
+control={<Checkbox/>}
+onChange={(e) => this.handleInputChange3( e, "weekDays", "dimanche")} 
 />
    </p> 
   </div>
