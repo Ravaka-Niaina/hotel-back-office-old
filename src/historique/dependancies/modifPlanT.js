@@ -20,6 +20,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { purple } from '@mui/material/colors';
 import SearchIcon from '@mui/icons-material/Search';
+import Skeleton from '../../SkeletonListe/skeleton';
 
 function ContenuTable(props){
   console.log(props);
@@ -72,6 +73,7 @@ function TChambre (props) {
         debut : "",
         fin: ""
     });
+    const [skeleton, setSkeleton] = React.useState(true);
 
     const ColorButton = styled(Button)(({ theme }) => ({
         color: theme.palette.getContrastText(purple[500]),
@@ -93,6 +95,7 @@ function TChambre (props) {
       }));
 
     const callBack = (data) =>{
+      setSkeleton(false);
       console.log(data)
         setHistorique(data.list);
         setNbrPage(data.nbrPage);
@@ -164,6 +167,9 @@ function TChambre (props) {
 
                     <ColorButton variant="contained" onClick={search} startIcon={<SearchIcon/>}>Search</ColorButton>
             </Box><br/>
+            {
+              skeleton ? <Skeleton /> :
+
             <TableContainer component={Paper}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
                 <TableHead>
@@ -178,7 +184,8 @@ function TChambre (props) {
                     <ContenuTable historique = {historique}  />
                 </TableBody>
             </Table>
-            </TableContainer><br/>
+            </TableContainer>
+            }<br/>
             <div style={{overflow : 'auto'}}>
                 <div style={{float :"left"}}></div>
                 <div style={{float : "right"}}>

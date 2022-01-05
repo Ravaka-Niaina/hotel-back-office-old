@@ -35,6 +35,7 @@ import Typography from '@mui/material/Typography';
 import { HTML5_FMT } from 'moment';
 import { styled } from '@mui/material/styles';
 import Alert from '@mui/material/Alert';
+import Skeleton from '../SkeletonListe/skeleton';
 
 //tooltip 
 const LightTooltip = styled(({ className, ...props }) => (
@@ -288,7 +289,7 @@ export default function EnhancedTable() {
   const [indiceU, setId] = React.useState("");
 
   const [message, setMessage] = React.useState("");
-  
+  const [skeleton, setSkeleton] = React.useState(true);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -297,6 +298,7 @@ export default function EnhancedTable() {
   };
 
   function setPlanTarifaire(data){
+    setSkeleton(false);
     console.log(data);
     rows = [];
     for(let i = 0; i < data.list.length; i++){
@@ -377,6 +379,10 @@ export default function EnhancedTable() {
         />
         <SearchIcon style={{color:"blue"}}/>
       </div> <br/><br/>
+
+      {
+          skeleton ? <Skeleton /> :
+
       <Paper sx={{ width: '100%', mb: 2 }}>
      
         <TableContainer>
@@ -440,7 +446,7 @@ export default function EnhancedTable() {
                             title={
                               <React.Fragment>
                                 <Typography color="error" style={{textDecoration:'underline'}}>Suppression</Typography>
-                                <strong>{row.nom} ?</strong><br/>
+                                <strong>voulez-vous vraiment supprimer "{row.nom}" ?</strong><br/>
                                 <Button variant ="contained" color="error" onClick = {(event) => suppression(event , row._id ,row.nom )}>Supprimer</Button> 
                               </React.Fragment>
                             }
@@ -474,6 +480,7 @@ export default function EnhancedTable() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      }
       <div style={{overflow : 'auto'}}>
         <div style={{float :"left"}}>
           <FormControlLabel 
