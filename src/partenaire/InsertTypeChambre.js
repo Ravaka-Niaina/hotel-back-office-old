@@ -359,7 +359,7 @@ function InsertTypeCHambre(){
                       size='small'
                       label={
                         <p id='libel'>
-                        Nom
+                        Chambre total
                         </p>
                              } 
                       type="number"
