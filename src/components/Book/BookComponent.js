@@ -44,7 +44,6 @@ const BookComponent = (props) => {
             callAPI('post', '/TCTarif/', data, setResult);
         }
     }
-
   return(
   <div className={styles.Book}>
     <Navbar currentPage={0}/>

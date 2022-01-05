@@ -22,10 +22,11 @@ import { purple } from '@mui/material/colors';
 import SearchIcon from '@mui/icons-material/Search';
 
 function ContenuTable(props){
+  console.log(props);
     let historique = props.historique.map(histo => {
         return (
             <TableRow>
-                <TableCell align="left">{histo.histoTarif[0].nom}</TableCell>
+                <TableCell align="left">{histo.idTarif.nom}</TableCell>
                 <TableCell align="left">{histo.idUser}</TableCell>
                 <TableCell align="left">{histo.dateHisto}</TableCell>
                 <TableCell align="left">{histo.delete ? "suppression" : "modification"}</TableCell>
@@ -174,7 +175,7 @@ function TChambre (props) {
                 </TableRow>
                 </TableHead>
                 <TableBody>
-                    <ContenuTable historique = {historique} />
+                    <ContenuTable historique = {historique}  />
                 </TableBody>
             </Table>
             </TableContainer><br/>
