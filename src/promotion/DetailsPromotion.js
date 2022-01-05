@@ -29,7 +29,6 @@ const Input = styled('input')({
 });
 
 function PlanTarifaire(props){
-  console.log(props.planTarifaire);
     let i = -1;
     let list = props.planTarifaire.map(tarif => {
         i++;
@@ -50,7 +49,6 @@ function PlanTarifaire(props){
   }
 
   function TypeChambre(props){
-    console.log(props.typeChambre);
     let i = -1;
     let list = props.typeChambre.map(typeC => {
         i++;
@@ -138,24 +136,13 @@ class DetailsPromotions extends React.Component{
     }
 
     setDetailsPromotion(data){
-        let currentState = JSON.parse(JSON.stringify(this.state));
-        currentState.promotion = data.promotion;
-        this.setState(currentState);
-        console.log(this.state.promotion);
+      console.log(data);
+      let currentState = JSON.parse(JSON.stringify(this.state));
+      currentState.promotion = data.promotion;
+      currentState.typeChambres = data.listTypeChambre;
+      currentState.tarifs = data.listTarif;
+      this.setState(currentState);
     }
-
-    // tryRedirect(res){
-    //     console.log(res);
-    //     if(res.status === 200){
-    //       this.props.history.push('/promotion');
-    //     }else if(res.status === 401){//Unauthorized
-    //         this.props.history.push('/login');
-    //     }else{
-    //       let currentState = JSON.parse(JSON.stringify(this.state));
-    //       currentState.errors = res.errors;
-    //       this.setState(currentState);
-    //     }
-    // }
 
      tryRedirect(res){
       console.log(res);
@@ -220,8 +207,6 @@ setListTypeChambre(res){
 
     componentDidMount(){
         callAPI('get', '/promotion/detail/'+this.props.match.params._id, {}, this.setDetailsPromotion);
-         callAPI('post', '/planTarifaire', {}, this.setTarifs);
-         callAPI('post', '/TCTarif', {}, this.setListTypeChambre);
     }
 
     update(e){
@@ -502,6 +487,7 @@ helperText={this.state.error.sejourMin === null ? null : this.state.error.sejour
               <div className ="col">
                   <FormControlLabel 
                   value="hour" 
+                  checked={this.state.isLeadHour}
                   onClick={(e) => this.handleIsLeadHourChange(true)} 
                   control={<Radio />} 
                   label={
@@ -512,6 +498,7 @@ helperText={this.state.error.sejourMin === null ? null : this.state.error.sejour
               <div className ="col">
                   <FormControlLabel  
                   value="day" 
+                  checked={!this.state.isLeadHour}
                   onClick={(e) => this.handleIsLeadHourChange(false)} 
                   control={<Radio />} 
                   label={
