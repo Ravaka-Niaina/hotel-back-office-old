@@ -142,9 +142,9 @@ function TChambre (props) {
                             label="content"
                             onChange={handleChange}
                         >
-                            <MenuItem value={20}>20</MenuItem>
-                            <MenuItem value={10}>10</MenuItem>
-                            <MenuItem value={5}>5</MenuItem>
+                            <MenuItem value={2}>2</MenuItem>
+                            <MenuItem value={6}>6</MenuItem>
+                            <MenuItem value={8}>8</MenuItem>
                         </Select>
                     </FormControl>
                     <TextField 
