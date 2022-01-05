@@ -30,6 +30,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import Pagination from '../pagination/pagination.js';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
+import Skeleton from '../SkeletonListe/skeleton';
 
 
 let rows = [];
@@ -214,6 +215,8 @@ export default function EnhancedTable() {
   const [list, setList] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [indiceU, setId] = React.useState("");
+
+  const [skeleton, setSkeleton] = React.useState(true);
   
 
   const handleRequestSort = (event, property) => {
@@ -224,7 +227,7 @@ export default function EnhancedTable() {
 
   function functionAppelList(data){
     console.log(data);
-    
+    setSkeleton(false);
     rows = [];
     for(let i = 0; i < data.promotions.length; i++){
       rows.push(data.promotions[i]);  
@@ -292,6 +295,9 @@ export default function EnhancedTable() {
       />
       <SearchIcon style={{color:"blue"}}/>
     </div> <br/><br/>
+
+    {
+      skeleton ? <Skeleton /> :
       <Paper sx={{ width: '100%', mb: 2 }}>
      
         <TableContainer>
@@ -368,6 +374,7 @@ export default function EnhancedTable() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+    }
       <div style={{overflow : 'auto'}}>
         <div style={{float :"left"}}>
           <FormControlLabel 

@@ -33,6 +33,7 @@ import Typography from '@mui/material/Typography';
 import { HTML5_FMT } from 'moment';
 import { styled } from '@mui/material/styles';
 import Alert from '@mui/material/Alert';
+import Skeleton from '../SkeletonListe/skeleton';
 
 //tooltip 
 const LightTooltip = styled(({ className, ...props }) => (
@@ -261,6 +262,8 @@ export default function EnhancedTable() {
 
   const [message, setMessage] = React.useState("");
 
+  const [skeleton, setSkeleton] = React.useState(true);
+
   const handleChangePagination =(e , value) =>{
     console.log(value);
     setPageCurrent(value);
@@ -274,7 +277,7 @@ export default function EnhancedTable() {
   };
 
   function functionAppelList(data){
-    console.log(data);
+    setSkeleton(false);
     rows = [];
     for(let i = 0; i < data.politiqueA.length; i++){
       rows.push(data.politiqueA[i]);  
@@ -338,6 +341,7 @@ export default function EnhancedTable() {
 
   return (
     <>
+    
     <Navbar currentPage={4}/><br/>
     <Box sx={{ width: '100%', padding :"50px" }} id = "test1">
     <Link to={'/politique'}  style={{float : 'left'}}>
@@ -352,6 +356,10 @@ export default function EnhancedTable() {
       />
       <SearchIcon style={{color:"blue"}}/>
     </div> <br/><br/>
+
+    {
+      skeleton ? <Skeleton /> :
+    
       <Paper sx={{ width: '100%', mb: 2 }}>
      
         <TableContainer>
@@ -412,7 +420,7 @@ export default function EnhancedTable() {
                             title={
                               <React.Fragment>
                                 <Typography color="error" style={{textDecoration:'underline'}}>Suppression</Typography>
-                                <strong>{row.nom} ?</strong><br/>
+                                <strong>voulez-vous vraiment supprimer "{row.nom}" ?</strong><br/>
                                 <Button variant ="contained" color="error" onClick = {(event) => suppression(event , row._id ,row.nom )}>Supprimer</Button> 
                               </React.Fragment>
                             }
@@ -445,6 +453,7 @@ export default function EnhancedTable() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      }
       <div style={{overflow : 'auto'}}>
         <div style={{float :"left"}}>
           <FormControlLabel 

@@ -30,6 +30,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import Pagination from '../pagination/pagination.js';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
+import Skeleton from '../SkeletonListe/skeleton';
 
 
 function createData(name, calories, fat, carbs, protein) {
@@ -232,6 +233,8 @@ export default function EnhancedTable() {
   const [pageCurrent, setPageCurrent] = React.useState(1);
   const [count, setCount] = React.useState(1);
 
+  const [skeleton, setSkeleton] = React.useState(true);
+
   const handleChangePagination =(e , value) =>{
     console.log(value);
     setPageCurrent(value);
@@ -245,6 +248,7 @@ export default function EnhancedTable() {
   };
 
   function setTypeChambre(data){
+    setSkeleton(false);
     console.log(data);
     rows = [];
     for(let i = 0; i < data.typeChambre.length; i++){
@@ -322,8 +326,11 @@ export default function EnhancedTable() {
         <SearchIcon style={{color:"blue"}}/>
       </div> 
       
-      
       <br/><br/>
+
+      {
+          skeleton ? <Skeleton /> :
+
       <Paper sx={{ width: '100%', mb: 2 }}>
         <TableContainer>
           <Table
@@ -397,6 +404,7 @@ export default function EnhancedTable() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
+      }
       <div style={{overflow : 'auto'}}>
         <div style={{float :"left"}}>
           <FormControlLabel 
