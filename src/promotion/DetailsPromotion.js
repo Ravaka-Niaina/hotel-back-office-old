@@ -90,9 +90,9 @@ class DetailsPromotions extends React.Component{
               sejourMin:null,
               premierJour:null,
               dernierJour:null,
+              remise:null,
               leadMin: null, 
               leadMax: null,
-              remise:null,
               typeChambre:null,
               planTarifaire:null,
               dateDebutS: null,
@@ -118,6 +118,8 @@ class DetailsPromotions extends React.Component{
               dernierJour:''
               ,lead: {min: '', max: ''}
               ,remise:''
+              ,isLeadHour:''
+              ,isRemiseEuro: ''
             }
             ,isRemiseEuro: true
             ,isLeadHour: true
@@ -266,9 +268,9 @@ setListTypeChambre(res){
       this.setState(current)
       }
 
-    handleIsRemiseEuroChange(value){
+    handleIsRemiseEuroChange(value,index){
         let temp = {...this.state};
-        temp.isRemiseEuro = value;
+        temp.promotion[index] = value;
         this.setState(temp);
             }
 
@@ -293,9 +295,9 @@ setListTypeChambre(res){
     //     this.setState(current)
     //     }
       
-    handleIsLeadHourChange(value){
+    handleIsLeadHourChange(value,index){
       let temp = {...this.state};
-      temp.isLeadHour = value;
+      temp.promotion[index] = value;
       this.setState(temp);
           }
 
@@ -385,7 +387,8 @@ Quelles chambres ?
               <div className ="col">
                   <FormControlLabel 
                   value="euro" 
-                  onClick={(e) => this.handleIsRemiseEuroChange(true)}
+                  checked={this.state.promotion.isRemiseEuro ? true : false}
+                  onClick={(e) => this.handleIsRemiseEuroChange(true,'isRemiseEuro')}
                   control={<Radio />}
                   label={
                   <span id='litleLabel'>
@@ -395,7 +398,8 @@ Quelles chambres ?
               <div className ="col">
                   <FormControlLabel  
                   value="pourcentage" 
-                  onClick={(e) => this.handleIsRemiseEuroChange(false)} 
+                  checked={this.state.promotion.isRemiseEuro ? false : true}
+                  onClick={(e) => this.handleIsRemiseEuroChange(false,'isRemiseEuro')} 
                   control={<Radio />} 
                   label={
                       <span id='litleLabel'>
@@ -510,9 +514,11 @@ helperText={this.state.error.sejourMin === null ? null : this.state.error.sejour
                   /> 
               </div>
               <div className ="col">
+                {console.log(this.state.isLeadHour)}
                   <FormControlLabel 
                   value="hour" 
-                  onClick={(e) => this.handleIsLeadHourChange(true)} 
+                  checked={this.state.promotion.isLeadHour ? true : false}
+                  onClick={(e) => this.handleIsLeadHourChange(true,"isLeadHour")} 
                   control={<Radio />} 
                   label={
                   <span id='litleLabel'>
@@ -522,7 +528,8 @@ helperText={this.state.error.sejourMin === null ? null : this.state.error.sejour
               <div className ="col">
                   <FormControlLabel  
                   value="day" 
-                  onClick={(e) => this.handleIsLeadHourChange(false)} 
+                  checked={this.state.promotion.isLeadHour ? false : true}
+                  onClick={(e) => this.handleIsLeadHourChange(false,"isLeadHour")} 
                   control={<Radio />} 
                   label={
                       <span id='litleLabel'>
@@ -581,11 +588,12 @@ Tarif réduit disponible uniquement pendant :
 <FormControlLabel  
 label={<p id='label'>Lundi</p>}
 value='1'
-checked={this.state.promotion.weekDays.lundi === 1 ? true : false}
+checked={true}
 name="lundi"  
 control={<Checkbox/>}
 onChange={(e) => this.handleInputChange3( e, "weekDays", "lundi")} 
 />
+
 
 <FormControlLabel  
 label={<p id='label'>Mardi</p>}
