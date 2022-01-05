@@ -17,9 +17,7 @@ import { useHistory } from 'react-router-dom';
 
 import Total from './applyReservation/Total.js';
 import InfoItineraires from './applyReservation/InfoItineraires.js';
-import {loadingStyle, StyledTableCell, StyledTableRow, 
-    createData, rows, createPaiement, rowsPaiement, style, 
-    Champs, ChampsImportant, line} from './applyReservation/commonAssets.js';
+import {Champs} from './applyReservation/commonAssets.js';
     import {setValue} from '../../../src/utility2.js';
   
 function TabPanel(props) {
@@ -58,6 +56,7 @@ function ApplyReservation(props){
     const [alertSuccess, setAlertSuccess] = useState(null);
     const [alertError, setAlertError] = useState(null);
     const [affilie, setAffilie] = useState([]);
+    const [isEditEnabled, setIsEditEnabled] = useState(false);
 
     function handleResponse(res){
         console.log(res);
@@ -159,30 +158,41 @@ function ApplyReservation(props){
                         }
                         <h2>Informations sur la personne qui fait la réservation</h2>
                         <Box>
-                            <TextField
-                                id="outlined-required"
-                                label="Nom"
-                                placeholder="dupond"
-                                value={reservateur.nom}
-                                onChange={(e) => handleChangeInfoReservateur("nom", e.target.value)} />
-                            <TextField
-                                id="outlined-required"
-                                label="Email"
-                                placeholder="dupond@gmail.com"
-                                type="email"
-                                value={reservateur.email}
-                                onChange={(e) => handleChangeInfoReservateur("email", e.target.value)} />
-                            <TextField
-                                id="outlined-required"
-                                label="Tel"
-                                placeholder="034 00 000 00"
-                                value={reservateur.tel}
-                                onChange={(e) => handleChangeInfoReservateur("tel", e.target.value)} />
-                            <TextField 
-                                label="Message particulier"
-                                placeholder="Votre message"
-                                value={reservateur.messageParticulier}
-                                onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} />
+                            {isEditEnabled ?
+                                <div>
+                                    <TextField
+                                        id="outlined-required"
+                                        label="Nom"
+                                        placeholder="dupond"
+                                        value={reservateur.nom}
+                                        onChange={(e) => handleChangeInfoReservateur("nom", e.target.value)} />
+                                    <TextField
+                                        id="outlined-required"
+                                        label="Email"
+                                        placeholder="dupond@gmail.com"
+                                        type="email"
+                                        value={reservateur.email}
+                                        onChange={(e) => handleChangeInfoReservateur("email", e.target.value)} />
+                                    <TextField
+                                        id="outlined-required"
+                                        label="Tel"
+                                        placeholder="034 00 000 00"
+                                        value={reservateur.tel}
+                                        onChange={(e) => handleChangeInfoReservateur("tel", e.target.value)} />
+                                    <TextField 
+                                        label="Message particulier"
+                                        placeholder="Votre message"
+                                        value={reservateur.messageParticulier}
+                                        onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} />
+                                    </div>
+                                : <div>
+                                    <Champs label="Nom" value={reservateur.nom.trim() !== "" ? reservateur.nom : "vide"} />
+                                    <Champs label="Email" value={reservateur.email.trim() !== "" ? reservateur.email : "vide"} />
+                                    <Champs label="Tel" value={reservateur.tel.trim() !== "" ? reservateur.tel : "vide"} />
+                                    <Champs label="Message particulier" value={reservateur.messageParticulier.trim() != "" ? reservateur.messageParticulier : "Vide"} />
+                                </div>
+                                
+                                } 
                         </Box>
                         
                         <InfoItineraires 
@@ -192,7 +202,8 @@ function ApplyReservation(props){
                             affilie={affilie}
                             setAffilie={setAffilie}
                             openLoad={openLoad}
-                            setOpenLoad={setOpenLoad} />
+                            setOpenLoad={setOpenLoad}
+                            isEditEnabled={isEditEnabled} />
                         <Total toPay={reservation.toPay} />
                         <Stack direction="row" spacing={2}>
                             <Button variant="contained">Imprimer</Button>
@@ -200,7 +211,7 @@ function ApplyReservation(props){
                             <Button variant="contained">Ajouter au calendrier</Button>
                         </Stack>
                         <Stack direction="row" spacing={2}>
-                            <Button variant="contained">Modifier réservation</Button>
+                            <Button variant="contained" onClick={(e) => setIsEditEnabled(!isEditEnabled)}>{isEditEnabled ? "Désactiver modification réservation" : "Modifier réservation"}</Button>
                             <Button variant="contained">Annuler réservation</Button>
                             <Button variant="contained" onClick={(e) => validerReservation()}>Valider réservation</Button>
                         </Stack>

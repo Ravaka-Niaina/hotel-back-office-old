@@ -54,7 +54,8 @@ function TarifReserves(props){
                         indexTarif={u}
                         reservateur={props.reservateur}
                         affilie={props.affilie}
-                        setAffilie={props.setAffilie} />
+                        setAffilie={props.setAffilie}
+                        isEditEnabled={props.isEditEnabled} />
                     <Politiques politiques={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTarif.infoPolitique} />
                     <Button variant="contained" color="warning" onClick={(e) => showAnnulModal(u)}>Annuler</Button>
                 </div>

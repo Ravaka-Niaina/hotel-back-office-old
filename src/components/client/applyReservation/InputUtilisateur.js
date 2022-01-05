@@ -1,5 +1,6 @@
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import {Champs} from '../applyReservation/commonAssets.js';
 
 function handleClientInfo(reservation, indexItineraire, indexTarif, i, categPers, field, value, setReservation){
     let current = JSON.parse(JSON.stringify(reservation));
@@ -46,27 +47,40 @@ function InputUtilisateur(props){
         for(let i = 0; i < props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].guests.nbAdulte; i++){
             inputs.push(
                 <div>
-                    <TextField
-                        id="outlined-required"
-                        label={"Nom"}
-                        placeholder="Dupond"
-                        value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].nom}
-                        onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "adultes", "nom", e.target.value, props.setReservation)}
-                    />
-                    <TextField
-                        id="outlined-required"
-                        label={"Email"}
-                        placeholder="dupond@gmail.com"
-                        value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].email}
-                        onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "adultes", "email", e.target.value, props.setReservation)}
-                    />
-                    <TextField
-                        id="outlined-required"
-                        label={"Tel"}
-                        placeholder="034 00 000 00"
-                        value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].tel}
-                        onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "adultes", "tel", e.target.value, props.setReservation)}
-                    />
+                {props.isEditEnabled ? 
+                    <div>
+                        <TextField
+                            id="outlined-required"
+                            label={"Nom"}
+                            placeholder="Dupond"
+                            value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].nom}
+                            onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "adultes", "nom", e.target.value, props.setReservation)}
+                        />
+                        <TextField
+                            id="outlined-required"
+                            label={"Email"}
+                            placeholder="dupond@gmail.com"
+                            value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].email}
+                            onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "adultes", "email", e.target.value, props.setReservation)}
+                        />
+                        <TextField
+                            id="outlined-required"
+                            label={"Tel"}
+                            placeholder="034 00 000 00"
+                            value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].tel}
+                            onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "adultes", "tel", e.target.value, props.setReservation)}
+                        />
+                    </div> : 
+                    <div>
+                        <Champs label="Nom" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].nom.trim() != "" ?
+                            props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].nom : "vide"} />
+                        <Champs label="Email" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].email.trim() != "" ?
+                            props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].email : "vide"} />
+                        <Champs label="Tel" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].tel.trim() != "" ? 
+                            props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].tel : "vide"} />
+                    </div>
+                }
+                
                     {(props.affilie.length > 0 && !props.affilie[props.indexItineraire]) ? <Button variant="contained" onClick={(e) => fillInfoOccupant(props.reservation, props.setReservation, props.reservateur, props.indexItineraire, props.indexTarif, "adultes", i)}>Celui qui a fait la réservation</Button> : null}
                 </div>
             );
@@ -78,28 +92,36 @@ function InputUtilisateur(props){
         for(let i = 0; i < props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].guests.nbEnfant; i++){
             inputs.push(
                 <div>
-                    <TextField
-                        id="outlined-required"
-                        label={"Nom"}
-                        placeholder="Dupond"
-                        value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.enfants[i].nom}
-                        onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "enfants", "nom", e.target.value, props.setReservation)}
-                    />
-                    <TextField
-                        id="outlined-required"
-                        label={"Email"}
-                        placeholder="dupond@gmail.com"
-                        type="email"
-                        value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.enfants[i].email}
-                        onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "enfants", "email", e.target.value, props.setReservation)}
-                    />
-                    <TextField
-                        id="outlined-required"
-                        label={"Tel"}
-                        placeholder="034 00 000 00"
-                        value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.enfants[i].tel}
-                        onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "enfants", "tel", e.target.value, props.setReservation)}
-                    />
+                    {props.isEditEnabled ? 
+                    <div>
+                        <TextField
+                            id="outlined-required"
+                            label={"Nom"}
+                            placeholder="Dupond"
+                            value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.enfants[i].nom}
+                            onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "enfants", "nom", e.target.value, props.setReservation)}
+                        />
+                        <TextField
+                            id="outlined-required"
+                            label={"Email"}
+                            placeholder="dupond@gmail.com"
+                            type="email"
+                            value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.enfants[i].email}
+                            onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "enfants", "email", e.target.value, props.setReservation)}
+                        />
+                        <TextField
+                            id="outlined-required"
+                            label={"Tel"}
+                            placeholder="034 00 000 00"
+                            value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.enfants[i].tel}
+                            onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "enfants", "tel", e.target.value, props.setReservation)}
+                        />
+                    </div> :
+                    <div>
+                        <Champs label="Nom" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.enfants[i].nom} />
+                        <Champs label="Email" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.enfants[i].email} />
+                        <Champs label="Tel" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.enfants[i].tel} />
+                    </div> }
                     {(props.affilie.length > 0 && !props.affilie[props.indexItineraire]) ? <Button variant="contained" onClick={(e) => fillInfoOccupant(props.reservation, props.setReservation, props.reservateur, props.indexItineraire, props.indexTarif, "enfants", i)}>Celui qui a fait la réservation</Button> : null}
                 </div>
             );
