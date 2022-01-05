@@ -23,7 +23,6 @@ import InsertChambre from './partenaire/chambre/InsertChambre.js';
 import  AppClient  from "./components/Book/dependencies/scroll";
 import  test  from "./components/client/Cookies";
 
-
 import  PromotionList  from "./promotion/LPromotion";
 import  InsertPromotion  from "./promotion/insertPromotion.js";
 import Global from "./politique/global.js";

@@ -22,6 +22,7 @@ import { purple } from '@mui/material/colors';
 import SearchIcon from '@mui/icons-material/Search';
 
 function ContenuTable(props){
+  console.log(props);
     let historique = props.historique.map(histo => {
         return (
             <TableRow>
@@ -63,7 +64,7 @@ function NouvelleValeur(props){
 
 
 function TChambre (props) {
-    const [content , setContent] = useState(20);
+    const [content , setContent] = useState(2);
     const [pageCurrent, setPageCurrent] = useState(1);
     const [nbrPage , setNbrPage] = useState();
     const [historique , setHistorique] = useState([]);
@@ -100,12 +101,12 @@ function TChambre (props) {
     const handleChange  = (event) =>{
         setContent(parseInt(event.target.value, 10));
         setPageCurrent(1);
-        callAPI("post" , "/histo/TC" , {content :event.target.value , pageCurrent : 1 , dateD : state.debut , dateF : state.fin} , callBack);
+        callAPI("post" , "/histo/modifTarif" , {content :event.target.value , pageCurrent : 1 , dateD : state.debut , dateF : state.fin} , callBack);
     }
 
     const handleChangePagination = (event , value) => {
         setPageCurrent(value);
-        callAPI("post" , "/histo/TC" , {content :content , pageCurrent : value , dateD : state.debut , dateF : state.fin} , callBack);
+        callAPI("post" , "/histo/modifTarif" , {content :content , pageCurrent : value , dateD : state.debut , dateF : state.fin} , callBack);
     }
 
     const handlechageDate =(e , field) =>{
@@ -116,7 +117,7 @@ function TChambre (props) {
     }
 
     const search =() =>{
-        callAPI("post" , "/histo/TC" , {content :content , dateD : state.debut , dateF : state.fin} , callBack);
+        callAPI("post" , "/histo/modifTarif" , {content :content , dateD : state.debut , dateF : state.fin} , callBack);
     }
 
     useEffect(() => {
@@ -139,9 +140,9 @@ function TChambre (props) {
                             label="content"
                             onChange={handleChange}
                         >
-                            <MenuItem value={20}>20</MenuItem>
-                            <MenuItem value={10}>10</MenuItem>
-                            <MenuItem value={5}>5</MenuItem>
+                            <MenuItem value={2}>2</MenuItem>
+                            <MenuItem value={6}>6</MenuItem>
+                            <MenuItem value={8}>8</MenuItem>
                         </Select>
                     </FormControl>
                     <TextField 
@@ -161,7 +162,7 @@ function TChambre (props) {
                         }}
                     />
 
-                    <ColorButton variant="contained" startIcon={<SearchIcon/>}>Search</ColorButton>
+                    <ColorButton variant="contained" onClick={search} startIcon={<SearchIcon/>}>Search</ColorButton>
             </Box><br/>
             <TableContainer component={Paper}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -174,7 +175,7 @@ function TChambre (props) {
                 </TableRow>
                 </TableHead>
                 <TableBody>
-                    <ContenuTable historique = {historique} />
+                    <ContenuTable historique = {historique}  />
                 </TableBody>
             </Table>
             </TableContainer><br/>
