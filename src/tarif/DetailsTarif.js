@@ -217,7 +217,6 @@ function DetailsTarif(){
                                         </div>
                                         <RadioGroup
                                             aria-label="Lead"
-                                            defaultValue="hour"
                                             name="radio-buttons-group"
                                         >
                                             <div className ="row" style={{marginTop:'15px'}}>
@@ -250,6 +249,7 @@ function DetailsTarif(){
                                                 <div className ="col">
                                                     <FormControlLabel 
                                                     value="hour" 
+                                                    checked={planTarifaire.isLeadHour ? true : false}
                                                     onClick={(e) => utility.handleIsLeadHourChange(planTarifaire, setPlanTarifaire, true)} 
                                                     control={<Radio />} 
                                                     label={
@@ -260,6 +260,7 @@ function DetailsTarif(){
                                                 <div className ="col">
                                                     <FormControlLabel  
                                                     value="day" 
+                                                    checked={planTarifaire.isLeadHour ? false : true}
                                                     onClick={(e) => utility.handleIsLeadHourChange(planTarifaire, setPlanTarifaire, false)} 
                                                     control={<Radio />} 
                                                     label={
