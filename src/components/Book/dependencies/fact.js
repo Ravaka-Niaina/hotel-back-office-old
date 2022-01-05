@@ -57,13 +57,14 @@ function Reservations(props){
         reservation = props.context.state.itineraires[props.indexItineraire].tarifReserves.map(tarif => {
             i++;
             const u = i;
+            console.log(tarif);
             if(tarif.etat == 1 || tarif.etat == undefined){
                 return (
                         <Card className={styles.stay}>
                         <CardContent>
                             <div>
                                 <span><BedIcon/>{tarif.nomTypeChambre}</span>
-                                <span><ModeNightIcon/>5 nuit(s)</span>
+                                <span><ModeNightIcon/>{tarif.nbNuits + " nuit(s)"}</span>
                                 <span><LocalOfferIcon/>{tarif.nomTarif}</span>
                             </div>
                         </CardContent>
@@ -190,9 +191,6 @@ class Fact extends React.Component{
                 <div style={{textAlign:'center'}}>
                     <Itineraires context={this.props.context} annulerReservation={this.annulerReservation} />
                     <p id='bigLabel'>TOTAL : </p>
-                    {this.props.context.state.changeDateSejour ? 
-                        null 
-                    : 
                     <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()}>Ajouter itinéraire</Button></p>}
                 </div>
                 <Modal

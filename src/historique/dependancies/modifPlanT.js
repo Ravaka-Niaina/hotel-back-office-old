@@ -25,7 +25,7 @@ function ContenuTable(props){
     let historique = props.historique.map(histo => {
         return (
             <TableRow>
-                <TableCell align="left">{histo.histoTarif[0].nom}</TableCell>
+                <TableCell align="left">{histo.idTarif.nom}</TableCell>
                 <TableCell align="left">{histo.idUser}</TableCell>
                 <TableCell align="left">{histo.dateHisto}</TableCell>
                 <TableCell align="left">{histo.delete ? "suppression" : "modification"}</TableCell>

@@ -22,6 +22,7 @@ import { purple } from '@mui/material/colors';
 import SearchIcon from '@mui/icons-material/Search';
 
 function ContenuTable(props){
+  console.log(props.historique);
     let historique = props.historique.map(histo => {
         return (
             <TableRow>
