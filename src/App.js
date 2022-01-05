@@ -1,4 +1,4 @@
-import 'normalize.css';
+
 
 import  Login  from "./components/login/login";
 import  Register  from "./components/login/register";

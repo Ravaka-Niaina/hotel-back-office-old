@@ -37,6 +37,7 @@ function ContenuTable(props){
             </TableRow> 
         );
     })
+    
     return historique;
 }
 function Champs(props){
