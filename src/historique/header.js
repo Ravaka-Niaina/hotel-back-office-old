@@ -19,7 +19,6 @@ const HeaderHistorique = (props) => {
             <ToggleButton size="small" value="0" component={Link} to="/historique/TC">Type Chambre</ToggleButton>
             <ToggleButton size="small" value="1" component={Link} to="/historique/MPL">Modif Plan tarifaires</ToggleButton>
             <ToggleButton size="small" value="2">Promotion</ToggleButton>
-            <ToggleButton size="small" value="3">Ouverture</ToggleButton>
         </ToggleButtonGroup>
     </div>
   </div>
