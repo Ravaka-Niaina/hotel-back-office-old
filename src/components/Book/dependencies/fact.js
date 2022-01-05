@@ -13,7 +13,7 @@ import {setValue} from '../../../utility2.js';
 import SkeletonFacture from './/skeletons/skeletonFacture.js';
 
 
-import '../../client/filtre.css';
+import './filtre.css';
 
 import styles from '../Book.module.css';
 
@@ -191,7 +191,7 @@ class Fact extends React.Component{
                 <div style={{textAlign:'center'}}>
                     <Itineraires context={this.props.context} annulerReservation={this.annulerReservation} />
                     <p id='bigLabel'>TOTAL : </p>
-                    <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()}>Ajouter itinéraire</Button></p>}
+                    <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()}>Ajouter itinéraire</Button></p>
                 </div>
                 <Modal
                     open={this.props.context.state.open}
