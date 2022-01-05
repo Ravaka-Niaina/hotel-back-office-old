@@ -11,17 +11,16 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import GETaPI from "../APiGet.js";
+import CallAPI from "../utility.js";
 import  Navbar  from "../Navbar/Navbar";
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
@@ -31,6 +30,48 @@ import EditIcon from '@mui/icons-material/Edit';
 import Pagination from '../pagination/pagination.js';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import Typography from '@mui/material/Typography';
+import { HTML5_FMT } from 'moment';
+import { styled } from '@mui/material/styles';
+import Alert from '@mui/material/Alert';
+
+//tooltip 
+const LightTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.common.white,
+    color: 'rgba(0, 0, 0, 0.87)',
+    boxShadow: theme.shadows[1],
+    fontSize: 11,
+  },
+}));
+
+
+const BootstrapTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} arrow classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.arrow}`]: {
+    color: theme.palette.common.black,
+  },
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: theme.palette.common.black,
+  },
+}));
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#f5f5f9',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: '1px solid #dadde9',
+  },
+}));
+
 
 let rows = [];
 function descendingComparator(a, b, orderBy) {
@@ -245,6 +286,8 @@ export default function EnhancedTable() {
   const [list, setList] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [indiceU, setId] = React.useState("");
+
+  const [message, setMessage] = React.useState("");
   
 
   const handleRequestSort = (event, property) => {
@@ -262,6 +305,10 @@ export default function EnhancedTable() {
     setList(data.list);
     return rows;
   }
+  function suppre(data){
+    setMessage (data.message);
+    GETaPI('post', "/planTarifaire",setPlanTarifaire);
+  }
 
   useEffect(() => {
     GETaPI('post', "/planTarifaire",setPlanTarifaire);
@@ -275,6 +322,11 @@ export default function EnhancedTable() {
     }
     setSelected([]);
   };
+
+  const suppression = (e,id, nom) => {
+    setMessage('');
+    CallAPI("post" ,"/politique/suppression" ,{id : id , nom : nom} , suppre)
+  }
 
   const handleClick = (event, field , bol) => {
     setId(field);
@@ -373,10 +425,29 @@ export default function EnhancedTable() {
                       <TableCell align="left"><Politic  row = {row.politiqueAnnulAtrb}/></TableCell>
                       <TableCell align="rigth">
                         <Link to={'/tarif/details/' + row._id}>
-
-                          <EditIcon style={{color : "green"}} /> 
+                        <HtmlTooltip
+                              title={
+                                <React.Fragment>
+                                  <Typography color="green" style={{textDecoration:'underline'}}>Editer</Typography>
+                                  <strong>{row.nom} ?</strong><br/>
+                                  </React.Fragment>
+                              }
+                            > 
+                               <EditIcon style={{color : "green"}} />
+                            </HtmlTooltip> 
                         </Link >
-                        <DeleteIcon style={{color : "red"}}/></TableCell>
+                        <HtmlTooltip
+                            title={
+                              <React.Fragment>
+                                <Typography color="error" style={{textDecoration:'underline'}}>Suppression</Typography>
+                                <strong>{row.nom} ?</strong><br/>
+                                <Button variant ="contained" color="error" onClick = {(event) => suppression(event , row._id ,row.nom )}>Supprimer</Button> 
+                              </React.Fragment>
+                            }
+                          > 
+                            <DeleteIcon style={{color : "red" , cursor :'pointer'}} />
+                        </HtmlTooltip> 
+                        </TableCell>
                     </TableRow>
                   );
                 })}

@@ -19,6 +19,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { purple } from '@mui/material/colors';
+import SearchIcon from '@mui/icons-material/Search';
 
 function ContenuTable(props){
     let historique = props.historique.map(histo => {
@@ -75,22 +76,23 @@ function TChambre (props) {
     });
 
     const ColorButton = styled(Button)(({ theme }) => ({
-        color: theme.palette.getContrastText(purple[500]),
-        backgroundColor: purple[500],
-        '&:hover': {
-          backgroundColor: purple[700],
-        },
-      }));
+      color: theme.palette.getContrastText(purple[500]),
+      backgroundColor:theme.palette.common.light,
+      '&:hover': {
+        color: theme.palette.common.white,
+        backgroundColor: theme.palette.common.dark,
+      },
+    }));
 
-    const StyledTableCell = styled(TableCell)(({ theme }) => ({
-        [`&.${tableCellClasses.head}`]: {
-          backgroundColor: theme.palette.common.black,
-          color: theme.palette.common.white,
-        },
-        [`&.${tableCellClasses.body}`]: {
-          fontSize: 14,
-        },
-      }));
+  const StyledTableCell = styled(TableCell)(({ theme }) => ({
+      [`&.${tableCellClasses.head}`]: {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.common.white,
+      },
+      [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+      },
+    }));
 
     const callBack = (data) =>{
       console.log(data)
@@ -108,7 +110,7 @@ function TChambre (props) {
         setPageCurrent(value);
         callAPI("post" , "/histo/TC" , {content :content , pageCurrent : value , dateD : state.debut , dateF : state.fin} , callBack);
     }
-
+    
     const handlechageDate =(e , field) =>{
         let current = {...state};
         current[field] = e.target.value;
@@ -162,9 +164,9 @@ function TChambre (props) {
                         }}
                     />
 
-                    <ColorButton variant="contained" onClick={search}>Search</ColorButton>
+                    <ColorButton variant="contained" onClick={search} startIcon={<SearchIcon/>}>Search</ColorButton>
             </Box><br/>
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper}> 
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
                 <TableHead>
                 <TableRow>
@@ -181,7 +183,7 @@ function TChambre (props) {
                     <ContenuTable historique = {historique} />
                 </TableBody>
             </Table>
-            </TableContainer>
+            </TableContainer><br/>
             <div style={{overflow : 'auto'}}>
                 <div style={{float :"left"}}></div>
                 <div style={{float : "right"}}>

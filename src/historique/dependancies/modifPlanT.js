@@ -19,18 +19,16 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import { purple } from '@mui/material/colors';
+import SearchIcon from '@mui/icons-material/Search';
 
 function ContenuTable(props){
     let historique = props.historique.map(histo => {
         return (
             <TableRow>
-                <TableCell align="left">{histo.TCHisto[0].nom}</TableCell>
-                <TableCell align="left">{histo.date}</TableCell>
+                <TableCell align="left">{histo.histoTarif[0].nom}</TableCell>
                 <TableCell align="left">{histo.idUser}</TableCell>
-                <TableCell align="left"><Champs champsModifier={histo.champsModifier}/></TableCell>
-                <TableCell align="left"><AncienneValeur AncienneValeur={histo.AncienneValeur}/></TableCell>
-                <TableCell align="left"><NouvelleValeur nouvelleValeur={histo.nouvelleValeur}/></TableCell>
                 <TableCell align="left">{histo.dateHisto}</TableCell>
+                <TableCell align="left">{histo.delete ? "suppression" : "modification"}</TableCell>
             </TableRow> 
         );
     })
@@ -76,15 +74,16 @@ function TChambre (props) {
 
     const ColorButton = styled(Button)(({ theme }) => ({
         color: theme.palette.getContrastText(purple[500]),
-        backgroundColor: purple[500],
+        backgroundColor:theme.palette.common.light,
         '&:hover': {
-          backgroundColor: purple[700],
+          color: theme.palette.common.white,
+          backgroundColor: theme.palette.common.dark,
         },
       }));
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
-          backgroundColor: theme.palette.common.black,
+          backgroundColor: theme.palette.primary.main,
           color: theme.palette.common.white,
         },
         [`&.${tableCellClasses.body}`]: {
@@ -162,7 +161,7 @@ function TChambre (props) {
                         }}
                     />
 
-                    <ColorButton variant="contained" onClick={search}>Search</ColorButton>
+                    <ColorButton variant="contained" startIcon={<SearchIcon/>}>Search</ColorButton>
             </Box><br/>
             <TableContainer component={Paper}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -170,18 +169,15 @@ function TChambre (props) {
                 <TableRow>
                     <StyledTableCell align="left">plan tarifaire</StyledTableCell>
                     <StyledTableCell align="left">Utilisateur</StyledTableCell>
-                    <StyledTableCell align="left">nom champs modifier</StyledTableCell>
-                    <StyledTableCell align="left">Ancienne valeur</StyledTableCell>
-                    <StyledTableCell align="left">nouvelle valeur</StyledTableCell>
                     <StyledTableCell align="left">dateHistorique</StyledTableCell>
-                    <StyledTableCell align="left">delete</StyledTableCell>
+                    <StyledTableCell align="left">Action</StyledTableCell>
                 </TableRow>
                 </TableHead>
                 <TableBody>
-                    {/*<ContenuTable historique = {historique} />*/}
+                    <ContenuTable historique = {historique} />
                 </TableBody>
             </Table>
-            </TableContainer>
+            </TableContainer><br/>
             <div style={{overflow : 'auto'}}>
                 <div style={{float :"left"}}></div>
                 <div style={{float : "right"}}>
