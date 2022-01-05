@@ -60,6 +60,9 @@ function InsertTarif(){
         let current = JSON.parse(JSON.stringify(planTarifaire));
         current.chambresAtrb = res.listType;
         current.politiqueAnnulAtrb = res.listPolitique;
+        for(let i = 0; i < current.politiqueAnnulAtrb.length; i++){
+            current.politiqueAnnulAtrb[i].checked = false;
+        }
         setPlanTarifaire(current);
         console.log(current);
     }

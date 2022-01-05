@@ -67,7 +67,7 @@ function NouvelleValeur(props){
 
 
 function TChambre (props) {
-    const [content , setContent] = useState(20);
+    const [content , setContent] = useState(2);
     const [pageCurrent, setPageCurrent] = useState(1);
     const [nbrPage , setNbrPage] = useState();
     const [historique , setHistorique] = useState([]);
