@@ -122,8 +122,6 @@ function InsertPromotion(){
   const history = useHistory();
 
   function setListTypeChambre(res){
-    console.log("List type chambre-----------");
-    console.log(res);
     let current = JSON.parse(JSON.stringify(state));
     for(let i = 0; i < res.listTypeChambre.length; i++){
       res.listTypeChambre[i].checked = false;

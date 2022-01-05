@@ -23,6 +23,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Skeleton from '../../SkeletonListe/skeleton';
 
 function ContenuTable(props){
+  console.log(props.historique);
     let historique = props.historique.map(histo => {
         return (
             <TableRow>

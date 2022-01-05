@@ -1,9 +1,6 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
-
-
 import FormLabel from '@mui/material/FormLabel'
 import DateRangePicker from '@mui/lab/DateRangePicker';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
@@ -17,7 +14,7 @@ import CalendrierTimeline from '../../components/calendrier/CalendrierTimeline/C
 
 class Calendrier extends React.Component{
     constructor(props){
-        super(props)
+       super(props)
        this.state = {
             label : "anja",
             range: [null,null],
@@ -112,35 +109,28 @@ render(){
             <div>
                 <Navbar/>
                 <Sidebar/>
-                    <div className="container"><br/>
-                   
-
-                      <LocalizationProvider dateAdapter={AdapterDateFns}>
-                        <DateRangePicker
-                            startText="Check-in"
-                            endText="Check-out"
-                            value={this.state.range}
-                            inputFormat={"dd/MM/yyyy"}
-                            onChange={(newValue) => {
-                                this.getDatas(newValue);
-                                
-                            }}
-                            renderInput={(startProps, endProps) => (
-                                this.renderTextfield(startProps,endProps)
-                            
-                            )}
-                        />
-                     </LocalizationProvider>
-                        <table style={{marginTop:20}}>
-                            
-
-                            {this.renderCalendar()}
-                            
-                        </table>
-                    
-                    </div>   
-                 
+                <div className="container"><br/>
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DateRangePicker
+                        startText="Check-in"
+                        endText="Check-out"
+                        value={this.state.range}
+                        inputFormat={"dd/MM/yyyy"}
+                        onChange={(newValue) => {
+                            this.getDatas(newValue);
+                        }}
+                        renderInput={(startProps, endProps) => (
+                            this.renderTextfield(startProps,endProps)
+                        
+                        )}
+                    />
+                    </LocalizationProvider>
+                    <table style={{marginTop:20}}>
+                        {this.renderCalendar()}
+                    </table>
+                
                 </div>
+            </div>
         ); 
     }
 }

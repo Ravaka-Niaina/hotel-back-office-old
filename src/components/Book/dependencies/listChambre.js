@@ -4,8 +4,6 @@ import styles from '../Book.module.css';
 import {PersonOutline, LiveTv, Wifi, AcUnit, Iron, HotTub} from '@mui/icons-material';
 import {Paper} from '@mui/material';
 import { styled } from '@mui/material/styles';
-
-import Filtre from '../../client/Filtre.js';
 import {Font} from '../../../partenaire/utilityTypeChambre.js';
 import ListTarif from './listTarif.js';
 import SkeletonTarifDispo from './skeletons/skeletonTarifDispo.js';
@@ -188,7 +186,6 @@ class DChambre extends React.Component{
             } 
         return (
             <div>
-                { this.props.context.state.showFiltre ? <Filtre context={this.props.context} /> : null }
                  {listChambre}
             </div>
         );

@@ -5,6 +5,7 @@ import {Button, TextField, Box, InputAdornment, ToggleButtonGroup, ToggleButton,
 import {ManageSearch, Search, ArrowDropDown, PersonOutline} from '@mui/icons-material';
 import BaeCalendar from "../../calendar/calendar.js";
 import Guest from "./guest.js";
+import Filtre from "./dependencies/Filtre.js";
 import callAPI from '../../utility';
 
 import {EventNote, ExpandMore} from '@mui/icons-material';
@@ -30,16 +31,16 @@ const BookComponent = (props) => {
         props.context.setState(currentState);
     }
 
-    function applyFilter(){
+    function applyFilter(moreData){
         if((props.context.state.guests.nbEnfant > 0 || props.context.state.guests.nbAdulte > 0)){
             props.context.handleChange("errFiltre", null);
             const data = {
-                filtres: props.context.state.filtres, 
+                filtres: moreData, 
                 guests: props.context.state.guests, 
                 dateDebut: props.context.state.dateSejour.debut,
                 dateFin: props.context.state.dateSejour.fin
             }
-            console.log(data);
+            //console.log(data);
             props.context.handleChange("isListTarifDispoReceived", false);
             callAPI('post', '/TCTarif/', data, setResult);
         }
@@ -134,6 +135,7 @@ const BookComponent = (props) => {
           <ToggleButton size="small" value="b">Plan tarifaires</ToggleButton>
         </ToggleButtonGroup>
     </Box>
+    <Filtre context={props.context} applyFilter={applyFilter} />
   </div>
 )};
 

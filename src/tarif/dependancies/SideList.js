@@ -3,12 +3,21 @@ import {Button,Box} from '@mui/material';
 import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
 import FullPriceEditor from './FullPriceEditor.js';
 import styles from '../CalendarComponent.module.css';
+import sideList_safari from './SideList_safari.module.css';
+import sideList_chrome from './SideList_chrome.module.css';
+
+let sideList_css = {};
+if (navigator.userAgent.match(/AppleWebKit/) && ! navigator.userAgent.match(/Chrome/)) { // browser safari
+    sideList_css = sideList_safari;
+}else{
+    sideList_css = sideList_chrome;
+}
 
 function ListTarifs(props){
     let list = [];
     for(let i = 0; i < props.planTarifaire.length; i++){
         list.push(
-            <li>
+            <li className={sideList_css.sideElt}>
                 <span>{props.planTarifaire[i].nom}</span>
             </li>
         );
@@ -24,9 +33,9 @@ const SideList = (props) => {
             sx={{
                 width: 'auto',
                 height: 'auto',
-                display: 'inline-block',
+                display: 'inline-block'
             }}
-            className={styles.sidelist}>
+            className={sideList_css.sidelist}>
             <span className={styles.sidetitle}>{props.typechambre.nom}</span>
             <ul>
                 <li>
@@ -37,10 +46,10 @@ const SideList = (props) => {
                 <li>
                     <span>Room status</span>
                 </li>
-                <li>
+                <li className={sideList_css.sideElt}>
                     <span>Room to sell</span>
                 </li>
-                <li>
+                <li className={sideList_css.sideElt}>
                     <span>Booked</span>
                 </li>
                 <ListTarifs planTarifaire={props.typechambre.planTarifaire} />
