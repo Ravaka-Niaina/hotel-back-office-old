@@ -283,6 +283,10 @@ body{
     justify-content: space-around;
 }
 
+.stay > div:first-child > div:first-child{
+    margin-bottom: 8px;
+}
+
 .stay > div:first-child > div svg{
     margin-right: 5px;
 }

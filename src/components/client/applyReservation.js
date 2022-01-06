@@ -8,7 +8,6 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
-import  Navbar  from "../../Navbar/Navbar";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
@@ -139,7 +138,6 @@ function ApplyReservation(props){
         <>
             {(reservation !== null) ? 
                 <div id="content" style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
-                    <Navbar/>
                     <Box sx={{ bgcolor: 'background.paper', maxWidth: 800, margin: "0 auto"}}>
                         <h1>Détails réservation</h1>
                         {alertSuccess != null ? 
@@ -210,6 +208,7 @@ function ApplyReservation(props){
                             <Button variant="contained">Partager</Button>
                             <Button variant="contained">Ajouter au calendrier</Button>
                         </Stack>
+                        <br />
                         <Stack direction="row" spacing={2}>
                             <Button variant="contained" onClick={(e) => setIsEditEnabled(!isEditEnabled)}>{isEditEnabled ? "Désactiver modification réservation" : "Modifier réservation"}</Button>
                             <Button variant="contained">Annuler réservation</Button>
