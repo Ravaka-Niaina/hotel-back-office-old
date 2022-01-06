@@ -135,7 +135,7 @@ function Itineraires(props){
                 <Reservations context={props.context} indexItineraire={i} annulerReservation={props.annulerReservation} />
                 <Card>
                     <p>
-                    Total : <span>{props.context.state.itineraires[i].toPay.toFixed(2)} EUR</span>
+                    Total : <span>{props.context.state.itineraires[i].toPay ? props.context.state.itineraires[i].toPay.toFixed(2) : ""} EUR</span>
                     </p>
                 </Card>
             </Box>
