@@ -31,7 +31,7 @@ import Pagination from '../pagination/pagination.js';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import Skeleton from '../SkeletonListe/skeleton';
-
+import InputAdornment from '@mui/material/InputAdornment';
 
 function createData(name, calories, fat, carbs, protein) {
   return {
@@ -322,8 +322,13 @@ export default function EnhancedTable() {
           size="small" label ="Search"
           name="Search"
           type="text"
+          InputProps={{
+            endAdornment: 
+            <InputAdornment position="end">
+                <SearchIcon style={{color:"blue" , hover : "pointer"}}/>
+            </InputAdornment>,
+            }}
         />
-        <SearchIcon style={{color:"blue"}}/>
       </div> 
       
       <br/><br/>

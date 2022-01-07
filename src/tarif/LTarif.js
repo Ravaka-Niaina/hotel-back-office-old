@@ -36,6 +36,8 @@ import { HTML5_FMT } from 'moment';
 import { styled } from '@mui/material/styles';
 import Alert from '@mui/material/Alert';
 import Skeleton from '../SkeletonListe/skeleton';
+import ModalAlert from '../SkeletonListe/modal';
+import InputAdornment from '@mui/material/InputAdornment';
 
 //tooltip 
 const LightTooltip = styled(({ className, ...props }) => (
@@ -285,11 +287,12 @@ export default function EnhancedTable() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [list, setList] = React.useState([]);
-  const [open, setOpen] = React.useState(false);
+  const [modal, setModal] = React.useState(false);
   const [indiceU, setId] = React.useState("");
 
   const [message, setMessage] = React.useState("");
   const [skeleton, setSkeleton] = React.useState(true);
+  const [nom, setNom] = React.useState({nom : "" , id : ""});
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -324,19 +327,21 @@ export default function EnhancedTable() {
     }
     setSelected([]);
   };
-
-  const suppression = (e,id, nom) => {
-    setMessage('');
-    CallAPI("post" ,"/politique/suppression" ,{id : id , nom : nom} , suppre)
+  const haddleAnnuler = () => {
+    setModal(false);
   }
 
-  const handleClick = (event, field , bol) => {
-    setId(field);
-    setOpen(bol);
-    
-  };
-  const closeModal = () => {
-    setOpen(false);
+  const haddleChangeModal = (id , nom ) => {
+    let current = {...nom};
+    current.nom = nom ;
+    current.id = id;
+    setNom(current);
+    setModal(true);
+  }
+  const suppression = (e,id, nom) => {
+    setModal(false);
+    setMessage('');
+    CallAPI("post" ,"/planTarifaire/suppression" ,{id : id , nom : nom} , suppre)
   }
 
   const handleChangePage = (event, newPage) => {
@@ -376,8 +381,13 @@ export default function EnhancedTable() {
           size="small" label ="Search"
           name="Search"
           type="text"
+          InputProps={{
+            endAdornment: 
+            <InputAdornment position="end">
+                <SearchIcon style={{color:"blue" , hover : "pointer"}} />
+            </InputAdornment>,
+            }}
         />
-        <SearchIcon style={{color:"blue"}}/>
       </div> <br/><br/>
 
       {
@@ -409,7 +419,6 @@ export default function EnhancedTable() {
 
                   return (
                     <TableRow
-                      onClick={(event) => handleClick(event, row._id , true)}
                       role="checkbox"
                       tabIndex={-1}
                       key={row.nom}
@@ -445,13 +454,11 @@ export default function EnhancedTable() {
                         <HtmlTooltip
                             title={
                               <React.Fragment>
-                                <Typography color="error" style={{textDecoration:'underline'}}>Suppression</Typography>
-                                <strong>voulez-vous vraiment supprimer "{row.nom}" ?</strong><br/>
-                                <Button variant ="contained" color="error" onClick = {(event) => suppression(event , row._id ,row.nom )}>Supprimer</Button> 
+                                <Typography color="error">Suppression</Typography>
                               </React.Fragment>
                             }
                           > 
-                            <DeleteIcon style={{color : "red" , cursor :'pointer'}} />
+                            <DeleteIcon style={{color : "red" , cursor :'pointer'}} onClick={(e)=>haddleChangeModal(row._id , row.nom)}/>
                         </HtmlTooltip> 
                         </TableCell>
                     </TableRow>
@@ -492,6 +499,10 @@ export default function EnhancedTable() {
           <Pagination  />
         </div>
       </div>
+      <div id = "test">
+        {message ? <Alert severity="error" >{message}</Alert> : ""}
+      </div>
+      <ModalAlert  suppression = {suppression}  modal = {modal} haddleAnnuler={haddleAnnuler} nom ={nom}/>
     </Box>
     </>
   );

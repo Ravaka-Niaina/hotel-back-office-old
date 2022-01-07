@@ -1,5 +1,4 @@
 
-
 import  Login  from "./components/login/login";
 import  Register  from "./components/login/register";
 import  home  from "./home/home";
@@ -58,7 +57,7 @@ import  BookComponent from "./components/Book/BookComponent.js";
 import  Historique from "./historique/header.js";
 import  HistoriqueTC from "./historique/dependancies/TChambre.js";
 import  HistoriqueMPL from "./historique/dependancies/modifPlanT.js";
-import  Tooltip from "./TooltipSuppression/tooltip.js";
+import  Tooltip from "./SkeletonListe/modal.js";
 
 function App(){
   return(
@@ -119,9 +118,10 @@ function App(){
         <Route path="/historique" exact component={Historique} />
         <Route path="/historique/TC" exact component={HistoriqueTC} />
         <Route path="/historique/MPL" exact component={HistoriqueMPL} />
-        <Route path="/tooltip" exact component={Tooltip} />
+        <Route path="/modal" exact component={Tooltip} />
       </Router>
     </div>
+    
   );
 
 }
