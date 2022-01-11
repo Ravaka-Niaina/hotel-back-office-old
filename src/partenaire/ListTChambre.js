@@ -13,7 +13,6 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -31,7 +30,24 @@ import Pagination from '../pagination/pagination.js';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import Skeleton from '../SkeletonListe/skeleton';
+import ModalAlert from '../SkeletonListe/modal';
 import InputAdornment from '@mui/material/InputAdornment';
+import Alert from '@mui/material/Alert';
+import { tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
+
+
+const HtmlTooltip = styled(({ className, ...props }) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: '#f5f5f9',
+    color: 'rgba(0, 0, 0, 0.87)',
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: '1px solid #dadde9',
+  },
+}));
 
 function createData(name, calories, fat, carbs, protein) {
   return {
@@ -44,9 +60,6 @@ function createData(name, calories, fat, carbs, protein) {
 }
 
 let rows = [];
-
-
-
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -232,11 +245,13 @@ export default function EnhancedTable() {
   const [nbrPage, setNbrPage] = React.useState(0);
   const [pageCurrent, setPageCurrent] = React.useState(1);
   const [count, setCount] = React.useState(1);
-
+  const [modal, setModal] = React.useState(false);
+  const [nom, setNom] = React.useState({nom : "" , id : ""});
   const [skeleton, setSkeleton] = React.useState(true);
+  const [message, setMessage] = React.useState("");
+  
 
   const handleChangePagination =(e , value) =>{
-    console.log(value);
     setPageCurrent(value);
     CallAPI("post" ,'/typeChambre/TC' ,{PageCurrent : value , content : rowsPerPage} , setTypeChambre)
   }
@@ -259,6 +274,31 @@ export default function EnhancedTable() {
     setCount(data.count);
   }
 
+  const suppression = (e,id, nom) => {
+    console.log(id);
+    console.log(nom);
+    setModal(false);
+    setMessage('');
+    CallAPI("post" ,"/typeChambre/suppression" ,{id : id , nom : nom} , suppre)
+  }
+
+  const suppre = (data) => {
+    setMessage(data.message);
+    CallAPI('post', '/typeChambre/TC',{PageCurrent : pageCurrent ,content : rowsPerPage}, setTypeChambre);
+  }   
+  
+  const haddleAnnuler = () => {
+    setModal(false);
+  }
+
+  const haddleChangeModal = (id , nom ) => {
+    let current = {...nom};
+    current.nom = nom ;
+    current.id = id;
+    setNom(current);
+    setModal(true);
+  }
+  
   useEffect(() => {
     CallAPI('post', '/typeChambre/TC',{PageCurrent : pageCurrent ,content : rowsPerPage},setTypeChambre);
 
@@ -381,9 +421,27 @@ export default function EnhancedTable() {
                       <TableCell align="right">{row.superficie}</TableCell>
                       <TableCell align="center">
                         <Link to={'/typeChambre/details/' + row._id}>
-                          <EditIcon style={{color : "green"}} /> 
-                        </Link>
-                          <DeleteIcon style={{color : "red"}}/></TableCell>
+                        <HtmlTooltip
+                              title={
+                                <React.Fragment>
+                                  <Typography color="green" style={{textDecoration:'underline'}}>Editer</Typography>
+                                  <strong>{row.nom} ?</strong><br/>
+                                  </React.Fragment>
+                              }
+                            > 
+                               <EditIcon style={{color : "green"}} />
+                            </HtmlTooltip> 
+                        </Link >
+                        <HtmlTooltip
+                            title={
+                              <React.Fragment>
+                                <Typography color="error">Suppression</Typography>
+                              </React.Fragment>
+                            }
+                          > 
+                            <DeleteIcon style={{color : "red" , cursor :'pointer'}} onClick={(e)=>haddleChangeModal(row._id , row.nom)}/>
+                        </HtmlTooltip> 
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -421,6 +479,10 @@ export default function EnhancedTable() {
         <Pagination pagine={nbrPage} pageCurrent = {pageCurrent}  handleChangePagination = {handleChangePagination}/>
         </div>
       </div>
+      <div id = "test">
+        {message ? <Alert severity="error" >{message}</Alert> : ""}
+      </div>
+      <ModalAlert  suppression = {suppression}  modal = {modal} haddleAnnuler={haddleAnnuler} nom ={nom}/>
     </Box>
     </>
   );
