@@ -76,7 +76,7 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
     return htmlProm;
   }
   
-  if(prix !== null){
+  if(prix !== null && prix !== undefined){
     for(let i = 0; i < prix.length; i++){
       let temp = new Date(prix[i].month);
       temp = temp.getMonth();

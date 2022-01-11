@@ -38,7 +38,8 @@ function InfoItineraires(props){
                         affilie={props.affilie}
                         setAffilie={props.setAffilie}
                         openLoad={props.openLoad}
-                        setOpenLoad={props.setOpenLoad} />
+                        setOpenLoad={props.setOpenLoad}
+                        isEditEnabled={props.isEditEnabled} />
                 </div>
             );
         }

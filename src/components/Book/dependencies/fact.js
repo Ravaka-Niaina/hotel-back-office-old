@@ -7,6 +7,8 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import BedIcon from '@mui/icons-material/Bed';
 import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import ModeNightIcon from '@mui/icons-material/ModeNight';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import PolicyIcon from '@mui/icons-material/Policy';
 
 import {setValue} from '../../../utility2.js';
 
@@ -18,6 +20,9 @@ import './filtre.css';
 import styles from '../Book.module.css';
 
 import {Card, CardContent, Typography, CardActions, Button, Box, Modal, TextField, IconButton} from '@mui/material';
+
+import { styled } from '@mui/material/styles';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
 function PrintDateSejour(props){
     // itineraire, borne, handleChange, label
@@ -51,6 +56,17 @@ function PrintDateSejour(props){
 }
 
 function Reservations(props){
+    const HtmlTooltip = styled(({ className, ...props }) => (
+        <Tooltip {...props} classes={{ popper: className }} />
+    ))(({ theme }) => ({
+        [`& .${tooltipClasses.tooltip}`]: {
+        backgroundColor: '#f5f5f9',
+        color: 'rgba(0, 0, 0, 0.87)',
+        maxWidth: 850,
+        fontSize: theme.typography.pxToRem(12),
+        border: '1px solid #dadde9',
+        },
+    }));
     let reservation = [];
     try{
         let i = -1;
@@ -67,8 +83,27 @@ function Reservations(props){
                                 <span><ModeNightIcon/>{tarif.nbNuits + " nuit(s)"}</span>
                                 <span><LocalOfferIcon/>{tarif.nomTarif}</span>
                             </div>
+                            <div>
+                                <span><PersonOutlineIcon/>x {tarif.nbPers} personnes</span>
+                                <HtmlTooltip
+                                    title={
+                                        <React.Fragment>
+                                            <h3>Politique d'annulation</h3>
+                                            <div>
+                                                <span>
+                                                    Le lorem ipsum est, en imprimerie, une suite de mots sans signification utilisée à titre provisoire pour calibrer une mise en page, le texte définitif venant remplacer le faux-texte dès qu'il est prêt ou que la mise en page est achevée. Généralement, on utilise un texte en faux latin, le Lorem ipsum ou Lipsum...
+                                                </span>
+                                            </div>
+                                        </React.Fragment>
+                                    }
+                                    placement="left-start"
+                                >
+                                    <span><PolicyIcon/>Politique d'annulation</span>
+                                </HtmlTooltip>
+                                <span></span>
+                            </div>
                         </CardContent>
-                        <div><span>Prix : {tarif.toPay.afterProm} EUR</span></div>
+                        <div><span>Prix : {tarif.toPay.afterProm.toFixed(2)} EUR</span></div>
                         <CardActions>
                             <Button size="small">Modifier</Button>
                             <Button size="small" onClick={(e) => props.annulerReservation(props.context, props.context.state.reservationEnCours._id, props.indexItineraire, u)}>
@@ -100,7 +135,7 @@ function Itineraires(props){
                 <Reservations context={props.context} indexItineraire={i} annulerReservation={props.annulerReservation} />
                 <Card>
                     <p>
-                    Total : <span>{props.context.state.itineraires[i].toPay} EUR</span>
+                    Total : <span>{props.context.state.itineraires[i].toPay ? props.context.state.itineraires[i].toPay.toFixed(2) : ""} EUR</span>
                     </p>
                 </Card>
             </Box>
