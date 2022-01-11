@@ -4,7 +4,7 @@ export default function callAPI(method, url, data, callback){
     axios({
         method: method,      
         url: process.env.REACT_APP_BACK_URL + url,
-        // withCredentials: true,
+        withCredentials: true,
         data: data
     })
     .then(res => {                                           

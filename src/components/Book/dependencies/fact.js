@@ -182,7 +182,7 @@ class Fact extends React.Component{
         axios({
             method: 'get',
             url: process.env.REACT_APP_BACK_URL + '/reservation/',
-            // withCredentials: true,
+            withCredentials: true,
             data: {}
         })
         .then(res => {
