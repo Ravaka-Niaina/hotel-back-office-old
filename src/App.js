@@ -24,6 +24,7 @@ import  AppClient  from "./components/Book/dependencies/scroll";
 import  test  from "./components/client/Cookies";
 
 import  PromotionList  from "./promotion/LPromotion";
+import PromotionList2 from "./promotion/ListPromotion.js";
 import  InsertPromotion  from "./promotion/insertPromotion.js";
 import Global from "./politique/global.js";
 import ListPolitique from "./politique/LPolitique.js"
@@ -71,6 +72,7 @@ function App(){
         <Route path="/hideShow" exact component={hideShow} />
 
         <Route path="/promotion" exact component={PromotionList} />
+        <Route path="/promotion/list" exact component={PromotionList2} />
         <Route path="/promotion/create" exact component={InsertPromotion} />
         <Route path="/promotion/detail/:_id" exact component={DetailsPromotion} />
         <Route path="/" exact component={home} />

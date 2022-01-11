@@ -605,7 +605,6 @@ Tarif réduit disponible uniquement pendant :
 
 </label>
    <p>
-{console.log(this.state.promotion.weekDays.lundi == 1 ? 'true' : 'false')}
 <FormControlLabel  
 label={<p id='label'>Lundi</p>}
 value='1'

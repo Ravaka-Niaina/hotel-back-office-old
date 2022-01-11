@@ -279,6 +279,7 @@ export default function EnhancedTable() {
     setOpen(bol);
     
   };
+  
   const closeModal = () => {
     setOpen(false);
   }
