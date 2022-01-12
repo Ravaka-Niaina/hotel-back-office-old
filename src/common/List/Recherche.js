@@ -19,24 +19,22 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-import GETaPI from "../APiGet.js";
-import  Navbar  from "../Navbar/Navbar";
+import  Navbar  from "../../Navbar/Navbar";
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 
 import EditIcon from '@mui/icons-material/Edit';
-import Pagination from './Pagination.js';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
-import { HTML5_FMT } from 'moment';
 import { styled } from '@mui/material/styles';
-import Alert from '@mui/material/Alert';
-import Skeleton from '../SkeletonListe/skeleton';
+import Skeleton from '../../SkeletonListe/skeleton';
 
-import callAPI from '../utility.js';
+import callAPI from '../../utility.js';
+import FooterList from './FooterList.js';
+import ValidationSuppression from './ValidationSuppression.js';
 
 const moment = require('moment');
 
@@ -125,14 +123,40 @@ EnhancedTableHead.propTypes = {
     rowCount: PropTypes.number.isRequired,
 };
 
+function removeSpecialCharFromDate(date, type){
+  date = "" + date;
+  if(date.includes(" ")){
+    if(type === "Date"){
+      date = date.split(" ")[0];
+    }
+  }else if(date.includes("T")){
+    const elts = date.split("T");
+    if(type === "Date"){
+      date = elts[0];
+    }else{
+      const datePart = elts[0];
+      const timePart = elts[1].split("Z")[0];
+      date = datePart + " " + timePart;
+    }
+  }
+  return date;
+}
+
+const getValue = (row, fieldName) => {
+  let value = {...row};
+  let fields = fieldName.split(".");
+  fields.map(field => {
+    value = value[field];
+  });
+  return value;
+}
+
 export default function Recherche(props){
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
-    const [dense, setDense] = React.useState(false);
-    const [rowsPerPage, setRowsPerPage] = 
-      React.useState(props.rowsPerPageOptions ? props.rowsPerPageOptions[0] : 5);
+    const [dense, setDense] = React.useState(true);
     const [list, setList] = React.useState([]);
     const [open, setOpen] = React.useState(false);
     const [indiceU, setId] = React.useState("");
@@ -141,9 +165,12 @@ export default function Recherche(props){
     const [toSearch, setToSearch] = React.useState("");
     const [currentNumPage, setCurrentNumPage] = React.useState(1);
     const [nbPage, setNbPage] = React.useState(1);
-    const [nbContent, setNbContent] = React.useState(props.nbContent);
+    const [nbContent, setNbContent] = React.useState(props.nbContent ? props.nbContent : 5);
     const [rowsPerPageOptions, setRowsPerPageOptions] = 
       React.useState(props.rowsPerPageOptions ? props.rowsPerPageOptions : [5, 10, 15]);
+    const [nbResult, setNbResult] = React.useState(0);
+    const [openModalDelete, setOpenModalDelete] = React.useState(false);
+    const [toDelete, setToDelete] = React.useState({_id: null, nom: null});
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
@@ -170,10 +197,12 @@ export default function Recherche(props){
       let toPrint = [];
       data.list.map(row => {
         let temp = {};
+        console.log(props.fieldsToPrint);
         props.fieldsToPrint.map(infoField => {
-          temp[infoField.field] = row[infoField.field];
-          if(infoField.type === "Date"){
-            temp[infoField.field] = moment(temp[infoField.field]).format('YYYY-MM-DD');
+          console.log("type nalefa = " + infoField.type);
+          temp[infoField.field] = getValue(row, infoField.field);
+          if(infoField.type === "Date" || infoField.type === "DateTime"){
+            temp[infoField.field] = removeSpecialCharFromDate(temp[infoField.field], infoField.type);
           }
         });
         toPrint.push(temp);
@@ -182,6 +211,7 @@ export default function Recherche(props){
     }
 
     const rechercher = (numPage, providedNbContent) => {
+        setIsLoading(true);
         let valuesToSearch = [];
         let cleanValue = toSearch.trim();
         if(cleanValue !== ""){
@@ -204,6 +234,8 @@ export default function Recherche(props){
             rearrangeCells(data);
             setListResult(data.list);
             setNbPage(data.nbPage);
+            setNbResult(data.nbResult);
+            setIsLoading(false);
         });
     };
 
@@ -229,47 +261,23 @@ export default function Recherche(props){
         });
         setHeadCells(temp);
     }, []);
-
-    const suppression = (e,id, nom) => {
-        setMessage('');
-        callAPI("post" ,"/politique/suppression" ,{id : id , nom : nom} , suppre)
-    }
-
-    const handleChangePage = (event, newPage) => {
-        setPage(newPage);
-    };
-
-    const handleChangeRowsPerPage = (event) => {
-      const nbRows = parseInt(event.target.value, 10)
-        setRowsPerPage(nbRows);
-        rechercher(1, nbRows);
-        setPage(0);
-    };
-
-    const handleChangeDense = (event) => {
-        setDense(event.target.checked);
-    };
     
     const [message, setMessage] = React.useState("");
-    const [skeleton, setSkeleton] = React.useState(true);
-
-    function suppre(data){
-
-    }
+    const [isLoading, setIsLoading] = React.useState(true);
 
     const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * nbContent - rows.length) : 0;
     let rows = [];
     return(
         <>
             <Navbar currentPage={1}/><br/>
             <Box sx={{ width: '100%', padding :"50px" }}>
-            <Link to={'/promotion/insertPromotion'}  style={{float : 'left'}}>
+            <Link to={props.btnInsert.urlRedirect}  style={{float : 'left'}}>
                 <Button 
                 variant="contained" 
                 endIcon={<AddIcon style={{color:'white'}}/>}
                 style={{textDecoration:'none'}}>
-                    <span style={{color:'white'}}>Ajouter Promotion</span>
+                    <span style={{color:'white'}}>{props.btnInsert.label}</span>
                 </Button>
             </Link> 
             <div style={{float : 'right'}}>  
@@ -285,8 +293,7 @@ export default function Recherche(props){
             </div> <br/><br/>
 
             {
-                !skeleton ? <Skeleton /> :
-
+                isLoading ? <Paper sx={{ width: '100%', mb: 2 }}><Skeleton /></Paper> :<>
             <Paper sx={{ width: '100%', mb: 2 }}>
             
                 <TableContainer>
@@ -307,7 +314,7 @@ export default function Recherche(props){
                     <TableBody>
                     {
                     stableSort(listResult, getComparator(order, orderBy))
-                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .slice(page * nbContent, page * nbContent + nbContent)
                         .map((row, index) => {
                         const isItemSelected = null;
                         const labelId = `enhanced-table-checkbox-${index}`;
@@ -344,27 +351,13 @@ export default function Recherche(props){
                                 }
                                 <TableCell align="rigth">
                                     <Link to={props.urlEdit + row._id}>
-                                    <HtmlTooltip
-                                        title={
-                                        <React.Fragment>
-                                            <Typography color="green" style={{textDecoration:'underline'}}>Editer</Typography>
-                                            <strong>{row.nom} ?</strong><br/>
-                                        </React.Fragment>
-                                        }
-                                    > 
+                                    <HtmlTooltip title="Editer"> 
                                         <EditIcon style={{color : "green"}} />
                                     </HtmlTooltip> 
                                     </Link >
-                                    <HtmlTooltip
-                                        title={
-                                        <React.Fragment>
-                                            <Typography color="error" style={{textDecoration:'underline'}}>Suppression</Typography>
-                                            <strong>voulez-vous vraiment supprimer "{row.nom}" ?</strong><br/>
-                                            <Button variant ="contained" color="error" onClick = {(event) => suppression(event , row._id ,row.nom )}>Supprimer</Button> 
-                                        </React.Fragment>
-                                        }
-                                    > 
-                                        <DeleteIcon style={{color : "red" , cursor :'pointer'}} />
+                                    <HtmlTooltip title="Supprimer" > 
+                                        <DeleteIcon style={{color : "red" , cursor :'pointer'}} 
+                                        onClick={(e) => {setToDelete(row); setOpenModalDelete(true)}} />
                                     </HtmlTooltip> 
                                 </TableCell>
                             </TableRow>
@@ -383,33 +376,25 @@ export default function Recherche(props){
                     </TableBody>
                 </Table>
                 </TableContainer>
-                <TablePagination style={{backgroundColor : '#2F4050',color:'white' }}
-                rowsPerPageOptions={rowsPerPageOptions}
-                component="div"
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                />
             </Paper>
+            <FooterList 
+              nbResult={nbResult} 
+              rowsPerPageOptions={rowsPerPageOptions}
+              nbContent={nbContent}
+              setNbContent={setNbContent}
+              currentNumPage={currentNumPage} setCurrentNumPage={setCurrentNumPage}
+              nbPage={nbPage} rechercher={rechercher}
+            /></>
             }
-            <div style={{overflow : 'auto'}}>
-                <div style={{float :"left"}}>
-                <FormControlLabel 
-                    control={<Switch checked={dense} onChange={handleChangeDense} />}
-                    label={dense ? "grand " : "petit"}
-                />
-                </div>
-                <div style={{float : "right"}}>
-                    <Pagination 
-                    current={currentNumPage} 
-                    setCurrentNumPage={setCurrentNumPage}
-                    pagine={nbPage}
-                    rechercher={rechercher} />
-                </div>
-            </div>
-            </Box>
-        </>
+          </Box>
+          <ValidationSuppression 
+            openModalDelete={openModalDelete}
+            setOpenModalDelete={setOpenModalDelete}
+            toDelete={toDelete}
+            tableName={props.tableName}
+            rechercher={rechercher}
+            setCurrentNumPage={setCurrentNumPage}
+          />
+      </>
     );
 }
