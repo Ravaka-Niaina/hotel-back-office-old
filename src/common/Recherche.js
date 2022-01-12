@@ -26,7 +26,7 @@ import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 
 import EditIcon from '@mui/icons-material/Edit';
-import Pagination from '../pagination/pagination.js';
+import Pagination from './Pagination.js';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
@@ -37,6 +37,8 @@ import Alert from '@mui/material/Alert';
 import Skeleton from '../SkeletonListe/skeleton';
 
 import callAPI from '../utility.js';
+
+const moment = require('moment');
 
   const HtmlTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
@@ -129,7 +131,8 @@ export default function Recherche(props){
     const [selected, setSelected] = React.useState([]);
     const [page, setPage] = React.useState(0);
     const [dense, setDense] = React.useState(false);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = 
+      React.useState(props.rowsPerPageOptions ? props.rowsPerPageOptions[0] : 5);
     const [list, setList] = React.useState([]);
     const [open, setOpen] = React.useState(false);
     const [indiceU, setId] = React.useState("");
@@ -138,6 +141,9 @@ export default function Recherche(props){
     const [toSearch, setToSearch] = React.useState("");
     const [currentNumPage, setCurrentNumPage] = React.useState(1);
     const [nbPage, setNbPage] = React.useState(1);
+    const [nbContent, setNbContent] = React.useState(props.nbContent);
+    const [rowsPerPageOptions, setRowsPerPageOptions] = 
+      React.useState(props.rowsPerPageOptions ? props.rowsPerPageOptions : [5, 10, 15]);
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
@@ -160,7 +166,22 @@ export default function Recherche(props){
         setOrderBy(property);
     };
 
-    const rechercher = (numPage) => {
+    const rearrangeCells = (data) => {
+      let toPrint = [];
+      data.list.map(row => {
+        let temp = {};
+        props.fieldsToPrint.map(infoField => {
+          temp[infoField.field] = row[infoField.field];
+          if(infoField.type === "Date"){
+            temp[infoField.field] = moment(temp[infoField.field]).format('YYYY-MM-DD');
+          }
+        });
+        toPrint.push(temp);
+      });
+      data.list = toPrint;
+    }
+
+    const rechercher = (numPage, providedNbContent) => {
         let valuesToSearch = [];
         let cleanValue = toSearch.trim();
         if(cleanValue !== ""){
@@ -168,32 +189,43 @@ export default function Recherche(props){
                 { "value": cleanValue, "fields": props.fieldsToSearch },
             ];
         }
+        let fieldsToPrint = [];
+        props.fieldsToPrint.map(infoField => {
+          fieldsToPrint.push(infoField.field);
+        });
         const data = {
             "tableName": props.tableName,
             "valuesToSearch": valuesToSearch,
-            "fieldsToPrint": props.fieldsToPrint,
-            "nbContent": props.nbContent,
+            "fieldsToPrint": fieldsToPrint,
+            "nbContent": providedNbContent ? providedNbContent : nbContent,
             "numPage": numPage
         };
-        callAPI('post', props.urlSearch, data, (data) => {
-            console.log(data.list);
+        callAPI(props.method ? props.method : "post", props.urlSearch, data, (data) => {
+            rearrangeCells(data);
             setListResult(data.list);
-            setCurrentNumPage(data.currentNumPage);
-            setNbPage(data.numPage);
+            setNbPage(data.nbPage);
         });
     };
 
     useEffect(() => {
+
         rechercher(1);
-        const cellNames = ["nom", "sejourMin", "Actions" ];
         let temp = [];
-        cellNames.map(cellName => {
+        props.fieldsToPrint.map(infoField => {
+          if(infoField.field !== "_id"){
             temp.push({
-                id: cellName,
-                numeric: true,
-                disablePadding: false,
-                label: cellName
+              id: infoField.field,
+              numeric: infoField.type === "Integer" || infoField.type === "Float" ? true : false,
+              disablePadding: false,
+              label: infoField.label
             });
+          }
+        });
+        temp.push({
+          id: "actions",
+          numeric: false,
+          disablePadding: false,
+          label: "Actions"
         });
         setHeadCells(temp);
     }, []);
@@ -208,7 +240,9 @@ export default function Recherche(props){
     };
 
     const handleChangeRowsPerPage = (event) => {
-        setRowsPerPage(parseInt(event.target.value, 10));
+      const nbRows = parseInt(event.target.value, 10)
+        setRowsPerPage(nbRows);
+        rechercher(1, nbRows);
         setPage(0);
     };
 
@@ -305,13 +339,11 @@ export default function Recherche(props){
                                                 </TableCell>
                                             }
                                             </>
-                                            
-                                            
                                         );
                                     })
                                 }
                                 <TableCell align="rigth">
-                                    <Link to={'/promotion/detailsPromotion/' + row._id}>
+                                    <Link to={props.urlEdit + row._id}>
                                     <HtmlTooltip
                                         title={
                                         <React.Fragment>
@@ -352,7 +384,7 @@ export default function Recherche(props){
                 </Table>
                 </TableContainer>
                 <TablePagination style={{backgroundColor : '#2F4050',color:'white' }}
-                rowsPerPageOptions={[5, 10, 25]}
+                rowsPerPageOptions={rowsPerPageOptions}
                 component="div"
                 count={rows.length}
                 rowsPerPage={rowsPerPage}
@@ -370,7 +402,11 @@ export default function Recherche(props){
                 />
                 </div>
                 <div style={{float : "right"}}>
-                    <Pagination current={currentNumPage} pagine={nbPage} />
+                    <Pagination 
+                    current={currentNumPage} 
+                    setCurrentNumPage={setCurrentNumPage}
+                    pagine={nbPage}
+                    rechercher={rechercher} />
                 </div>
             </div>
             </Box>
