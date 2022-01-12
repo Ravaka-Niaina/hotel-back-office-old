@@ -46,21 +46,39 @@ const Input = styled('input')({
 
 function PlanTarifaire(props){
     let i = -1;
-    let list = props.planTarifaire.map(tarif => {
-        i++;
-        let u = i;
-        return(
+    // let list = props.planTarifaire.map(tarif => {
+    //     i++;
+    //     let u = i;
+    //     return(
+    //       <FormControlLabel 
+    //         checked={tarif.checked}
+    //         control={<Checkbox/>}
+    //         onChange={(e) => props.handleCheckBoxPlanTarifaire(e, u)}
+    //         label={<span id='litleLabel'>
+    //         {tarif.nom}
+    //               </span>}
+    //         style={{marginLeft:"20px"}}
+    //       />
+    //     );
+    // })
+
+    let list = [];
+    let u = -1;
+    for(const doc of props.planTarifaire) {
+        u += 1
+        list.push(
           <FormControlLabel 
-            checked={tarif.checked}
-            control={<Checkbox/>}
-            onChange={(e) => props.handleCheckBoxPlanTarifaire(e, u)}
-            label={<span id='litleLabel'>
-            {tarif.nom}
-                  </span>}
-            style={{marginLeft:"20px"}}
-          />
-        );
-    })
+                checked={doc.checked}
+                control={<Checkbox/>}
+                onChange={(e) => props.handleCheckBoxPlanTarifaire(e, u)}
+                label={<span id='litleLabel'>
+                {doc.nom}
+                      </span>}
+                style={{marginLeft:"20px"}}
+              />
+            );
+          }
+    
     return list;
   }
 

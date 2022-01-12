@@ -261,6 +261,7 @@ export default function EnhancedTable() {
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
+  
 
   function setTypeChambre(data){
     setSkeleton(false);
