@@ -6,8 +6,6 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 export default function CustomIcons(props) {
-
-
   return (
     <Stack spacing={2}>
       <Pagination

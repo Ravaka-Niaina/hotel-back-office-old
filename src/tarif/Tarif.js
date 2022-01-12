@@ -11,7 +11,6 @@ import DateRangeOutlinedIcon from '@mui/icons-material/DateRangeOutlined';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../partenaire/typeChambre.css';
 
-import ListTarif from './ListTarif.js';
 import ListT from './LTarif.js';
 import CalendarComponent from './CalendarComponent';
 function TabPanel(props) {

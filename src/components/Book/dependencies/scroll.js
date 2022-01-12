@@ -98,7 +98,7 @@ class Scroll extends React.Component{
             temp.listTypeChambre[i].show = false;
         }
         temp.isListTarifDispoReceived = true;
-        setTimeout(()=>{this.setState(temp)}, 1000);
+        setTimeout(()=>{this.setState(temp)}, 1500);
         console.log(res);
     }
 
