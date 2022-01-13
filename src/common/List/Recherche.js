@@ -197,9 +197,7 @@ export default function Recherche(props){
       let toPrint = [];
       data.list.map(row => {
         let temp = {};
-        console.log(props.fieldsToPrint);
         props.fieldsToPrint.map(infoField => {
-          console.log("type nalefa = " + infoField.type);
           temp[infoField.field] = getValue(row, infoField.field);
           if(infoField.type === "Date" || infoField.type === "DateTime"){
             temp[infoField.field] = removeSpecialCharFromDate(temp[infoField.field], infoField.type);

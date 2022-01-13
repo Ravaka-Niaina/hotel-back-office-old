@@ -39,8 +39,11 @@ class Login extends React.Component{
   }
 
   tryRedirectToHome(res){
-    console.log(res);
+    console.log(res.headers);
+    localStorage.setItem("user_session", res.headers.user_session);
+    res = res.data;
     this.state.type = res.idSession;
+    
     if(res.status === 200){
       const cookie = new Cookies();
       cookie.set('sessionId', this.state.type , { path: '/' })
@@ -51,6 +54,7 @@ class Login extends React.Component{
       currentState.errors = res.errors;
       this.setState(currentState);
     }
+    
   }
 
   componentDidMount(){
@@ -82,7 +86,7 @@ class Login extends React.Component{
       withCredentials: true,
       data: data
     })
-    .then(res => this.tryRedirectToHome(res.data))
+    .then(res => this.tryRedirectToHome(res))
     .catch(err => console.log(err))
   }
 
