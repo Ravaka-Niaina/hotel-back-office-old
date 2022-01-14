@@ -71,6 +71,11 @@ const Login = (props) => {
         .catch(err =>{console.log(err); console.log("erreur");} );
     };
 
+    const register = (e) => {
+        e.preventDefault();
+        history.push(isPartner ? "/back/register" : "/front/register");
+    }
+
     return(
         <div className={styles.auth + " " + stylesLogin.auth}>
               <Paper 
@@ -119,9 +124,14 @@ const Login = (props) => {
                               />
                           </Box>
                           <div className={styles.btn}>
-                          <Button variant="contained" onClick={(e) => login(e)}>
-                              <span style={{color:'white'}}>S'inscrire</span>
-                          </Button>
+                            <Button sx={{width: 200}} variant="contained" onClick={(e) => login(e)}>
+                                <span style={{color:'white'}}>Se connecter</span>
+                            </Button>
+                          </div>
+                          <div className={styles.btn}>
+                            <Button sx={{width: 200}} variant="contained" onClick={(e) => register(e)}>
+                                <span style={{color:'white'}}>S'inscrire</span>
+                            </Button>
                           </div>
                       </>
                   } 
