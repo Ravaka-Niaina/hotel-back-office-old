@@ -187,6 +187,7 @@ function InsertTypeCHambre(){
   }
 
   function tryRedirect(res){
+    console.log(res);
     let currentState = JSON.parse(JSON.stringify(state));
     let keys = Object.keys(currentState.error);
     keys.map((k) => {
