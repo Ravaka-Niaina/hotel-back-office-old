@@ -7,7 +7,7 @@ import TableBody from '@mui/material/TableBody';
 
 import {loadingStyle, StyledTableCell, StyledTableRow, 
     createData, rows, createPaiement, rowsPaiement, style, 
-    Champs, ChampsImportant, line} from './commonAssets.js';
+    Champs, ChampsImportant, line} from '../../../common/commonAssets.js';
 
 function Politiques(props){
     let politiques = [];

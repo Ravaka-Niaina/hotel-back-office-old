@@ -89,7 +89,6 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {},
   "optionalDependencies": {
     "fsevents": "^2.3.2"
   }

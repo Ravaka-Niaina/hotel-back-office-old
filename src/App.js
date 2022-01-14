@@ -1,9 +1,10 @@
 
 
-import  Login  from "./components/login/login";
+import  Login  from "./components/Authentification/Login.js";
 import  Register  from "./components/Authentification/Register.js";
 import  home  from "./home/home";
 import  listeUser  from "./components/User/listeUser";
+import  DetailsUser from "./partenaire/DetailsUser.js";
 
 import  InsertTypeChambre  from "./partenaire/InsertTypeChambre.js";
 import  DetailsTypeChambre  from "./partenaire/DetailsTypeChambre.js";
@@ -60,6 +61,9 @@ import  HistoriqueTC from "./historique/dependancies/TChambre.js";
 import  HistoriqueMPL from "./historique/dependancies/modifPlanT.js";
 import  Tooltip from "./TooltipSuppression/tooltip.js";
 
+import NotFound from "./common/404NotFound.js";
+import NotEnoughAccessRight from "./common/NotEnoughAccessRight.js";
+
 function App(){
   return(
     <div className="App"> 
@@ -73,11 +77,7 @@ function App(){
         <Route path="/promotion" exact component={PromotionList} />
         <Route path="/promotion/create" exact component={InsertPromotion} />
         <Route path="/promotion/detail/:_id" exact component={DetailsPromotion} />
-        <Route path="/" exact component={home} />
 
-        <Route path="/client" exact component={AppClient} />
-        
-        <Route path="/booking" exact component={AppClient} />
         <Route path="/Paiement" exact component={Paiement} />
 
         <Route path="/typeChambre" exact component={ListTypeChambre} />
@@ -101,9 +101,17 @@ function App(){
     
         <Route path="/cookie" exact component={test} />
 
-        <Route path="/login" exact component={Login} />
-        <Route path="/Register" exact component={Register} />
-        <Route path="/userList" exact component={listeUser} />
+        <Route path="/back" exact component={home} />
+        <Route path="/back/login" exact component={Login} />
+        <Route path="/back/Register" exact component={Register} />
+        <Route path="/back/user" exact component={listeUser} />
+        <Route path="/back/user/details/:_id" exact component={DetailsUser} />
+
+        <Route path="/" exact component={AppClient} />
+        <Route path="/front" exact component={AppClient} />
+        <Route path="/front/login" exact component={Login} />
+        <Route path="/front/Register" exact component={Register} />
+        <Route path="/front/userList" exact component={listeUser} />
         
         <Route path="/frontClient" exact component={Front_client} />
         <Route path="/devis" exact component={Devis} />
@@ -119,6 +127,9 @@ function App(){
         <Route path="/historique/TC" exact component={HistoriqueTC} />
         <Route path="/historique/MPL" exact component={HistoriqueMPL} />
         <Route path="/tooltip" exact component={Tooltip} />
+
+        <Route path="/404NotFound" exact component={NotFound} />
+        <Route path="/NotEnoughAccessRight" exact component={NotEnoughAccessRight} />
       </Router>
     </div>
   );

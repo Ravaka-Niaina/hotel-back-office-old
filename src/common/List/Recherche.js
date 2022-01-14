@@ -35,6 +35,7 @@ import Skeleton from '../../SkeletonListe/skeleton';
 import callAPI from '../../utility.js';
 import FooterList from './FooterList.js';
 import ValidationSuppression from './ValidationSuppression.js';
+import {session} from '../../common/utilitySession.js';
 
 const moment = require('moment');
 
@@ -172,6 +173,11 @@ export default function Recherche(props){
     const [openModalDelete, setOpenModalDelete] = React.useState(false);
     const [toDelete, setToDelete] = React.useState({_id: null, nom: null});
 
+    console.log(props.accessRightToDelete);
+    let hasARToDelete = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToDelete);
+    console.log(props.accessRightToViewDetails);
+    let hasARToViewDetails = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToViewDetails);
+
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
           const newSelecteds = rows.map((n) => n.name);
@@ -229,6 +235,7 @@ export default function Recherche(props){
             "numPage": numPage
         };
         callAPI(props.method ? props.method : "post", props.urlSearch, data, (data) => {
+            console.log(data);
             rearrangeCells(data);
             setListResult(data.list);
             setNbPage(data.nbPage);
@@ -348,15 +355,21 @@ export default function Recherche(props){
                                     })
                                 }
                                 <TableCell align="rigth">
-                                    <Link to={props.urlEdit + row._id}>
-                                    <HtmlTooltip title="Editer"> 
-                                        <EditIcon style={{color : "green"}} />
-                                    </HtmlTooltip> 
-                                    </Link >
-                                    <HtmlTooltip title="Supprimer" > 
-                                        <DeleteIcon style={{color : "red" , cursor :'pointer'}} 
-                                        onClick={(e) => {setToDelete(row); setOpenModalDelete(true)}} />
-                                    </HtmlTooltip> 
+                                    { 
+                                      hasARToViewDetails
+                                      ? <Link to={props.urlEdit + row._id}>
+                                        <HtmlTooltip title="Editer"> 
+                                            <EditIcon style={{color : "green"}} />
+                                        </HtmlTooltip> 
+                                      </Link > 
+                                      : null
+                                    }
+                                    { hasARToDelete
+                                    ? <HtmlTooltip title="Supprimer" > 
+                                          <DeleteIcon style={{color : "red" , cursor :'pointer'}} 
+                                          onClick={(e) => {setToDelete(row); setOpenModalDelete(true)}} />
+                                      </HtmlTooltip> 
+                                    : null }
                                 </TableCell>
                             </TableRow>
                         );
@@ -392,6 +405,7 @@ export default function Recherche(props){
             tableName={props.tableName}
             rechercher={rechercher}
             setCurrentNumPage={setCurrentNumPage}
+            accessRightToDelte={props.accessRightToDelete}
           />
       </>
     );

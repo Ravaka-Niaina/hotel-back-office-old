@@ -1,4 +1,4 @@
-import {ChampsImportant, line} from './commonAssets.js';
+import {ChampsImportant, line} from '../../../common/commonAssets.js';
   
 function Total(props){
     return(

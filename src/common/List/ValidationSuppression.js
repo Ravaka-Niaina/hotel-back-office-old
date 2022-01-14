@@ -22,14 +22,17 @@ const ValidationSuppression = (props) => {
     function supprimer(){
         setIsDeletePending(true);
         const data = {tableName: props.tableName, _id: props.toDelete._id};
-        callAPI("post", "/delete", data, () => {
+        callAPI("post", "/delete", data, (data) => {
+            if(data.status === 300){
+                window.location.href = "/back/login";
+            }
             setIsDeletePending(false);
             props.setOpenModalDelete(false)
             props.setCurrentNumPage(1);
             props.rechercher(1);
         });
     }
-
+    
     return (
         <Modal
             open={props.openModalDelete}
@@ -48,6 +51,7 @@ const ValidationSuppression = (props) => {
                     <strong>Voulez-vous vraiment supprimer "{props.toDelete.nom}" ?</strong><br/>
                     <br/>
                     <div style={{width: "fit-content", margin: "0 auto"}}>
+
                         <Button variant ="contained" sx={{marginRight: 5}} color="warning" onClick = {(e) => supprimer()}>Oui</Button>
                         <Button variant ="contained" color="success" onClick = {(e) => props.setOpenModalDelete(false)}>Non</Button>
                     </div>

@@ -11,7 +11,7 @@ import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import {Link} from 'react-router-dom';
@@ -27,6 +27,9 @@ import callAPI from '../utility';
 
 import { useState } from 'react';
 import {FileInput, Preview, Videos, Font} from './utilityTypeChambre.js';
+
+import {session} from '../common/utilitySession.js';
+import NotEnoughAccessRight from '../common/NotEnoughAccessRight';
 
 function PlanTarifaire(props){
   let i = -1;
@@ -99,9 +102,6 @@ function Equipements(props){
     </table>
   return table;
 }
-
-
-
 function InsertTypeCHambre(){
   const noImage = '/no-image.jpg';
   let [val, setVal] = useState(1);
@@ -141,13 +141,25 @@ function InsertTypeCHambre(){
     font: null,
     nom: null
   })
+  const hasAR = session.getInstance().hasOneOfTheseAccessRights(["insertTypeChambre", "superAdmin"]);
+
+  useEffect(() => {
+    if(hasAR){
+      callAPI('get', '/TCTarif/infoInsertTypeChambre', {}, setInfo);
+    }
+  }, []);
+  
+  const history = useHistory();
+  if(!hasAR){
+    return(
+      <NotEnoughAccessRight />
+    );
+  }
+  
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  const history = useHistory();
-
   function setInfo(res){
-    console.log(res);
     let current = JSON.parse(JSON.stringify(state));
     for(let i = 0; i < res.listTarif.length; i++){
       res.listTarif[i].checked = false;
@@ -160,10 +172,6 @@ function InsertTypeCHambre(){
     current.equipements = res.listEquipement;
     setState(current);
   }
-
-  useEffect(() => {
-    callAPI('get', '/TCTarif/infoInsertTypeChambre', {}, setInfo);
-  }, []); 
 
   function handleCheckBoxPlanTarifaire(e, index){
     let current = JSON.parse(JSON.stringify(state));
@@ -179,7 +187,6 @@ function InsertTypeCHambre(){
   }
 
   function tryRedirect(res){
-    console.log(res);
     let currentState = JSON.parse(JSON.stringify(state));
     let keys = Object.keys(currentState.error);
     keys.map((k) => {
@@ -190,7 +197,6 @@ function InsertTypeCHambre(){
     }else if(res.status === 401){//Unauthorized
       history.push('/login');
     }else{
-      console.log(res.errors);
       let keys = Object.keys(res.errors);
       keys.map((k) => {
         currentState.error[k] = res.errors[k];
@@ -201,7 +207,6 @@ function InsertTypeCHambre(){
 
   function insert(e){
       e.preventDefault();
-      console.log('Envoie en attente...');
       let toSend = JSON.parse(JSON.stringify(state));
 
       let selectedEquip = [];
@@ -219,7 +224,6 @@ function InsertTypeCHambre(){
         }
       }
       toSend.planTarifaire = selectedPlan;
-      console.log(toSend);
       axios({
           method: 'post',
           url: process.env.REACT_APP_BACK_URL + "/typeChambre/insert",
@@ -296,7 +300,6 @@ function InsertTypeCHambre(){
   }
 
   function setListEquipement2(res){
-    console.log(res);
     if(res.status === 200){
       setNewIcon({font: "", nom: ""});
       let current = {...state};
@@ -580,15 +583,17 @@ function InsertTypeCHambre(){
                   
 
                     <div className="pied" style={{marginTop:'30px'}}>   
-                     <div class="bouton-aligne">  
-                  <Button  
-                  variant="contained" 
-                  type='submit' 
-                  id='btn1'
-                  onClick={(e) => insert(e)}
-                  style={{backgroundColor:'#2ac4ea' }}>
-                  <span style={{color:'white'}}>Ajouter</span>
-                  </Button>
+                     <div class="bouton-aligne">
+                    <Button  
+                    variant="contained" 
+                    type='submit' 
+                    id='btn1'
+                    onClick={(e) => insert(e)}
+                    style={{backgroundColor:'#2ac4ea' }}>
+                    <span style={{color:'white'}}>Ajouter</span>
+                    </Button>
+                    
+                  
                      </div>
                      <div class="bouton-aligne">
                       <Link to={'/typeChambre'} style={{textDecoration:'none'}}>
@@ -599,16 +604,6 @@ function InsertTypeCHambre(){
                       </Link>
                      </div>
                     </div>
-
-                  {/* <div style={{marginTop:'50px'}}>
-                    <Button 
-                    variant="contained" 
-                    color="success" 
-                    onClick={(e) => insert(e)}
-                    style={{textDecoration:'none'}}>
-                      <span style={{color:'white'}}>Créer</span>
-                    </Button>
-                        </div> */}
                 </form>
               </div>
             </div>
