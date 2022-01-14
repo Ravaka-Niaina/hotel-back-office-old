@@ -138,7 +138,8 @@ function ApplyReservation(props){
         <>
             {(reservation !== null) ? 
                 <div id="content" style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
-                    <Box sx={{ bgcolor: 'background.paper', maxWidth: 800, margin: "0 auto"}}>
+                    <Box sx={{ bgcolor: 'background.paper', maxWidth: 800, margin: "0 auto"
+                    , padding: "15px 15px"}}>
                         <h1>Détails réservation</h1>
                         {alertSuccess != null ? 
                             <div id="success">
@@ -158,31 +159,41 @@ function ApplyReservation(props){
                         <Box>
                             {isEditEnabled ?
                                 <div>
-                                    <TextField
-                                        id="outlined-required"
-                                        label="Nom"
-                                        placeholder="dupond"
-                                        value={reservateur.nom}
-                                        onChange={(e) => handleChangeInfoReservateur("nom", e.target.value)} />
-                                    <TextField
-                                        id="outlined-required"
-                                        label="Email"
-                                        placeholder="dupond@gmail.com"
-                                        type="email"
-                                        value={reservateur.email}
-                                        onChange={(e) => handleChangeInfoReservateur("email", e.target.value)} />
-                                    <TextField
-                                        id="outlined-required"
-                                        label="Tel"
-                                        placeholder="034 00 000 00"
-                                        value={reservateur.tel}
-                                        onChange={(e) => handleChangeInfoReservateur("tel", e.target.value)} />
-                                    <TextField 
-                                        label="Message particulier"
-                                        placeholder="Votre message"
-                                        value={reservateur.messageParticulier}
-                                        onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} />
-                                    </div>
+                                    <Box
+                                        component="form"
+                                        sx={{
+                                            '& .MuiTextField-root': { m: 1, width: '25ch' },
+                                        }}
+                                        noValidate
+                                        autoComplete="off"
+                                    >
+                                        <TextField
+                                            id="outlined-required"
+                                            label="Nom"
+                                            placeholder="dupond"
+                                            value={reservateur.nom}
+                                            onChange={(e) => handleChangeInfoReservateur("nom", e.target.value)} />
+                                        <TextField
+                                            id="outlined-required"
+                                            label="Email"
+                                            placeholder="dupond@gmail.com"
+                                            type="email"
+                                            value={reservateur.email}
+                                            onChange={(e) => handleChangeInfoReservateur("email", e.target.value)} />
+                                        <TextField
+                                            id="outlined-required"
+                                            label="Tel"
+                                            placeholder="034 00 000 00"
+                                            value={reservateur.tel}
+                                            onChange={(e) => handleChangeInfoReservateur("tel", e.target.value)} />
+                                        <TextField 
+                                            label="Message particulier"
+                                            placeholder="Votre message"
+                                            value={reservateur.messageParticulier}
+                                            onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} />        
+                                    </Box>
+                                    
+                                </div>
                                 : <div>
                                     <Champs label="Nom" value={reservateur.nom.trim() !== "" ? reservateur.nom : "vide"} />
                                     <Champs label="Email" value={reservateur.email.trim() !== "" ? reservateur.email : "vide"} />

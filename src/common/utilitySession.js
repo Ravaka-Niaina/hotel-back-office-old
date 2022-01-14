@@ -34,32 +34,24 @@ class Session{
 
     hasOneOfTheseAccessRights(accessRight){
         if(accessRight === undefined){
-            return false;
+            return true;
         }
         if(typeof(accessRight) === "object"){// array
             const ownedAR = this.#getAllAccessRight();
-            console.log("ok 1");
             if(accessRight.length === 0){
                 return true;
             }
-            console.log("ok 2");
             if(ownedAR !== null){
-                console.log("ok 2.1");
                 for(let i = 0; i < accessRight.length; i++){
-                    console.log("ok 2.2");
                     for(let u = 0; u < ownedAR.length; u++){
-                        console.log("ok 2.3");
                         if(accessRight[i] === ownedAR[u].value){
-                            console.log("ok 2.4 ");
                             return true;
                         }
                     }
                 }
             }
-            console.log("ok 3");
             return false;
         }else{
-            console.log("ok 4");
             if(this.#user_session === null){
                 return false;
             }else{

@@ -1,5 +1,3 @@
-
-
 import  Login  from "./components/Authentification/Login.js";
 import  Register  from "./components/Authentification/Register.js";
 import  home  from "./home/home";
@@ -43,18 +41,10 @@ import  guest  from "./partenaire/guest.js";
 import  hideShow  from "./hideShow.js";
 import  DetailsPromotion  from "./promotion/DetailsPromotion.js";
 
-
 import DropDown from './pagination/pagination.js';
-
-
-import { useCookies } from 'react-cookie';
-import React, {useEffect , useState} from "react";
-import APIGet from "./APiGet.js"
 import {BrowserRouter as Router, Route , useHistory ,Switch} from 'react-router-dom';
-import Cookies from 'universal-cookie';
 
 import  ListTChambre  from "./dataTable/datatable.js";
-import  BookComponent from "./components/Book/BookComponent.js";
 
 import  Historique from "./historique/header.js";
 import  HistoriqueTC from "./historique/dependancies/TChambre.js";
@@ -75,7 +65,7 @@ function App(){
         <Route path="/hideShow" exact component={hideShow} />
 
         <Route path="/promotion" exact component={PromotionList} />
-        <Route path="/promotion/create" exact component={InsertPromotion} />
+        <Route path="/promotion/insert" exact component={InsertPromotion} />
         <Route path="/promotion/detail/:_id" exact component={DetailsPromotion} />
 
         <Route path="/Paiement" exact component={Paiement} />
@@ -112,8 +102,6 @@ function App(){
         <Route path="/front/login" exact component={Login} />
         <Route path="/front/Register" exact component={Register} />
         <Route path="/front/userList" exact component={listeUser} />
-        
-        <Route path="/frontClient" exact component={Front_client} />
         <Route path="/devis" exact component={Devis} />
 
         <Route path="/reservation/:_id" exact component={Reservation} />
@@ -121,7 +109,6 @@ function App(){
         <Route path="/drop" exact component={DropDown} />
 
         <Route path="/CalendarClient" exact component={BasicDateRangePicker} />
-        <Route path="/book" exact component={BookComponent} />
 
         <Route path="/historique" exact component={Historique} />
         <Route path="/historique/TC" exact component={HistoriqueTC} />

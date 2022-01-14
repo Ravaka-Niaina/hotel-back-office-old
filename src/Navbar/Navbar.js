@@ -47,7 +47,7 @@ function Navbar(props) {
                 <Tab value={5} component={Link} icon={<DocumentScannerOutlinedIcon />}to="/historique" iconPosition="start" label="historique" />
 
 
-                <Tab value={6} component={Link} icon={<FormatListBulletedOutlinedIcon />} to="/frontClient" iconPosition="start" label="Client" />
+                <Tab value={6} component={Link} icon={<FormatListBulletedOutlinedIcon />} to="/front" iconPosition="start" label="Client" />
 
                 <Tab value={7} icon={<PersonPinIcon />} iconPosition="start" label="Mon compte" />
             

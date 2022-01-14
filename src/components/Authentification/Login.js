@@ -6,8 +6,12 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
+import Stack from '@mui/material/Stack';
+
+
 import styles from './Register.module.css';
 import stylesLogin from './Login.module.css';
+
 import axios from "axios";
 
 const Login = (props) => {
@@ -21,13 +25,14 @@ const Login = (props) => {
     const history = useHistory();
 
     useEffect(() => {
-        const regExp = new RegExp("/back/","i");
+        const regExp = new RegExp("/back","i");
         if(regExp.test(window.location.href)){
             setIsPartner(true);
         }
     }, []);
     
     const interpretResponse = (res) => {
+        console.log(res);
         const data = res.data;
         if(data.status === 200){
             localStorage.setItem("user_session", res.headers.user_session);
@@ -123,16 +128,15 @@ const Login = (props) => {
                                   helperText={errorMdp === null ? null : errorMdp}
                               />
                           </Box>
-                          <div className={styles.btn}>
+                          <Stack spacing={1}>
                             <Button sx={{width: 200}} variant="contained" onClick={(e) => login(e)}>
                                 <span style={{color:'white'}}>Se connecter</span>
                             </Button>
-                          </div>
-                          <div className={styles.btn}>
                             <Button sx={{width: 200}} variant="contained" onClick={(e) => register(e)}>
                                 <span style={{color:'white'}}>S'inscrire</span>
                             </Button>
-                          </div>
+                          </Stack>
+                            
                       </>
                   } 
               />

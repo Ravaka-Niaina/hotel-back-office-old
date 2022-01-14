@@ -1,5 +1,7 @@
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
+
 import {Champs} from '../../../common/commonAssets.js';
 
 function handleClientInfo(reservation, indexItineraire, indexTarif, i, categPers, field, value, setReservation){
@@ -49,27 +51,36 @@ function InputUtilisateur(props){
                 <div>
                 {props.isEditEnabled ? 
                     <div>
-                        <TextField
-                            id="outlined-required"
-                            label={"Nom"}
-                            placeholder="Dupond"
-                            value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].nom}
-                            onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "adultes", "nom", e.target.value, props.setReservation)}
-                        />
-                        <TextField
-                            id="outlined-required"
-                            label={"Email"}
-                            placeholder="dupond@gmail.com"
-                            value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].email}
-                            onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "adultes", "email", e.target.value, props.setReservation)}
-                        />
-                        <TextField
-                            id="outlined-required"
-                            label={"Tel"}
-                            placeholder="034 00 000 00"
-                            value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].tel}
-                            onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "adultes", "tel", e.target.value, props.setReservation)}
-                        />
+                        <Box
+                            component="form"
+                            sx={{
+                                '& .MuiTextField-root': { m: 1, width: '25ch' },
+                            }}
+                            noValidate
+                            autoComplete="off"
+                        >
+                            <TextField
+                                id="outlined-required"
+                                label={"Nom"}
+                                placeholder="Dupond"
+                                value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].nom}
+                                onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "adultes", "nom", e.target.value, props.setReservation)}
+                            />
+                            <TextField
+                                id="outlined-required"
+                                label={"Email"}
+                                placeholder="dupond@gmail.com"
+                                value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].email}
+                                onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "adultes", "email", e.target.value, props.setReservation)}
+                            />
+                            <TextField
+                                id="outlined-required"
+                                label={"Tel"}
+                                placeholder="034 00 000 00"
+                                value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].tel}
+                                onChange={(e) => handleClientInfo(props.reservation, props.indexItineraire, props.indexTarif, i, "adultes", "tel", e.target.value, props.setReservation)}
+                            />
+                        </Box>
                     </div> : 
                     <div>
                         <Champs label="Nom" value={props.reservation.itineraires[props.indexItineraire].tarifReserves[props.indexTarif].infoGuests.adultes[i].nom.trim() != "" ?
