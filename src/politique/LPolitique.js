@@ -34,6 +34,9 @@ import { HTML5_FMT } from 'moment';
 import { styled } from '@mui/material/styles';
 import Alert from '@mui/material/Alert';
 import Skeleton from '../SkeletonListe/skeleton';
+import ModalAlert from '../SkeletonListe/modal';
+import InputAdornment from '@mui/material/InputAdornment';
+import Input from '@mui/material/Input';
 
 //tooltip 
 const LightTooltip = styled(({ className, ...props }) => (
@@ -259,9 +262,9 @@ export default function EnhancedTable() {
   const [nbrPage, setNbrPage] = React.useState(0);
   const [pageCurrent, setPageCurrent] = React.useState(1);
   const [count, setCount] = React.useState(1);
-
   const [message, setMessage] = React.useState("");
-
+  const [modal, setModal] = React.useState(false);
+  const [nom, setNom] = React.useState({nom : "" , id : ""});
   const [skeleton, setSkeleton] = React.useState(true);
 
   const handleChangePagination =(e , value) =>{
@@ -290,7 +293,6 @@ export default function EnhancedTable() {
   function suppre(data){
     setMessage (data.message);
     CallAPI("post" ,"/politique/list" ,{PageCurrent : pageCurrent ,content : rowsPerPage} , functionAppelList)
-  
   }
  
   useEffect(() => {
@@ -311,8 +313,8 @@ export default function EnhancedTable() {
     setOpen(bol);
     
   };
-  const closeModal = () => {
-    setOpen(false);
+  const haddleAnnuler = () => {
+    setModal(false);
   }
 
   const handleChangePage = (event, newPage) => {
@@ -325,14 +327,28 @@ export default function EnhancedTable() {
     setPage(0);
     CallAPI("post" ,"/politique/list" ,{content : event.target.value ,pageCurrent : 1} , functionAppelList)
   };
+  
+  const haddleChangeModal = (nom , id) => {
+    let current = {...nom};
+    current.nom = nom ;
+    current.id = id;
+    setNom(current);
+    setModal(true);
+  };
 
   const handleChangeDense = (event) => {
     setDense(event.target.checked);
   };
 
+  const Research = (event) => {
+    console.log("research");
+  };
+  
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const suppression = (e,id, nom) => {
+    setModal(false);
     setMessage('');
     CallAPI("post" ,"/politique/suppression" ,{id : id , nom : nom} , suppre)
   }
@@ -347,14 +363,20 @@ export default function EnhancedTable() {
     <Link to={'/politique'}  style={{float : 'left'}}>
         <Button variant ="contained">Insert Politique</Button> 
     </Link>
-    <div style={{float : 'right'}}>  
+    <div style={{float : 'right'}}> 
       <TextField 
         id="outlined-size-small"
         size="small" label ="Search"
         name="Search"
         type="text"
+        InputProps={{
+          endAdornment: 
+          <InputAdornment position="end">
+              <SearchIcon style={{color:"blue" , hover : "pointer"}} onClick={(e)=> Research(e)}/>
+          </InputAdornment>,
+          }}
       />
-      <SearchIcon style={{color:"blue"}}/>
+      
     </div> <br/><br/>
 
     {
@@ -408,9 +430,8 @@ export default function EnhancedTable() {
                           <HtmlTooltip
                               title={
                                 <React.Fragment>
-                                  <Typography color="green" style={{textDecoration:'underline'}}>Editer</Typography>
-                                  <strong>{row.nom} ?</strong><br/>
-                                  </React.Fragment>
+                                  <Typography color="green" >Editer</Typography>
+                                </React.Fragment>
                               }
                             > 
                                <EditIcon style={{color : "green"}} />
@@ -419,13 +440,11 @@ export default function EnhancedTable() {
                           <HtmlTooltip
                             title={
                               <React.Fragment>
-                                <Typography color="error" style={{textDecoration:'underline'}}>Suppression</Typography>
-                                <strong>voulez-vous vraiment supprimer "{row.nom}" ?</strong><br/>
-                                <Button variant ="contained" color="error" onClick = {(event) => suppression(event , row._id ,row.nom )}>Supprimer</Button> 
+                                <Typography color="error">Suppression</Typography>
                               </React.Fragment>
                             }
                           > 
-                            <DeleteIcon style={{color : "red" , cursor :'pointer'}} />
+                            <DeleteIcon style={{color : "red" , cursor :'pointer'}} onClick={(e)=>haddleChangeModal(row.nom , row._id)}/>
                           </HtmlTooltip> 
                       </TableCell>
                     </TableRow>
@@ -468,6 +487,7 @@ export default function EnhancedTable() {
       <div id = "test">
         {message ? <Alert severity="error" >{message}</Alert> : ""}
       </div>
+      <ModalAlert  suppression = {suppression}  modal = {modal} haddleAnnuler={haddleAnnuler} nom ={nom}/>
     </Box>
     </>
   );

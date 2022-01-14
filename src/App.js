@@ -59,7 +59,7 @@ import  BookComponent from "./components/Book/BookComponent.js";
 import  Historique from "./historique/header.js";
 import  HistoriqueTC from "./historique/dependancies/TChambre.js";
 import  HistoriqueMPL from "./historique/dependancies/modifPlanT.js";
-import  Tooltip from "./TooltipSuppression/tooltip.js";
+import  Tooltip from "./SkeletonListe/modal.js";
 
 import NotFound from "./common/404NotFound.js";
 import NotEnoughAccessRight from "./common/NotEnoughAccessRight.js";
@@ -130,8 +130,10 @@ function App(){
 
         <Route path="/404NotFound" exact component={NotFound} />
         <Route path="/NotEnoughAccessRight" exact component={NotEnoughAccessRight} />
+        <Route path="/modal" exact component={Tooltip} />
       </Router>
     </div>
+    
   );
 
 }
