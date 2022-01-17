@@ -1,0 +1,50 @@
+.bae-date-indicator {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(auto, 1fr));
+    grid-template-rows: repeat(6, minmax(35px, 1fr));
+    grid-gap: 5px;
+    padding: 0 15px;
+    .date-icon {
+      display: block;
+      justify-content: center;
+      justify-self: center;
+      align-items: center;
+      height: 32px;
+      width: 45px;
+      padding: 5px;
+      cursor: pointer;
+      height: fit-content;
+      &[data-active-month='false'] {
+        color: rgba(0, 0, 0, 0.3);
+    }
+      &.active,
+      &.selected, &.selected div{
+        background-color: #C2B59B;
+        color: #FFFF;
+        height: fit-content;
+      }
+    }
+  }
+
+  .nonDispo {
+    background-image: url("./cross.png");
+    background-color: #EEEEEE;
+    background-size: 100% 100%;
+    opacity: 0.5;
+    width: 45px;
+    height: 46px;
+    position: absolute;
+  }
+
+  .hier {
+    background-color: #EEEEEE;
+    opacity: 0.5;
+    width: 45px;
+    height: 46px;
+    position: absolute;
+    padding-top: 7px;
+  }
+
+  .disabled {
+    opacity: 0.5;
+  }

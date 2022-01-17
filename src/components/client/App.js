@@ -1,5 +1,5 @@
 import React from 'react';
-import Scroll from '../Book/dependencies/scroll'
+import Scroll from './Book/dependencies/scroll'
 import {BrowserRouter as Router , Route} from 'react-router-dom';
 import Detail from './detail';
 

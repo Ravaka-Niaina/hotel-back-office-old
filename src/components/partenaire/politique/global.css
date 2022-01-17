@@ -1,0 +1,39 @@
+.politiqueContent{
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+    width: 1000px;
+    padding: 20px;
+    }
+
+#error{
+    font-size: 12px;
+    color : red;
+
+}
+
+.entete {
+    text-align: center;
+}
+
+#bigLabel{
+    color: #616569;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+
+    }
+
+#label{
+    color: #616569;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    margin-top: 15px;
+    }
+
+#litleLabel{
+color: black;
+font-family: 'Roboto', sans-serif;
+font-size: 14px;
+}
+

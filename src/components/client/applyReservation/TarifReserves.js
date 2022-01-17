@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Button from '@mui/material/Button';
 
-import {Champs, ChampsImportant, line} from '../../../common/commonAssets.js';
+import {Champs, ChampsImportant, line} from '../../common/commonAssets.js';
 import InputUtilisateur from './InputUtilisateur.js';
 import Politiques from './Politiques.js';
 import ConfirmAnnulChambre from './ConfirmAnnulChambre.js';

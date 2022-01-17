@@ -1,0 +1,40 @@
+.scroll-bg{
+	background:  rgb(224, 224, 226);
+	width: 100%;
+	padding: 30px;
+	border-radius: 5px;
+    margin-top: 3%;
+}
+
+
+.scroll-div{
+	width: 880px;
+	background: rgb(250, 250, 250);
+	overflow: hidden;
+	overflow-y: scroll;
+  
+   
+}
+
+.scroll-object{
+	color: black;  /*wheat*/
+	font-size: 15px;
+	padding: 20px;
+    
+}
+
+.divRight{
+    width: 380px;
+    background: rgb(250, 250, 250);
+
+}
+
+#remove:hover {
+	color : red;
+	cursor : pointer
+}
+
+#edit:hover {
+	color : green;
+	cursor : pointer
+}

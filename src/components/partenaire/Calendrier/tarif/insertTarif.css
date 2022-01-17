@@ -1,0 +1,107 @@
+.jumbotron{
+    padding: 20px 70px 20px 70px;
+    margin-top: 5%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+    }
+    
+    #title1{
+        font-family: 'Roboto', sans-serif;
+        color: #1976d2;
+   
+    }
+
+#litleLabel{
+color: black;
+font-family: 'Roboto', sans-serif;
+font-size: 15px;
+}
+
+#bigLabel{
+    color: #616569;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    }
+
+#column{
+    display:inline-block;
+}
+
+.col2{
+margin-left: 40px;
+}
+
+#libelle
+{
+    font-size: 15px;
+    font-family: 'Roboto';
+    margin-top: 16px;
+}
+
+.pied{
+    margin-left: 2%;
+}
+
+div.bouton-aligne{
+	display:inline-block;
+}
+
+#btn2{
+    margin-left: 10%;
+}
+
+#libel{
+    color: #616569;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    }
+
+#btn1{
+    text-decoration:'none';
+}
+
+#btnAdd{
+    text-decoration:'none';
+    color:'black';
+}
+
+input#dateD1 {
+    width: 200px;
+    min-width: 0px;
+    background-color: transparent;
+    border: solid 1px lightslategray;
+    font-family: 'Roboto';
+}
+
+input#dateF1 {
+    width: 200px;
+    min-width: 0px;
+    background-color: transparent;
+    border: solid 1px lightslategray;
+    font-family: 'Roboto';
+}
+
+input#dateD2 {
+    width: 200px;
+    min-width: 0px;
+    background-color: transparent;
+    border: solid 1px lightslategray;
+    font-family: 'Roboto';
+}
+
+input#dateF2 {
+    width: 200px;
+    min-width: 0px;
+    background-color: transparent;
+    border: solid 1px lightslategray;
+    font-family: 'Roboto';
+}
+
+input#lead {
+    width: 200px;
+    min-width: 0px;
+    background-color: transparent;
+    border: solid 1px lightslategray;
+    font-family: 'Roboto';
+}

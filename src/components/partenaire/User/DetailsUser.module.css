@@ -1,0 +1,20 @@
+.infoUser > div:first-child > div{
+    overflow: auto;
+}
+.infoUser > div > h1, h2{
+    margin: 10px 10px;
+}
+.infoUser > div{
+    width: 500px;
+}
+.infoUser > div > table{
+    table-layout: auto;
+    width: 100%;
+    margin-bottom: 10px;
+}
+.infoUser > div > table > thead > tr > th{
+    padding: 0 10px;
+}
+.infoUser > div > table > tbody > tr > td{
+    padding: 0 10px;
+}

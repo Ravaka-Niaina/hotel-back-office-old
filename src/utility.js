@@ -1,5 +1,5 @@
 import axios from "axios";
-import {session} from "./common/utilitySession.js"; 
+import {session} from "./components/common/utilitySession.js"; 
 
 export default function callAPI(method, url, data, callback){
     axios({
@@ -13,7 +13,7 @@ export default function callAPI(method, url, data, callback){
         }
     })
     .then(res => {                                           
-        callback(res.data)})
+        callback(res.data, res.headers)})
     .catch(err =>{console.log(err); console.log("erreur");} );
 }
 

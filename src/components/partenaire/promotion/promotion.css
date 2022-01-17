@@ -1,0 +1,143 @@
+#outlined-basic{
+    height: 5;
+}
+.block1{
+    width: 60%;
+    background-color: white;
+    box-shadow: 0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25);
+    margin-left: 2%;
+    padding-top: 2%;
+    padding-bottom: 5%;
+    padding-left: 25px;
+}
+
+.block2{
+    width: 60%;
+    background-color: white;
+    box-shadow: 0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25);
+    margin-left: 2%;
+    padding-top: 2%;
+    padding-bottom: 5%;
+    padding-left: 25px;
+}
+
+.block3{
+    width: 60%;
+    background-color: white;
+    box-shadow: 0 0 20px 0 rgba(0,0,0,0.2),0 5px 5px 0 rgba(0,0,0,0.25);
+    margin-left: 2%;
+    padding-top: 2%;
+    padding-bottom: 5%;
+    padding-left: 25px;
+    margin-top: 3%;
+}
+
+
+.enteteP {
+    margin-left: 2%;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+label{
+    font-weight: bold;
+    font-size: 16px;
+}
+
+p{
+    font-size: 15px;
+}
+
+.pied{
+    margin-left: 2%;
+}
+
+div.bouton-aligne{
+	display:inline-block;
+}
+
+#btn2{
+    margin-left: 10%;
+}
+
+.checkbox2{
+    height:50px;
+}
+
+.mardi{
+    display:inline-block;
+}
+
+/* #label{
+font-size: 15px;
+font-family: Arial;
+margin-top: 15px;
+} */
+
+#bigLabel{
+    color: #616569;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    }
+
+#label{
+    color: #616569;
+    font-family: 'Roboto', sans-serif;
+    font-size: 15px;
+    margin-top: 15px;
+    }
+
+
+#litleLabel{
+color: black;
+font-family: 'Roboto', sans-serif;
+font-size: 14px;
+}
+
+input#dateDebutS {
+    width: 200px;
+    min-width: 0px;
+    background-color: transparent;
+    border: solid 1px lightslategray;
+    font-family: 'Roboto';
+}
+
+input#dateFinS {
+    width: 200px;
+    min-width: 0px;
+    background-color: transparent;
+    border: solid 1px lightslategray;
+    font-family: 'Roboto';
+}
+
+input#sejourMin {
+    width: 200px;
+    min-width: 0px;
+    background-color: transparent;
+    border: solid 1px lightslategray;
+    font-family: 'Roboto';
+}
+
+input#leadDay {
+    width: 200px;
+    min-width: 0px;
+    background-color: transparent;
+    border: solid 1px lightslategray;
+    font-family: 'Roboto';
+}
+
+input#leadHour {
+    width: 200px;
+    min-width: 0px;
+    background-color: transparent;
+    border: solid 1px lightslategray;
+    font-family: 'Roboto';
+}
+
+input#nom {
+    width: 200px;
+    min-width: 0px;
+    background-color: transparent;
+    border: solid 1px lightslategray;
+    font-family: 'Roboto';
+}

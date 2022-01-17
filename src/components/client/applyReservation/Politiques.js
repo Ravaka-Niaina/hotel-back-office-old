@@ -7,7 +7,7 @@ import TableBody from '@mui/material/TableBody';
 
 import {loadingStyle, StyledTableCell, StyledTableRow, 
     createData, rows, createPaiement, rowsPaiement, style, 
-    Champs, ChampsImportant, line} from '../../../common/commonAssets.js';
+    Champs, ChampsImportant, line} from '../../common/commonAssets.js';
 
 function Politiques(props){
     let politiques = [];
@@ -16,8 +16,8 @@ function Politiques(props){
         politiques.push(
             <div>
                 <h4>{props.politiques[u].nom}</h4> 
-                <TableContainer component={Paper}>
-                    <Table sx={{ width: "400px" }} aria-label="customized table">
+                <TableContainer component={Paper} sx={{ width: "400px" }}>
+                    <Table aria-label="customized table">
                         <TableHead>
                         <TableRow>
                             <StyledTableCell align="left">Avant</StyledTableCell>

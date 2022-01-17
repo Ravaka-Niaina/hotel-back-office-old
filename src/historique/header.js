@@ -1,5 +1,5 @@
 import React from 'react';
-import Navbar  from "../Navbar/Navbar";
+import Navbar  from "../components/partenaire/Navbar/Navbar.js";
 import {ToggleButtonGroup, ToggleButton, Typography} from '@mui/material';
 import { Link } from 'react-router-dom';
 

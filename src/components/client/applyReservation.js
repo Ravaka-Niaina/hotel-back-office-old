@@ -16,7 +16,7 @@ import { useHistory } from 'react-router-dom';
 
 import Total from './applyReservation/Total.js';
 import InfoItineraires from './applyReservation/InfoItineraires.js';
-import {Champs} from '../../common/commonAssets.js';
+import {Champs} from '../common/commonAssets.js';
     import {setValue} from '../../../src/utility2.js';
   
 function TabPanel(props) {

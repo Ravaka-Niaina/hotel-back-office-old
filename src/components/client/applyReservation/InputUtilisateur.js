@@ -2,7 +2,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 
-import {Champs} from '../../../common/commonAssets.js';
+import {Champs} from '../../common/commonAssets.js';
 
 function handleClientInfo(reservation, indexItineraire, indexTarif, i, categPers, field, value, setReservation){
     let current = JSON.parse(JSON.stringify(reservation));

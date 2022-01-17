@@ -1,0 +1,47 @@
+.sidelist{
+    width: 15% !important;
+    position: absolute;
+    top: 88px;
+    left: 0;
+    bottom: 0;
+    position: absolute;
+}
+.sidelist ul{
+    list-style-type: none;
+    padding-left: 0 !important;
+    border-right: 1px solid #e0e0e0;
+    margin-bottom: 0 !important;
+}
+.sidelist ul > li{
+    height: 50px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-top:12px;
+}
+.sidelist ul > li > span{
+    display: inline-block;
+    display: inline-block;
+    position: absolute;
+}
+.sidelist ul > li:first-child{
+    border-top: 1px solid #e0e0e0;
+    padding-top:9px;
+}
+.sidelist ul > li:nth-child(2){
+    height: 21px;
+}
+.sidelist ul > li:nth-child(2) > span{
+    display: block;
+    margin-top: -12px;
+}
+
+.sideElt{
+    padding-top: 0px;
+    height: 51px !important;
+}
+.sidelist ul > li > span{
+    padding-left: 8px !important;
+    font-size: 12px !important;
+}
+.sidelist button{
+    margin-left:8px !important;
+}

@@ -6,7 +6,7 @@ import TableRow from '@mui/material/TableRow';
 import TableBody from '@mui/material/TableBody';
 
 import {StyledTableCell, StyledTableRow, 
-    rows, rowsPaiement, Champs, ChampsImportant, line} from '../../../common/commonAssets.js';
+    rows, rowsPaiement, Champs, ChampsImportant, line} from '../../common/commonAssets.js';
 import TarifReserves from './TarifReserves.js';
 
 function InfoItineraires(props){
@@ -73,8 +73,8 @@ function InfoItineraires(props){
         </TableContainer>
         */}
         <h3>Paiements</h3>
-        <TableContainer component={Paper}>
-            <Table sx={{ width: 400 }} aria-label="customized table">
+        <TableContainer component={Paper} sx={{ width: 400 }}>
+            <Table aria-label="customized table">
                 <TableHead>
                 <TableRow>
                     <StyledTableCell align="left">Date paiement</StyledTableCell>
