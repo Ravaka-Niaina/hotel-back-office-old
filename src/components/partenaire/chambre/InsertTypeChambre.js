@@ -652,7 +652,7 @@ function InsertTypeCHambre(){
                   
                      </div>
                      <div class="bouton-aligne">
-                      <Link to={'/typeChambre'} style={{textDecoration:'none'}}>
+                      <Link to={'/back/typeChambre'} style={{textDecoration:'none'}}>
                         <Button variant="outlined" 
                         id="btn2">
                   <span style={{color:'#1976d2'}}>Retour</span>

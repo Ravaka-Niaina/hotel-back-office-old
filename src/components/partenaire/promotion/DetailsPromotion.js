@@ -185,9 +185,9 @@ class DetailsPromotions extends React.Component{
         currentState.error[k] = null;
       });
       if(res.status === 200){
-        this.props.history.push('/promotion');
+        this.props.history.push('/back/promotion');
       }else if(res.status === 401){//Unauthorized
-        this.props.history.push('/login');
+        this.props.history.push('/back/login');
       }else{
         currentState.errors = res.errors;
         keys = Object.keys(res.errors);
@@ -708,7 +708,7 @@ onClick={(e) => this.update(e)}>
 </Button>
    </div>
    <div class="bouton-aligne">
-    <Link to={'/promotion'} style={{textDecoration:'none'}}>
+    <Link to={'/back/promotion'} style={{textDecoration:'none'}}>
        <Button variant="outlined" 
        id="btn2"
        >

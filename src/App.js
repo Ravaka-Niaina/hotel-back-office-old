@@ -1,3 +1,4 @@
+import ListeDroitAcces from "./components/partenaire/droitAcces/listeDroitAcces.js";
 import InsertDroitAcces from "./components/partenaire/droitAcces/InsertDroitAcces.js";
 import  Login  from "./components/common/Authentification/Login.js";
 import  Register  from "./components/common/Authentification/Register.js";
@@ -69,6 +70,7 @@ function App(){
     
         <Route path="/cookie" exact component={test} />
 
+        <Route path="/back/accessRight" exact component={ListeDroitAcces} />
         <Route path="/back/accessRight/insert" exact component={InsertDroitAcces} />
 
         <Route path="/back" exact component={home} />

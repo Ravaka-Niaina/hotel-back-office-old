@@ -249,7 +249,7 @@ export default function Recherche(props){
         rechercher(1);
         let temp = [];
         props.fieldsToPrint.map(infoField => {
-          if(infoField.field !== "_id"){
+          if(infoField.field !== "_id" && !infoField.forcePrint){
             temp.push({
               id: infoField.field,
               numeric: infoField.type === "Integer" || infoField.type === "Float" ? true : false,
