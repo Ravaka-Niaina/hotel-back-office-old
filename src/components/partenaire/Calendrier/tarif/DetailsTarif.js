@@ -64,7 +64,7 @@ function DetailsTarif(){
         };
         console.log(res);
         if(res.status === 200){
-            history.push('/tarif');
+            history.push('/back/tarif');
         }else{
             let keys = Object.keys(res.errors);
             keys.map((k) => {
