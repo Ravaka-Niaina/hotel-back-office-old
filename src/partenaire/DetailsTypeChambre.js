@@ -136,7 +136,9 @@ class DetailsTypeCHambre extends React.Component{
         this.setListEquipement2 = this.setListEquipement2.bind(this);
     }
 
-    setDetailsTypeChambre(data){
+    setDetailsTypeChambre(res){
+        console.log(res);
+        let data = res.data;
         let currentState = JSON.parse(JSON.stringify(this.state));
         currentState = data;
         if(currentState.typeChambre.photo != '' || 
@@ -188,7 +190,7 @@ class DetailsTypeCHambre extends React.Component{
                 "/typeChambre/details/" + this.props.match.params._id ,
             withCredentials: true
         })
-        .then(res => this.setDetailsTypeChambre(res.data))
+        .then(res => this.setDetailsTypeChambre(res))
         .catch(err => console.log(err));
     }
 

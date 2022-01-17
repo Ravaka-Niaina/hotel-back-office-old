@@ -1,5 +1,6 @@
-import Rechercher from '../common/Recherche.js';
+import Rechercher from '../common/List/Recherche.js';
 
+const btnInsert = {urlRedirect: "/tarif/insert", label: "Ajouter plan tarifaire"}
 const urlSearch = "/planTarifaire";
 const tableName = "tarif";
 const fieldsToSearch = [
@@ -12,6 +13,7 @@ const fieldsToSearch = [
     {name: "politiqueAnnulAtrb", type: "Array"}
 ];
 const fieldsToPrint = [
+    {field: "_id", label: null},
     {field: "nom", label: "Nom"},
     {field: "chambresAtrb", label: "Chambres attribues", type: "Array"},
     {field: "dateSejour.debut", label: "Debut date sejour", type: "Date"},
@@ -20,18 +22,21 @@ const fieldsToPrint = [
     {field: "dateReservation.fin", label: "Fin date reservation", type: "Date"},
     {field: "politiqueAnnulAtrb", label: "Politiques d'annulation attribuees", type: "Array"},
 ];
-const nbContent = 10;
+const nbContent = 5;
 const urlEdit = '/tarif/details/';
+const rowsPerPageOptions = [5, 10, 20];
 
 export default function ListTarif(){
     return(
         <Rechercher 
+            btnInsert={btnInsert}
             urlSearch={urlSearch}
             tableName={tableName}
             fieldsToSearch={fieldsToSearch}
             fieldsToPrint={fieldsToPrint}
             urlEdit={urlEdit}
             nbContent={nbContent}
+            rowsPerPageOptions={rowsPerPageOptions}
         />
     );
 }

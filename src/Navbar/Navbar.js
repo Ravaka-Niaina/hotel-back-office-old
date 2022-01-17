@@ -18,17 +18,28 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Box from '@mui/material/Box';
 import { Link } from 'react-router-dom';
 import Drop from "./drop.js";
+import DropHisto from "./dropHisto.js";
 
 function Navbar(props) {
     const [value, setValue] = React.useState(0);
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl1, setAnchorEl1] = React.useState(null);
     const open = Boolean(anchorEl);
+    const open1 = Boolean(anchorEl1);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
       };
+      const handleClick2 = (event) => {
+        setAnchorEl1(event.currentTarget);
+      };
+
       const handleClose = () => {
         setAnchorEl(null);
+      };
+
+      const handleClose1 = () => {
+        setAnchorEl1(null);
       };
 
     const handleChange = (event, newValue) => {
@@ -38,14 +49,14 @@ function Navbar(props) {
             <nav className="navbar navbar-expand-lg navbar-dark" id="navbar">
             <Tabs value={props.currentPage} onChange={handleChange} aria-label="icon label tabs example">
                 <Tab value={0} component={Link} to="/" icon={<HomeOutlinedIcon />} iconPosition="start" label="Accueil" />
-                <Tab value={1} component={Link} to="#" icon={<DocumentScannerOutlinedIcon />} iconPosition="start" label="Plan tarifaire" onClick={handleClick} />
+                <Tab value={1}  icon={<DocumentScannerOutlinedIcon />} iconPosition="start" label="Plan tarifaire" onClick={handleClick} />
                 <Drop click = {handleChange} close ={handleClose} open={open} anchorEl={anchorEl} />
                 <Tab value={2} component={Link} to="/typeChambre" icon={<BedroomChildOutlinedIcon />} iconPosition="start" label="Type de chambre" />
                 <Tab value={3} component={Link} icon={<PushPinOutlinedIcon />} to="/promotion" iconPosition="start" label="Promotion" />
 
                 <Tab value={4} component={Link} icon={<GavelOutlinedIcon />} to="/politique/list" iconPosition="start" label="Politique" />
-                <Tab value={5} component={Link} icon={<DocumentScannerOutlinedIcon />}to="/historique" iconPosition="start" label="historique" />
-
+                <Tab value={5} icon={<DocumentScannerOutlinedIcon />}  iconPosition="start" label="historique" onClick={handleClick2}/>
+                <DropHisto click = {handleChange} close ={handleClose1} open={open1} anchorEl={anchorEl1} />
 
                 <Tab value={6} component={Link} icon={<FormatListBulletedOutlinedIcon />} to="/frontClient" iconPosition="start" label="Client" />
 

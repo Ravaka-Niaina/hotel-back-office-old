@@ -1,6 +1,6 @@
 
 import  Login  from "./components/login/login";
-import  Register  from "./components/login/register";
+import  Register  from "./components/Authentification/Register.js";
 import  home  from "./home/home";
 import  listeUser  from "./components/User/listeUser";
 
@@ -26,7 +26,6 @@ import PromotionList from "./promotion/ListPromotion.js";
 import  InsertPromotion  from "./promotion/insertPromotion.js";
 import Global from "./politique/global.js";
 import ListPolitique from "./politique/LPolitique.js"
-import testData from "./politique/listpolitique.js"
 
 import  Front_client  from "./front_client/front_client";
 
@@ -93,7 +92,6 @@ function App(){
         <Route path="/politique" exact component={Global} />
         <Route path="/politique/detail/:_id" exact component={Global} />
         <Route path="/politique/list" exact component={ListPolitique} />
-        <Route path="/politique/testData" exact component={testData} />
 
 
         <Route path="/calendrier" exact component={Calendrier} />
@@ -103,7 +101,6 @@ function App(){
         <Route path="/login" exact component={Login} />
         <Route path="/Register" exact component={Register} />
         <Route path="/userList" exact component={listeUser} />
-        <Route path="/Register/:_id" exact component={Register} />
         
         <Route path="/frontClient" exact component={Front_client} />
         <Route path="/devis" exact component={Devis} />
