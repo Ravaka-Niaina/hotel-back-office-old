@@ -22,17 +22,26 @@ import Drop from "./drop.js";
 import { useHistory } from 'react-router-dom';
 
 import {session} from "../../common/utilitySession.js";
+import DropHisto from "./dropHisto.js";
 
 function Navbar(props) {
     const [value, setValue] = React.useState(0);
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl1, setAnchorEl1] = React.useState(null);
     const open = Boolean(anchorEl);
+    const open1 = Boolean(anchorEl1);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
       };
+      const handleClick2 = (event) => {
+        setAnchorEl1(event.currentTarget);
+      };
       const handleClose = () => {
         setAnchorEl(null);
+      };
+      const handleClose1 = () => {
+        setAnchorEl1(null);
       };
 
     const handleChange = (event, newValue) => {
@@ -61,11 +70,12 @@ function Navbar(props) {
                     <Tab value={2} component={Link} to="/back/typeChambre" icon={<BedroomChildOutlinedIcon />} iconPosition="start" label="Type de chambre" />
                     <Tab value={3} component={Link} icon={<PushPinOutlinedIcon />} to="/back/promotion" iconPosition="start" label="Promotion" />
                     <Tab value={4} component={Link} icon={<GavelOutlinedIcon />} to="/back/politique/list" iconPosition="start" label="Politique" />
-                    <Tab value={5} component={Link} icon={<DocumentScannerOutlinedIcon />}to="/back/historique" iconPosition="start" label="historique" />
+                    <Tab value={5} icon={<DocumentScannerOutlinedIcon />}  iconPosition="start" label="historique" onClick={handleClick2}/>
                     <Tab value={6} component={Link} icon={<FormatListBulletedOutlinedIcon />} to="/front" iconPosition="start" label="Client" />
                     <Tab value={7} icon={<PersonPinIcon />} iconPosition="start" label="Mon compte" />
                     <Tab value={8} component={Link} to="/back/user" icon={<PersonPinIcon />} iconPosition="start" label="Partenaires" />
                     <Drop click = {handleChange} close ={handleClose} open={open} anchorEl={anchorEl} />
+                    <DropHisto click = {handleChange} close ={handleClose1} open={open1} anchorEl={anchorEl1} />
                 </Tabs>
             <div className="nav-right-el">
                 <Box

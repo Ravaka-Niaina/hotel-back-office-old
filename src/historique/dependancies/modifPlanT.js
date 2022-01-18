@@ -30,9 +30,9 @@ import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import callAPI from '../../utility.js';
-import ValidationSuppression from "../../common/List/ValidationSuppression.js";
+import ValidationSuppression from "../../components/common/List/ValidationSuppression.js";
 import Skeleton from '../../SkeletonListe/skeleton';
-import  Navbar  from "../../Navbar/Navbar";
+import  Navbar  from "../../components/partenaire/Navbar/Navbar";
 import FooterList from '../FooterList.js';
 const moment = require('moment');
 

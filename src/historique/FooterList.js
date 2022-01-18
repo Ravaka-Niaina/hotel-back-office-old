@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Pagination from '@mui/material/Pagination';
 import Stack from '@mui/material/Stack';
-import styles from '../common/List/FooterList.module.css';
+import styles from '../components/common/List/FooterList.module.css';
 
 export default function FooterList(props){
 

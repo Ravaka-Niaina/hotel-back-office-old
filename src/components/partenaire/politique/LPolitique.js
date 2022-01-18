@@ -1,4 +1,4 @@
-import Rechercher from '../common/List/Recherche.js';
+import Rechercher from '../../common/List/Recherche.js';
 
 const btnInsert = {urlRedirect: "/tarif/insert", label: "Ajouter plan tarifaire"}
 const urlSearch = "/planTarifaire";
