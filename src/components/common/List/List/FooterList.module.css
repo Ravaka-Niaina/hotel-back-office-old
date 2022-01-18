@@ -1,0 +1,26 @@
+.footer > div{
+    display:inline-block;
+    width: fit-content;
+    height: 35px;
+    padding-left: 10px;
+}
+.footer > div:first-child{
+    min-width: 300px;
+}
+.footer >div:first-child > span{
+    margin-right: 5px;
+}
+.footer > div:nth-child(2){
+    width: 300px;
+}
+.footer > div:nth-child(2) > span{
+    margin-right: 5px;
+}
+.footer >div:nth-child(2) > select{
+    width: 75px;
+    border-radius: 3px;
+    background-color: white;
+}
+.footer > div:last-child{
+    float: right;
+}
