@@ -206,11 +206,17 @@ function ApplyReservation(props){
                                                 onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} />         */}
                                                 <div class="input-field">
                                                     <input type="text" required />
-                                                        <label>Prénom <span class="red_required">*</span></label>
+                                                    <label>Prénom <span class="red_required">*</span></label>
+                                                    <div class="error_text">
+                                                        Le prénom est obligatoire.
+                                                    </div>
                                                 </div>
                                                 <div class="input-field">
                                                     <input type="text" required />
                                                         <label>Nom <span class="red_required">*</span></label>
+                                                        <div class="error_text">
+                                                         Le nom est obligatoire.
+                                                        </div>
                                                 </div>
                                                 <div class="input-field">
                                                     <input type="text" required />
@@ -219,6 +225,9 @@ function ApplyReservation(props){
                                                 <div class="input-field input-email">
                                                     <input type="text" required />
                                                         <label>Adresse e-mail <span class="red_required">*</span></label>
+                                                        <div class="error_text">
+                                                         L'adresse e-mail est obligatoire.
+                                                        </div>
                                                      <p class="infos_mail">Voici l'adresse e-mail à laquelle votre confirmation sera envoyée.</p>    
                                                 </div>
 
@@ -230,10 +239,29 @@ function ApplyReservation(props){
                                         <div class="inscription_quick">
                                             <input type="checkbox" id="inscription_quick" name="scales" 
                                                     checked={isConnectionShowing} onChange={quickConnection}/>
-                                            <label for="scales"></label>
+                                            <label for="scales">J'aimerais créer un compte.</label>
                                         </div>
-                                        
-                                        
+                                        {isConnectionShowing ?
+                                            <div class="password_quick">
+                                                    <div class="input-field">
+                                                        <input type="password" required />
+                                                            <label>Mot de passe <span class="red_required">*</span></label>
+                                                    </div>
+                                                    
+                                                    <div class="input-field">
+                                                        <input type="password" required />
+                                                        <label>Confirmer le mot de passe <span class="red_required">*</span></label>
+                                                    </div>
+                                            </div>
+                                        :null
+                                        }
+                                        <hr style={{marginLeft:'0.8em'}}></hr>
+                                        <h2 class="infos_heading"><span>Détails et préférences supplémentaires</span></h2>
+                                        <div class="details_reservation">
+                                            <textarea class="text_reservation" id="details_reservation" maxlength="200" type="textarea" name="commentArea" aria-label="Veuillez noter vos demandes ou besoins spéciaux (maximum 200 caractères)" placeholder=""></textarea>
+                                            <label class="label_reservation">Veuillez indiquer vos demandes ou besoins spéciaux.</label>
+                                        </div>
+                                       
                                     </div>
                                     : <div>
                                         <Champs label="Nom" value={reservateur.nom.trim() !== "" ? reservateur.nom : "vide"} />
