@@ -182,9 +182,11 @@ function ApplyReservation(props){
                         <div class="infos_contact">
                             <div class="infos_contact_header">
                                 <h2 class="infos_heading">Informations de contact</h2>
+                                {isEditEnabled ?
                                 <span class="required-field-indicator-message_container">
                                     <span><span class="required-field-indicator-message_required">*</span> Obligatoire</span>
-                                </span>
+                                </span> : null
+                                }
                             </div>
                             <Box>
                                 {isEditEnabled ?
@@ -298,11 +300,11 @@ function ApplyReservation(props){
                                         </div>
                                        
                                     </div>
-                                    : <div>
+                                    : <div class="champs">
                                         <Champs label="Nom" value={reservateur.nom.trim() !== "" ? reservateur.nom : "vide"} />
                                         <Champs label="Email" value={reservateur.email.trim() !== "" ? reservateur.email : "vide"} />
                                         <Champs label="Tel" value={reservateur.tel.trim() !== "" ? reservateur.tel : "vide"} />
-                                        <Champs label="Message particulier" value={reservateur.messageParticulier.trim() != "" ? reservateur.messageParticulier : "Vide"} />
+                                        <Champs label="Message particulier" value={reservateur.messageParticulier.trim() != "" ? reservateur.messageParticulier : "vide"} />
                                     </div>
                                     
                                     } 

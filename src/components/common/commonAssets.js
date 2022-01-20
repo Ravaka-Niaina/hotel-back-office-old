@@ -69,7 +69,7 @@ export const style = {
 
 export function Champs(props){
     return(
-        <div style={{width:"fit-content", float: "left", margin: "5px 10px", minWidth: "200px"}}>
+        <div >
             <p style={{width:"fit-content", marginBottom: "0"}}>
                 <span style={{color: "#6B6B6B", fontSize: "14px"}}>{props.label}:</span>
             </p>

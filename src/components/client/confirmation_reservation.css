@@ -221,6 +221,9 @@ input:valid ~ label{
     transition: .4s;
     transform: translateY(-50%);
   }
+  .champs {
+      margin-left: 0.8em;
+  }
 
 
 
