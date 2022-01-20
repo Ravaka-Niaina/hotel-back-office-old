@@ -50,8 +50,9 @@ function ApplyReservation(props){
     const history = useHistory();
     const [reservation, setReservation] = useState(null);
     const { _id } = useParams();
-    const [reservateur, setReservateur] = useState({nom: "", email: "", tel: "", messageParticulier: ""});
+    const [reservateur, setReservateur] = useState({prenom:"",nom: "", email: "", tel: "", messageParticulier: ""});
     const [openLoad, setOpenLoad] = useState(true);
+    const [errorEmpty, setErrorEmpty] = useState({prenom:false,nom: false, email: false, tel: false, messageParticulier: false});
 
     const [alertSuccess, setAlertSuccess] = useState(null);
     const [alertError, setAlertError] = useState(null);
@@ -132,8 +133,25 @@ function ApplyReservation(props){
 
     function handleChangeInfoReservateur(field, value){
         let current = JSON.parse(JSON.stringify(reservateur));
+        let errorField = JSON.parse(JSON.stringify(errorEmpty));
         current[field] = value;
+        if(value!=""){
+            errorField[field] = false; 
+        }
         setReservateur(current);
+        setErrorEmpty(errorField);
+    }
+    function handleEmptyInfoReservateur(field){
+        let reserv = JSON.parse(JSON.stringify(reservateur));
+        let current = JSON.parse(JSON.stringify(errorEmpty));
+       
+        if(reserv[field]==='' ||reserv[field]===null){
+            current[field] = true;
+        }else{
+            current[field] = false;
+        }
+           
+        setErrorEmpty(current);
     }
     function quickConnection(event){
         setIsConnectionShowing(!isConnectionShowing);
@@ -205,29 +223,45 @@ function ApplyReservation(props){
                                                 value={reservateur.messageParticulier}
                                                 onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} />         */}
                                                 <div class="input-field">
-                                                    <input type="text" required />
+                                                    <input type="text" value={reservateur.prenom}
+                                                onChange={(e) => handleChangeInfoReservateur("prenom", e.target.value)} onBlur={(e) => handleEmptyInfoReservateur("prenom")} required />
                                                     <label>Prénom <span class="red_required">*</span></label>
-                                                    <div class="error_text">
-                                                        Le prénom est obligatoire.
-                                                    </div>
-                                                </div>
-                                                <div class="input-field">
-                                                    <input type="text" required />
-                                                        <label>Nom <span class="red_required">*</span></label>
+                                                    {
+                                                        errorEmpty.prenom ?
                                                         <div class="error_text">
-                                                         Le nom est obligatoire.
+                                                            Le prénom est obligatoire.
                                                         </div>
+                                                        :null
+                                                    }
                                                 </div>
                                                 <div class="input-field">
-                                                    <input type="text" required />
+                                                    <input type="text" value={reservateur.nom} onBlur={(e) => handleEmptyInfoReservateur("nom")}
+                                                             onChange={(e) => handleChangeInfoReservateur("nom", e.target.value)} required />
+                                                        <label>Nom <span class="red_required">*</span></label>
+                                                        {
+                                                            errorEmpty.nom ?
+                                                            <div class="error_text">
+                                                                Le nom est obligatoire.
+                                                            </div>
+                                                            :null
+                                                        }
+                                                </div>
+                                                <div class="input-field">
+                                                    <input type="text" value={reservateur.tel}
+                                                            onChange={(e) => handleChangeInfoReservateur("tel", e.target.value)} required />
                                                         <label>Téléphone pendant la journée</label>
                                                 </div>
                                                 <div class="input-field input-email">
-                                                    <input type="text" required />
+                                                    <input type="text" value={reservateur.email} onBlur={(e) => handleEmptyInfoReservateur("email")}
+                                                            onChange={(e) => handleChangeInfoReservateur("email", e.target.value)} required />
                                                         <label>Adresse e-mail <span class="red_required">*</span></label>
-                                                        <div class="error_text">
-                                                         L'adresse e-mail est obligatoire.
-                                                        </div>
+                                                        {
+                                                            errorEmpty.email ?
+                                                            <div class="error_text">
+                                                                L'adresse e-mail est obligatoire.
+                                                            </div>
+                                                            :null
+                                                        }
                                                      <p class="infos_mail">Voici l'adresse e-mail à laquelle votre confirmation sera envoyée.</p>    
                                                 </div>
 
@@ -258,7 +292,8 @@ function ApplyReservation(props){
                                         <hr style={{marginLeft:'0.8em'}}></hr>
                                         <h2 class="infos_heading"><span>Détails et préférences supplémentaires</span></h2>
                                         <div class="details_reservation">
-                                            <textarea class="text_reservation" id="details_reservation" maxlength="200" type="textarea" name="commentArea" aria-label="Veuillez noter vos demandes ou besoins spéciaux (maximum 200 caractères)" placeholder=""></textarea>
+                                            <textarea value={reservateur.messageParticulier}
+                                                onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} class="text_reservation" id="details_reservation" maxlength="200" type="textarea" name="commentArea" aria-label="Veuillez noter vos demandes ou besoins spéciaux (maximum 200 caractères)" placeholder=""></textarea>
                                             <label class="label_reservation">Veuillez indiquer vos demandes ou besoins spéciaux.</label>
                                         </div>
                                        
