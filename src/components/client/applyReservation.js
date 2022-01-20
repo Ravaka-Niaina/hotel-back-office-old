@@ -18,7 +18,7 @@ import Total from './applyReservation/Total.js';
 import InfoItineraires from './applyReservation/InfoItineraires.js';
 import {Champs} from '../common/commonAssets.js';
     import {setValue} from '../../../src/utility2.js';
-  
+import './confirmation_reservation.css';
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
   
@@ -140,7 +140,8 @@ function ApplyReservation(props){
                 <div id="content" style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
                     <Box sx={{ bgcolor: 'background.paper', maxWidth: 800, margin: "0 auto"
                     , padding: "15px 15px"}}>
-                        <h1>Détails réservation</h1>
+                        {/* <h1>Détails réservation</h1> */}
+                        <button class="btn button_btn button_secondary button_sm" datatest="Button"><span>CONNECTER-VOUS POUR RÉSERVER RAPIDEMENT</span></button>
                         {alertSuccess != null ? 
                             <div id="success">
                                 <Stack sx={{ width: '100%' }} spacing={2}>
@@ -155,55 +156,79 @@ function ApplyReservation(props){
                                 </Stack>
                             </div> : null
                         }
-                        <h2>Informations sur la personne qui fait la réservation</h2>
-                        <Box>
-                            {isEditEnabled ?
-                                <div>
-                                    <Box
-                                        component="form"
-                                        sx={{
-                                            '& .MuiTextField-root': { m: 1, width: '25ch' },
-                                        }}
-                                        noValidate
-                                        autoComplete="off"
-                                    >
-                                        <TextField
-                                            id="outlined-required"
-                                            label="Nom"
-                                            placeholder="dupond"
-                                            value={reservateur.nom}
-                                            onChange={(e) => handleChangeInfoReservateur("nom", e.target.value)} />
-                                        <TextField
-                                            id="outlined-required"
-                                            label="Email"
-                                            placeholder="dupond@gmail.com"
-                                            type="email"
-                                            value={reservateur.email}
-                                            onChange={(e) => handleChangeInfoReservateur("email", e.target.value)} />
-                                        <TextField
-                                            id="outlined-required"
-                                            label="Tel"
-                                            placeholder="034 00 000 00"
-                                            value={reservateur.tel}
-                                            onChange={(e) => handleChangeInfoReservateur("tel", e.target.value)} />
-                                        <TextField 
-                                            label="Message particulier"
-                                            placeholder="Votre message"
-                                            value={reservateur.messageParticulier}
-                                            onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} />        
-                                    </Box>
+                        <div class="infos_contact">
+                            <div class="infos_contact_header">
+                                <h2 class="infos_heading">Informations de contact</h2>
+                                <span class="required-field-indicator-message_container">
+                                    <span><span class="required-field-indicator-message_required">*</span> Obligatoire</span>
+                                </span>
+                            </div>
+                            <Box>
+                                {isEditEnabled ?
+                                    <div>
+                                        <Box
+                                            component="form"
+                                            sx={{
+                                                '& .MuiTextField-root': { m: 1, width: '35ch' },
+                                            }}
+                                            noValidate
+                                            autoComplete="off"
+                                            class="container_infos"
+                                        >
+                                            {/* <TextField
+                                                id="outlined-required"
+                                                label="Nom"
+                                                placeholder="dupond"
+                                                value={reservateur.nom}
+                                                onChange={(e) => handleChangeInfoReservateur("nom", e.target.value)} />
+                                            <TextField
+                                                id="outlined-required"
+                                                label="Email"
+                                                placeholder="dupond@gmail.com"
+                                                type="email"
+                                                value={reservateur.email}
+                                                onChange={(e) => handleChangeInfoReservateur("email", e.target.value)} />
+                                            <TextField
+                                                id="outlined-required"
+                                                label="Tel"
+                                                placeholder="034 00 000 00"
+                                                value={reservateur.tel}
+                                                onChange={(e) => handleChangeInfoReservateur("tel", e.target.value)} />
+                                            <TextField 
+                                                label="Message particulier"
+                                                placeholder="Votre message"
+                                                value={reservateur.messageParticulier}
+                                                onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} />         */}
+                                                <div class="input-field">
+                                                    <input type="text" required />
+                                                        <label>Prénom <span class="red-required">*</span></label>
+                                                </div>
+                                                <div class="input-field">
+                                                    <input type="text" required />
+                                                        <label>Nom <span class="red-required">*</span></label>
+                                                </div>
+                                                <div class="input-field">
+                                                    <input type="text" required />
+                                                        <label>Téléphone pendant la journée</label>
+                                                </div>
+                                                <div class="input-field">
+                                                    <input type="text" required />
+                                                        <label>Adresse e-mail <span class="red-required">*</span></label>
+                                                </div>
+                                                   
+                                        </Box>
+                                        
+                                    </div>
+                                    : <div>
+                                        <Champs label="Nom" value={reservateur.nom.trim() !== "" ? reservateur.nom : "vide"} />
+                                        <Champs label="Email" value={reservateur.email.trim() !== "" ? reservateur.email : "vide"} />
+                                        <Champs label="Tel" value={reservateur.tel.trim() !== "" ? reservateur.tel : "vide"} />
+                                        <Champs label="Message particulier" value={reservateur.messageParticulier.trim() != "" ? reservateur.messageParticulier : "Vide"} />
+                                    </div>
                                     
-                                </div>
-                                : <div>
-                                    <Champs label="Nom" value={reservateur.nom.trim() !== "" ? reservateur.nom : "vide"} />
-                                    <Champs label="Email" value={reservateur.email.trim() !== "" ? reservateur.email : "vide"} />
-                                    <Champs label="Tel" value={reservateur.tel.trim() !== "" ? reservateur.tel : "vide"} />
-                                    <Champs label="Message particulier" value={reservateur.messageParticulier.trim() != "" ? reservateur.messageParticulier : "Vide"} />
-                                </div>
-                                
-                                } 
-                        </Box>
-                        
+                                    } 
+                            </Box>
+                        </div>
                         <InfoItineraires 
                             reservation={reservation} 
                             setReservation={setReservation}

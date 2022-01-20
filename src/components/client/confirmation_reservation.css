@@ -1,0 +1,132 @@
+.button_sm {
+    line-height: 1rem;
+    padding: 0.75rem 1.25rem;
+}
+.button_secondary {
+    font-size: 1rem;
+    font-family: 'Futura Lt BT', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 0px;
+    background: rgba(175,161,134,1);
+    border: 1px solid #c2b59b;
+    color: #ffffff;
+}
+.button_secondary:hover{
+    background: #3399cc;
+    color: #ffffff;
+    
+}
+.button_btn {
+    cursor: pointer;
+    display: inline-block;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    transition-duration: 100ms;
+    transition-property: background-color, color, border-color, box-shadow;
+    transition-timing-function: ease-in-out;
+    white-space: nowrap;
+    z-index: 5;
+}
+.button_btn::before {
+    content: '';
+    height: 100%;
+    top: 0;
+    position: absolute;
+    transition: top 100ms cubic-bezier(0.86, 0, 0.07, 1);
+    width: 100%;
+    z-index: 5;
+}
+.infos_contact_header{
+    display: flex;
+    justify-content: space-between;
+}
+.infos_contact{
+    border: 1px solid #887b62;
+    background: #fff;
+    border-radius: 0px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    margin-top: 1rem;
+
+}
+.infos_heading {
+   
+}
+.required-field-indicator-message_container{
+    display: flex;
+    font-size: .85rem;
+    -ms-flex-align: end;
+    align-items: flex-end
+}
+
+
+.container_infos{
+  display: flex;
+  justify-content: space-between;
+  background: white;
+  margin-left: 0.8rem;
+  flex-wrap: wrap;
+ 
+}
+
+.input-field, form .button{
+  
+  position: relative;
+  height: 50px;
+  margin-top: 15px;
+  width: 45%;
+}
+.input-field input{
+  height: 100%;
+  width: 100%;
+  border: 1px solid #7c612b;
+  padding-left: 15px;
+  padding-right: 20px;
+  outline: none;
+  font-size: 11px;
+  transition: .4s;
+  
+}
+input:focus{
+  background-color: #eeeeee;
+}
+.input-field label, span.show{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.input-field label{
+  left: 15px;
+  pointer-events: none;
+  color: #7c612b;
+  font-size: 11px;
+  transition: .4s;
+}
+span.show{
+  right: 20px;
+  color: #111;
+  font-size: 14px;
+  
+  cursor: pointer;
+  user-select: none;
+  visibility: hidden;
+  font-family: 'Open Sans', sans-serif;
+}
+input:valid ~ span.show{
+  visibility: visible;
+}
+input:focus ~ label,
+input:valid ~ label{
+  transform: translateY(-23px);
+  
+  font-size: 11px;
+  
+}
+
+
+
+
