@@ -13,10 +13,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Icon from '@mui/material/Icon';
 import { useHistory } from 'react-router-dom';
-
+import Checkbox from '@mui/material/Checkbox';
 import Total from './applyReservation/Total.js';
 import InfoItineraires from './applyReservation/InfoItineraires.js';
 import {Champs} from '../common/commonAssets.js';
+import FormControlLabel from '@mui/material/FormControlLabel';
     import {setValue} from '../../../src/utility2.js';
 import './confirmation_reservation.css';
 function TabPanel(props) {
@@ -56,6 +57,7 @@ function ApplyReservation(props){
     const [alertError, setAlertError] = useState(null);
     const [affilie, setAffilie] = useState([]);
     const [isEditEnabled, setIsEditEnabled] = useState(false);
+    const [isConnectionShowing, setIsConnectionShowing] = useState(false);
 
     function handleResponse(res){
         console.log(res);
@@ -133,6 +135,9 @@ function ApplyReservation(props){
         current[field] = value;
         setReservateur(current);
     }
+    function quickConnection(event){
+        setIsConnectionShowing(!isConnectionShowing);
+    }
 
     return (
         <>
@@ -201,22 +206,33 @@ function ApplyReservation(props){
                                                 onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} />         */}
                                                 <div class="input-field">
                                                     <input type="text" required />
-                                                        <label>Prénom <span class="red-required">*</span></label>
+                                                        <label>Prénom <span class="red_required">*</span></label>
                                                 </div>
                                                 <div class="input-field">
                                                     <input type="text" required />
-                                                        <label>Nom <span class="red-required">*</span></label>
+                                                        <label>Nom <span class="red_required">*</span></label>
                                                 </div>
                                                 <div class="input-field">
                                                     <input type="text" required />
                                                         <label>Téléphone pendant la journée</label>
                                                 </div>
-                                                <div class="input-field">
+                                                <div class="input-field input-email">
                                                     <input type="text" required />
-                                                        <label>Adresse e-mail <span class="red-required">*</span></label>
+                                                        <label>Adresse e-mail <span class="red_required">*</span></label>
+                                                     <p class="infos_mail">Voici l'adresse e-mail à laquelle votre confirmation sera envoyée.</p>    
                                                 </div>
-                                                   
+
+                                                
                                         </Box>
+                                        <hr style={{marginLeft:'0.8em'}}></hr>
+                                        <h2 class="infos_heading"><span>Réserver plus rapidement (en option)</span></h2>
+                                        
+                                        <div class="inscription_quick">
+                                            <input type="checkbox" id="inscription_quick" name="scales" 
+                                                    checked={isConnectionShowing} onChange={quickConnection}/>
+                                            <label for="scales"></label>
+                                        </div>
+                                        
                                         
                                     </div>
                                     : <div>
