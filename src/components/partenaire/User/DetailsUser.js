@@ -2,9 +2,6 @@ import  React,{useEffect}  from 'react';
 import { useParams } from 'react-router-dom'
 import callAPI from '../../../utility.js';
 import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Add from '@mui/icons-material/Add';
-import Remove from '@mui/icons-material/Remove';
 import Paper from '@mui/material/Paper';
 
 import  Navbar  from "../Navbar/Navbar";
@@ -12,6 +9,7 @@ import {Champs} from '../../common/commonAssets';
 import {session} from '../../common/utilitySession.js';
 import NotEnoughAccessRight from '../../common/NotEnoughAccessRight';
 import styles from './DetailsUser.module.css';
+import ListeDroitAcces from './ListeDroitAcces.js';
 
 
 const DetailsUser = () => {
@@ -20,11 +18,13 @@ const DetailsUser = () => {
     const [email, setEmail] = React.useState("");
     const [dateInscription, setDateInscription] = React.useState("");
     const [companie, setCompanie] = React.useState("");
+    const [atribAR, setAtribAR] = React.useState([]);
+    const [notAtribAR, setNotAtribAR] = React.useState([]);
+
     const { _id } = useParams();
 
     const hasAR = session.getInstance().hasOneOfTheseAccessRights(["getPartenaire", "updatePartenaire", "superAdmin"]);
     const setDetailsUser = (data) => {
-        console.log(data);
         if(data.status === 401){
             window.location.href = "/back/login";
         }else if(data.status === 403){
@@ -35,6 +35,8 @@ const DetailsUser = () => {
             setEmail(data.user.email);
             setDateInscription(data.user.dateInscription);
             setCompanie(data.user.companie);
+            setAtribAR(data.atribAR);
+            setNotAtribAR(data.notAtribAR);
         }
     }
 
@@ -72,34 +74,13 @@ const DetailsUser = () => {
                                     <Champs label="Companie" value={companie} />
                                 </div>
                             </div>
-                            <h2>Droits d'accès</h2>
-                            <div>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th colspan="2" width="50%">non attribués</th>
-                                            <th colspan="2">attribués</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td border="1">Insertion type chambre</td>
-                                            <td align="center">
-                                                <IconButton aria-label="delete">
-                                                    <Add />
-                                                </IconButton>
-                                            </td>
-                                            <td align="center">
-                                                <IconButton aria-label="delete">
-                                                    <Remove />
-                                                </IconButton>
-                                            </td>
-                                            <td border="1">Insertion type chambre</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            
+                            <ListeDroitAcces
+                                idUser={_id}
+                                atribAR={atribAR} 
+                                setAtribAR={setAtribAR}
+                                notAtribAR={notAtribAR}
+                                setNotAtribAR={setNotAtribAR}     
+                            />
                         </div>
                     } 
                 />
