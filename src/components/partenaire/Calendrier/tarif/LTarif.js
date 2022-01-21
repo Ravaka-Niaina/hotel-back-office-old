@@ -25,12 +25,14 @@ const fieldsToPrint = [
 const nbContent = 5;
 const urlEdit = '/back/tarif/details/';
 const rowsPerPageOptions = [5, 10, 20];
-const currentPage = 1;
+const accessRightToViewInsert = ["superAdmin", "insertPlanTarifaire"];
+const accessRightToDelete = ["superAdmin", "deletePlanTarifaire"];
+const accessRightToViewDetails = ["superAdmin", "getPlanTarifaire", "updatePlanTarifaire"];
 
 export default function ListTarif(){
     return(
         <Rechercher
-            currentPage={currentPage}
+            currentPage={1}
             btnInsert={btnInsert}
             urlSearch={urlSearch}
             tableName={tableName}
@@ -39,6 +41,9 @@ export default function ListTarif(){
             urlEdit={urlEdit}
             nbContent={nbContent}
             rowsPerPageOptions={rowsPerPageOptions}
+            accessRightToViewInsert={accessRightToViewInsert}
+            accessRightToViewDetails={accessRightToViewDetails}
+            accessRightToDelete={accessRightToDelete}
         />
     );
 }

@@ -3,7 +3,7 @@ import {session} from '../../common/utilitySession.js';
 import NotEnoughAccessRight from '../../common/NotEnoughAccessRight';
 import Login from '../../common/Authentification/Login.js';
 
-const btnInsert = {urlRedirect: "/back/droitAcces/insert", label: "Ajout droit d'accés"};
+const btnInsert = {urlRedirect: "/back/accessRight/insert", label: "Ajout droit d'accés"};
 const urlSearch = "/droitAcces/list";
 const method = "get";
 const tableName = "droitAcces";
@@ -18,6 +18,7 @@ const fieldsToPrint = [
 const nbContent = 5;
 const urlEdit = "/back";
 const rowsPerPageOptions = [5, 10, 20];
+const accessRightToViewInsert = ["superAdmin", "insertDroitAcces"];
 const accessRightToDelete = ["superAdmin", "deleteDroitAcces"];
 const accessRightToViewDetails = ["superAdmin", "getDroitAcces", "updateDroitAcces"];
 
@@ -41,6 +42,7 @@ const ListeDroitAcces = () => {
             urlEdit={urlEdit}
             nbContent={nbContent}
             rowsPerPageOptions={rowsPerPageOptions}
+            accessRightToViewInsert={accessRightToViewInsert}
             accessRightToDelete={accessRightToDelete}
             accessRightToViewDetails={accessRightToViewDetails}
         />

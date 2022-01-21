@@ -173,9 +173,8 @@ export default function Recherche(props){
     const [openModalDelete, setOpenModalDelete] = React.useState(false);
     const [toDelete, setToDelete] = React.useState({_id: null, nom: null});
 
-    console.log(props.accessRightToDelete);
+    let hasARToViewInsert = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToViewInsert);
     let hasARToDelete = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToDelete);
-    console.log(props.accessRightToViewDetails);
     let hasARToViewDetails = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToViewDetails);
 
     const handleSelectAllClick = (event) => {
@@ -277,7 +276,8 @@ export default function Recherche(props){
         <>
             <Navbar currentPage={props.currentPage}/><br/>
             <Box sx={{ width: '100%', padding :"50px" }}>
-            <Link to={props.btnInsert.urlRedirect}  style={{float : 'left'}}>
+            {hasARToViewInsert
+             ? <Link to={props.btnInsert.urlRedirect}  style={{float : 'left'}}>
                 <Button 
                 variant="contained" 
                 endIcon={<AddIcon style={{color:'white'}}/>}
@@ -285,6 +285,7 @@ export default function Recherche(props){
                     <span style={{color:'white'}}>{props.btnInsert.label}</span>
                 </Button>
             </Link> 
+            : null }
             <div style={{float : 'right'}}>  
                 <TextField 
                 id="outlined-size-small"

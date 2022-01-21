@@ -23,6 +23,9 @@ const fieldsToPrint = [
 const nbContent = 5;
 const urlEdit = '/back/promotion/detail/';
 const rowsPerPageOptions = [5, 10, 20];
+const accessRightToViewInsert = ["superAdmin", "insertPlanTarifaire"];
+const accessRightToDelete = ["superAdmin", "deletePlanTarifaire"];
+const accessRightToViewDetails = ["superAdmin", "getPlanTarifaire", "updatePlanTarifaire"];
 
 export default function ListPromotion(){
     return(
@@ -36,6 +39,9 @@ export default function ListPromotion(){
             urlEdit={urlEdit}
             nbContent={nbContent}
             rowsPerPageOptions={rowsPerPageOptions}
+            accessRightToViewInsert={accessRightToViewInsert}
+            accessRightToViewDetails={accessRightToViewDetails}
+            accessRightToDelete={accessRightToDelete}
         />
     );
 }

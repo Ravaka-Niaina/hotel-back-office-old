@@ -94,6 +94,7 @@ const BaeCalendar = ({ theme, applyFilter, activeDates, onDateSelect, context, c
       console.log("reload calendar...");
     }
   });
+  
 
   function reload(){
     let temp = JSON.parse(JSON.stringify(context.state));

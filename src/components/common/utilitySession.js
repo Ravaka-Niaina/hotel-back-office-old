@@ -33,12 +33,12 @@ class Session{
 
     hasOneOfTheseAccessRights(accessRight){
         if(accessRight === undefined){
-            return true;
+            return false;
         }
         if(typeof(accessRight) === "object"){// array
             const ownedAR = this.#getAllAccessRight();
             if(accessRight.length === 0){
-                return true;
+                return false;
             }
             if(ownedAR !== null){
                 for(let i = 0; i < accessRight.length; i++){

@@ -78,7 +78,6 @@ function ListTarif(props){
                 idTypeChambre : idTypeChambre,
                 nbPers: nbPers
             });
-            console.log(itineraires);
             axios({
                 method: 'post',
                 url: process.env.REACT_APP_BACK_URL + '/reservation/insert',
