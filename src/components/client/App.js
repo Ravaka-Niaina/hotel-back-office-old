@@ -4,6 +4,7 @@ import {BrowserRouter as Router , Route} from 'react-router-dom';
 import Detail from './detail';
 
 
+
 function FrontApp(){
     return(
         <div className="login-wrapper">

@@ -1,6 +1,8 @@
 import ListeDroitAcces from "./components/partenaire/droitAcces/listeDroitAcces.js";
 import InsertDroitAcces from "./components/partenaire/droitAcces/InsertDroitAcces.js";
 import  Login  from "./components/common/Authentification/Login.js";
+import  LoginClient  from "./components/common/Authentification/loginClient";
+import  registerClient  from "./components/common/Authentification/registerClient";
 import  Register  from "./components/common/Authentification/Register.js";
 import  home  from "./home/home";
 import  listeUser  from "./components/partenaire/User/listeUser";
@@ -17,6 +19,8 @@ import LTarif from "./components/partenaire/Calendrier/tarif/LTarif.js";
 import CalendarComponent from './components/partenaire/Calendrier/tarif/CalendarComponent';
 
 import Paiement from "./components/client/paiement";
+
+import Navbar from "./components/client/NavbarClient/Navbar";
 
 import InsertChambre from './components/partenaire/chambre/InsertTypeChambre.js';
 import  AppClient  from "./components/client/Book/dependencies/scroll";
@@ -78,6 +82,9 @@ function App(){
         <Route path="/back/Register" exact component={Register} />
         <Route path="/back/user" exact component={listeUser} />
         <Route path="/back/user/details/:_id" exact component={DetailsUser} />
+
+        <Route path="/loginClient" exact component={LoginClient} />
+        <Route path="/registerClient" exact component={registerClient} />
 
         <Route path="/back/tarif" exact component={LTarif} />
         <Route path="/back/tarif/calendar" exact component={CalendarComponent} />
