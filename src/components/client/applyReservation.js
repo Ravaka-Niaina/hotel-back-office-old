@@ -316,6 +316,7 @@ function ApplyReservation(props){
                             reservateur={reservateur}
                             affilie={affilie}
                             setAffilie={setAffilie}
+                            isEditEnabled={isEditEnabled}
                             openLoad={openLoad}
                             setOpenLoad={setOpenLoad}
                             isEditEnabled={isEditEnabled} />

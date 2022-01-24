@@ -35,6 +35,7 @@ function InfoItineraires(props){
                         reservation={props.reservation}
                         setReservation={props.setReservation}
                         reservateur={props.reservateur}
+                        isEditEnabled={props.isEditEnabled}
                         affilie={props.affilie}
                         setAffilie={props.setAffilie}
                         openLoad={props.openLoad}

@@ -19,7 +19,8 @@ function TarifReserves(props){
         });
     const [reservateur, setReservateur] = useState({prenom:"",nom: "", email: "", tel: "", messageParticulier: ""});
     const [errorEmpty, setErrorEmpty] = useState({prenom:false,nom: false, email: false, tel: false, messageParticulier: false});
-    const [isEditEnabled, setIsEditEnabled] = useState(true);
+    const [isEditEnabled, setIsEditEnabled] = useState(props.isEditEnabled);
+    const [isClientPrincipal, setIsClientPrincipal] = useState(false);
 
     function showAnnulModal(indexTarif){
         console.log("Annulation en cours...");
@@ -28,6 +29,16 @@ function TarifReserves(props){
         temp.indexTarif = indexTarif;
         console.log(temp);
         setAnnulChambre(temp);
+    }
+    function handleClientprincipal(value){
+        setIsClientPrincipal(!isClientPrincipal);
+        
+        if(!isClientPrincipal){
+           
+            setReservateur(props.reservateur);
+        }else{
+            setReservateur({prenom:"",nom: "", email: "", tel: "", messageParticulier: ""});
+        }
     }
     function handleChangeInfoReservateur(field, value){
         let current = JSON.parse(JSON.stringify(reservateur));
@@ -58,8 +69,8 @@ function TarifReserves(props){
             const u = i;
            // console.log("u = " + u);
             const tarif = props.reservation.itineraires[props.indexItineraire].tarifReserves[i];
-            console.log("tarifs");
-            console.log(Date.parse(tarif.dateSejour.debut));
+            // console.log("tarifs");
+            // console.log(Date.parse(tarif.dateSejour.debut));
             tarifs.push(
                 <div class="box_reservation">
                     {/* <h3>Informations Hôtel</h3>
@@ -110,17 +121,22 @@ function TarifReserves(props){
                                 </span> : null
                                 }
                             </div>
-                            <h2 class="infos_heading"><span>Pour qui réservez-vous ?</span></h2>
+                            {isEditEnabled ?
+                            <h2 class="infos_heading" style={{fontSize:'1.1rem'}}><span>Pour qui réservez-vous ?</span></h2> : null }
+                            {isEditEnabled ?
                             <div class="inscription_quick">
-                                            <input type="checkbox" id="inscription_quick" name="scales" 
+                                            <input type="checkbox" id="inscription_quick" name="scales"  checked={isClientPrincipal} onChange={handleClientprincipal}
                                                     />
                                             <label for="scales">Je suis le client principal.</label>
                             </div>
+                            : null }
+                             {isEditEnabled ?
                             <div class="inscription_quick">
-                                            <input type="checkbox" id="inscription_quick" name="scales" 
+                                            <input type="checkbox" id="inscription_quick" name="scales"  checked={!isClientPrincipal} onChange={handleClientprincipal}
                                                     />
                                             <label for="scales">Je réserve pour un autre client.</label>
                             </div>
+                            : null }
                             <Box>
                                 {isEditEnabled ?
                                     <div>
