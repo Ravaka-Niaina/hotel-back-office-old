@@ -22,6 +22,7 @@ function TarifReserves(props){
     const [isEditEnabled, setIsEditEnabled] = useState(props.isEditEnabled);
     const [isClientPrincipal, setIsClientPrincipal] = useState(false);
 
+
     function showAnnulModal(indexTarif){
         console.log("Annulation en cours...");
         let temp = JSON.parse(JSON.stringify(annulChambre));
@@ -69,48 +70,27 @@ function TarifReserves(props){
             const u = i;
            // console.log("u = " + u);
             const tarif = props.reservation.itineraires[props.indexItineraire].tarifReserves[i];
-            // console.log("tarifs");
-            // console.log(Date.parse(tarif.dateSejour.debut));
+            console.log("tarifs");
+            console.log(tarif);
+            const datedebut = new Date(tarif.dateSejour.debut);
+            const datefin = new Date(tarif.dateSejour.fin);
+            const months = ['jan','fev','mar', 'av','mai','juin','juil','août','sept','oct','nov','déc'];
             tarifs.push(
                 <div class="box_reservation">
-                    {/* <h3>Informations Hôtel</h3>
-                    <div style={line}>
-                        <Champs label="Nom" value={tarif.infoTypeChambre.infoHotel.nom} />
-                        <Champs label="Adresse" value={tarif.infoTypeChambre.infoHotel.adresse} />
-                        <Champs label="Email" value={tarif.infoTypeChambre.infoHotel.email} />
-                        <Champs label="Téléphone" value={tarif.infoTypeChambre.infoHotel.tel} />
-                    </div>
-                    <div style={line}>
-                        <Champs label="Type chambre" value={tarif.nomTypeChambre} />
-                        <Champs label="Plan tarifaire" value={tarif.nomTarif} />
-                        <Champs label="Nombre de personnes" value={tarif.nbPers} />
-                        <ChampsImportant label="Prix sans promotion" value={"€ " + tarif.toPay.beforeProm} />
-                        <ChampsImportant label="Prix avec promotion" value={"€ " + tarif.toPay.afterProm} />
-                    </div>
-                    <InputUtilisateur 
-                        reservation={props.reservation}
-                        setReservation={props.setReservation}
-                        indexItineraire={props.indexItineraire}
-                        indexTarif={u}
-                        reservateur={props.reservateur}
-                        affilie={props.affilie}
-                        setAffilie={props.setAffilie}
-                        isEditEnabled={props.isEditEnabled} />
-                    <Politiques politiques={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTarif.infoPolitique} />
-                    <Button variant="contained" color="warning" onClick={(e) => showAnnulModal(u)}>Annuler</Button> */}
+                    
                     <div class="infos_chambre">
-                        <img  src='https://images.unsplash.com/photo-1494253109108-2e30c049369b?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cmFuZG9tJTIwZm9vZCUyMHN0b3JlfGVufDB8fDB8fA%3D%3D&w=1000&q=80'/>
+                        <img  src='https://www.hotel-restaurant-colbert.com/wp-content/uploads/2012/06/Logo-Colbert1-Copier.jpg'/>
                         <div class="details_chambre">
                             <p class="title_hotel">{tarif.infoTypeChambre.infoHotel.nom}</p>
                             <p class="chambre"> {tarif.nomTypeChambre} </p>
                             <p class="tarifs"> {tarif.nomTarif} </p>
-                            <p class="nuites"> 5 nuités </p>
-                            <p class="hotel"> 23 Jan -  23 jan 2022 </p>
+                            <p class="nuites"> {getDiffDays(new Date(tarif.dateSejour.debut),new Date(tarif.dateSejour.fin))} nuités </p>
+                            <p class="hotel"> {datedebut.getDate()} {months[datedebut.getMonth()]} { datedebut.getYear()!=datefin.getYear() ? datedebut.getYear()+1900 : ""} -  {datefin.getDate()} {months[datefin.getMonth()]} {datefin.getYear()+1900} </p>
                             
                             
                         </div>
 
-                    </div>
+                    </div> 
                     <div class="input_utilisateur">
                     <div class="infos_contact" style={{border:'none'}}>
                             <div class="infos_contact_header">

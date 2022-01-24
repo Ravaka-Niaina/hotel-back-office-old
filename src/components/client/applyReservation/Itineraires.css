@@ -17,6 +17,7 @@
     text-transform: none;
     line-height: 1.3;
     text-align: center;
+    margin-bottom: 1.6em;
 }
 .box_reservation{
  
@@ -28,7 +29,7 @@
     margin-left:1.4em;
 }
 .infos_chambre img{
-    width: 30%;
+    width: 35%;
     height: auto;
 }
 .infos_chambre .details_chambre{
