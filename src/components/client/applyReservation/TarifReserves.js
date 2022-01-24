@@ -195,7 +195,7 @@ function TarifReserves(props){
                                     
                                     } 
                             </Box>
-                        </div>
+                    </div>
 
                     </div>
                     <div class="politique_annulation"></div>
