@@ -133,14 +133,14 @@ class DChambre extends React.Component{
                                     <span>{typeChambre.description.substring(0,85) + "..."}</span>
                                     <DetailsTypeChambre context={this} typeChambre={typeChambre} indexTypeChambre={u} />
                                     <div className={styles.equipements}>
-                                        {
+                                        {/* {
                                             typeChambre.equipements.map(equipement => {
                                                 return(
                                                     <Font font={equipement.font} />
                                                 );
                                             })
-                                        }
-                                        {/*
+                                        } */}
+                                        
                                         <div>
                                             <LiveTv/>
                                         </div>
@@ -156,7 +156,7 @@ class DChambre extends React.Component{
                                         <div>
                                             <Iron/>
                                         </div>
-                                        */}
+                                       
                                     </div>
                                 </div>
                             </div>

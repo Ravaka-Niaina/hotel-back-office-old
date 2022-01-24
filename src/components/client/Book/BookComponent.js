@@ -11,12 +11,12 @@ import callAPI from '../../../utility';
 import {EventNote, ExpandMore} from '@mui/icons-material';
 
 const BookComponent = (props) => {
-  const [groupby, setGroupBy] = React.useState('a');
-  const handleGroupByChange = (event, g) => {
-    if(g !== null){
-      setGroupBy(g);
-    }
-  };
+    const [groupby, setGroupBy] = React.useState('a');
+    const handleGroupByChange = (event, g) => {
+        if(g !== null){
+        setGroupBy(g);
+        }
+    };
 
     function changeOpenChangeNbGuest(){
         let temp = {...props.context.state};
@@ -29,9 +29,12 @@ const BookComponent = (props) => {
         currentState.listTypeChambre = res.list;
         currentState.isListTarifDispoReceived = true;
         props.context.setState(currentState);
+        setLoadingFilter(false);
+        props.context.changeOpenFiltre();
     }
 
     function applyFilter(moreData){
+        setLoadingFilter(true);
         if((props.context.state.guests.nbEnfant > 0 || props.context.state.guests.nbAdulte > 0)){
             props.context.handleChange("errFiltre", null);
             const data = {
@@ -40,11 +43,11 @@ const BookComponent = (props) => {
                 dateDebut: props.context.state.dateSejour.debut,
                 dateFin: props.context.state.dateSejour.fin
             }
-            //console.log(data);
             props.context.handleChange("isListTarifDispoReceived", false);
             callAPI('post', '/TCTarif/', data, setResult);
         }
     }
+    const [loadingFilter, setLoadingFilter] = React.useState(false);
   return(
     <div className={styles.Book}>
         <Navbar currentPage={0}/>
@@ -105,39 +108,56 @@ const BookComponent = (props) => {
                         }}
                         onClick={(e) => changeOpenChangeNbGuest()}
                     />
+                    <TextField
+                        fullwidth={false}
+                        size="small"
+                        id="outlined-number"
+                        label="Check-out" 
+                        value={props.context.state.dateSejour.fin}
+                        InputProps={{
+                            startAdornment: <InputAdornment position="start"><EventNote/></InputAdornment>,
+                            endAdornment:<InputAdornment position="end"><ExpandMore/></InputAdornment>,
+                            readOnly: true,
+                        }}
+                        InputLabelProps={{
+                            shrink: true
+                        }}
+                    />
                 </div>
             } />
-            
-            <Button variant="outlined" startIcon={<Search />} onClick={(e) => applyFilter()}>
-                Search
-            </Button>
-        </Box>
-        </Box>
-        <Box sx={{ display: { xs: 'none', md: 'flex'}}} className={styles.resultsFilter}>
-            <Button variant="outlined" startIcon={<ManageSearch />} onClick={(e) => props.context.changeOpenFiltre()}>
-                Filter
-            </Button>
-            <Typography
-                variant="h6"
-                noWrap
-                component="div"
-                sx={{ display: { xs: 'none', sm: 'block' }, fontSize: '16px' }}
-            >
-                Group by :
-            </Typography>
-            <ToggleButtonGroup
+          
+          <Button variant="outlined" startIcon={<Search />} onClick={(e) => applyFilter()}>
+              Search
+          </Button>
+      </Box>
+    </Box>
+    <Box sx={{ display: { xs: 'none', md: 'flex'}}} className={styles.resultsFilter}>
+        <Button variant="outlined" startIcon={<ManageSearch />} onClick={(e) => props.context.changeOpenFiltre()}>
+            Filter
+        </Button>
+        <Typography
+            variant="h6"
+            noWrap
+            component="div"
+            sx={{ display: { xs: 'none', sm: 'block' }, fontSize: '16px' }}
+        >
+            Group by :
+        </Typography>
+        <ToggleButtonGroup
             color="primary"
             exclusive
             value={groupby}
             onChange={handleGroupByChange}
-            >
-            <ToggleButton size="small" value="a">Type chambre</ToggleButton>
-            <ToggleButton size="small" value="b">Plan tarifaires</ToggleButton>
-            </ToggleButtonGroup>
-        </Box>
-        <Filtre context={props.context} applyFilter={applyFilter} />
-    </div>
-    )
-};
+        >
+        <ToggleButton size="small" value="a">Type chambre</ToggleButton>
+        <ToggleButton size="small" value="b">Plan tarifaires</ToggleButton>
+        </ToggleButtonGroup>
+            <div>
+                <span><strong>{ props.context.state.listTypeChambre.length }</strong> matching rooms</span>
+            </div>
+    </Box>
+    <Filtre context={props.context} applyFilter={applyFilter} loadingFilter={loadingFilter} />
+  </div>
+)};
 
 export default BookComponent;
