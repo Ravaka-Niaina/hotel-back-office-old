@@ -115,22 +115,22 @@ function TarifReserves(props){
                     <div class="infos_contact" style={{border:'none'}}>
                             <div class="infos_contact_header">
                                 <h2 class="infos_heading">Informations de contact</h2>
-                                {isEditEnabled ?
+                                {props.isEditEnabled ?
                                 <span class="required-field-indicator-message_container">
                                     <span><span class="required-field-indicator-message_required">*</span> Obligatoire</span>
                                 </span> : null
                                 }
                             </div>
-                            {isEditEnabled ?
+                            {props.isEditEnabled ?
                             <h2 class="infos_heading" style={{fontSize:'1.1rem'}}><span>Pour qui réservez-vous ?</span></h2> : null }
-                            {isEditEnabled ?
+                            {props.isEditEnabled ?
                             <div class="inscription_quick">
                                             <input type="checkbox" id="inscription_quick" name="scales"  checked={isClientPrincipal} onChange={handleClientprincipal}
                                                     />
                                             <label for="scales">Je suis le client principal.</label>
                             </div>
                             : null }
-                             {isEditEnabled ?
+                             {props.isEditEnabled ?
                             <div class="inscription_quick">
                                             <input type="checkbox" id="inscription_quick" name="scales"  checked={!isClientPrincipal} onChange={handleClientprincipal}
                                                     />
@@ -138,7 +138,7 @@ function TarifReserves(props){
                             </div>
                             : null }
                             <Box>
-                                {isEditEnabled ?
+                                {props.isEditEnabled ?
                                     <div>
                                         <Box
                                             component="form"
