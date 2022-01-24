@@ -1,41 +1,11 @@
 import React from "react";
 
-import FormGroup from '@mui/material/FormGroup';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Box from '@mui/material/Box';
-import Checkbox from '@mui/material/Checkbox';
-import FormLabel from '@mui/material/FormLabel';
-import Divider from '@mui/material/Divider';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import Button from '@mui/material/Button';
+import {Stack, FormGroup, FormControl, FormControlLabel, Box, Checkbox, FormLabel, Divider, Radio, RadioGroup, Button, Backdrop, Modal, Fade} from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import SaveIcon from '@mui/icons-material/Save';
-
-import Backdrop from '@mui/material/Backdrop';
-import Modal from '@mui/material/Modal';
-import Fade from '@mui/material/Fade';
-
 import callAPI from '../../../../utility';
-import styles from './filtre.css';
+import styles from '../Book.module.css';
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 'fit-content',
-    bgcolor: 'background.paper',
-    border: '2px solid #E9E9E9 ',
-    boxShadow: 24,
-    position:'absolute',
-    overflow:'scroll',
-    overflowX: 'hidden',
-    height: '100%',
-    maxHeight: '1000px',
-    display:'block'
-};
+
 
 function ListOptCheckBox(props){
     let list = null;
@@ -319,28 +289,29 @@ class Filtre extends React.Component{
                 BackdropProps={{
                 timeout: 500,
                 }}
+                className={styles.filterModal}
             >
                 <Fade in={this.props.context.state.showFiltre}>
-                    <Box sx={style}>
+                    <Box>
                         { this.props.context.state.errFiltre != null ? <p style={{backgroundColor: "red"}}>{this.props.context.state.errFiltre}</p> : null }
-                        <div className="form-content" style = {{marginTop : "20px", backgroundColor: "white", width: "700px"}}>
+                        <div className="form-content" style = {{ backgroundColor: "white", width: "700px"}}>
                             <form>
                                 <FormGroup>
-                                <div><Button style={{width: "fit-content", float: "right"}} onClick={(e) => this.props.context.changeOpenFiltre()}>X</Button></div>
                                     <div class="row">
                                         <ListFiltres filtre={this.state.filtres} handleChange={this.handleChange} handleRadioChange={this.handleRadioChange} />
-                                        <div className="apply" style={{marginLeft: "20px"}}>
-                                            <span>
-                                                <strong>{ this.props.context.state.listTypeChambre.length }</strong><span id='litleLabel'> matching rooms</span>
-                                            </span>
-                                            <Button
-                                                variant="contained"
-                                                onClick={(e) => this.props.applyFilter(this.state.filtres)}
-                                            >
-                                                Apply
-                                            </Button>
-                                        </div>
                                     </div>
+                                    <Stack direction="row" spacing={2}>
+                                        <LoadingButton
+                                            onClick={(e) => this.props.applyFilter(this.state.filtres)}
+                                            loading={this.props.loadingFilter}
+                                            variant="contained"
+                                        >
+                                            Apply
+                                        </LoadingButton>
+                                        <Button size="small" variant="contained" onClick={(e) => this.props.context.changeOpenFiltre()}>
+                                            Close
+                                        </Button>
+                                    </Stack>
                                 </FormGroup>
                             </form>
                         </div>
