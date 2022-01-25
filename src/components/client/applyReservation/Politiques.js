@@ -44,10 +44,13 @@ function Politiques(props){
         <div>
             {/* {politiques} */}
             <div class="details_politique">
-                <p>Votre carte sera débité du montant total de la réservation le jour de votre arrivée le JJ/MM/AN </p>
-                <p>Vous pouvez annuler votre réservation gratuitement avant le JJ/MM/AN à Midi </p>
-                <p> En cas d’annulation après le JJ/MM/AN à Midi, votre carte sera débité de 20%</p>
-                <p> En cas d’annulation après le JJ/MM/AN à Midi, votre carte sera débité de 50%</p>
+                <p>Votre carte sera débité du montant total de la réservation le jour de votre arrivée le JJ/MM/AN. </p>
+                <p>Vous pouvez annuler votre réservation gratuitement avant le JJ/MM/AN à Midi. </p>
+                <p> En cas d’annulation après le JJ/MM/AN à Midi, votre carte sera débité de 20%.</p>
+                <p> En cas d’annulation après le JJ/MM/AN à Midi, votre carte sera débité de 50%.</p>
+            </div>
+            <div class="prix_reservation">
+
             </div>
         </div>
     );

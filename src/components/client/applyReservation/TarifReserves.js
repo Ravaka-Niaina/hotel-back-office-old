@@ -203,7 +203,15 @@ function TarifReserves(props){
                         <hr style={{marginLeft:'0.8em'}}></hr>    
                         <h2 class="infos_heading">Politiques d'annulation et paiement:</h2>
                         <Politiques politiques={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTarif.infoPolitique} />
-                        <hr style={{marginLeft:'0.8em'}}></hr> 
+                        <div class="prix_tarif">
+                            <p class="prix">Prix:</p>
+                            <p class="prix">{tarif.toPay.afterProm} € </p>
+                        </div>
+                        <button style={{marginLeft:'0.8em'}} class="btn button_btn button_secondary button_sm" datatest="Button"><span>Annuler</span></button>
+                        
+                        <hr style={{marginLeft:'0.6em'}}></hr> 
+                        
+                        
                     </div>
 
                 </div>

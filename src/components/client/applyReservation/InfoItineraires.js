@@ -73,8 +73,8 @@ function InfoItineraires(props){
             </Table>
         </TableContainer>
         */}
-        <h3>Paiements</h3>
-        <TableContainer component={Paper} sx={{ width: 400 }}>
+        
+        {/* <TableContainer component={Paper} sx={{ width: 400 }}>
             <Table aria-label="customized table">
                 <TableHead>
                 <TableRow>
@@ -95,7 +95,7 @@ function InfoItineraires(props){
                     </StyledTableRow>
                 </TableBody>
             </Table>
-        </TableContainer>
+        </TableContainer> */}
         </div>
     );
 }

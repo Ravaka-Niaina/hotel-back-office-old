@@ -320,7 +320,20 @@ function ApplyReservation(props){
                             openLoad={openLoad}
                             setOpenLoad={setOpenLoad}
                             isEditEnabled={isEditEnabled} />
-                        <Total toPay={reservation.toPay} />
+                        <div class="infos_contact">
+                            <h2 class="infos_heading">Paiements</h2>
+                            <Total toPay={reservation.toPay} />
+                        </div>
+                        <div class="infos_contact">
+                            <h2 class="infos_heading">Confirmation</h2>
+                            <div class="inscription_quick">
+                                            <input type="checkbox" id="inscription_quick" name="scales" 
+                                                    checked={isConnectionShowing} onChange={quickConnection}/>
+                                            <label for="scales" style={{fontWeight:'normal'}}>* J'accepte la politique de confidentialité.</label>
+                                            
+                            </div>
+                            <p style={{marginLeft:'0.8rem',fontSize:14}}>En effectuant cette réservation, j'accepte les conditions de réservation.</p>
+                        </div>
                         <Stack direction="row" spacing={2}>
                             <Button variant="contained">Imprimer</Button>
                             <Button variant="contained">Partager</Button>
