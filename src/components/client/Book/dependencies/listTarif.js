@@ -10,6 +10,7 @@ import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
+import numeroConfirmation from './numeroConfirmation.js';
 
 const style = {
     position: 'absolute',
@@ -34,6 +35,19 @@ function getNDigits(number, digit){
     return digit;
 }
 
+function getDateNotEspace(date){
+    date = new Date(date);
+    let year = date.getFullYear()+"";
+    let month = getNDigits(2, date.getMonth() + 1);
+    let day = getNDigits(2, date.getDate());
+    let annee = '';
+    for (let i = year.length-1; i > 1 ; i--){
+        annee = annee+year[i];   
+    }
+    date = annee  + month  + day;
+    return date;
+}
+
 function getDate(date){
     date = new Date(date);
     let year = date.getFullYear();
@@ -53,7 +67,23 @@ function ListTarif(props){
         }
     }
 
-    function addReservation(e ,id, nom, idTypeChambre, nbPers){
+    function NumeroIntineraire (random , nameHotel ,TChambre){
+        let hotel = '';
+        const number = 3;
+        const min = 1;
+        const max = 1000000;
+        const nameTC = TChambre.split(" ");
+        let rand = min + Math.random() * (max - min);
+        rand = Number.parseInt(rand);
+        let now = new Date();
+        let date = getDateNotEspace(now);
+        for(let i = 0; i < number ; i++){
+            hotel = hotel + nameHotel[i] ;
+        }
+        return random = date+hotel+(random + rand)+nameTC[0][0] + nameTC[1][0];
+    }
+
+    function addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre){
         if(props.context.state.itineraires.length === 0){
             let temp = {...props.context.state};
             temp.err = "Veuillez d'abord choisir une date de sejour";
@@ -70,6 +100,11 @@ function ListTarif(props){
                     fin: itineraires[itineraires.length - 1].tarifReserves[lastTarif].dateSejour.fin
                 };
             }
+            //numero itineraire
+            const Random = NumeroIntineraire(props.context.state.random , props.context.state.nameHotel,TChambre);
+            //numero confirmation
+            const numeroConfirm = numeroConfirmation(0,props.context.state.nameHotel, TChambre);
+            console.log(numeroConfirm);
             itineraires[lastItineraire].tarifReserves.push({
                 idTarif: id, 
                 dateSejour: dateSejour,
@@ -78,12 +113,11 @@ function ListTarif(props){
                 idTypeChambre : idTypeChambre,
                 nbPers: nbPers
             });
-            console.log(itineraires);
             axios({
                 method: 'post',
                 url: process.env.REACT_APP_BACK_URL + '/reservation/insert',
                 withCredentials: true,
-                data: {itineraires: itineraires}
+                data: {itineraires: itineraires , numeroIntineraire : Random}
             })
             .then(res => {
                 setReservationEnCours(res.data)})
@@ -130,7 +164,7 @@ function ListTarif(props){
                                                 </div>
                                                 <div className={styles.bookNow}>
                                                     <Button variant="contained"
-                                                        onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre, version.nbPers)}
+                                                        onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre, version.nbPers , props.nameTC)}
                                                         endIcon={<AddIcon/>}
                                                         className="bookNow"
                                                     >

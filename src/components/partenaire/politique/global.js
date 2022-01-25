@@ -14,6 +14,7 @@ import Navbar from '../Navbar/Navbar.js'
 import { useParams, useHistory, Link } from 'react-router-dom'
 import "./global.css";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
 
 function Global(){
     const [datePrice , setDatePrice] = useState([{ date:"" , pourcentage: ""}]);
@@ -420,7 +421,7 @@ function Global(){
                                             </> 
                                             
                                         }
-                                            <Link to ="/politique/list" style={{textDecoration:'none'}}>
+                                            <Link to ="/back/politique/list" style={{textDecoration:'none'}}>
                                                 <Button 
                                                 variant="outlined" 
                                                 id='btn2' 
@@ -431,6 +432,7 @@ function Global(){
                                     </div> <br/>
                                               
                         </div>
+                        <SkelettonForm />
             </>
         );
     

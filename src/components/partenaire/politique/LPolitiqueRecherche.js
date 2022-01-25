@@ -23,17 +23,17 @@ import  Navbar  from "../Navbar/Navbar";
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-
+import InputAdornment from '@mui/material/InputAdornment';
 import EditIcon from '@mui/icons-material/Edit';
 import SearchIcon from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
-import Skeleton from '../SkeletonListe/skeleton';
-import FooterList from '../common/List/FooterList.js';
-import callAPI from '../utility.js';
-import ValidationSuppression from "../common/List/ValidationSuppression.js";
+import Skeleton from '../../../SkeletonListe/skeleton';
+import FooterList from '../../common/List/FooterList.js';
+import callAPI from '../../../utility.js';
+import ValidationSuppression from "../../common/List/ValidationSuppression.js";
 const moment = require('moment');
 
 function DatePrice(props){
@@ -285,27 +285,34 @@ export default function Recherche(props){
     let rows = [];
     return(
         <>
-            <Navbar currentPage={1}/><br/>
-            <Box sx={{ width: '100%', padding :"50px" }}>
-            <Link to={props.btnInsert.urlRedirect}  style={{float : 'left'}}>
-                <Button 
-                variant="contained" 
-                endIcon={<AddIcon style={{color:'white'}}/>}
-                style={{textDecoration:'none'}}>
-                    <span style={{color:'white'}}>{props.btnInsert.label}</span>
-                </Button>
-            </Link> 
-            <div style={{float : 'right'}}>  
-                <TextField 
-                id="outlined-size-small"
-                size="small" label ="Search"
-                name="Search"
-                type="text"
-                value={toSearch}
-                onChange={(e) => setToSearch(e.target.value)}
-                />
-                <Button onClick={(e) => rechercher(1)}><SearchIcon style={{color:"blue"}} /></Button>
-            </div> <br/><br/>
+            <Navbar  currentPage={props.currentPage}/><br/>
+              <Box sx={{ width: '100%', padding :"50px" }} >
+                    <Link to={props.btnInsert.urlRedirect}  style={{float : 'left'}}>
+                        <Button 
+                            variant="contained" 
+                            endIcon={<AddIcon style={{color:'white'}}/>}
+                            style={{textDecoration:'none'}}>
+                            <span style={{color:'white'}}>{props.btnInsert.label}</span>
+                        </Button>
+                    </Link> 
+                    <div style={{float : 'right'}}>  
+                        <Box sx={{ display: { xs: 'none', md: 'flex'  }, gap : 1,paddingLeft :"50px" }}>
+                            <TextField 
+                                id="outlined-size-small"
+                                size="small" label ="Search"
+                                name="Search"
+                                type="text"
+                                value={toSearch}
+                                onChange={(e) => setToSearch(e.target.value)}
+                                InputProps={{ endAdornment: 
+                                <InputAdornment position="end">
+                                    <SearchIcon style={{color:"blue"}} 
+                                        onClick={(e) => rechercher(1)} />
+                                </InputAdornment>
+                                }}
+                            />
+                        </Box> 
+                        </div><br/><br/>
 
             {
                 isLoading ? <Paper sx={{ width: '100%', mb: 2 }}><Skeleton /></Paper> :<>
