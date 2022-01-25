@@ -58,7 +58,15 @@ const BaeCalendar = ({ theme, applyFilter, activeDates, onDateSelect, context, c
 
   function populatePrix(res){
     if(res.status === 200){
-      console.log(res);
+      if(res.checkIn && res.checkOut){
+        let checkIn = new Date(res.checkIn);
+        let checkOut = new Date(res.checkOut);
+        setBornes({debut: checkIn, fin: checkOut, isDebut: true});
+        let firstMonth = new Date(res.result[0].month);
+        let secondMonth = new Date(res.result[1].month);
+        setSelectDate(firstMonth);
+        setMonthLater(secondMonth);
+      }
       setPrix(res.result);
     }
   }
