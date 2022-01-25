@@ -15,3 +15,8 @@
     color: #587817;
     font-weight: 700;
 }
+.input-field-carte label{
+    color: black !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+}

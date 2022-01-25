@@ -60,6 +60,7 @@ function ApplyReservation(props){
     const [affilie, setAffilie] = useState([]);
     const [isEditEnabled, setIsEditEnabled] = useState(false);
     const [isConnectionShowing, setIsConnectionShowing] = useState(false);
+    const [isConditionAccepted, setIsConditionAccepted] = useState(false);
 
     function handleResponse(res){
         console.log(res);
@@ -156,6 +157,9 @@ function ApplyReservation(props){
     }
     function quickConnection(event){
         setIsConnectionShowing(!isConnectionShowing);
+    }
+    function conditionAccepted(event){
+        setIsConditionAccepted(!isConditionAccepted);
     }
 
     return (
@@ -330,24 +334,33 @@ function ApplyReservation(props){
                         <div class="infos_contact">
                             <h2 class="infos_heading">Confirmation</h2>
                             <div class="inscription_quick">
-                                            <input type="checkbox" id="inscription_quick" name="scales" 
-                                                    checked={isConnectionShowing} onChange={quickConnection}/>
+                                            <input type="checkbox" id="conditions" name="scales" 
+                                                    checked={isConditionAccepted} onChange={conditionAccepted}/>
                                             <label for="scales" style={{fontWeight:'normal'}}>* J'accepte la politique de confidentialité.</label>
                                             
                             </div>
                             <p style={{marginLeft:'0.8rem',fontSize:14}}>En effectuant cette réservation, j'accepte les conditions de réservation.</p>
                         </div>
-                        <Stack direction="row" spacing={2}>
+                        {/* <Stack direction="row" spacing={2}>
                             <Button variant="contained">Imprimer</Button>
                             <Button variant="contained">Partager</Button>
                             <Button variant="contained">Ajouter au calendrier</Button>
-                        </Stack>
+                        </Stack> */}
                         <br />
-                        <Stack direction="row" spacing={2}>
-                            <Button variant="contained" onClick={(e) => setIsEditEnabled(!isEditEnabled)}>{isEditEnabled ? "Désactiver modification réservation" : "Modifier réservation"}</Button>
-                            <Button variant="contained">Annuler réservation</Button>
-                            <Button variant="contained" onClick={(e) => validerReservation()}>Valider réservation</Button>
-                        </Stack>
+                        <div style={{display:'flex',flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between'}}>
+                            <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" variant="contained" onClick={(e) => setIsEditEnabled(!isEditEnabled)}>{isEditEnabled ? "Désactiver modification réservation" : "Modifier réservation"}</button>
+                            <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" variant="contained">Annuler réservation</button>
+                         </div>
+                        
+                        {
+                            isConditionAccepted ?
+                            <div style={{display:'flex',flexDirection:'row',justifyContent:'flex-end'}}>
+                                <button enabled={isConditionAccepted} style={{marginTop:20,minWidth:250}}  class="btn button_btn button_pink button_sm" variant="contained" onClick={(e) => validerReservation()}>Valider réservation</button>
+                       
+                            </div> : null
+                        }
+                         
+                        
                     </Box>
                 </div>
                 : <Stack sx={{ width: '100%' }} spacing={2}>

@@ -35,7 +35,7 @@ function PaiementField(props){
                 <img src={process.env.PUBLIC_URL + '/EuroCard.png'} />
             </div>
             <div >
-                <div class="input-field">
+                <div class="input-field input-field-carte">
                     <input type="text" value={reservateur.numeroCarte}
                 onChange={(e) => handleChangeInfoReservateur("numeroCarte", e.target.value)} onBlur={(e) => handleEmptyInfoReservateur("numeroCarte")} required />
                     <label>Numéro de carte <span class="red_required">*</span></label>
@@ -48,7 +48,7 @@ function PaiementField(props){
                     }
                 </div>
                 <div style={{display:'flex',flexDirection:'row'}}>
-                    <div class="input-field">
+                    <div class="input-field input-field-carte">
                             <input type="text" value={reservateur.expirationCarte} placeholder='MM/YY'
                         onChange={(e) => handleChangeInfoReservateur("expirationCarte", e.target.value)} onBlur={(e) => handleEmptyInfoReservateur("expirationCarte")} required />
                             <label>Date d'expiration (MM/AA) <span class="red_required">*</span></label>
@@ -60,7 +60,7 @@ function PaiementField(props){
                                 :null
                             }
                     </div>
-                    <div class="input-field" style={{width:150,marginLeft:10}}>
+                    <div class="input-field input-field-carte" style={{width:150,marginLeft:10}}>
                             <input type="text" value={reservateur.ccvCarte}
                         onChange={(e) => handleChangeInfoReservateur("ccvCarte", e.target.value)} onBlur={(e) => handleEmptyInfoReservateur("ccvCarte")} required />
                             <label>CCV <span class="red_required">*</span></label>
@@ -73,7 +73,7 @@ function PaiementField(props){
                             }
                     </div>
                 </div>
-                <div class="input-field">
+                <div class="input-field input-field-carte">
                             <input type="text" value={reservateur.nomCarte}
                         onChange={(e) => handleChangeInfoReservateur("nomCarte", e.target.value)} onBlur={(e) => handleEmptyInfoReservateur("nomCarte")} required />
                             <label>Nom figurant sur la carte  <span class="red_required">*</span></label>

@@ -2,7 +2,7 @@
     line-height: 1rem;
     padding: 0.75rem 1.25rem;
 }
-.button_secondary {
+.button_secondary ,.button_pink {
     font-size: 1rem;
     font-family: 'Futura Lt BT', sans-serif;
     font-style: normal;
@@ -17,6 +17,11 @@
     background: #3399cc;
     color: #ffffff;
     
+}
+.button_pink:hover{
+  background: #f69999;
+  color: #ffffff;
+  
 }
 .button_btn {
     cursor: pointer;
