@@ -350,7 +350,7 @@ setListTypeChambre(res){
         return(
 <div className="block">
 <form>
-<h4 className='entete'>Ajouter une nouvelle promotion</h4>
+<h4 className='entete'>Modifier promotion</h4>
 <CustomError errors={this.state.errors} />
   <div className="block1">
   <h6>Détails de la promotion</h6>

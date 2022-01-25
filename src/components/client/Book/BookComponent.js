@@ -11,12 +11,12 @@ import callAPI from '../../../utility';
 import {EventNote, ExpandMore} from '@mui/icons-material';
 
 const BookComponent = (props) => {
-  const [groupby, setGroupBy] = React.useState('a');
-  const handleGroupByChange = (event, g) => {
-    if(g !== null){
-      setGroupBy(g);
-    }
-  };
+    const [groupby, setGroupBy] = React.useState('a');
+    const handleGroupByChange = (event, g) => {
+        if(g !== null){
+        setGroupBy(g);
+        }
+    };
 
     function changeOpenChangeNbGuest(){
         let temp = {...props.context.state};
@@ -29,9 +29,12 @@ const BookComponent = (props) => {
         currentState.listTypeChambre = res.list;
         currentState.isListTarifDispoReceived = true;
         props.context.setState(currentState);
+        setLoadingFilter(false);
+        props.context.changeOpenFiltre();
     }
 
     function applyFilter(moreData){
+        setLoadingFilter(true);
         if((props.context.state.guests.nbEnfant > 0 || props.context.state.guests.nbAdulte > 0)){
             props.context.handleChange("errFiltre", null);
             const data = {
@@ -40,33 +43,70 @@ const BookComponent = (props) => {
                 dateDebut: props.context.state.dateSejour.debut,
                 dateFin: props.context.state.dateSejour.fin
             }
-            //console.log(data);
             props.context.handleChange("isListTarifDispoReceived", false);
             callAPI('post', '/TCTarif/', data, setResult);
         }
     }
+    const [loadingFilter, setLoadingFilter] = React.useState(false);
   return(
-  <div className={styles.Book}>
-    <Navbar currentPage={0}/>
-    <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection:'column' }} className={styles.filter}>
-      <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
-          <BaeCalendar context = {props.context} applyFilter={applyFilter} dateSejour={props.context.state.dateSejour} check={
-            <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection:'column' }} className={styles.filter2}>
-                <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
+    <div className={styles.Book}>
+        <Navbar currentPage={0}/>
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection:'column' }} className={styles.filter}>
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
+            <BaeCalendar context = {props.context} applyFilter={applyFilter} dateSejour={props.context.state.dateSejour} check={
+                <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection:'column' }} className={styles.filter2}>
+                    <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
+                        <TextField
+                            fullwidth={false}
+                            size="small"
+                            id="outlined-number"
+                            label="Check-in"
+                            value={props.context.state.dateSejour.debut}
+                            InputProps={{
+                                startAdornment: <InputAdornment position="start"><EventNote/></InputAdornment>,
+                                endAdornment:<InputAdornment position="end"><ExpandMore/></InputAdornment>,
+                                readOnly: true,
+                            }}
+                            InputLabelProps={{
+                                shrink: true
+                            }}
+                        />
+                        <TextField
+                            fullwidth={false}
+                            size="small"
+                            id="outlined-number"
+                            label="Check-out" 
+                            value={props.context.state.dateSejour.fin}
+                            InputProps={{
+                                startAdornment: <InputAdornment position="start"><EventNote/></InputAdornment>,
+                                endAdornment:<InputAdornment position="end"><ExpandMore/></InputAdornment>,
+                                readOnly: true,
+                            }}
+                            InputLabelProps={{
+                                shrink: true
+                            }}
+                        />
+                    </Box>
+                </Box>} 
+            />
+            
+            <Guest context = {props.context} applyFilter={applyFilter} occupancy={
+                <div>
                     <TextField
                         fullwidth={false}
-                        size="small"
+                        size="small" 
                         id="outlined-number"
-                        label="Check-in"
-                        value={props.context.state.dateSejour.debut}
+                        label="Occupancy"
+                        value={props.context.state.guests.nbAdulte + " adults - " + props.context.state.guests.nbEnfant + " children"}
                         InputProps={{
-                            startAdornment: <InputAdornment position="start"><EventNote/></InputAdornment>,
-                            endAdornment:<InputAdornment position="end"><ExpandMore/></InputAdornment>,
+                            startAdornment: <InputAdornment position="start"><PersonOutline/></InputAdornment>,
+                            endAdornment:<InputAdornment position="end"><ArrowDropDown/></InputAdornment>,
                             readOnly: true,
                         }}
                         InputLabelProps={{
                             shrink: true
                         }}
+                        onClick={(e) => changeOpenChangeNbGuest()}
                     />
                     <TextField
                         fullwidth={false}
@@ -83,30 +123,8 @@ const BookComponent = (props) => {
                             shrink: true
                         }}
                     />
-                </Box>
-            </Box>} 
-          />
-        
-          <Guest context = {props.context} applyFilter={applyFilter} occupancy={
-              <div>
-                <TextField
-                    fullwidth={false}
-                    size="small" 
-                    id="outlined-number"
-                    label="Occupancy"
-                    value={props.context.state.guests.nbAdulte + " adults - " + props.context.state.guests.nbEnfant + " children"}
-                    InputProps={{
-                        startAdornment: <InputAdornment position="start"><PersonOutline/></InputAdornment>,
-                        endAdornment:<InputAdornment position="end"><ArrowDropDown/></InputAdornment>,
-                        readOnly: true,
-                    }}
-                    InputLabelProps={{
-                        shrink: true
-                    }}
-                    onClick={(e) => changeOpenChangeNbGuest()}
-                />
-              </div>
-          } />
+                </div>
+            } />
           
           <Button variant="outlined" startIcon={<Search />} onClick={(e) => applyFilter()}>
               Search
@@ -126,16 +144,19 @@ const BookComponent = (props) => {
             Group by :
         </Typography>
         <ToggleButtonGroup
-          color="primary"
-          exclusive
-          value={groupby}
-          onChange={handleGroupByChange}
+            color="primary"
+            exclusive
+            value={groupby}
+            onChange={handleGroupByChange}
         >
-          <ToggleButton size="small" value="a">Type chambre</ToggleButton>
-          <ToggleButton size="small" value="b">Plan tarifaires</ToggleButton>
+        <ToggleButton size="small" value="a">Type chambre</ToggleButton>
+        <ToggleButton size="small" value="b">Plan tarifaires</ToggleButton>
         </ToggleButtonGroup>
+            <div>
+                <span><strong>{ props.context.state.listTypeChambre.length }</strong> matching rooms</span>
+            </div>
     </Box>
-    <Filtre context={props.context} applyFilter={applyFilter} />
+    <Filtre context={props.context} applyFilter={applyFilter} loadingFilter={loadingFilter} />
   </div>
 )};
 

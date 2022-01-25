@@ -73,7 +73,6 @@ function Reservations(props){
         reservation = props.context.state.itineraires[props.indexItineraire].tarifReserves.map(tarif => {
             i++;
             const u = i;
-            console.log(tarif);
             if(tarif.etat == 1 || tarif.etat == undefined){
                 return (
                         <Card className={styles.stay}>

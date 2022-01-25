@@ -9,7 +9,6 @@ import { monthsFull } from '../constants/dates';
 
 const MonthIndicator = ({ selectDate, setSelectDate, monthLater, setMonthLater, getPrix }) => {
   const changeDate = (date) => {
-    console.log("azo = " + date);
     let firstMonth = new Date(date.getFullYear(), date.getMonth(), 1);
     const secondMonth = new Date(firstMonth.getFullYear(), firstMonth.getMonth() + 2, 0);
     setSelectDate(firstMonth);

@@ -1,4 +1,4 @@
-import React from "react";
+import  React,{useEffect}  from 'react';
 import { useHistory } from 'react-router-dom';
 import  Navbar  from "../Navbar/Navbar";
 import Paper from '@mui/material/Paper';
@@ -9,6 +9,8 @@ import Button from '@mui/material/Button';
 
 import styles from './InsertDroitAcces.module.css';
 import callAPI from '../../../utility.js';
+import {session} from '../../common/utilitySession.js';
+import Login from '../../common/Authentification/Login.js';
 import NotEnoughAccessRight from '../../common/NotEnoughAccessRight.js';
 
 const InsertDroitAcces = () => {
@@ -17,6 +19,17 @@ const InsertDroitAcces = () => {
     const [nom, setNom] = React.useState("");
     const [errorNom, setErrorNom] = React.useState(null);
     const history = useHistory();
+
+    const isConnected = session.getInstance().isConnected();
+    const hasAR = session.getInstance().hasOneOfTheseAccessRights(["superAdmin"]);
+    useEffect(() => {
+        if(!isConnected){
+            return(<Login urlRedirect={window.location.href} />);
+        }
+        if(!hasAR){
+            return(<NotEnoughAccessRight />);
+        }
+    }, []);
 
     const interpretResponse = (data) => {
         if(data.status === 401){

@@ -1,8 +1,0 @@
-.loadingDelete > div{
-    width: fit-content;
-    margin: 0 auto;
-}
-
-.loadingDelete > div:first-child{
-    margin-bottom: 10px;
-}

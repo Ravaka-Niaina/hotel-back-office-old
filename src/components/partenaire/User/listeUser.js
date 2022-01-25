@@ -27,11 +27,11 @@ const fieldsToPrint = [
 const nbContent = 5;
 const urlEdit = "/back/user/details/";
 const rowsPerPageOptions = [5, 10, 20];
-const accessRightToDelete = ["superAdmin", "deleteUser"];
+const accessRightToDelete = ["superAdmin", "deletePartenaire"];
 const accessRightToViewDetails = ["superAdmin", "getUser"];
 
 const ListeUser = () => {
-    const hasAR = session.getInstance().hasOneOfTheseAccessRights(["insertTypeChambre", "superAdmin"]);
+    const hasAR = session.getInstance().hasOneOfTheseAccessRights(["getPartenaire", "superAdmin"]);
     if(!session.getInstance().isConnected()){
         return(<Login urlRedirect={window.location.href} />);
     }else if(!hasAR){
