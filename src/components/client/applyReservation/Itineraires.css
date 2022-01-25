@@ -45,3 +45,12 @@
     font-weight: bold;
     line-height: 1.3;
 }
+.box_reservation .politique_annulation{
+    margin-left: 0.8rem;
+    margin-bottom: 4rem;
+}
+.box_reservation .politique_annulation .details_politique{
+    margin-left: 0.8rem;
+    line-height: 0.5rem;
+    font-family: 'Futura Lt BT', serif;
+}

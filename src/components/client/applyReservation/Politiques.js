@@ -36,12 +36,19 @@ function Politiques(props){
                 </TableContainer>
                 <br/>
             </div>
+           
         );
+       
     }
     return(
         <div>
-            <h3>Politiques d'annulation et paiement</h3>
-            {politiques}
+            {/* {politiques} */}
+            <div class="details_politique">
+                <p>Votre carte sera débité du montant total de la réservation le jour de votre arrivée le JJ/MM/AN </p>
+                <p>Vous pouvez annuler votre réservation gratuitement avant le JJ/MM/AN à Midi </p>
+                <p> En cas d’annulation après le JJ/MM/AN à Midi, votre carte sera débité de 20%</p>
+                <p> En cas d’annulation après le JJ/MM/AN à Midi, votre carte sera débité de 50%</p>
+            </div>
         </div>
     );
 }

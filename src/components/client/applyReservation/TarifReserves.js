@@ -198,7 +198,13 @@ function TarifReserves(props){
                     </div>
 
                     </div>
-                    <div class="politique_annulation"></div>
+                    
+                    <div class="politique_annulation">
+                        <hr style={{marginLeft:'0.8em'}}></hr>    
+                        <h2 class="infos_heading">Politiques d'annulation et paiement:</h2>
+                        <Politiques politiques={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTarif.infoPolitique} />
+                        <hr style={{marginLeft:'0.8em'}}></hr> 
+                    </div>
 
                 </div>
             );
