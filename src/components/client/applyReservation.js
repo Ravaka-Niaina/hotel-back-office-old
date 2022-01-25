@@ -20,6 +20,7 @@ import {Champs} from '../common/commonAssets.js';
 import FormControlLabel from '@mui/material/FormControlLabel';
     import {setValue} from '../../../src/utility2.js';
 import './confirmation_reservation.css';
+import PaiementField from './applyReservation/PaiementField';
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
   
@@ -50,9 +51,9 @@ function ApplyReservation(props){
     const history = useHistory();
     const [reservation, setReservation] = useState(null);
     const { _id } = useParams();
-    const [reservateur, setReservateur] = useState({prenom:"",nom: "", email: "", tel: "", messageParticulier: ""});
+    const [reservateur, setReservateur] = useState({prenom:"",nom: "", email: "", tel: "", messageParticulier: "",numeroCarte:"",expirationCarte:"",ccvCarte:"",nomCarte:""});
     const [openLoad, setOpenLoad] = useState(true);
-    const [errorEmpty, setErrorEmpty] = useState({prenom:false,nom: false, email: false, tel: false, messageParticulier: false});
+    const [errorEmpty, setErrorEmpty] = useState({prenom:false,nom: false, email: false, tel: false, messageParticulier: false,numeroCarte:false,expirationCarte:false,ccvCarte:false,nomCarte:false,});
 
     const [alertSuccess, setAlertSuccess] = useState(null);
     const [alertError, setAlertError] = useState(null);
@@ -322,7 +323,9 @@ function ApplyReservation(props){
                             isEditEnabled={isEditEnabled} />
                         <div class="infos_contact">
                             <h2 class="infos_heading">Paiements</h2>
+                            <PaiementField reservation={reservation}/>
                             <Total toPay={reservation.toPay} />
+                            
                         </div>
                         <div class="infos_contact">
                             <h2 class="infos_heading">Confirmation</h2>

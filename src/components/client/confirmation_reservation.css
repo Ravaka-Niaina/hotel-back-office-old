@@ -150,6 +150,12 @@ input:valid ~ label{
   font-size: 11px;
   
 }
+input::placeholder{
+  opacity: 0;
+}
+input:focus::placeholder{
+  opacity: 1;
+}
 .infos_mail{
 
     font-size: 11px;

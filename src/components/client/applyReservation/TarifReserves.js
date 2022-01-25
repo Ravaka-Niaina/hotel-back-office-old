@@ -70,8 +70,8 @@ function TarifReserves(props){
             const u = i;
            // console.log("u = " + u);
             const tarif = props.reservation.itineraires[props.indexItineraire].tarifReserves[i];
-            console.log("tarifs");
-            console.log(tarif);
+            // console.log("tarifs");
+            // console.log(tarif);
             const datedebut = new Date(tarif.dateSejour.debut);
             const datefin = new Date(tarif.dateSejour.fin);
             const months = ['jan','fev','mar', 'av','mai','juin','juil','août','sept','oct','nov','déc'];
