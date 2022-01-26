@@ -13,6 +13,7 @@ function InputContact(props){
         if(!isClientPrincipal){
            
             setReservateur(props.reservateur);
+            
         }else{
             setReservateur({prenom:"",nom: "", email: "", tel: "", messageParticulier: ""});
         }

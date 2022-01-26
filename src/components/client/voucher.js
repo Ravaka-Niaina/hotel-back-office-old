@@ -2,6 +2,9 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import callAPI from '../../utility';
+import './voucher/voucher.css';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {  faCalendar, faCheckCircle ,faPrint, faShare, faShareAlt} from '@fortawesome/free-solid-svg-icons';
 function Voucher(props){
     const [reservation, setReservation] = useState(null);
     const { _id } = useParams();
@@ -61,9 +64,56 @@ function Voucher(props){
 
 
     return(
-        <div>
+        <div class="voucher_container">
             
-            this is voucher
+            <div class="voucher_infos">
+                <div class="voucher_border voucher_bravo">
+                    <div>
+                    <FontAwesomeIcon icon={faCheckCircle} color="#587817" size="3x" />
+                    </div>
+                    <div style={{marginLeft:10}}>
+                        <p style={{color:'#587817'}}>
+                            Bravo ! Vos chambres sont bien réservées.
+                        </p>
+                        <p>
+                            Rendez-vous sur votre messagerie {reservateur.email} pour voir l'e-mail de confirmation.
+                        </p>
+                    </div>
+
+                </div>
+                <div class="voucher_numero">
+
+                </div>
+                <div class="voucher_details">
+                    <div class="voucher_politiques">
+                    </div>
+                </div>
+                
+            </div>
+            <div class="voucher_pannel">
+                <div class="voucher_link_container">
+                    <FontAwesomeIcon icon={faPrint} color="#7c612b" size="0.5x" />
+                    <button class="voucher_link" datatest="Button"><span>imprimer cette page</span></button>
+                </div>
+                <div class="voucher_link_container">
+                    <FontAwesomeIcon icon={faCalendar} color="#7c612b" size="0.5x" />
+                    <button class="voucher_link" datatest="Button"><span>ajouter au calendrier</span></button>
+                </div>
+                <div class="voucher_link_container">
+                    <FontAwesomeIcon icon={faShareAlt} color="#7c612b" size="0.5x" />
+                    <button class="voucher_link" datatest="Button"><span>partager</span></button>
+                </div>
+                <hr style={{marginLeft:'0.1em'}}></hr>
+
+                <div>
+                    <p><strong><span>Modification des réservations</span></strong></p>
+                    <button   class="button_pannel" >Modifier la réservation</button>
+                    <p style={{marginTop:'1rem'}}><strong><span>Annulations</span></strong></p>
+                    <button   class="button_pannel" >Annuler l'itinéraire</button>
+                </div>
+
+                
+            </div>
         </div>
     );
 }
