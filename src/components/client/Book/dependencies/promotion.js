@@ -4,26 +4,22 @@ import styles from '../Book.module.css';
 import {Avatar, CardHeader, Card} from '@mui/material';
 import {Visibility} from '@mui/icons-material';
 
+import { getDate } from '../../../../utility/utilityDate.js';
+
 function Promotions(props){
     let promo = "Aucun promotion pour le moment";
-    if(props.context != null && props.context != null){
-        promo = props.context.map(prom => {
+    if(props.tab != null){
+        promo = props.tab.map(prom => {
             return(
-                // <div>
-                //     <li>  <strong>nom :</strong> {prom.nom}</li>
-                //     <li><strong>Remise : </strong> {prom.remiseEuro}</li>
-                //     <li style={{fontSize : "12px"}}> <strong>Sejour : </strong> {prom.dateDebutS} - {prom.dateFinS}</li>
-                // </div>
-
                 <Card className={styles.promotion}>
                 <CardHeader
                     avatar={
                     <Avatar aria-label="promotion">
-                        -50% {/* {prom.remiseEuro} */}
+                        {"-" + prom.remise + (prom.isRemiseEuro ? " EUR" : "%")}
                     </Avatar>
                     }
                     title={prom.nom}
-                    subheader={prom.dateDebutS + " - " + prom.dateFinS}
+                    subheader={getDate(prom.dateDebutS) + " - " + getDate(prom.dateFinS)}
                 />
                 </Card>
             )
@@ -47,7 +43,7 @@ function Promotion (props){
 
     return (
         <div>
-             <Promotions context = {promotion}/>
+             <Promotions tab = {promotion}/>
         </div>
 
     );

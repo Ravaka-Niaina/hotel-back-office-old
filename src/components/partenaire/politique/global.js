@@ -205,10 +205,7 @@ function Global(){
     useEffect(() => {
         if(_id != null){
             callAPI('get', '/politique/detail/'+ _id, {}, setListPolitiqueAnnulation);
-            console.log("modification")
-        }else(
-            console.log("insertion")
-        )
+        }
         
     }, [_id])
 

@@ -21,6 +21,8 @@ import { Link } from 'react-router-dom';
 import Drop from "./drop.js";
 import { useHistory } from 'react-router-dom';
 
+import callAPI from '../../../utility.js';
+
 import {session} from '../../common/utilitySession.js';
 import NotEnoughAccessRight from '../../common/NotEnoughAccessRight';
 import Login from '../../common/Authentification/Login.js';
@@ -40,6 +42,7 @@ function Navbar(props) {
     const [showPolitique, setShowPolitique] = React.useState(true);
     const [showHistorique, setShowHistorique] = React.useState(true);
     const [showPartenaire, setShowPartenaire] = React.useState(true);
+    const [showDroitAcces, setShowDroitAcces] = React.useState(true);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -62,7 +65,9 @@ function Navbar(props) {
     function logout(e){
         e.preventDefault();
         localStorage.setItem("user_session", null);
-        history.push('/back/login');
+        callAPI('post', '/user/logout', {}, (data) => {
+            history.push('/back/login');
+        });
     }
 
     useEffect(() => {
@@ -76,6 +81,7 @@ function Navbar(props) {
         // setShowPolitique(session.getInstance().hasOneOfTheseAccessRights(["superAdmin", "insertPolitique", "getPolitique", "updatePolitique", "deletePolitique"]));
         // setShowHistorique() = // a implementer
         setShowPartenaire(session.getInstance().hasOneOfTheseAccessRights(["superAdmin", "insertPartenaire", "getPartenaire", "updatePartenaire", "deletePartenaire"]));
+        setShowDroitAcces(session.getInstance().hasOneOfTheseAccessRights(["superAdmin", "insertDroitAcces", "getDroitAcces", "updateDroitAcces", "deleteDroitAcces"]));
     }, []);
     
     
@@ -91,6 +97,7 @@ function Navbar(props) {
                     <Tab value={6} component={Link} icon={<FormatListBulletedOutlinedIcon />} to="/front" iconPosition="start" label="Client" />
                     <Tab value={7} icon={<PersonPinIcon />} iconPosition="start" label="Mon compte" />
                     { showPartenaire ? <Tab value={8} component={Link} to="/back/user" icon={<PersonPinIcon />} iconPosition="start" label="Partenaires" /> : null }
+                    { showDroitAcces ? <Tab value={8} component={Link} to="/back/accessRight" icon={<PersonPinIcon />} iconPosition="start" label="Droit d'accès" /> : null }
                     <Drop click = {handleChange} close ={handleClose} open={open} anchorEl={anchorEl} />
                     <DropHisto click = {handleChange} close ={handleClose1} open={open1} anchorEl={anchorEl1} />
                 </Tabs>

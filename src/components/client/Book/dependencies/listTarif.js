@@ -73,7 +73,6 @@ function ListTarif(props){
             itineraires[lastItineraire].tarifReserves.push({
                 idTarif: id, 
                 dateSejour: dateSejour,
-                dateReservation: getDate(Date.now()),
                 guests: props.context.state.guests,
                 idTypeChambre : idTypeChambre,
                 nbPers: nbPers

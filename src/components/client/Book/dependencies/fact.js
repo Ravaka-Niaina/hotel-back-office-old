@@ -10,19 +10,18 @@ import ModeNightIcon from '@mui/icons-material/ModeNight';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import PolicyIcon from '@mui/icons-material/Policy';
 
-import {setValue} from '../../../../utility2.js';
-
-import SkeletonFacture from './skeletons/skeletonFacture.js';
-
-
-import './filtre.css';
-
-import styles from '../Book.module.css';
-
 import {Card, CardContent, Typography, CardActions, Button, Box, Modal, TextField, IconButton} from '@mui/material';
-
 import { styled } from '@mui/material/styles';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+
+import {setValue} from '../../../../utility2.js';
+import SkeletonFacture from './skeletons/skeletonFacture.js';
+import InfoPolitiqueAnnul from './infoPolitiqueAnnul.js';
+
+import './filtre.css';
+import styles from '../Book.module.css';
+
+import {getDiffDays} from '../../../../utility/utilityDate.js';
 
 function PrintDateSejour(props){
     // itineraire, borne, handleChange, label
@@ -73,33 +72,30 @@ function Reservations(props){
         reservation = props.context.state.itineraires[props.indexItineraire].tarifReserves.map(tarif => {
             i++;
             const u = i;
+            const nbNuit = getDiffDays(new Date(tarif.dateSejour.debut), new Date(tarif.dateSejour.fin));
             if(tarif.etat == 1 || tarif.etat == undefined){
                 return (
                         <Card className={styles.stay}>
                         <CardContent>
                             <div>
                                 <span><BedIcon/>{tarif.nomTypeChambre}</span>
-                                <span><ModeNightIcon/>{tarif.nbNuits + " nuit(s)"}</span>
+                                <span><ModeNightIcon/>{nbNuit + " nuit(s)"}</span>
                                 <span><LocalOfferIcon/>{tarif.nomTarif}</span>
                             </div>
                             <div>
                                 <span><PersonOutlineIcon/>x {tarif.nbPers} personnes</span>
-                                <HtmlTooltip
-                                    title={
-                                        <React.Fragment>
-                                            <h3>Politique d'annulation</h3>
-                                            <div>
-                                                <p>Votre carte sera débité du montant total de la réservation le jour de votre arrivée le JJ/MM/AN</p>
-                                                <p>En cas d’annulation après le JJ/MM/AN à Midi, les frais d’annulation s’élèveront à X%</p>
-                                                <p>En cas d’annulation après le JJ/MM/AN à Midi, votre carte sera débité de X%</p>
-                                                <p>En cas d’annulation, les frais d’annulation s’élèveront à X%</p>
-                                            </div>
-                                        </React.Fragment>
-                                    }
-                                    placement="left-start"
-                                >
-                                    <span><PolicyIcon/>Politique d'annulation</span>
-                                </HtmlTooltip>
+                                {tarif.politiqueAnnulAtrb ? 
+                                    <HtmlTooltip
+                                        title={
+                                            <InfoPolitiqueAnnul 
+                                                checkIn={props.context.state.itineraires[props.indexItineraire]} 
+                                                politique={tarif.politiqueAnnulAtrb} 
+                                        />}
+                                        placement="left-start"
+                                    >
+                                        <span><PolicyIcon/>{tarif.politiqueAnnulAtrb.nom}</span>
+                                    </HtmlTooltip>
+                                : null }
                                 <span></span>
                             </div>
                         </CardContent>
