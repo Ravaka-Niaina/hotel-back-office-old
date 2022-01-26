@@ -5,6 +5,7 @@ import callAPI from '../../utility';
 import './voucher/voucher.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faCalendar, faCheckCircle ,faPrint, faShare, faShareAlt} from '@fortawesome/free-solid-svg-icons';
+import ItinerairesVoucher from './voucher/ItineraireVoucher';
 function Voucher(props){
     const [reservation, setReservation] = useState(null);
     const { _id } = useParams();
@@ -81,13 +82,19 @@ function Voucher(props){
                     </div>
 
                 </div>
-                <div class="voucher_numero">
-
+                <div class="voucher_itineraires">
+                    <ItinerairesVoucher 
+                            reservation={reservation} 
+                            setReservation={setReservation}
+                            reservateur={reservateur}
+                            affilie={affilie}
+                            setAffilie={setAffilie}
+                            
+                            openLoad={openLoad}
+                            setOpenLoad={setOpenLoad}
+                             />
                 </div>
-                <div class="voucher_details">
-                    <div class="voucher_politiques">
-                    </div>
-                </div>
+                
                 
             </div>
             <div class="voucher_pannel">
