@@ -326,7 +326,7 @@ function ApplyReservation(props){
                             setOpenLoad={setOpenLoad}
                             isEditEnabled={isEditEnabled} />
                         <div class="infos_contact">
-                            <h2 class="infos_heading">Paiements</h2>
+                            <h2 class="infos_heading">Paiement</h2>
                             <PaiementField reservation={reservation}/>
                             <Total toPay={reservation.toPay} />
                             
@@ -336,10 +336,10 @@ function ApplyReservation(props){
                             <div class="inscription_quick">
                                             <input type="checkbox" id="conditions" name="scales" 
                                                     checked={isConditionAccepted} onChange={conditionAccepted}/>
-                                            <label for="scales" style={{fontWeight:'normal'}}>* J'accepte la politique de confidentialité.</label>
+                                            <label for="scales" style={{fontWeight:'normal'}}>* J'accepte la <span><a href='' style={{textDecoration:'none',color:'#587817'}}> politique de confidentialité </a> </span>.</label>
                                             
                             </div>
-                            <p style={{marginLeft:'0.8rem',fontSize:14}}>En effectuant cette réservation, j'accepte les conditions de réservation.</p>
+                            <p style={{marginLeft:'0.8rem',fontSize:14}}>En effectuant cette réservation, j'accepte les <span> <a href='' style={{textDecoration:'none',color:'#587817'}}> conditions de réservation. </a> </span> </p>
                         </div>
                         {/* <Stack direction="row" spacing={2}>
                             <Button variant="contained">Imprimer</Button>

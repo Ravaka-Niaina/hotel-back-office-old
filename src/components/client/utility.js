@@ -34,3 +34,17 @@ export function getDiffDays(StartDate, EndDate){
      Date.UTC(StartDate.getFullYear(), StartDate.getMonth(), StartDate.getDate())) / 86400000;
     return nDays;
 }
+export function addDays(date, days) {
+    var result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result;
+}
+export function dateToDDMMYYYY(date){
+    
+    var dd = String(date.getDate()).padStart(2, '0');
+    var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = date.getFullYear();
+
+    const str = dd + '/' + mm + '/' + yyyy;
+    return str;
+}

@@ -1,5 +1,7 @@
 import './paiement_field.css';
-import { useState } from 'react'; 
+import { useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {  faCreditCard,faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 function PaiementField(props){
     const [reservateur, setReservateur] = useState({numeroCarte:"",expirationCarte: "", ccvCarte: "", nomCarte: ""});
     const [errorEmpty, setErrorEmpty] = useState({numeroCarte:false,expirationCarte: false, ccvCarte: false, nomCarte: false});
@@ -36,9 +38,13 @@ function PaiementField(props){
             </div>
             <div >
                 <div class="input-field input-field-carte">
-                    <input type="text" value={reservateur.numeroCarte}
+                    <span class="fixed_left"><FontAwesomeIcon icon={faCreditCard} /></span>
+                    <input style={{paddingLeft:55}} type="text" value={reservateur.numeroCarte}
+                    
                 onChange={(e) => handleChangeInfoReservateur("numeroCarte", e.target.value)} onBlur={(e) => handleEmptyInfoReservateur("numeroCarte")} required />
-                    <label>Numéro de carte <span class="red_required">*</span></label>
+                    <label><span style={{marginLeft:40}}>Numéro de carte</span> <span class="red_required">*</span>
+                       
+                    </label>
                     {
                         errorEmpty.numeroCarte ?
                         <div class="error_text">
@@ -61,6 +67,7 @@ function PaiementField(props){
                             }
                     </div>
                     <div class="input-field input-field-carte" style={{width:150,marginLeft:10}}>
+                            <span class="fixed_right"><FontAwesomeIcon color="black" icon={faInfoCircle} /></span>
                             <input type="text" value={reservateur.ccvCarte}
                         onChange={(e) => handleChangeInfoReservateur("ccvCarte", e.target.value)} onBlur={(e) => handleEmptyInfoReservateur("ccvCarte")} required />
                             <label>CCV <span class="red_required">*</span></label>

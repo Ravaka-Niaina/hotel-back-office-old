@@ -148,11 +148,29 @@ span.show{
 input:valid ~ span.show{
   visibility: visible;
 }
+.fixed_left{
+  position: absolute;
+  left: 10px;
+  top: 30%;
+  transform: translateY(-50%);
+}
+.fixed_right{
+  position: absolute;
+  right: 10px;
+  top: 30%;
+  transform: translateY(-50%);
+}
 input:focus ~ label,
 input:valid ~ label{
   transform: translateY(-23px);
   
   font-size: 11px;
+  
+}
+input:focus ~ label .fixed_left,
+input:valid ~ label .fixed_left{
+  position: absolute !important;
+  left: 10px !important;
   
 }
 input::placeholder{
