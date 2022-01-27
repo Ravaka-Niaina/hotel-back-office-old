@@ -250,8 +250,6 @@ class Filtre extends React.Component{
 
         currentState.filtres = res.filters;
         this.setState(currentState);
-        console.log('filtres obtenus');
-        console.log(res.filters);
     }
 
     componentDidMount(){

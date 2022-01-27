@@ -70,7 +70,6 @@ function ApplyReservation(props){
     }
 
     function validerReservation(){
-        console.log(reservation);
         setOpenLoad(true);
         setAlertSuccess(null);
         setAlertError(null);

@@ -93,7 +93,6 @@ getDatas(newValue){
     }else{
         this.setState({range:newValue});
     }
-    
 }
 renderStatus(){
 
@@ -121,7 +120,6 @@ render(){
                         }}
                         renderInput={(startProps, endProps) => (
                             this.renderTextfield(startProps,endProps)
-                        
                         )}
                     />
                     </LocalizationProvider>
