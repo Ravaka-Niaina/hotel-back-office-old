@@ -54,6 +54,18 @@ function TarifsVoucher(props){
             const nbAdults =tarif.infoTypeChambre.nbAdulte;
             const nbEnfant =tarif.infoTypeChambre.nbEnfant;
             tarifs.push(
+                <div>
+                <h2 class="voucher_title">Détails de la chambre</h2>
+                <div class="voucher_hotel">
+                    <strong>{tarif.infoTypeChambre.infoHotel.nom}</strong>
+                    <div>{tarif.infoTypeChambre.infoHotel.adresse}</div>
+                    <div>{tarif.infoTypeChambre.infoHotel.tel}</div>
+                    <div>{tarif.infoTypeChambre.infoHotel.email}</div>
+                </div>
+                <hr style={{marginLeft:'0.8em'}}></hr>
+                </div>
+            )
+            tarifs.push(
                 <div class="voucher_details_tarifs">
                     
                     <div class="image_tarifs">
@@ -135,14 +147,7 @@ function TarifsVoucher(props){
     
     return (<div>
                 
-                <h2 class="voucher_title">Détails de la chambre</h2>
-                <div class="voucher_hotel">
-                    <strong>{hotelItineraire.nom}</strong>
-                    <div>{hotelItineraire.adresse}</div>
-                    <div>{hotelItineraire.tel}</div>
-                    <div>{hotelItineraire.email}</div>
-                </div>
-                <hr style={{marginLeft:'0.8em'}}></hr>
+                
                 {tarifs}
 
             </div>);
