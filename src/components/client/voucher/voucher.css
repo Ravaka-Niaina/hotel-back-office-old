@@ -29,7 +29,9 @@
     background: #f2f2f2;
     border-radius: 0px;
     padding: 1rem;
-    margin-bottom: 1rem
+    margin-bottom: 1rem;
+    height: 40%;
+
 }
  .voucher_link{
     font-family: 'Futura Lt BT', sans-serif;
@@ -113,5 +115,37 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin-left: 0.8rem;
+}
+.voucher_tarifs{
+    margin-top: 1rem;
+}
+.voucher_hotel{
+    margin-left: 16.66667%;
+    line-height: 1.5em;
+}
+.voucher_details_tarifs{
+    display: flex;
+    flex-direction: row;
+}
+.image_tarifs{
+    width: 15%;
+}
+.voucher_info_tarifs{
+    margin-left: 0.8rem;
+    line-height: 1.8em;
+    width: 83%;
+    padding-bottom: 1.5rem;
+}
+.flex_voucher_tarif{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.voucher_bold{
+    font-weight: 700;
+}
+
+.details_politique_voucher{
     margin-left: 0.8rem;
 }

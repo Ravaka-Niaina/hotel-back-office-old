@@ -1,3 +1,4 @@
+import TarifsVoucher from "./TarifsVoucher";
 
 
 function ItinerairesVoucher(props){
@@ -8,6 +9,7 @@ function ItinerairesVoucher(props){
             const u = i;
             let chambres_number = [];
             let length = props.reservation.itineraires[i].tarifReserves.length;
+            // console.log(props.reservation);
             for (let j = 0; j < length; j++) {
                     const tarif = props.reservation.itineraires[i].tarifReserves[j]; 
                    chambres_number.push(
@@ -30,18 +32,20 @@ function ItinerairesVoucher(props){
                                 
                        
                     </div>
+                    <div class="voucher_border voucher_tarifs">
+                        <TarifsVoucher
+                            indexItineraire={u}
+                            reservation={props.reservation}
+                            setReservation={props.setReservation}
+                            reservateur={props.reservateur}
+                            isEditEnabled={props.isEditEnabled}
+                            affilie={props.affilie}
+                            setAffilie={props.setAffilie}
+                            openLoad={props.openLoad}
+                            setOpenLoad={props.setOpenLoad}
+                            isEditEnabled={props.isEditEnabled} />  
+                    </div>
                    
-                    {/* <TarifsVoucher 
-                        indexItineraire={u}
-                        reservation={props.reservation}
-                        setReservation={props.setReservation}
-                        reservateur={props.reservateur}
-                        isEditEnabled={props.isEditEnabled}
-                        affilie={props.affilie}
-                        setAffilie={props.setAffilie}
-                        openLoad={props.openLoad}
-                        setOpenLoad={props.setOpenLoad}
-                        isEditEnabled={props.isEditEnabled} /> */}
                 </div>
             );
         }

@@ -48,3 +48,15 @@ export function dateToDDMMYYYY(date){
     const str = dd + '/' + mm + '/' + yyyy;
     return str;
 }
+export function dateToFullString(date){
+    
+    const jourDelaSemaine=["dim.","lun.","mar.","mer.","jeu.","ven.","sam."];
+    const months = ['janvier','fevrier','mars', 'avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+    var dd = String(date.getDate()).padStart(2, '0');
+    var mm = months[date.getMonth()] //January is 0!
+    var yyyy = date.getFullYear();
+    var day = jourDelaSemaine[date.getDay()];
+
+    const str = day+' '+ dd + ' ' + mm + ' ' + yyyy;
+    return str;
+}
