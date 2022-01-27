@@ -15,11 +15,9 @@ import Radio from '@mui/material/Radio'
 import {Link} from 'react-router-dom';
 import OutlinedInput from '@mui/material/OutlinedInput';
 
-
+import {session} from '../../../common/utilitySession.js';
+import Login from '../../../common/Authentification/Login.js';
 const utility = require('./utility.js');
-
-
-
 
 function DetailsTarif(){
     const [errors, setErrors] = useState([]);
@@ -62,7 +60,6 @@ function DetailsTarif(){
             leadMin: null, 
             leadMax: null
         };
-        console.log(res);
         if(res.status === 200){
             history.push('/back/tarif');
         }else{
@@ -71,23 +68,52 @@ function DetailsTarif(){
                 temp[k] = res.errors[k];
             });
         }
+
+        if(res.status === 200){
+            history.push('/back/tarif');
+        }else if(res.status === 401){//Unauthorized
+            history.push('/back/login');
+        }else if(res.status === 403){
+            history.push('/notEnoughAccessRight');
+        }else{
+            let keys = Object.keys(res.errors);
+            keys.map((k) => {
+                temp[k] = res.errors[k];
+            });
+        }
+
         setError(temp);
     }
 
     function update(e){
         const current = utility.getPlan(planTarifaire);
-        console.log(current);
         callAPI('post', '/planTarifaire/update', current, tryRedirect);
     }
 
     function setPlan(res){
-        console.log(res);
-        setPlanTarifaire(res.planTarifaire);
+        if(res.status === 200){
+            setPlanTarifaire(res.planTarifaire);
+        }else if(res.status === 401){//Unauthorized
+            history.push('/back/login');
+        }else if(res.status === 403){
+            history.push('/notEnoughAccessRight');
+        }
     }
 
+    const hasARGet = session.getInstance().hasOneOfTheseAccessRights(["getPlanTarifaire", "superAdmin"]);
+    const hasARUpdate = session.getInstance().hasOneOfTheseAccessRights(["updatePlanTarifaire", "superAdmin"]);
+
     useEffect(() => {
-        console.log(planTarifaire.dateReservation.debut);
-        callAPI('get', "/planTarifaire/details/" + _id, {}, setPlan);
+        const isConnected = session.getInstance().isConnected();
+        if(!isConnected){
+            return(<Login urlRedirect={window.location.href} />);
+        }else if(hasARGet || hasARUpdate){
+            console.log("hasAR");
+            callAPI('get', "/planTarifaire/details/" + _id, {}, setPlan);
+        }else{
+            console.log("hasNoAR");
+            history.push('/notEnoughAccessRight');
+        }
       }, [_id]);
 
     return(
@@ -298,9 +324,12 @@ function DetailsTarif(){
 
                                 <div style={{marginTop:'30px'}}>
 
-<Button variant="contained"  style={{backgroundColor:'#FA8072'}} onClick={(e) => update(e)}>
+{hasARUpdate 
+? <Button variant="contained"  style={{backgroundColor:'#FA8072'}} onClick={(e) => update(e)}>
     Modifier
-</Button>
+ </Button>
+: null }
+
 <Link to='/typeChambre' style={{textDecoration:'none'}}>
     <Button variant="contained" style={{backgroundColor:'#293846',color:'white',marginLeft:'20px'}}>
         Retour
