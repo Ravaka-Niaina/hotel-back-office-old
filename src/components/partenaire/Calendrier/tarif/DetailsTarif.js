@@ -16,6 +16,8 @@ import {Link} from 'react-router-dom';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import ButtonLoading from "../../buttonLoading.js"
 
+import {session} from '../../../common/utilitySession.js';
+import Login from '../../../common/Authentification/Login.js';
 const utility = require('./utility.js');
 
 
@@ -67,6 +69,10 @@ function DetailsTarif(){
         console.log(res);
         if(res.status === 200){
             history.push('/back/tarif');
+        }else if(res.status === 401){//Unauthorized
+            history.push('/back/login');
+        }else if(res.status === 403){
+            history.push('/notEnoughAccessRight');
         }else{
             setBtnLoad(false);
             let keys = Object.keys(res.errors);
@@ -85,13 +91,30 @@ function DetailsTarif(){
     }
 
     function setPlan(res){
-        console.log(res);
-        setPlanTarifaire(res.planTarifaire);
+        if(res.status === 200){
+            setPlanTarifaire(res.planTarifaire);
+        }else if(res.status === 401){//Unauthorized
+            history.push('/back/login');
+        }else if(res.status === 403){
+            history.push('/notEnoughAccessRight');
+        }
     }
 
+    const hasARGet = session.getInstance().hasOneOfTheseAccessRights(["getPlanTarifaire", "superAdmin"]);
+    const hasARUpdate = session.getInstance().hasOneOfTheseAccessRights(["updatePlanTarifaire", "superAdmin"]);
+
+
     useEffect(() => {
-        console.log(planTarifaire.dateReservation.debut);
-        callAPI('get', "/planTarifaire/details/" + _id, {}, setPlan);
+        const isConnected = session.getInstance().isConnected();
+        if(!isConnected){
+            return(<Login urlRedirect={window.location.href} />);
+        }else if(hasARGet || hasARUpdate){
+            console.log("hasAR");
+            callAPI('get', "/planTarifaire/details/" + _id, {}, setPlan);
+        }else{
+            console.log("hasNoAR");
+            history.push('/notEnoughAccessRight');
+        }
       }, [_id]);
 
     return(

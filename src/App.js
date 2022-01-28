@@ -73,6 +73,7 @@ function App(){
 
         <Route path="/back/accessRight" exact component={ListeDroitAcces} />
         <Route path="/back/accessRight/insert" exact component={InsertDroitAcces} />
+        <Route path="/back/accessRight/update/:_id" exact component={InsertDroitAcces} />
 
         <Route path="/back" exact component={home} />
         <Route path="/back/login" exact component={Login} />

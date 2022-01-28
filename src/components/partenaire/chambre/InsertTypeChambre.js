@@ -143,6 +143,7 @@ function InsertTypeCHambre(){
   
   const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
   const hasARInsert = session.getInstance().hasOneOfTheseAccessRights(["insertTypeChambre", "superAdmin"]);
+  const hasARGet = session.getInstance().hasOneOfTheseAccessRights(["getTypeChambre", "superAdmin"]);
   const hasARUpdate = session.getInstance().hasOneOfTheseAccessRights(["updateTypeChambre", "superAdmin"]);
   const fieldsToSet = ["_id", "nom", "nbAdulte", "nbEnfant", "photo",
       "chambreTotal", "etage", "superficie", "description",
@@ -152,7 +153,11 @@ function InsertTypeCHambre(){
   
   const setDetailsTypeChambre = (data) => {
     let currentState = {...state};
-    console.log(data);
+    if(data.status === 401){//Unauthorized
+      history.push('/back/login');
+    }else if(data.status === 403){
+      history.push('/notEnoughAccessRight');
+    }
     fieldsToSet.map(field => {
       currentState[field] = data.typeChambre[field];
     });
@@ -170,13 +175,18 @@ function InsertTypeCHambre(){
   useEffect(() => {
     if(isInsert && hasARInsert){
       callAPI('get', '/TCTarif/infoInsertTypeChambre', {}, setInfo);
-    }else if(hasARUpdate){
+    }else if(hasARGet || hasARUpdate){
       callAPI("get", "/typeChambre/details/" + _id, {}, setDetailsTypeChambre);
     }
   }, [_id]);
   
   const history = useHistory();
-  if(!hasARInsert){
+  if(isInsert && !hasARInsert){
+    return(
+      <NotEnoughAccessRight />
+    );
+  }
+  if(!isInsert && !hasARGet && !hasARUpdate){
     return(
       <NotEnoughAccessRight />
     );
@@ -224,6 +234,8 @@ function InsertTypeCHambre(){
     }else if(res.status === 401){//Unauthorized
       setBtnLoad(false);
       history.push('/back/login');
+    }else if(res.status === 403){
+      history.push('/notEnoughAccessRight');
     }else{
       setBtnLoad(false);
       let keys = Object.keys(res.errors);
@@ -254,14 +266,7 @@ function InsertTypeCHambre(){
       }
     }
     toSend.planTarifaire = selectedPlan;
-    axios({
-        method: 'post',
-        url: process.env.REACT_APP_BACK_URL + "/typeChambre/insert",
-        withCredentials: true,
-        data: toSend
-    })
-    .then(res => tryRedirect(res.data))
-    .catch(err => console.log(err));
+    callAPI('post', '/typeChambre/insert', toSend, tryRedirect);
   }
 
   function update(e){
@@ -286,16 +291,7 @@ function InsertTypeCHambre(){
         }
     }
     toSend.planTarifaire = planTarifaire;
-    console.log(toSend);
-    axios({
-        method: 'post',
-        url: process.env.REACT_APP_BACK_URL + "/typeChambre/update",
-        withCredentials: true,
-        data: toSend
-    })
-
-    .then(res => tryRedirect(res.data))
-    .catch(err => console.log(err));
+    callAPI('post', '/typeChambre/update/', toSend, tryRedirect);
   }
 
   function handleInputChange(event, inputName){
@@ -648,6 +644,40 @@ function InsertTypeCHambre(){
 
                     <div className="pied" style={{marginTop:'30px'}}>   
                      <div class="bouton-aligne">
+                     {isInsert && hasARInsert 
+                      ? <>
+                        {
+                          btnLoad ? <ButtonLoading /> :
+                        <Button  
+                          variant="contained" 
+                          type='submit' 
+                          id='btn1'
+                          onClick={(e) => insert(e)}
+                          style={{backgroundColor:'#2ac4ea' }}>
+                          <span style={{color:'white'}}>Ajouter</span>
+                        </Button>
+                        }
+                      </>
+                      : null
+                      }
+
+                      {!isInsert && hasARUpdate
+                      ? 
+                       <>
+                      {
+                        btnLoad ? <ButtonLoading /> :
+                        <Button  
+                          variant="contained" 
+                          type='submit' 
+                          id='btn1'
+                          onClick={(e) => update(e)}
+                          style={{backgroundColor:'#2ac4ea' }}>
+                          <span style={{color:'white'}}>Modifier</span>
+                        </Button>
+                      }
+                      </>
+                      : null
+                      }
                       {
                         btnLoad ? <ButtonLoading /> :
                         <Button  

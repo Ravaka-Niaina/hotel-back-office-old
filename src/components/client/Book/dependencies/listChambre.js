@@ -133,20 +133,36 @@ class DChambre extends React.Component{
                                     <span>{typeChambre.description.substring(0,85) + "..."}</span>
                                     <DetailsTypeChambre context={this} typeChambre={typeChambre} indexTypeChambre={u} />
                                     <div className={styles.equipements}>
-                                        {
+                                        {/* {
                                             typeChambre.equipements.map(equipement => {
                                                 return(
                                                     <Font font={equipement.font} />
                                                 );
                                             })
-                                        }
-                                    
+                                        } */}
+                                        
+                                        <div>
+                                            <LiveTv/>
+                                        </div>
+                                        <div>
+                                            <Wifi/>
+                                        </div>
+                                        <div>
+                                            <AcUnit/>
+                                        </div>
+                                        <div>
+                                            <HotTub/>
+                                        </div>
+                                        <div>
+                                            <Iron/>
+                                        </div>
+                                       
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <ListTarif context={this.props.context} tarifs={typeChambre.tarifs} idTypeChambre={typeChambre._id} nameTC = {typeChambre.nom} />
+                                    <ListTarif context={this.props.context} tarifs={typeChambre.tarifs} idTypeChambre={typeChambre._id} />
                                 </div>
                             </div>  
                         </div>      

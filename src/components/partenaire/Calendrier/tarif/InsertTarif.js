@@ -22,6 +22,10 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio'
 import ButtonLoading from "../../buttonLoading.js"
+import {session} from '../../../common/utilitySession.js';
+import Login from '../../../common/Authentification/Login.js';
+import NotEnoughAccessRight from '../../../common/NotEnoughAccessRight';
+
 
 const utility = require('./utility.js');
 
@@ -68,11 +72,20 @@ function InsertTarif(){
         setPlanTarifaire(current);
         console.log(current);
     }
+    const hasARInsert = session.getInstance().hasOneOfTheseAccessRights(["insertPlanTarifaire", "superAdmin"]);
 
     useEffect(() => {
-        callAPI('get', '/TCTarif/TPAvecPA', {}, setListTypeChambre);
+        const isConnected = session.getInstance().isConnected();
+        if(!isConnected){
+            return(<Login urlRedirect={window.location.href} />);
+        }
+        if(hasARInsert){
+            callAPI('get', '/TCTarif/TPAvecPA', {}, setListTypeChambre);
+        }else{
+            history.push('/notEnoughAccessRight');
+        }
+        
       }, []);
-
     function tryRedirect(res){
         let temp = {...error};
         temp = {
@@ -85,9 +98,12 @@ function InsertTarif(){
             leadMin: null, 
             leadMax: null
         };
-        console.log(res);
         if(res.status === 200){
             history.push('/back/tarif');
+        }else if(res.status === 401){//Unauthorized
+                history.push('/back/login');
+        }else if(res.status === 403){
+                history.push('/notEnoughAccessRight');
         }else{
             setBtnLoad(false);
             let keys = Object.keys(res.errors);
@@ -319,16 +335,20 @@ function InsertTarif(){
 
                                 <div className="pied" style={{marginTop:'30px'}}>   
                                     <div class="bouton-aligne"> 
-                                    { 
-                                        btnLoad ? <ButtonLoading /> :
-                                    
-                                    <Button  
-                                        variant="contained" 
-                                        type='submit' 
-                                        style={{textDecoration:'none',color:'black',backgroundColor:'#2ac4ea'}}
-                                        onClick={(e) => insert(e)}>
-                                        <span style={{color:'white'}}>Ajouter</span>
-                                    </Button> }
+                                    { hasARInsert ? <>
+                                        { 
+                                            btnLoad ? <ButtonLoading /> :
+                                        
+                                            <Button  
+                                                variant="contained" 
+                                                type='submit' 
+                                                style={{textDecoration:'none',color:'black',backgroundColor:'#2ac4ea'}}
+                                                onClick={(e) => insert(e)}>
+                                                <span style={{color:'white'}}>Ajouter</span>
+                                            </Button> 
+                                        }
+                                    </> : null
+                                    }
                                     </div>
                                     <div class="bouton-aligne">
                                         <Link to={'/back/tarif'} style={{textDecoration:'none'}}>

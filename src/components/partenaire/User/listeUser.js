@@ -27,11 +27,12 @@ const fieldsToPrint = [
 const nbContent = 5;
 const urlEdit = "/back/user/details/";
 const rowsPerPageOptions = [5, 10, 20];
-const accessRightToDelete = ["superAdmin", "deleteUser"];
-const accessRightToViewDetails = ["superAdmin", "getUser"];
+const accessRightToViewInsert = ["superAdmin", "insertPartenaire"];
+const accessRightToDelete = ["superAdmin", "deletePartenaire"];
+const accessRightToViewDetails = ["superAdmin", "getPartenaire", "updatePartenaire", "assocPartnerWithAR", "disocPartnerWithAR"];
 
 const ListeUser = () => {
-    const hasAR = session.getInstance().hasOneOfTheseAccessRights(["insertTypeChambre", "superAdmin"]);
+    const hasAR = session.getInstance().hasOneOfTheseAccessRights(["insertPartenaire", "getPartenaire", "updatePartenaire", "deletePartenaire", "superAdmin"]);
     if(!session.getInstance().isConnected()){
         return(<Login urlRedirect={window.location.href} />);
     }else if(!hasAR){
@@ -49,6 +50,7 @@ const ListeUser = () => {
             urlEdit={urlEdit}
             nbContent={nbContent}
             rowsPerPageOptions={rowsPerPageOptions}
+            accessRightToViewInsert={accessRightToViewInsert}
             accessRightToDelete={accessRightToDelete}
             accessRightToViewDetails={accessRightToViewDetails}
         />
