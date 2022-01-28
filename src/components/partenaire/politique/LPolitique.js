@@ -14,7 +14,7 @@ const fieldsToPrint = [
     {field: "remboursable", label: "remboursable", type: "String"}
 ];
 const nbContent = 5;
-const urlEdit = '/politique/detail/';
+const urlEdit = '/back/politique/detail/';
 const rowsPerPageOptions = [5, 10, 20];
 
 export default function ListPolitque(){

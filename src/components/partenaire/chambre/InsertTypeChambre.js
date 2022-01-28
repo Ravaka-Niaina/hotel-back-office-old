@@ -27,6 +27,8 @@ import {FileInput, Preview, Videos, Font} from './utilityTypeChambre.js';
 import {session} from '../../common/utilitySession.js';
 import NotEnoughAccessRight from '../../common/NotEnoughAccessRight';
 
+import ButtonLoading from "../buttonLoading.js"
+
 function PlanTarifaire(props){
   let i = -1;
   let list = props.planTarifaire.map(tarif => {
@@ -145,6 +147,8 @@ function InsertTypeCHambre(){
   const fieldsToSet = ["_id", "nom", "nbAdulte", "nbEnfant", "photo",
       "chambreTotal", "etage", "superficie", "description",
       "planTarifaire", "equipements", "videos"];
+
+  const [btnLoad, setBtnLoad] = useState(false);
   
   const setDetailsTypeChambre = (data) => {
     let currentState = {...state};
@@ -218,8 +222,10 @@ function InsertTypeCHambre(){
     if(res.status === 200){
       history.push('/back/typeChambre');
     }else if(res.status === 401){//Unauthorized
+      setBtnLoad(false);
       history.push('/back/login');
     }else{
+      setBtnLoad(false);
       let keys = Object.keys(res.errors);
       keys.map((k) => {
         currentState.error[k] = res.errors[k];
@@ -230,6 +236,7 @@ function InsertTypeCHambre(){
 
   function insert(e){
     e.preventDefault();
+    setBtnLoad(true);
     let toSend = JSON.parse(JSON.stringify(state));
 
     let selectedEquip = [];
@@ -259,6 +266,7 @@ function InsertTypeCHambre(){
 
   function update(e){
     e.preventDefault();
+    setBtnLoad(true);
     let toSend = {};
     fieldsToSet.map(field => {
       toSend[field] = state[field];
@@ -640,22 +648,24 @@ function InsertTypeCHambre(){
 
                     <div className="pied" style={{marginTop:'30px'}}>   
                      <div class="bouton-aligne">
-                    <Button  
-                    variant="contained" 
-                    type='submit' 
-                    id='btn1'
-                    onClick={(e) => isInsert ? insert(e) : update(e)}
-                    style={{backgroundColor:'#2ac4ea' }}>
-                    <span style={{color:'white'}}>{isInsert ? "Ajouter" : "Modifier"}</span>
-                    </Button>
-                    
+                      {
+                        btnLoad ? <ButtonLoading /> :
+                        <Button  
+                          variant="contained" 
+                          type='submit' 
+                          id='btn1'
+                          onClick={(e) => isInsert ? insert(e) : update(e)}
+                          style={{backgroundColor:'#2ac4ea' }}>
+                          <span style={{color:'white'}}>{isInsert ? "Ajouter" : "Modifier"}</span>
+                        </Button>
+                     }
                   
                      </div>
                      <div class="bouton-aligne">
                       <Link to={'/back/typeChambre'} style={{textDecoration:'none'}}>
                         <Button variant="outlined" 
                         id="btn2">
-                  <span style={{color:'#1976d2'}}>Retour</span>
+                          <span style={{color:'#1976d2'}}>Retour</span>
                         </Button>
                       </Link>
                      </div>

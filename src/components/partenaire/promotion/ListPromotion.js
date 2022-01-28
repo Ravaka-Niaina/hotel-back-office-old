@@ -27,7 +27,7 @@ const rowsPerPageOptions = [5, 10, 20];
 export default function ListPromotion(){
     return(
         <Rechercher 
-            currentPage={1}
+            currentPage={3}
             btnInsert={btnInsert}
             urlSearch={urlSearch}
             tableName={tableName}

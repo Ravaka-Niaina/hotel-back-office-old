@@ -9,6 +9,7 @@ import styles from '../CalendarComponent.module.css';
 
 import callAPI from '../../../../../utility';
 import { useHistory } from 'react-router-dom';
+import ButtonLoading from "../../../buttonLoading.js"
 
 const getDaysBetweenDates = function(startDate, endDate) {
     var now = startDate.clone(), dates = [];
@@ -206,9 +207,9 @@ const FullPriceEditor = (props) => {
     }
 
     function refresh(res){
-        console.log(res);
+        console.log(props.openLoad);
+
         let tempError = {...error};
-        
         const keysError = Object.keys(tempError);
         keysError.map((k) => {
             if(k === "versions"){
@@ -224,6 +225,7 @@ const FullPriceEditor = (props) => {
         if(res.status === 200){
             console.log("Redirection en cours...");
             props.getPrix();
+            
         }else{
             console.log("prix non configuré");
             const keys = Object.keys(res.errors);
@@ -239,6 +241,7 @@ const FullPriceEditor = (props) => {
                 }
             });
             props.setOpenLoad(false);
+            
         }
         setError(tempError);
     }
@@ -295,7 +298,6 @@ const FullPriceEditor = (props) => {
                 forTypeChambre: forTypeChambre,
                 forTarif: forTarif
             };
-            console.log(data);
             callAPI('post', '/TCTarif/configPrix', data, refresh);
         }
     }

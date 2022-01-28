@@ -21,6 +21,7 @@ import  Navbar  from "../../Navbar/Navbar";
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio'
+import ButtonLoading from "../../buttonLoading.js"
 
 const utility = require('./utility.js');
 
@@ -53,6 +54,7 @@ function InsertTarif(){
 
         ]
     });
+    const [btnLoad, setBtnLoad] = useState(false);
     const history = useHistory();
 
     function setListTypeChambre(res){
@@ -87,6 +89,7 @@ function InsertTarif(){
         if(res.status === 200){
             history.push('/back/tarif');
         }else{
+            setBtnLoad(false);
             let keys = Object.keys(res.errors);
             if(keys.length === 0){
                 history.push('/back/tarif');
@@ -100,6 +103,7 @@ function InsertTarif(){
 
     function insert(e){
         e.preventDefault();
+        setBtnLoad(true);
         const current = utility.getPlan(planTarifaire);
         console.log(current);
         callAPI('post', '/planTarifaire/insert', current, tryRedirect);
@@ -314,17 +318,20 @@ function InsertTarif(){
                                 </Box>
 
                                 <div className="pied" style={{marginTop:'30px'}}>   
-                                    <div class="bouton-aligne">  
+                                    <div class="bouton-aligne"> 
+                                    { 
+                                        btnLoad ? <ButtonLoading /> :
+                                    
                                     <Button  
-                                    variant="contained" 
-                                    type='submit' 
-                                    style={{textDecoration:'none',color:'black',backgroundColor:'#2ac4ea'}}
-                                    onClick={(e) => insert(e)}>
-                                    <span style={{color:'white'}}>Ajouter</span>
-                                    </Button>
+                                        variant="contained" 
+                                        type='submit' 
+                                        style={{textDecoration:'none',color:'black',backgroundColor:'#2ac4ea'}}
+                                        onClick={(e) => insert(e)}>
+                                        <span style={{color:'white'}}>Ajouter</span>
+                                    </Button> }
                                     </div>
                                     <div class="bouton-aligne">
-                                        <Link to={'/tarif'} style={{textDecoration:'none'}}>
+                                        <Link to={'/back/tarif'} style={{textDecoration:'none'}}>
                                         <Button variant="outlined" 
                                         id="btn2">
                                     <span style={{color:'#1976d2'}}>Retour</span>

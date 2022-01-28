@@ -14,7 +14,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio'
 import {Link} from 'react-router-dom';
 import OutlinedInput from '@mui/material/OutlinedInput';
-
+import ButtonLoading from "../../buttonLoading.js"
 
 const utility = require('./utility.js');
 
@@ -47,6 +47,8 @@ function DetailsTarif(){
 
         ]
     });
+    const [btnLoad, setBtnLoad] = useState(false);
+
     const { _id } = useParams();
     const history = useHistory();
 
@@ -66,6 +68,7 @@ function DetailsTarif(){
         if(res.status === 200){
             history.push('/back/tarif');
         }else{
+            setBtnLoad(false);
             let keys = Object.keys(res.errors);
             keys.map((k) => {
                 temp[k] = res.errors[k];
@@ -75,6 +78,7 @@ function DetailsTarif(){
     }
 
     function update(e){
+        setBtnLoad(true);
         const current = utility.getPlan(planTarifaire);
         console.log(current);
         callAPI('post', '/planTarifaire/update', current, tryRedirect);
@@ -295,19 +299,24 @@ function DetailsTarif(){
                                         
                                     </div>
                                 </Box>
-
-                                <div style={{marginTop:'30px'}}>
-
-<Button variant="contained"  style={{backgroundColor:'#FA8072'}} onClick={(e) => update(e)}>
-    Modifier
-</Button>
-<Link to='/typeChambre' style={{textDecoration:'none'}}>
-    <Button variant="contained" style={{backgroundColor:'#293846',color:'white',marginLeft:'20px'}}>
-        Retour
-    </Button>
-</Link>
+                                <div className="pied" style={{marginTop:'30px'}}>   
+                                    <div class="bouton-aligne">
+                                    {
+                                        btnLoad ? <ButtonLoading /> :
+                                        <Button variant="contained"  style={{backgroundColor:'#FA8072'}} onClick={(e) => update(e)}>
+                                            Modifier
+                                        </Button>
+                                    }
+                                
+                                    </div>
+                                    <div class="bouton-aligne">
+                                    <Link to='/back/typeChambre' style={{textDecoration:'none'}}>
+                                        <Button variant="contained" style={{backgroundColor:'#293846',color:'white',marginLeft:'20px'}}>
+                                            Retour
+                                        </Button>
+                                    </Link>
+                                    </div>
                                 </div>
-
                             </form>
                         </div>
  

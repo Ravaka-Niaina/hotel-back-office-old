@@ -74,6 +74,7 @@ const CalendarComponent = () => {
                             dateRange={value}
                             getPrix={getPrix}
                             dateMin={dateMin}
+                            openLoad={openLoad}
                             setOpenLoad={setOpenLoad} />
                         </>
                     );
