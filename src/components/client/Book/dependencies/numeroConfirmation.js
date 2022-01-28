@@ -21,6 +21,10 @@ function NumeroConfirmation(nbrRadom , nameHotel , TChambre){
     for(let i = 0; i < 3 ; i++){
         hotel = hotel + nameHotel[i] ;
     }
-    return (nbrRadom+rand)+date.annee+hotel+nameTC[0][0]+nameTC[1][0]+date.milliSeconde;
+    try{// A revoir
+        return (nbrRadom+rand)+date.annee+hotel+nameTC[0][0]+nameTC[1][0]+date.milliSeconde;
+    }catch(err){
+        return (nbrRadom+rand)+date.annee+hotel+nameTC[0][0]+nameTC[0][0]+date.milliSeconde;
+    }
 }
 export default NumeroConfirmation;
