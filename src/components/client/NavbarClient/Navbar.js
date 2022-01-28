@@ -22,50 +22,63 @@ import { useEffect } from "react";
 import { useState } from 'react';
 
 function Navbar(props) {
-    let [state, setState] = useState(
-        {
-            email: '',
-            mdp: '',
-            errors: []
-        }
-      );
-      const history = useHistory();
+  const [email, setEmail] = React.useState("");
+  const [errorEmail, setErrorEmail] = React.useState(null);
+  const [mdp, setMdp] = React.useState("");
+  const [errorMdp, setErrorMdp] = React.useState(null);
+  const [ambiguousError, setAmbiguousError] = React.useState(null);
+  const history = useHistory();
+  
+  const interpretResponse = (res) => {
+      console.log(res);
+      const data = res.data;
+      if(data.status === 200){
+          localStorage.setItem("user_session", res.headers.user_session);
+          session.getInstance().update(res.headers.user_session);
+          console.log(res.headers.user_session);
+          if(props.urlRedirect){
+              window.location.href = props.urlRedirect;
+          }else{
+              history.push('/front');
+          }
+      }else{
+          const setErrors = [
+              {field: "ambiguous", setter: setAmbiguousError},
+              {field: "email", setter: setErrorEmail},
+              {field: "mdp", setter: setErrorMdp}
+          ];
+          let keys = Object.keys(data.errors);
+          keys.map(field => {
+              for(let i = 0; i < setErrors.length; i++){
+                  if(setErrors[i].field === field){
+                      setErrors[i].setter(data.errors[field]);
+                  }
+              }
+          });
+      }
+  };
 
-    function  tryRedirectToHome(res){
-        console.log(res);
-        if(res.status === 200){
-          history.push('/test');
-        }else{
-          let currentState = JSON.parse(JSON.stringify(state));
-          currentState.errors = res.errors;
-          setState(currentState);
-        }
-      }
-    
-      function  handleEmailChange(event){
-        const currentState = JSON.parse(JSON.stringify(state));
-        currentState.email = event.target.value;
-        setState(currentState);
-      }
-    
-      function  handleMdpChange(event){
-        const currentState = JSON.parse(JSON.stringify(state));
-        currentState.mdp = event.target.value;
-        setState(currentState);
-      }
-    
-      function  login(e){
-        e.preventDefault();
-        let data = {email: state.email, mdp: state.mdp};
-        axios({
-          method: 'post',
-          url: process.env.REACT_APP_BACK_URL + "/client/login",
+  const login = (e) => {
+      e.preventDefault();
+      setAmbiguousError(null);
+      const data = {
+          email: email.trim(),
+          mdp: mdp.trim()
+      };
+      axios({
+          method: "post",      
+          url: process.env.REACT_APP_BACK_URL + '/user/login',
           withCredentials: true,
           data: data
-        })
-        .then(res => tryRedirectToHome(res.data))
-        .catch(err => console.log(err))
-      }
+      })
+      .then(res => interpretResponse(res))
+      .catch(err =>{console.log(err); console.log("erreur");} );
+  };
+
+  const register = (e) => {
+      e.preventDefault();
+      history.push("/front/register");
+  }
     return (
             <Box sx={{ flexGrow: 1 }}>
                 <AppBar position="static">
@@ -91,40 +104,72 @@ function Navbar(props) {
             {({ TransitionProps }) => (
               <Fade {...TransitionProps} timeout={350}>
 
-        <Paper>
-        <div className="base-container">
-            <div className="content">
-              {/* <CustomError errors={this.state.errors} /> */}
-              <div className="form">
-                <div className="form-group" style={{paddingTop:"15px"}}>
-                  <TextField id="standard-basic" className="form-control" label="Email" variant="standard" style={{width:"350px"}}
-                  type="email" 
-                  name="email" 
-                  value={state.email} placeholder="Email"
-                  onChange={(e) => handleEmailChange(e)}/>
-                  </div>
-                  <div className="form-group" style={{paddingTop:"15px"}}>
-                  <TextField id="standard-basic" className="form-control" label="Mot de passe" variant="standard" style={{width:"350px"}}
-                  type="password" 
-                  name="mdp" 
-                  value={state.mdp}
-                  onChange={(e) => handleMdpChange(e)}/>
-                </div>
-              </div>
-            </div>
-              
-
-            <Link to='/Register' style={{textDecoration:'none',marginLeft:'290px',marginTop:'30px'}}>
-              <p style={{color:"#87CEEB",fontSize:"17px",color:'#2F4050',textDecoration:'underline'}}>S'inscrire</p>
-            </Link>
-            <div className="footer">
-              {/* <button type="button" className="btn" id="btn" onClick={(e) => this.login(e)}>Login</button> */}
-              <Button variant="contained" style={{backgroundColor:'#1E90FF'}} onClick={(e) => login(e)}>
-              Se Connecter
-              </Button>
-            </div>
-          </div>
-        </Paper>
+<Paper 
+                  elevation={1}
+                  
+                  children={
+                      <>
+                        <div className='title11'>
+                          <h4 id='title11'>Se connecter</h4>
+                        </div>
+                          {ambiguousError === null ? null : <Alert severity="error">{ambiguousError}</Alert>}
+                          <Box
+                              component="form"
+                              sx={{
+                                  '& .MuiTextField-root': { m: 1, width: '25ch' },
+                              }}
+                              noValidate
+                              autoComplete="off"
+                          >
+                          
+                              <TextField 
+                                  id="outlined-basic"
+                                  variant="outlined"
+                                  size='small'
+                                  label={<p>Email</p>}
+                                  type="email"
+                                  value={email} onChange={(e) => {setErrorEmail(null); setEmail(e.target.value)}}
+                                  error={errorEmail === null ? false : true}
+                                  helperText={errorEmail === null ? null : errorEmail}
+                              /> 
+                          </Box>
+                          <Box
+                              component="form"
+                              sx={{
+                                  '& .MuiTextField-root': { m: 1, width: '25ch' },
+                              }}
+                              noValidate
+                              autoComplete="off"
+                          >
+                              <TextField 
+                                  id="outlined-basic"
+                                  variant="outlined"
+                                  size='small'
+                                  label={<p>Mot de passe</p>}
+                                  type="password"
+                                  value={mdp} onChange={(e) => {setErrorMdp(null); setMdp(e.target.value)}}
+                                  error={errorMdp === null ? false : true}
+                                  helperText={errorMdp === null ? null : errorMdp}
+                              />
+                          </Box>
+                          <Box>
+                          <div id='buttons'>
+                           <div class="login">
+                            <Button sx={{width: 200}} variant="contained" onClick={(e) => login(e)}>
+                                <span style={{color:'white'}}>Se connecter</span>
+                            </Button>
+                           </div>
+                           <div class="register">
+                            <Button id="register" sx={{width: 200}} onClick={(e) => register(e)}>
+                                <span style={{color:'black'}}>S'inscrire</span>
+                            </Button>
+                           </div>
+                          </div>
+                          </Box>
+                            
+                      </>
+                  } 
+              />
 
               </Fade>
             )}

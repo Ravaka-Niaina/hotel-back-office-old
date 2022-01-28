@@ -62,7 +62,11 @@ class Scroll extends React.Component{
             openChangeNbGuest: false,
             openLoad: false,
             isListTarifDispoReceived: false,
-            isFactureReceived: false
+            isFactureReceived: false,
+            user_session : {
+                id:""
+            }
+            
         };
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
         this.setResult = this.setResult.bind(this);

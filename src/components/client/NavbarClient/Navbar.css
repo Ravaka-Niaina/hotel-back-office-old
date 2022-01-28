@@ -12,4 +12,37 @@ header{
     color: #fff !important;
     background-color: #333 !important;
   }
+
+#title11{
+  text-align: center;
+  font-family: 'Roboto';
+  color: #1976d2;
+  text-decoration: underline;
+  }
+
+  div#buttons {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.register {
+  margin-top: 10px;
+}
+
+button#register {
+  text-decoration: underline black;
+}
+
+.mdp {
+  margin-top: 10px;
+}
+
+button#mdp {
+  text-decoration: underline black;
+}
+
+.title11{
+margin-top: 10px;
+}
+
   
