@@ -16,9 +16,9 @@ const fieldsToPrint = [
     {field: "nom", label: "Nom"}
 ];
 const nbContent = 5;
-const urlEdit = "/back";
+const urlEdit = "/back/accessRight/update/";
 const rowsPerPageOptions = [5, 10, 20];
-const accessRightToViewInsert = ["superAdmin", "insertDroitAcces"];
+const accessRightToViewInsert = ["superAdmin"];
 const accessRightToDelete = ["superAdmin", "deleteDroitAcces"];
 const accessRightToViewDetails = ["superAdmin", "getDroitAcces", "updateDroitAcces"];
 

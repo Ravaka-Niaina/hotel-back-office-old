@@ -6,8 +6,12 @@ import Box from '@mui/material/Box';
 import Alert from '@mui/material/Alert';
 
 import callAPI from '../../../utility.js';
+import {session} from '../../common/utilitySession.js';
 
 const Liste = (props) => {
+
+    const hasARToAssoc = session.getInstance().hasOneOfTheseAccessRights(["assocPartnerWithAR", "superAdmin"]);
+    const hasARToDisooc = session.getInstance().hasOneOfTheseAccessRights(["disocPartnerWithAR", "superAdmin"]);
 
     const addAccessRight = (notAtribAR) => {
         props.setError(null);
@@ -19,8 +23,6 @@ const Liste = (props) => {
             }else if(data.status !== 200){
                 props.setError(data.error);
             }else{
-                console.log(data.atribAR);
-                console.log(data.notAtribAR);
                 props.setAtribAR(data.atribAR);
                 props.setNotAtribAR(data.notAtribAR);
             }
@@ -46,7 +48,6 @@ const Liste = (props) => {
     };
 
     let liste = [];
-    console.log(props);
     const max = props.atribAR.length 
     > props.notAtribAR.length 
     ? props.atribAR.length 
@@ -63,20 +64,23 @@ const Liste = (props) => {
         </>;
         if(props.notAtribAR[u] !== undefined){
             tempNotAtrib = <>
-            <td border="1">{props.notAtribAR[u].nom}</td>
+                <td border="1">{props.notAtribAR[u].nom}</td>
                 <td align="center">
-                    <IconButton aria-label="delete" onClick={() => addAccessRight(props.notAtribAR[u])}>
+                    {hasARToAssoc 
+                    ? <IconButton aria-label="delete" onClick={() => addAccessRight(props.notAtribAR[u])}>
                         <Add />
-                    </IconButton>
+                    </IconButton> : null}
+                    
                 </td>
             </>;
         }
         if(props.atribAR[u] !== undefined){
             tempAtrib = <>
                 <td align="center">
-                    <IconButton aria-label="delete" onClick={() => removeAccessRight(props.atribAR[u])}>
+                    {hasARToDisooc 
+                    ? <IconButton aria-label="delete" onClick={() => removeAccessRight(props.atribAR[u])}>
                         <Remove />
-                    </IconButton>
+                     </IconButton> : null}
                 </td>
                 <td border="1">{props.atribAR[u].nom}</td>
             </>;
@@ -89,31 +93,34 @@ const Liste = (props) => {
 const ListeDroitAcces = (props) => {
     const [error, setError] = React.useState(null);
     return(
-        <>
-            <h2>Droits d'accès</h2>
-            {error === null ? null : <Box><Alert severity="error">{ error }</Alert></Box>}
-            <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th colspan="2" width="50%">non attribués</th>
-                            <th colspan="2">attribués</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <Liste 
-                            idUser={props.idUser }
-                            error={error}
-                            setError={setError}
-                            atribAR={props.atribAR}
-                            setAtribAR={props.setAtribAR}
-                            notAtribAR={props.notAtribAR}
-                            setNotAtribAR={props.setNotAtribAR}
-                        />
-                    </tbody>
-                </table>
-            </div>
-        </>
+        <div>
+            <table>
+                <tr>
+                    <th><h2>Droits d'accès</h2></th>
+                </tr>
+                {error === null ? null : <tr><Box><Alert severity="error">{ error }</Alert></Box></tr>}
+            </table>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="2" width="50%">non attribués</th>
+                        <th colspan="2">attribués</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <Liste 
+                        idUser={props.idUser }
+                        error={error}
+                        setError={setError}
+                        atribAR={props.atribAR}
+                        setAtribAR={props.setAtribAR}
+                        notAtribAR={props.notAtribAR}
+                        setNotAtribAR={props.setNotAtribAR}
+                    />
+                </tbody>
+            </table>
+        </div>
     );
 };
 export default ListeDroitAcces;

@@ -183,7 +183,6 @@ class Scroll extends React.Component{
       
     }
     setReservationEnCours(reservation, isFactureReceived){
-        console.log(reservation);
         let currentState = JSON.parse(JSON.stringify(this.state));
         currentState.reservationEnCours = reservation;
         currentState.reload = true;

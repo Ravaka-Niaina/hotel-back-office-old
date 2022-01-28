@@ -58,7 +58,20 @@ const BaeCalendar = ({ theme, applyFilter, activeDates, onDateSelect, context, c
 
   function populatePrix(res){
     if(res.status === 200){
-      console.log(res);
+      if(res.checkIn && res.checkOut){
+        let checkIn = new Date(res.checkIn);
+        let checkOut = new Date(res.checkOut);
+        setBornes({debut: checkIn, fin: checkOut, isDebut: true});
+        let firstMonth = new Date(res.result[0].month);
+        let secondMonth = new Date(res.result[1].month);
+        setSelectDate(firstMonth);
+        setMonthLater(secondMonth);
+
+        let temp = {...context.state};
+        temp.dateSejour.debut = getDate(checkIn);
+        temp.dateSejour.fin = getDate(checkOut);
+        context.setState(temp);
+      }
       setPrix(res.result);
     }
   }
@@ -73,28 +86,10 @@ const BaeCalendar = ({ theme, applyFilter, activeDates, onDateSelect, context, c
     callAPI('post', '/TCTarif/disponibiliteTarif', data, populatePrix);
   }
 
-  function stopReload(){
-    let temp = JSON.parse(JSON.stringify(context.state));
-    temp.reload = false;
-    context.setState(temp);
-  }
-
   useEffect(() => {
-    if(firstTime){
-      setOpen(undefined);
-      setFirstTime(false);
-    }
-    if(context.state.reload){
-      getPrix(selectDate, monthLater);
-      stopReload();
-      //setPrix(data);
-      if (onDateSelect) {
-        onDateSelect(selectDate);
-      }
-      console.log("reload calendar...");
-    }
-  });
-  
+    getPrix(selectDate, monthLater);
+    setOpen(true);
+  }, []);
 
   function reload(){
     let temp = JSON.parse(JSON.stringify(context.state));

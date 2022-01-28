@@ -170,7 +170,6 @@ function Navbar(props) {
                       </>
                   } 
               />
-
               </Fade>
             )}
           </Popper>

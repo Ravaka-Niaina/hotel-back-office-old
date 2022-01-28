@@ -12,6 +12,7 @@ import {
 } from '../utils/moment-utils';
 import { getDatesInMonthDisplay } from '../utils/date-utils';
 const utility = require('../../../../partenaire/Calendrier/tarif/utility.js');
+const { getDate } = require('../../../../../utility/utilityDate.js');
 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -99,7 +100,7 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
   }
 
   const debut = new Date(bornes.debut);
-  const fin = new Date(bornes.fin);
+  let fin = new Date(bornes.fin);
   let today = new Date();
   today = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const monthDates = datesInMonth.map((i, key) => {
@@ -113,6 +114,9 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
     }else{
       price = "€ " + i.price;
       notValid = notValid + " date-icon";
+      if(getDate(fin) === getDate(i.date)){
+        price = "";
+      }
     }
 
     if(debut <= temp && fin >= temp){
