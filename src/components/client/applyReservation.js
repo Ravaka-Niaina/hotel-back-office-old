@@ -18,10 +18,14 @@ import Total from './applyReservation/Total.js';
 import InfoItineraires from './applyReservation/InfoItineraires.js';
 import {Champs} from '../common/commonAssets.js';
     import {setValue} from '../../../src/utility2.js';
+
+import { Checkbox } from "@mui/material";
+import FormControlLabel from '@mui/material/FormControlLabel';
   
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
   
+
     return (
       <div
         role="tabpanel"
@@ -49,13 +53,34 @@ function ApplyReservation(props){
     const history = useHistory();
     const [reservation, setReservation] = useState(null);
     const { _id } = useParams();
-    const [reservateur, setReservateur] = useState({nom: "", email: "", tel: "", messageParticulier: ""});
+    const [reservateur, setReservateur] = useState({nom: "",prenom : "", email: "", tel: "", messageParticulier: ""});
+    const [user, setUser] = useState({mdp : "",confirmMdp:""});
     const [openLoad, setOpenLoad] = useState(true);
 
     const [alertSuccess, setAlertSuccess] = useState(null);
     const [alertError, setAlertError] = useState(null);
     const [affilie, setAffilie] = useState([]);
     const [isEditEnabled, setIsEditEnabled] = useState(false);
+    const [showResults, setShowResults] = useState(false);
+
+    const interpretResponse = (data) => {
+        if(data.status === 200){
+            history.push('/front/login');
+        }
+    };
+
+    const register = (e) => {
+        e.preventDefault();
+        const data = {
+            nom: reservateur.nom.trim(),
+            prenom: reservateur.prenom.trim(),
+            email: reservateur.email.trim(),
+            mdp: user.mdp.trim(),
+            confirmMdp: user.confirmMdp.trim()
+        };
+        callAPI('post', '/user/register', data, interpretResponse);
+    };
+
 
     function handleResponse(res){
         console.log(res);
@@ -133,6 +158,12 @@ function ApplyReservation(props){
         setReservateur(current);
     }
 
+    function handleChangeInfoUser(field, value){
+        let current = JSON.parse(JSON.stringify(user));
+        current[field] = value;
+        setUser(current);
+    }
+
     return (
         <>
             {(reservation !== null) ? 
@@ -174,6 +205,12 @@ function ApplyReservation(props){
                                             onChange={(e) => handleChangeInfoReservateur("nom", e.target.value)} />
                                         <TextField
                                             id="outlined-required"
+                                            label="Prenom"
+                                            placeholder="dupond"
+                                            value={reservateur.prenom}
+                                            onChange={(e) => handleChangeInfoReservateur("prenom", e.target.value)} />
+                                        <TextField
+                                            id="outlined-required"
                                             label="Email"
                                             placeholder="dupond@gmail.com"
                                             type="email"
@@ -189,7 +226,34 @@ function ApplyReservation(props){
                                             label="Message particulier"
                                             placeholder="Votre message"
                                             value={reservateur.messageParticulier}
-                                            onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} />        
+                                            onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} />
+
+<div>
+                                    <FormControlLabel
+                                    control={<Checkbox/>}
+                                    label={<span id='label'>J'aimerais créer un compte.</span>}
+                                    onClick={() => {
+                                        setShowResults(!showResults);
+                                      }}
+                                    // style={{marginLeft:"20px"}}
+                                    />
+                                    {showResults ? 
+                                    <div>
+                                    <TextField 
+                                    label="Mot de passe "
+                                    value={user.mdp}
+                                    onChange={(e) => handleChangeInfoUser("mdp", e.target.value)}
+                                     />
+                                    <br/>
+                                    <TextField 
+                                    label="Confirmer le mot de passe"
+                                    value={user.confirmMdp}
+                                    onChange={(e) => handleChangeInfoUser("confirmMdp", e.target.value)}
+                                     />
+                                     </div>                                
+                                        : null
+                                    }
+                                    </div>        
                                     </Box>
                                     
                                 </div>
@@ -222,7 +286,7 @@ function ApplyReservation(props){
                         <Stack direction="row" spacing={2}>
                             <Button variant="contained" onClick={(e) => setIsEditEnabled(!isEditEnabled)}>{isEditEnabled ? "Désactiver modification réservation" : "Modifier réservation"}</Button>
                             <Button variant="contained">Annuler réservation</Button>
-                            <Button variant="contained" onClick={(e) => validerReservation()}>Valider réservation</Button>
+                            <Button variant="contained" onClick={(e) => {validerReservation();register(e)}}>Valider réservation</Button>
                         </Stack>
                     </Box>
                 </div>

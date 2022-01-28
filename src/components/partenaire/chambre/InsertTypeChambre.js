@@ -235,13 +235,8 @@ function InsertTypeCHambre(){
       history.push('/back/login');
     }else if(res.status === 403){
       history.push('/notEnoughAccessRight');
-<<<<<<< HEAD
     }
     else{
-=======
-    }else{
-      setBtnLoad(false);
->>>>>>> origin/btnLoadAnja
       let keys = Object.keys(res.errors);
       keys.map((k) => {
         currentState.error[k] = res.errors[k];
@@ -648,51 +643,11 @@ function InsertTypeCHambre(){
 
                     <div className="pied" style={{marginTop:'30px'}}>   
                      <div class="bouton-aligne">
-<<<<<<< HEAD
                       { isInsert && hasARInsert 
                       ? <>
                         { btnLoad 
                         ? <ButtonLoading /> 
                         : <Button  
-=======
-                     {isInsert && hasARInsert 
-                      ? <>
-                        {
-                          btnLoad ? <ButtonLoading /> :
-                        <Button  
-                          variant="contained" 
-                          type='submit' 
-                          id='btn1'
-                          onClick={(e) => insert(e)}
-                          style={{backgroundColor:'#2ac4ea' }}>
-                          <span style={{color:'white'}}>Ajouter</span>
-                        </Button>
-                        }
-                      </>
-                      : null
-                      }
-
-                      {!isInsert && hasARUpdate
-                      ? 
-                       <>
-                      {
-                        btnLoad ? <ButtonLoading /> :
-                        <Button  
-                          variant="contained" 
-                          type='submit' 
-                          id='btn1'
-                          onClick={(e) => update(e)}
-                          style={{backgroundColor:'#2ac4ea' }}>
-                          <span style={{color:'white'}}>Modifier</span>
-                        </Button>
-                      }
-                      </>
-                      : null
-                      }
-                      {
-                        btnLoad ? <ButtonLoading /> :
-                        <Button  
->>>>>>> origin/btnLoadAnja
                           variant="contained" 
                           type='submit' 
                           id='btn1'
@@ -732,9 +687,5 @@ function InsertTypeCHambre(){
             </div>
   );
 }
-  
-<<<<<<< HEAD
+
 export default InsertTypeCHambre;
-=======
-  export default InsertTypeCHambre;
->>>>>>> origin/btnLoadAnja
