@@ -8,16 +8,16 @@ import TableBody from '@mui/material/TableBody';
 import {StyledTableCell, StyledTableRow, 
     rows, rowsPaiement, Champs, ChampsImportant, line} from '../../common/commonAssets.js';
 import TarifReserves from './TarifReserves.js';
-
+import './Itineraires.css';
 function InfoItineraires(props){
     let itineraires = [];
     if(props.reservation != null){
         for(let i = 0; i < props.reservation.itineraires.length; i++){
             const u = i;
             itineraires.push(
-                <div>
-                    <h2>Informations itinéraire {u + 1}</h2>
-                    <div style={line}>
+                <div class ="box_itineraire">
+                    <h2 class ="title_itineraire">Informations itinéraire {u + 1}</h2>
+                    {/* <div style={line}>
                         <Champs 
                             label={"Numéro de réservation " + (u + 1)} 
                             value={props.reservation.itineraires[u].num === undefined ? "Vide" : props.reservation.itineraires[u].num } />
@@ -29,12 +29,13 @@ function InfoItineraires(props){
                         <ChampsImportant label="Check in" value={props.reservation.itineraires[u].dateSejour.debut} />
                         <ChampsImportant label="Check out" value={props.reservation.itineraires[u].dateSejour.fin} />
                         <Champs label="Nombre de nuité" value={(props.reservation.itineraires[u].nights + 1) + " nights"} />
-                    </div>
-                    <TarifReserves 
+                    </div> */}
+                    <TarifReserves  
                         indexItineraire={u}
                         reservation={props.reservation}
                         setReservation={props.setReservation}
                         reservateur={props.reservateur}
+                        isEditEnabled={props.isEditEnabled}
                         affilie={props.affilie}
                         setAffilie={props.setAffilie}
                         openLoad={props.openLoad}
@@ -72,8 +73,8 @@ function InfoItineraires(props){
             </Table>
         </TableContainer>
         */}
-        <h3>Paiements</h3>
-        <TableContainer component={Paper} sx={{ width: 400 }}>
+        
+        {/* <TableContainer component={Paper} sx={{ width: 400 }}>
             <Table aria-label="customized table">
                 <TableHead>
                 <TableRow>
@@ -94,7 +95,7 @@ function InfoItineraires(props){
                     </StyledTableRow>
                 </TableBody>
             </Table>
-        </TableContainer>
+        </TableContainer> */}
         </div>
     );
 }

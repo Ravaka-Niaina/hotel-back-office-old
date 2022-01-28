@@ -1,0 +1,22 @@
+.paiement_field {
+    padding-left: 0.8rem;
+}
+.paiement_field .logo_card{
+    display: flex;
+    flex-direction: row;
+    
+}
+.paiement_field .logo_card img {
+    opacity: 0.5;
+    margin-right: 5px;
+    height: 25px;
+}
+.guest-payment_payNowAmount {
+    color: #587817;
+    font-weight: 700;
+}
+.input-field-carte label{
+    color: black !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+}

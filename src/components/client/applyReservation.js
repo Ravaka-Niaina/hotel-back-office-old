@@ -13,15 +13,14 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Icon from '@mui/material/Icon';
 import { useHistory } from 'react-router-dom';
-
+import Checkbox from '@mui/material/Checkbox';
 import Total from './applyReservation/Total.js';
 import InfoItineraires from './applyReservation/InfoItineraires.js';
 import {Champs} from '../common/commonAssets.js';
-    import {setValue} from '../../../src/utility2.js';
-
-import { Checkbox } from "@mui/material";
 import FormControlLabel from '@mui/material/FormControlLabel';
-  
+    import {setValue} from '../../../src/utility2.js';
+import './confirmation_reservation.css';
+import PaiementField from './applyReservation/PaiementField';
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
   
@@ -53,41 +52,24 @@ function ApplyReservation(props){
     const history = useHistory();
     const [reservation, setReservation] = useState(null);
     const { _id } = useParams();
-    const [reservateur, setReservateur] = useState({nom: "",prenom : "", email: "", tel: "", messageParticulier: ""});
-    const [user, setUser] = useState({mdp : "",confirmMdp:""});
+    const [reservateur, setReservateur] = useState({prenom:"",nom: "", email: "", tel: "", messageParticulier: "",numeroCarte:"",expirationCarte:"",ccvCarte:"",nomCarte:""});
     const [openLoad, setOpenLoad] = useState(true);
+    const [errorEmpty, setErrorEmpty] = useState({prenom:false,nom: false, email: false, tel: false, messageParticulier: false,numeroCarte:false,expirationCarte:false,ccvCarte:false,nomCarte:false,});
 
     const [alertSuccess, setAlertSuccess] = useState(null);
     const [alertError, setAlertError] = useState(null);
     const [affilie, setAffilie] = useState([]);
     const [isEditEnabled, setIsEditEnabled] = useState(false);
-    const [showResults, setShowResults] = useState(false);
-
-    const interpretResponse = (data) => {
-        if(data.status === 200){
-            history.push('/front/login');
-        }
-    };
-
-    const register = (e) => {
-        e.preventDefault();
-        const data = {
-            nom: reservateur.nom.trim(),
-            prenom: reservateur.prenom.trim(),
-            email: reservateur.email.trim(),
-            mdp: user.mdp.trim(),
-            confirmMdp: user.confirmMdp.trim()
-        };
-        callAPI('post', '/user/register', data, interpretResponse);
-    };
-
+    const [isConnectionShowing, setIsConnectionShowing] = useState(false);
+    const [isConditionAccepted, setIsConditionAccepted] = useState(false);
 
     function handleResponse(res){
         console.log(res);
         setOpenLoad(false);
         if(res.status === 200){
             setAlertSuccess(res.message);
-            window.location.href = '#success';
+         
+            window.location.href = "/reservation/" + _id + "/voucher";
         }else{
             setAlertError(res.errors[0].message);
             window.location.href = '#error';
@@ -154,8 +136,31 @@ function ApplyReservation(props){
 
     function handleChangeInfoReservateur(field, value){
         let current = JSON.parse(JSON.stringify(reservateur));
+        let errorField = JSON.parse(JSON.stringify(errorEmpty));
         current[field] = value;
+        if(value!=""){
+            errorField[field] = false; 
+        }
         setReservateur(current);
+        setErrorEmpty(errorField);
+    }
+    function handleEmptyInfoReservateur(field){
+        let reserv = JSON.parse(JSON.stringify(reservateur));
+        let current = JSON.parse(JSON.stringify(errorEmpty));
+       
+        if(reserv[field]==='' ||reserv[field]===null){
+            current[field] = true;
+        }else{
+            current[field] = false;
+        }
+           
+        setErrorEmpty(current);
+    }
+    function quickConnection(event){
+        setIsConnectionShowing(!isConnectionShowing);
+    }
+    function conditionAccepted(event){
+        setIsConditionAccepted(!isConditionAccepted);
     }
 
     function handleChangeInfoUser(field, value){
@@ -170,7 +175,8 @@ function ApplyReservation(props){
                 <div id="content" style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
                     <Box sx={{ bgcolor: 'background.paper', maxWidth: 800, margin: "0 auto"
                     , padding: "15px 15px"}}>
-                        <h1>Détails réservation</h1>
+                        {/* <h1>Détails réservation</h1> */}
+                        <button class="btn button_btn button_secondary button_sm" datatest="Button"><span>CONNECTER-VOUS POUR RÉSERVER RAPIDEMENT</span></button>
                         {alertSuccess != null ? 
                             <div id="success">
                                 <Stack sx={{ width: '100%' }} spacing={2}>
@@ -185,109 +191,183 @@ function ApplyReservation(props){
                                 </Stack>
                             </div> : null
                         }
-                        <h2>Informations sur la personne qui fait la réservation</h2>
-                        <Box>
-                            {isEditEnabled ?
-                                <div>
-                                    <Box
-                                        component="form"
-                                        sx={{
-                                            '& .MuiTextField-root': { m: 1, width: '25ch' },
-                                        }}
-                                        noValidate
-                                        autoComplete="off"
-                                    >
-                                        <TextField
-                                            id="outlined-required"
-                                            label="Nom"
-                                            placeholder="dupond"
-                                            value={reservateur.nom}
-                                            onChange={(e) => handleChangeInfoReservateur("nom", e.target.value)} />
-                                        <TextField
-                                            id="outlined-required"
-                                            label="Prenom"
-                                            placeholder="dupond"
-                                            value={reservateur.prenom}
-                                            onChange={(e) => handleChangeInfoReservateur("prenom", e.target.value)} />
-                                        <TextField
-                                            id="outlined-required"
-                                            label="Email"
-                                            placeholder="dupond@gmail.com"
-                                            type="email"
-                                            value={reservateur.email}
-                                            onChange={(e) => handleChangeInfoReservateur("email", e.target.value)} />
-                                        <TextField
-                                            id="outlined-required"
-                                            label="Tel"
-                                            placeholder="034 00 000 00"
-                                            value={reservateur.tel}
-                                            onChange={(e) => handleChangeInfoReservateur("tel", e.target.value)} />
-                                        <TextField 
-                                            label="Message particulier"
-                                            placeholder="Votre message"
-                                            value={reservateur.messageParticulier}
-                                            onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} />
-
-<div>
-                                    <FormControlLabel
-                                    control={<Checkbox/>}
-                                    label={<span id='label'>J'aimerais créer un compte.</span>}
-                                    onClick={() => {
-                                        setShowResults(!showResults);
-                                      }}
-                                    // style={{marginLeft:"20px"}}
-                                    />
-                                    {showResults ? 
+                        <div class="infos_contact">
+                            <div class="infos_contact_header">
+                                <h2 class="infos_heading">Informations de contact</h2>
+                                {isEditEnabled ?
+                                <span class="required-field-indicator-message_container">
+                                    <span><span class="required-field-indicator-message_required">*</span> Obligatoire</span>
+                                </span> : null
+                                }
+                            </div>
+                            <Box>
+                                {isEditEnabled ?
                                     <div>
-                                    <TextField 
-                                    label="Mot de passe "
-                                    value={user.mdp}
-                                    onChange={(e) => handleChangeInfoUser("mdp", e.target.value)}
-                                     />
-                                    <br/>
-                                    <TextField 
-                                    label="Confirmer le mot de passe"
-                                    value={user.confirmMdp}
-                                    onChange={(e) => handleChangeInfoUser("confirmMdp", e.target.value)}
-                                     />
-                                     </div>                                
-                                        : null
-                                    }
-                                    </div>        
-                                    </Box>
+                                        <Box
+                                            component="form"
+                                            sx={{
+                                                '& .MuiTextField-root': { m: 1, width: '35ch' },
+                                            }}
+                                            noValidate
+                                            autoComplete="off"
+                                            class="container_infos"
+                                        >
+                                            {/* <TextField
+                                                id="outlined-required"
+                                                label="Nom"
+                                                placeholder="dupond"
+                                                value={reservateur.nom}
+                                                onChange={(e) => handleChangeInfoReservateur("nom", e.target.value)} />
+                                            <TextField
+                                                id="outlined-required"
+                                                label="Email"
+                                                placeholder="dupond@gmail.com"
+                                                type="email"
+                                                value={reservateur.email}
+                                                onChange={(e) => handleChangeInfoReservateur("email", e.target.value)} />
+                                            <TextField
+                                                id="outlined-required"
+                                                label="Tel"
+                                                placeholder="034 00 000 00"
+                                                value={reservateur.tel}
+                                                onChange={(e) => handleChangeInfoReservateur("tel", e.target.value)} />
+                                            <TextField 
+                                                label="Message particulier"
+                                                placeholder="Votre message"
+                                                value={reservateur.messageParticulier}
+                                                onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} />         */}
+                                                <div class="input-field">
+                                                    <input type="text" value={reservateur.prenom}
+                                                onChange={(e) => handleChangeInfoReservateur("prenom", e.target.value)} onBlur={(e) => handleEmptyInfoReservateur("prenom")} required />
+                                                    <label>Prénom <span class="red_required">*</span></label>
+                                                    {
+                                                        errorEmpty.prenom ?
+                                                        <div class="error_text">
+                                                            Le prénom est obligatoire.
+                                                        </div>
+                                                        :null
+                                                    }
+                                                </div>
+                                                <div class="input-field">
+                                                    <input type="text" value={reservateur.nom} onBlur={(e) => handleEmptyInfoReservateur("nom")}
+                                                             onChange={(e) => handleChangeInfoReservateur("nom", e.target.value)} required />
+                                                        <label>Nom <span class="red_required">*</span></label>
+                                                        {
+                                                            errorEmpty.nom ?
+                                                            <div class="error_text">
+                                                                Le nom est obligatoire.
+                                                            </div>
+                                                            :null
+                                                        }
+                                                </div>
+                                                <div class="input-field">
+                                                    <input type="text" value={reservateur.tel}
+                                                            onChange={(e) => handleChangeInfoReservateur("tel", e.target.value)} required />
+                                                        <label>Téléphone pendant la journée</label>
+                                                </div>
+                                                <div class="input-field input-email">
+                                                    <input type="text" value={reservateur.email} onBlur={(e) => handleEmptyInfoReservateur("email")}
+                                                            onChange={(e) => handleChangeInfoReservateur("email", e.target.value)} required />
+                                                        <label>Adresse e-mail <span class="red_required">*</span></label>
+                                                        {
+                                                            errorEmpty.email ?
+                                                            <div class="error_text">
+                                                                L'adresse e-mail est obligatoire.
+                                                            </div>
+                                                            :null
+                                                        }
+                                                     <p class="infos_mail">Voici l'adresse e-mail à laquelle votre confirmation sera envoyée.</p>    
+                                                </div>
+
+                                                
+                                        </Box>
+                                        <hr style={{marginLeft:'0.8em'}}></hr>
+                                        <h2 class="infos_heading"><span>Réserver plus rapidement (en option)</span></h2>
+                                        
+                                        <div class="inscription_quick">
+                                            <input type="checkbox" id="inscription_quick" name="scales" 
+                                                    checked={isConnectionShowing} onChange={quickConnection}/>
+                                            <label for="scales">J'aimerais créer un compte.</label>
+                                        </div>
+                                        {isConnectionShowing ?
+                                            <div class="password_quick">
+                                                    <div class="input-field">
+                                                        <input type="password" required />
+                                                            <label>Mot de passe <span class="red_required">*</span></label>
+                                                    </div>
+                                                    
+                                                    <div class="input-field">
+                                                        <input type="password" required />
+                                                        <label>Confirmer le mot de passe <span class="red_required">*</span></label>
+                                                    </div>
+                                            </div>
+                                        :null
+                                        }
+                                        <hr style={{marginLeft:'0.8em'}}></hr>
+                                        <h2 class="infos_heading"><span>Détails et préférences supplémentaires</span></h2>
+                                        <div class="details_reservation">
+                                            <textarea value={reservateur.messageParticulier}
+                                                onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} class="text_reservation" id="details_reservation" maxlength="200" type="textarea" name="commentArea" aria-label="Veuillez noter vos demandes ou besoins spéciaux (maximum 200 caractères)" placeholder=""></textarea>
+                                            <label class="label_reservation">Veuillez indiquer vos demandes ou besoins spéciaux.</label>
+                                        </div>
+                                       
+                                    </div>
+                                    : <div class="champs">
+                                        <Champs label="Nom" value={reservateur.nom.trim() !== "" ? reservateur.nom : "vide"} />
+                                        <Champs label="Email" value={reservateur.email.trim() !== "" ? reservateur.email : "vide"} />
+                                        <Champs label="Tel" value={reservateur.tel.trim() !== "" ? reservateur.tel : "vide"} />
+                                        <Champs label="Message particulier" value={reservateur.messageParticulier.trim() != "" ? reservateur.messageParticulier : "vide"} />
+                                    </div>
                                     
-                                </div>
-                                : <div>
-                                    <Champs label="Nom" value={reservateur.nom.trim() !== "" ? reservateur.nom : "vide"} />
-                                    <Champs label="Email" value={reservateur.email.trim() !== "" ? reservateur.email : "vide"} />
-                                    <Champs label="Tel" value={reservateur.tel.trim() !== "" ? reservateur.tel : "vide"} />
-                                    <Champs label="Message particulier" value={reservateur.messageParticulier.trim() != "" ? reservateur.messageParticulier : "Vide"} />
-                                </div>
-                                
-                                } 
-                        </Box>
-                        
+                                    } 
+                            </Box>
+                        </div>
                         <InfoItineraires 
                             reservation={reservation} 
                             setReservation={setReservation}
                             reservateur={reservateur}
                             affilie={affilie}
                             setAffilie={setAffilie}
+                            isEditEnabled={isEditEnabled}
                             openLoad={openLoad}
                             setOpenLoad={setOpenLoad}
                             isEditEnabled={isEditEnabled} />
-                        <Total toPay={reservation.toPay} />
-                        <Stack direction="row" spacing={2}>
+                        <div class="infos_contact">
+                            <h2 class="infos_heading">Paiement</h2>
+                            <PaiementField reservation={reservation}/>
+                            <Total toPay={reservation.toPay} />
+                            
+                        </div>
+                        <div class="infos_contact">
+                            <h2 class="infos_heading">Confirmation</h2>
+                            <div class="inscription_quick">
+                                            <input type="checkbox" id="conditions" name="scales" 
+                                                    checked={isConditionAccepted} onChange={conditionAccepted}/>
+                                            <label for="scales" style={{fontWeight:'normal'}}>* J'accepte la <span><a href='' style={{textDecoration:'none',color:'#587817'}}> politique de confidentialité </a> </span>.</label>
+                                            
+                            </div>
+                            <p style={{marginLeft:'0.8rem',fontSize:14}}>En effectuant cette réservation, j'accepte les <span> <a href='' style={{textDecoration:'none',color:'#587817'}}> conditions de réservation. </a> </span> </p>
+                        </div>
+                        {/* <Stack direction="row" spacing={2}>
                             <Button variant="contained">Imprimer</Button>
                             <Button variant="contained">Partager</Button>
                             <Button variant="contained">Ajouter au calendrier</Button>
-                        </Stack>
+                        </Stack> */}
                         <br />
-                        <Stack direction="row" spacing={2}>
-                            <Button variant="contained" onClick={(e) => setIsEditEnabled(!isEditEnabled)}>{isEditEnabled ? "Désactiver modification réservation" : "Modifier réservation"}</Button>
-                            <Button variant="contained">Annuler réservation</Button>
-                            <Button variant="contained" onClick={(e) => {validerReservation();register(e)}}>Valider réservation</Button>
-                        </Stack>
+                        <div style={{display:'flex',flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between'}}>
+                            <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" variant="contained" onClick={(e) => setIsEditEnabled(!isEditEnabled)}>{isEditEnabled ? "Désactiver modification réservation" : "Modifier réservation"}</button>
+                            <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" variant="contained">Annuler réservation</button>
+                         </div>
+                        
+                        {
+                            isConditionAccepted ?
+                            <div style={{display:'flex',flexDirection:'row',justifyContent:'flex-end'}}>
+                                <button enabled={isConditionAccepted} style={{marginTop:20,minWidth:250}}  class="btn button_btn button_pink button_sm" variant="contained" onClick={(e) => validerReservation()}>Valider réservation</button>
+                       
+                            </div> : null
+                        }
+                         
+                        
                     </Box>
                 </div>
                 : <Stack sx={{ width: '100%' }} spacing={2}>

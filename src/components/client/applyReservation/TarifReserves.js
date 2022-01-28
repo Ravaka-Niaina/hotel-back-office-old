@@ -6,7 +6,10 @@ import InputUtilisateur from './InputUtilisateur.js';
 import Politiques from './Politiques.js';
 import ConfirmAnnulChambre from './ConfirmAnnulChambre.js';
 import {setValue} from '../../../../src/utility2.js';
-
+import {getDiffDays} from '../../client/utility.js';
+import './Itineraires.css';
+import Box from '@mui/material/Box';
+import InputContact from './InputContact.js';
 function TarifReserves(props){
     const [annulChambre, setAnnulChambre] = useState(
         {
@@ -15,6 +18,11 @@ function TarifReserves(props){
             indexItineraire: props.indexItineraire,
             indexTarif: null
         });
+    const [reservateur, setReservateur] = useState({prenom:"",nom: "", email: "", tel: "", messageParticulier: ""});
+    const [errorEmpty, setErrorEmpty] = useState({prenom:false,nom: false, email: false, tel: false, messageParticulier: false});
+    const [isEditEnabled, setIsEditEnabled] = useState(props.isEditEnabled);
+    const [isClientPrincipal, setIsClientPrincipal] = useState(false);
+
 
     function showAnnulModal(indexTarif){
         console.log("Annulation en cours...");
@@ -24,40 +32,55 @@ function TarifReserves(props){
         console.log(temp);
         setAnnulChambre(temp);
     }
+   
     
     let tarifs = [];
     for(let i = 0; i < props.reservation.itineraires[props.indexItineraire].tarifReserves.length; i++){
         if(props.reservation.itineraires[props.indexItineraire].tarifReserves[i].dateAnnulation === undefined){
             const u = i;
-            console.log("u = " + u);
+           // console.log("u = " + u);
             const tarif = props.reservation.itineraires[props.indexItineraire].tarifReserves[i];
+            // console.log("tarifs");
+            // console.log(tarif);
+            const datedebut = new Date(tarif.dateSejour.debut);
+            const datefin = new Date(tarif.dateSejour.fin);
+            const months = ['jan','fev','mar', 'av','mai','juin','juil','août','sept','oct','nov','déc'];
             tarifs.push(
-                <div>
-                    <h3>Informations Hôtel</h3>
-                    <div style={line}>
-                        <Champs label="Nom" value={tarif.infoTypeChambre.infoHotel.nom} />
-                        <Champs label="Adresse" value={tarif.infoTypeChambre.infoHotel.adresse} />
-                        <Champs label="Email" value={tarif.infoTypeChambre.infoHotel.email} />
-                        <Champs label="Téléphone" value={tarif.infoTypeChambre.infoHotel.tel} />
+                <div class="box_reservation">
+                    
+                    <div class="infos_chambre">
+                        <img  src='https://www.hotel-restaurant-colbert.com/wp-content/uploads/2012/06/Logo-Colbert1-Copier.jpg'/>
+                        <div class="details_chambre">
+                            <p class="title_hotel">{tarif.infoTypeChambre.infoHotel.nom}</p>
+                            <p class="chambre"> {tarif.nomTypeChambre} </p>
+                            <p class="tarifs"> {tarif.nomTarif} </p>
+                            <p class="nuites"> {getDiffDays(new Date(tarif.dateSejour.debut),new Date(tarif.dateSejour.fin))} nuités </p>
+                            <p class="hotel"> {datedebut.getDate()} {months[datedebut.getMonth()]} { datedebut.getYear()!=datefin.getYear() ? datedebut.getYear()+1900 : ""} -  {datefin.getDate()} {months[datefin.getMonth()]} {datefin.getYear()+1900} </p>
+                            
+                            
+                        </div>
+
+                    </div> 
+                    <div class="input_utilisateur">
+                        <InputContact isEditEnabled={props.isEditEnabled} reservateur={props.reservateur} />
+
                     </div>
-                    <div style={line}>
-                        <Champs label="Type chambre" value={tarif.nomTypeChambre} />
-                        <Champs label="Plan tarifaire" value={tarif.nomTarif} />
-                        <Champs label="Nombre de personnes" value={tarif.nbPers} />
-                        <ChampsImportant label="Prix sans promotion" value={"€ " + tarif.toPay.beforeProm} />
-                        <ChampsImportant label="Prix avec promotion" value={"€ " + tarif.toPay.afterProm} />
+                    
+                    <div class="politique_annulation">
+                        <hr style={{marginLeft:'0.8em'}}></hr>    
+                        <h2 class="infos_heading">Politiques d'annulation et paiement:</h2>
+                        <Politiques politiques={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTarif.infoPolitique} tarif={tarif} />
+                        <div class="prix_tarif">
+                            <p class="prix">Prix:</p>
+                            <p class="prix">{tarif.toPay.afterProm} € </p>
+                        </div>
+                        <button style={{marginLeft:'0.8em'}} class="btn button_btn button_secondary button_sm" datatest="Button"><span>Annuler</span></button>
+                        
+                        <hr style={{marginLeft:'0.6em'}}></hr> 
+                        
+                        
                     </div>
-                    <InputUtilisateur 
-                        reservation={props.reservation}
-                        setReservation={props.setReservation}
-                        indexItineraire={props.indexItineraire}
-                        indexTarif={u}
-                        reservateur={props.reservateur}
-                        affilie={props.affilie}
-                        setAffilie={props.setAffilie}
-                        isEditEnabled={props.isEditEnabled} />
-                    <Politiques politiques={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTarif.infoPolitique} />
-                    <Button variant="contained" color="warning" onClick={(e) => showAnnulModal(u)}>Annuler</Button>
+
                 </div>
             );
         }
