@@ -82,7 +82,11 @@ function ListTarif(props){
         for(let i = 0; i < number ; i++){
             hotel = hotel + nameHotel[i] ;
         }
-        return random = date+hotel+(random + rand)+nameTC[0][0] + nameTC[1][0];
+        return random = date+hotel+
+        (random + rand)+nameTC[0]
+        [0] + 
+        nameTC[1]
+        [0];
     }
 
     function addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre){
