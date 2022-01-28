@@ -82,6 +82,7 @@ function ListTarif(props){
         for(let i = 0; i < number ; i++){
             hotel = hotel + nameHotel[i] ;
         }
+        console.log(nameTC);
         return random = date+hotel+
         (random + rand)+nameTC[0]
         [0] + 
