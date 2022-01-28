@@ -19,9 +19,16 @@ import InfoItineraires from './applyReservation/InfoItineraires.js';
 import {Champs} from '../common/commonAssets.js';
 import FormControlLabel from '@mui/material/FormControlLabel';
     import {setValue} from '../../../src/utility2.js';
+<<<<<<< HEAD
 import './confirmation_reservation.css';
 import PaiementField from './applyReservation/PaiementField';
 import { is } from 'date-fns/locale';
+=======
+
+import { Checkbox } from "@mui/material";
+import FormControlLabel from '@mui/material/FormControlLabel';
+  
+>>>>>>> 9287bb5f (login & inscription client user)
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
   
@@ -53,7 +60,11 @@ function ApplyReservation(props){
     const history = useHistory();
     const [reservation, setReservation] = useState(null);
     const { _id } = useParams();
+<<<<<<< HEAD
     const [reservateur, setReservateur] = useState({prenom:"",nom: "", email: "", tel: "", messageParticulier: "",numeroCarte:"",expirationCarte:"",ccvCarte:"",nomCarte:""});
+=======
+    const [reservateur, setReservateur] = useState({nom: "",prenom : "", email: "", tel: "", messageParticulier: ""});
+>>>>>>> 9287bb5f (login & inscription client user)
     const [user, setUser] = useState({mdp : "",confirmMdp:""});
     const [openLoad, setOpenLoad] = useState(true);
     const [errorEmpty, setErrorEmpty] = useState({prenom:false,nom: false, email: false, tel: false, messageParticulier: false,numeroCarte:false,expirationCarte:false,ccvCarte:false,nomCarte:false,});
@@ -65,6 +76,26 @@ function ApplyReservation(props){
     const [isConnectionShowing, setIsConnectionShowing] = useState(false);
     const [isConditionAccepted, setIsConditionAccepted] = useState(false);
     const [conditionError, setConditionError] = useState(false);
+    const [showResults, setShowResults] = useState(false);
+
+    const interpretResponse = (data) => {
+        if(data.status === 200){
+            history.push('/front/login');
+        }
+    };
+
+    const register = (e) => {
+        e.preventDefault();
+        const data = {
+            nom: reservateur.nom.trim(),
+            prenom: reservateur.prenom.trim(),
+            email: reservateur.email.trim(),
+            mdp: user.mdp.trim(),
+            confirmMdp: user.confirmMdp.trim()
+        };
+        callAPI('post', '/user/register', data, interpretResponse);
+    };
+
 
     function handleResponse(res){
         console.log(res);
@@ -175,6 +206,12 @@ function ApplyReservation(props){
             setConditionError(false);
         }
         setIsConditionAccepted(!isConditionAccepted);
+    }
+
+    function handleChangeInfoUser(field, value){
+        let current = JSON.parse(JSON.stringify(user));
+        current[field] = value;
+        setUser(current);
     }
 
     function handleChangeInfoUser(field, value){
@@ -376,7 +413,8 @@ function ApplyReservation(props){
                             {/* <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" variant="contained" onClick={(e) => setIsEditEnabled(!isEditEnabled)}>{isEditEnabled ? "Désactiver modification réservation" : "Modifier réservation"}</button> */}
                             <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained">Annuler réservation</button>
                             <button  style={{minWidth:250,heigth:80}}  class="btn button_btn button_pink button_sm" variant="contained" onClick={(e) => validerReservation()}>Valider réservation</button>
-                       
+                            <Button variant="contained" onClick={(e) => {validerReservation();register(e)}}>Valider réservation</Button>
+
                          </div>
                         
                        
