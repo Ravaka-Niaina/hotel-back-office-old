@@ -53,6 +53,7 @@ import  Tooltip from "./SkeletonListe/modal.js";
 
 import NotFound from "./components/common/404NotFound.js";
 import NotEnoughAccessRight from "./components/common/NotEnoughAccessRight.js";
+import RechercheReservation from "./components/client/RechercheReseravation.js";
 
 function App(){
   return(
@@ -103,6 +104,7 @@ function App(){
         <Route path="/front/login" exact component={Login} />
         <Route path="/front/Register" exact component={Register} />
         <Route path="/front/userList" exact component={listeUser} />
+        <Route path="/front/researchReservation" exact component={RechercheReservation} />
         <Route path="/devis" exact component={Devis} />
 
         <Route path="/reservation/:_id" exact component={Reservation} />

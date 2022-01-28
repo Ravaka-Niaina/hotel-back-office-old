@@ -14,6 +14,8 @@ import Navbar from '../Navbar/Navbar.js'
 import { useParams, useHistory, Link } from 'react-router-dom'
 import "./global.css";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
+import ButtonLoading from "../buttonLoading.js"
 
 function Global(){
     const [datePrice , setDatePrice] = useState([{ date:"" , pourcentage: ""}]);
@@ -32,7 +34,8 @@ function Global(){
             pourcentage : null,
             vide : null
         }
-    );   
+    );  
+    const [btnLoad, setBtnLoad] = useState(false); 
   
     
        
@@ -46,15 +49,16 @@ function Global(){
                     duplic[err[indice]] = res.errors[err[indice]];
                 }
             setState(duplic);
-            console.log(duplic);
+            setBtnLoad(false);
         }
         
         if(res.status == 500){
             setMessage(res.message);
+            setBtnLoad(false);
         }else if(res.status == 200 ){
-            console.log(res);
             history.push("/back/politique/list");
        }else{
+            setBtnLoad(false);
            console.log("pas de reponse");
        }
            
@@ -205,12 +209,16 @@ function Global(){
     useEffect(() => {
         if(_id != null){
             callAPI('get', '/politique/detail/'+ _id, {}, setListPolitiqueAnnulation);
-        }
+            console.log("modification")
+        }else(
+            console.log("insertion")
+        )
         
     }, [_id])
 
 
     const insert = () => {
+        setBtnLoad(true);
         for(let i = 0 ; i < datePrice.length ; i++){
             datePrice[i].date = Number.parseInt(datePrice[i].date);
             datePrice[i].pourcentage = Number.parseInt(datePrice[i].pourcentage); 
@@ -223,6 +231,7 @@ function Global(){
       }
 
       const update = () => {
+        setBtnLoad(true);
         let id1 = _id 
         for(let i = 0 ; i < datePrice.length ; i++){
             datePrice[i].date = Number.parseInt(datePrice[i].date);
@@ -382,42 +391,54 @@ function Global(){
                                 </div> <br/>
                                 
                                    <div style = {{width : "fit-content" , margin : " 0 auto" }}>
+                                        <div class="bouton-aligne">
                                        { 
                                         _id == null ? 
                                            <> 
                                                {
                                                     nom == "" ? 
-                                                    <Button 
-                                                    variant="contained" 
-                                                    onClick={(e) => insert()} disabled>
+                                                    <Button variant="contained"  disabled>
                                                         Sauvegarder
                                                     </Button> :
-                                                    <Button 
-                                                    variant="contained" 
-                                                    style={{backgroundColor:'#2ac4ea' }}
-                                                    id='btn1' 
-                                                    onClick={(e) => insert()} >
-                                                        Sauvegarder
-                                                    </Button>
+                                                    <> 
+                                                        {
+                                                            btnLoad ? <ButtonLoading /> :
+                                                             <Button 
+                                                                variant="contained" 
+                                                                style={{backgroundColor:'#2ac4ea' }}
+                                                                id='btn1' 
+                                                                onClick={(e) => insert()} >
+                                                                Sauvegarder
+                                                            </Button>
+                                                        }
+                                                    </> 
+                                                   
                                                 }
                                             </> :
                                             <> 
                                                 {
                                                      nom == "" ? 
-                                                     <Button variant="contained" color="success" onClick={(e) => update()} disabled >
+                                                     <Button variant="contained" color="success"  disabled >
                                                         modifier
                                                     </Button> : 
-                                                    <Button variant="contained" 
-                                                    style={{backgroundColor:'#FA8072'}}
-                                                    onClick={(e) => update()} >
-                                                        <span style={{color:'white'}}>modifier</span>
-                                                    </Button>
+                                                     <> 
+                                                        {
+                                                            btnLoad ? <ButtonLoading /> :
+                                                            <Button variant="contained" 
+                                                                style={{backgroundColor:'#FA8072'}}
+                                                                onClick={(e) => update()} >
+                                                                <span style={{color:'white'}}>modifier</span>
+                                                            </Button>
+                                                        }
+                                                    </>
 
                                                 }   
                                             </> 
                                             
                                         }
-                                            <Link to ="/politique/list" style={{textDecoration:'none'}}>
+                                        </div> 
+                                        <div class="bouton-aligne">                                       
+                                            <Link to ="/back/politique/list" style={{textDecoration:'none'}}>
                                                 <Button 
                                                 variant="outlined" 
                                                 id='btn2' 
@@ -425,9 +446,11 @@ function Global(){
                                                     retour
                                                 </Button>
                                             </Link>
+                                            </div>
                                     </div> <br/>
                                               
                         </div>
+                        <SkelettonForm />
             </>
         );
     

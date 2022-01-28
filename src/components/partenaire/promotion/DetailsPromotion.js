@@ -22,6 +22,7 @@ import callAPI from '../../../utility';
 
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
+import ButtonLoading from "../buttonLoading.js"
 
 function getNDigits(number, digit){
   digit = digit + '';
@@ -139,7 +140,8 @@ class DetailsPromotions extends React.Component{
             ,isLeadHour: true
             , tarifs: []
             , typeChambres : []
-            , previewPhoto: [this.noImage]
+            , previewPhoto: [this.noImage],
+              btnLoad : false
         }
         this.handleCheckBoxPlanTarifaire = this.handleCheckBoxPlanTarifaire.bind(this);
         this.handleCheckBoxTypeChambre = this.handleCheckBoxTypeChambre.bind(this);
@@ -187,8 +189,13 @@ class DetailsPromotions extends React.Component{
       if(res.status === 200){
         this.props.history.push('/back/promotion');
       }else if(res.status === 401){//Unauthorized
+        let current = {...this.state};
+        current.btnLoad = false;
+        this.setState(current);
         this.props.history.push('/back/login');
       }else{
+        currentState.btnLoad = false;
+        this.setState(currentState);
         currentState.errors = res.errors;
         keys = Object.keys(res.errors);
         keys.map((k) => {
@@ -261,8 +268,9 @@ setListTypeChambre(res){
             }
         }
         toSend.typeChambre = typeChambre;
-
-        console.log(toSend);
+        let current = {...this.state};
+        current.btnLoad = true;
+        this.setState(current);
         
         axios({
             method: 'post',
@@ -350,7 +358,7 @@ setListTypeChambre(res){
         return(
 <div className="block">
 <form>
-<h4 className='entete'>Modifier promotion</h4>
+<h4 className='entete'>Ajouter une nouvelle promotion</h4>
 <CustomError errors={this.state.errors} />
   <div className="block1">
   <h6>Détails de la promotion</h6>
@@ -699,20 +707,23 @@ helperText={this.state.error.nom === null ? null : this.state.error.nom}
     
   <div className="pied" style={{marginTop:'25px'}}>   
    <div class="bouton-aligne">  
-<Button  
-variant="contained" 
-type='submit' 
-style={{backgroundColor:'#FA8072'}}
-onClick={(e) => this.update(e)}>
-<span style={{color:'white'}}>Modifier</span>
-</Button>
+   {
+     this.state.btnLoad ? <ButtonLoading /> :
+    <Button  
+      variant="contained" 
+      type='submit' 
+      style={{backgroundColor:'#FA8072'}}
+      onClick={(e) => this.update(e)}>
+      <span style={{color:'white'}}>Modifier</span>
+    </Button>
+    }
    </div>
    <div class="bouton-aligne">
     <Link to={'/back/promotion'} style={{textDecoration:'none'}}>
        <Button variant="outlined" 
        id="btn2"
        >
-<span style={{color:'#1976d2'}}>Retour</span>
+      <span style={{color:'#1976d2'}}>Retour</span>
        </Button>
     </Link>
    </div>

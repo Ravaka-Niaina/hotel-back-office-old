@@ -162,7 +162,7 @@ class DChambre extends React.Component{
                             </div>
                             <div class="row">
                                 <div class="col">
-                                    <ListTarif context={this.props.context} tarifs={typeChambre.tarifs} idTypeChambre={typeChambre._id} />
+                                <ListTarif context={this.props.context} tarifs={typeChambre.tarifs} idTypeChambre={typeChambre._id} nameTC = {typeChambre.nom} />
                                 </div>
                             </div>  
                         </div>      

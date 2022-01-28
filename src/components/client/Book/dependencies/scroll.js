@@ -62,7 +62,9 @@ class Scroll extends React.Component{
             openChangeNbGuest: false,
             openLoad: false,
             isListTarifDispoReceived: false,
-            isFactureReceived: false
+            isFactureReceived: false,
+            nameHotel : "COLBERT",
+            random : 0,
         };
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
         this.setResult = this.setResult.bind(this);
@@ -179,6 +181,7 @@ class Scroll extends React.Component{
       
     }
     setReservationEnCours(reservation, isFactureReceived){
+        console.log(reservation);
         let currentState = JSON.parse(JSON.stringify(this.state));
         currentState.reservationEnCours = reservation;
         currentState.reload = true;

@@ -20,7 +20,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormLabel from '@mui/material/FormLabel';
-
+import ButtonLoading from "../buttonLoading.js"
 
 import { useState } from 'react';
 
@@ -113,6 +113,7 @@ function InsertPromotion(){
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [btnLoad, setBtnLoad] = useState(false);
 
   const history = useHistory();
 
@@ -157,8 +158,10 @@ function InsertPromotion(){
     if(res.status === 200){
       history.push('/back/promotion');
     }else if(res.status === 401){//Unauthorized
+      setBtnLoad(false);
       history.push('/back/login');
     }else{
+      setBtnLoad(false);
       console.log(res.errors);
       let keys = Object.keys(res.errors);
       keys.map((k) => {
@@ -171,6 +174,7 @@ function InsertPromotion(){
   function insert(e){
       e.preventDefault();
       console.log('Envoie en attente...');
+      setBtnLoad(true);
       let toSend = JSON.parse(JSON.stringify(state));
       let selectedPlan = [];
       for(let i = 0; i < state.planTarifaire.length; i++){
@@ -670,20 +674,23 @@ helperText={state.error.nom === null ? null : state.error.nom}
 
   <div className="pied" style={{marginTop:'25px'}}>   
    <div class="bouton-aligne">  
-<Button  
-variant="contained" 
-type='submit' 
-style={{textDecoration:'none',backgroundColor:'#2ac4ea'}}
-onClick={(e) => insert(e)}>
-<span style={{color:'white'}}>Ajouter</span>
-</Button>
-   </div>
+      {
+        btnLoad ? <ButtonLoading /> :
+        <Button  
+          variant="contained" 
+          type='submit' 
+          style={{textDecoration:'none',backgroundColor:'#2ac4ea'}}
+          onClick={(e) => insert(e)}>
+          <span style={{color:'white'}}>Ajouter</span>
+        </Button>
+      }
+    </div>
    <div class="bouton-aligne">
-    <Link to={'/promotion'} style={{textDecoration:'none'}}>
+    <Link to={'/back/promotion'} style={{textDecoration:'none'}}>
        <Button variant="outlined" 
        id="btn2"
        >
-<span style={{color:'#1976d2'}}>Retour</span>
+      <span style={{color:'#1976d2'}}>Retour</span>
        </Button>
     </Link>
    </div>

@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import CustomError from '../../../CustomError';
 import axios from "axios";
@@ -26,6 +25,8 @@ import callAPI from '../../../utility';
 import {FileInput, Preview, Videos, Font} from './utilityTypeChambre.js';
 import {session} from '../../common/utilitySession.js';
 import NotEnoughAccessRight from '../../common/NotEnoughAccessRight';
+
+import ButtonLoading from "../buttonLoading.js"
 
 function PlanTarifaire(props){
   let i = -1;
@@ -146,6 +147,8 @@ function InsertTypeCHambre(){
   const fieldsToSet = ["_id", "nom", "nbAdulte", "nbEnfant", "photo",
       "chambreTotal", "etage", "superficie", "description",
       "planTarifaire", "equipements", "videos"];
+
+  const [btnLoad, setBtnLoad] = useState(false);
   
   const setDetailsTypeChambre = (data) => {
     let currentState = {...state};
@@ -219,6 +222,7 @@ function InsertTypeCHambre(){
   }
 
   function tryRedirect(res){
+    setBtnLoad(false);
     let currentState = JSON.parse(JSON.stringify(state));
     let keys = Object.keys(currentState.error);
     keys.map((k) => {
@@ -243,6 +247,7 @@ function InsertTypeCHambre(){
 
   function insert(e){
     e.preventDefault();
+    setBtnLoad(true);
     let toSend = JSON.parse(JSON.stringify(state));
 
     let selectedEquip = [];
@@ -265,6 +270,7 @@ function InsertTypeCHambre(){
 
   function update(e){
     e.preventDefault();
+    setBtnLoad(true);
     let toSend = {};
     fieldsToSet.map(field => {
       toSend[field] = state[field];
@@ -637,33 +643,41 @@ function InsertTypeCHambre(){
 
                     <div className="pied" style={{marginTop:'30px'}}>   
                      <div class="bouton-aligne">
-                      {isInsert && hasARInsert 
-                      ? <Button  
-                        variant="contained" 
-                        type='submit' 
-                        id='btn1'
-                        onClick={(e) => insert(e)}
-                        style={{backgroundColor:'#2ac4ea' }}>
-                        <span style={{color:'white'}}>Ajouter</span>
-                      </Button>
-                      : null}
+                      { isInsert && hasARInsert 
+                      ? <>
+                        { btnLoad 
+                        ? <ButtonLoading /> 
+                        : <Button  
+                          variant="contained" 
+                          type='submit' 
+                          id='btn1'
+                          onClick={(e) => insert(e)}
+                          style={{backgroundColor:'#2ac4ea' }}>
+                          <span style={{color:'white'}}>Ajouter</span>
+                        </Button> }
+                       </> 
+                      : null }
 
-                      {!isInsert && hasARUpdate
-                      ? <Button  
-                        variant="contained" 
-                        type='submit' 
-                        id='btn1'
-                        onClick={(e) => update(e)}
-                        style={{backgroundColor:'#2ac4ea' }}>
-                        <span style={{color:'white'}}>Modifier</span>
-                      </Button>
+                      { !isInsert && hasARUpdate
+                      ? <>
+                        { btnLoad 
+                        ? <ButtonLoading />
+                        : <Button  
+                          variant="contained" 
+                          type='submit' 
+                          id='btn1'
+                          onClick={(e) => update(e)}
+                          style={{backgroundColor:'#2ac4ea' }}>
+                          <span style={{color:'white'}}>Modifier</span>
+                        </Button> }
+                        </>
                       : null}
                      </div>
                      <div class="bouton-aligne">
                       <Link to={'/back/typeChambre'} style={{textDecoration:'none'}}>
                         <Button variant="outlined" 
                         id="btn2">
-                  <span style={{color:'#1976d2'}}>Retour</span>
+                          <span style={{color:'#1976d2'}}>Retour</span>
                         </Button>
                       </Link>
                      </div>
@@ -674,4 +688,4 @@ function InsertTypeCHambre(){
   );
 }
   
-  export default InsertTypeCHambre;
+export default InsertTypeCHambre;

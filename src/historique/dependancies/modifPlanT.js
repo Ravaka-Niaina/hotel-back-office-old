@@ -39,7 +39,7 @@ const moment = require('moment');
 const headCells = [
       {
         id: 'idTarif',
-        numeric: false,
+        numeric: true,
         disablePadding: true,
         label: 'plan Tarif',
       },
@@ -125,7 +125,7 @@ function EnhancedTableHead(props) {
       <TableHead>
         <TableRow style={{backgroundColor :"#F6F8FC",color:'white'}}>
           {headCells.map((headCell) => (
-            <TableCell
+            <TableCell style={{padding : "15px"}}
               key={headCell.id}
               align={headCell.numeric ? 'left' : 'center'}
               padding={headCell.disablePadding ? 'none' : 'normal'}
@@ -261,7 +261,7 @@ export default function Recherche(props){
     return(
         <>
             <Navbar currentPage={5}/><br/><br/><br/>
-              <Box sx={{ display: { xs: 'none', md: 'flex'  }, gap : 1 ,float : "left",paddingLeft :"50px" }} >
+              <Box sx={{ display: { xs: 'none', md: 'flex'  }, gap : 1,paddingLeft :"50px" }} >
                 <TextField 
                   size = "small"
                   label="debut"style={{width:"250px"}}
