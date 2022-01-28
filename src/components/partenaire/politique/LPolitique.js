@@ -13,6 +13,10 @@ const fieldsToPrint = [
     {field: "datePrice", label: "condition", type: "Array"},
     {field: "remboursable", label: "remboursable", type: "String"}
 ];
+const accessRightToViewInsert = ["superAdmin", "insertPolitiqueAnnulation"];
+const accessRightToDelete = ["superAdmin", "deletePolitiqueAnnulation"];
+const accessRightToViewDetails = ["superAdmin", "getPolitiqueAnnulation", "updatePolitiqueAnnulation"];
+
 const nbContent = 5;
 const urlEdit = '/back/politique/detail/';
 const rowsPerPageOptions = [5, 10, 20];
@@ -30,6 +34,9 @@ export default function ListPolitque(){
             urlEdit={urlEdit}
             nbContent={nbContent}
             rowsPerPageOptions={rowsPerPageOptions}
+            accessRightToViewInsert={accessRightToViewInsert}
+            accessRightToViewDetails={accessRightToViewDetails}
+            accessRightToDelete={accessRightToDelete}
         />
     );
 }

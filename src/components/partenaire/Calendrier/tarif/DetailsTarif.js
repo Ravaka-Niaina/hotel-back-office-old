@@ -51,6 +51,7 @@ function DetailsTarif(){
     const history = useHistory();
 
     function tryRedirect(res){
+        setBtnLoad(false);
         let temp = {...error};
         temp = {
             nom: null,
@@ -62,15 +63,6 @@ function DetailsTarif(){
             leadMin: null, 
             leadMax: null
         };
-        if(res.status === 200){
-            history.push('/back/tarif');
-        }else{
-            setBtnLoad(false);
-            let keys = Object.keys(res.errors);
-            keys.map((k) => {
-                temp[k] = res.errors[k];
-            });
-        }
 
         if(res.status === 200){
             history.push('/back/tarif');
