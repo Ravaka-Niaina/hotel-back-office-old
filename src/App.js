@@ -23,7 +23,6 @@ import Paiement from "./components/client/paiement";
 import Navbar from "./components/client/NavbarClient/Navbar";
 
 import searchUser from "./components/common/Authentification/identify";
-import FormRequest from "./components/common/Authentification/requestAccess";
 import result from "./components/common/Authentification/result";
 
 
@@ -115,7 +114,6 @@ function App(){
         <Route path="/front/login" exact component={Login} />
         <Route path="/login/identify" exact component={searchUser} />
         <Route path="/result" exact component={result} />
-        <Route path="/sendEmail" exact component={FormRequest} />
         <Route path="/front/Register" exact component={Register} />
         <Route path="/front/userList" exact component={listeUser} />
         <Route path="/devis" exact component={Devis} />
