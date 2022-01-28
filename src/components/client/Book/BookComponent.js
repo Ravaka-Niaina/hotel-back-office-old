@@ -108,21 +108,6 @@ const BookComponent = (props) => {
                         }}
                         onClick={(e) => changeOpenChangeNbGuest()}
                     />
-                    <TextField
-                        fullwidth={false}
-                        size="small"
-                        id="outlined-number"
-                        label="Check-out" 
-                        value={props.context.state.dateSejour.fin}
-                        InputProps={{
-                            startAdornment: <InputAdornment position="start"><EventNote/></InputAdornment>,
-                            endAdornment:<InputAdornment position="end"><ExpandMore/></InputAdornment>,
-                            readOnly: true,
-                        }}
-                        InputLabelProps={{
-                            shrink: true
-                        }}
-                    />
                 </div>
             } />
           

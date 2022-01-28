@@ -10,6 +10,8 @@ import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
+
+import callAPI from '../../../../utility.js';
 import numeroConfirmation from './numeroConfirmation.js';
 
 const style = {
@@ -113,15 +115,8 @@ function ListTarif(props){
                 idTypeChambre : idTypeChambre,
                 nbPers: nbPers
             });
-            axios({
-                method: 'post',
-                url: process.env.REACT_APP_BACK_URL + '/reservation/insert',
-                withCredentials: true,
-                data: {itineraires: itineraires , numeroIntineraire : Random}
-            })
-            .then(res => {
-                setReservationEnCours(res.data)})
-            .catch(err => console.log(err));
+            const data = {itineraires: itineraires , numeroIntineraire : Random};
+            callAPI("post" , "/reservation/insert" , data , setReservationEnCours);
         }
     }
     

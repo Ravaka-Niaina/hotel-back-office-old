@@ -53,6 +53,7 @@ function ApplyReservation(props){
     const [reservation, setReservation] = useState(null);
     const { _id } = useParams();
     const [reservateur, setReservateur] = useState({prenom:"",nom: "", email: "", tel: "", messageParticulier: "",numeroCarte:"",expirationCarte:"",ccvCarte:"",nomCarte:""});
+    const [user, setUser] = useState({mdp : "",confirmMdp:""});
     const [openLoad, setOpenLoad] = useState(true);
     const [errorEmpty, setErrorEmpty] = useState({prenom:false,nom: false, email: false, tel: false, messageParticulier: false,numeroCarte:false,expirationCarte:false,ccvCarte:false,nomCarte:false,});
 
