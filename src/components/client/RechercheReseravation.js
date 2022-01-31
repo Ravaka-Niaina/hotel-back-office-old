@@ -72,12 +72,9 @@ function Compte(props){
             <div style={{float : 'right'}}>  
                 {
                     props.grise ? 
-                        <Button variant="contained"  disabled>
-                            CONNEXION
-                        </Button> : 
-                        <Button variant="contained" onClick={() => props.conx()}>
-                            CONNEXION
-                        </Button>
+                    " " : 
+                    <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" variant="contained" onClick={() => props.conx()}>CONNEXION</button>
+                       
                 }
                         
             </div> 
@@ -92,12 +89,12 @@ function Numero(props){
             <div style={{float : 'right'}}>  
                 {
                     props.grise ? 
-                        <Button variant="contained"  disabled>
+                        " " : 
+                        <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" variant="contained" 
+                            onClick={() => props.conx()}>
                             RECHERCHE UNE RESERVATION
-                        </Button> : 
-                        <Button variant="contained"  onClick={() => props.conx()}>
-                            RECHERCHE UNE RESERVATION
-                        </Button >
+                        </button>
+                        
                 }
             </div> 
         </Box><br/><br/>

@@ -12,6 +12,7 @@ import TextField from '@mui/material/TextField';
 import {Link} from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import Alert from '@mui/material/Alert';
+import SearchIcon from '@mui/icons-material/Search';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import axios from "axios";
@@ -93,7 +94,11 @@ function Navbar(props) {
                     </Typography>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
-
+                    <Button variant="outlined" startIcon={<SearchIcon/> } onClick={(e) => props.clickRetour()}>
+                        <Link to='/front/researchReservation' style={{textDecoration : "none" ,color : "#887B62"}}>
+                            RECHERCHE UNE RESERVATION
+                        </Link>
+                    </Button>
                     <PopupState variant="popper" popupId="demo-popup-popper">
       {(popupState) => (
         <div>
