@@ -11,19 +11,32 @@ function PolitiquesVoucher(props){
     const diff = getDiffDays(datenow,datedebut);
     console.log(datedebut);
     console.log("diff day:"+diff);
+
+    
+    
+
+    // Non entame
     if(diff>=15){
         let d = addDays(datedebut,-15);
         politiques.push(<p>Vous pouvez annuler votre réservation gratuitement avant le {dateToDDMMYYYY(d)} à Midi. </p>);
-    }else if(diff <15 && diff >=5){
+    }if(diff >15){
         let d = addDays(datedebut,-15);
         politiques.push(<p> En cas d’annulation après le {dateToDDMMYYYY(d)} à Midi, votre carte sera débité de 20%.</p>);
-    }else if(diff<5 && diff>0){
+    } if(diff>5){
         let d = addDays(datedebut,-5);
         politiques.push(<p> En cas d’annulation après le {dateToDDMMYYYY(d)} à Midi, votre carte sera débité de 50%.</p>);
-    }else{
-
     }
-    
+    // entame
+    if(diff>=15){
+        let d = addDays(datedebut,-15);
+        // politiques.push(<p>Vous pouvez annuler votre réservation gratuitement avant le {dateToDDMMYYYY(d)} à Midi. </p>);
+    }else if(diff <15 && diff >=5){
+        let d = addDays(datedebut,-15);
+        politiques.push(<p> En cas d’annulation , votre carte sera débité de 20%.</p>);
+    }else if(diff<5 && diff>0){
+         let d = addDays(datedebut,-5);
+         politiques.push(<p> En cas d’annulation , votre carte sera débité de 50%.</p>);
+     }
     return(
         <div>
             

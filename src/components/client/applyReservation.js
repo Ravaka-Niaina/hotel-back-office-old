@@ -21,6 +21,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
     import {setValue} from '../../../src/utility2.js';
 import './confirmation_reservation.css';
 import PaiementField from './applyReservation/PaiementField';
+import { is } from 'date-fns/locale';
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
   
@@ -60,9 +61,10 @@ function ApplyReservation(props){
     const [alertSuccess, setAlertSuccess] = useState(null);
     const [alertError, setAlertError] = useState(null);
     const [affilie, setAffilie] = useState([]);
-    const [isEditEnabled, setIsEditEnabled] = useState(false);
+    const [isEditEnabled, setIsEditEnabled] = useState(true);
     const [isConnectionShowing, setIsConnectionShowing] = useState(false);
     const [isConditionAccepted, setIsConditionAccepted] = useState(false);
+    const [conditionError, setConditionError] = useState(false);
 
     function handleResponse(res){
         console.log(res);
@@ -78,10 +80,16 @@ function ApplyReservation(props){
     }
 
     function validerReservation(){
-        setOpenLoad(true);
-        setAlertSuccess(null);
-        setAlertError(null);
-        callAPI('post', '/reservation/applyWithEmail', {_id: reservation._id, reservateur: reservateur, reservation: reservation}, handleResponse );
+        if(isConditionAccepted){
+            setOpenLoad(true);
+            setAlertSuccess(null);
+            setAlertError(null);
+            callAPI('post', '/reservation/applyWithEmail', {_id: reservation._id, reservateur: reservateur, reservation: reservation}, handleResponse );
+        }else{
+            setConditionError(true);
+            window.location.href = '#conditions';
+        }
+     
     }
 
     function setDetailReservation(res){
@@ -161,6 +169,9 @@ function ApplyReservation(props){
         setIsConnectionShowing(!isConnectionShowing);
     }
     function conditionAccepted(event){
+        if(!isConditionAccepted){
+            setConditionError(false);
+        }
         setIsConditionAccepted(!isConditionAccepted);
     }
 
@@ -339,8 +350,12 @@ function ApplyReservation(props){
                             <Total toPay={reservation.toPay} />
                             
                         </div>
-                        <div class="infos_contact">
+                        <div class="infos_contact" id="conditions">
                             <h2 class="infos_heading">Confirmation</h2>
+                            {
+                                conditionError ?   <p style={{color:'#ac0000',marginLeft:'0.8em'}}>Veuillez accepter la politique de confidentialité et les conditions de réservation.</p> :null
+                            }
+                          
                             <div class="inscription_quick">
                                             <input type="checkbox" id="conditions" name="scales" 
                                                     checked={isConditionAccepted} onChange={conditionAccepted}/>
@@ -355,18 +370,14 @@ function ApplyReservation(props){
                             <Button variant="contained">Ajouter au calendrier</Button>
                         </Stack> */}
                         <br />
-                        <div style={{display:'flex',flexDirection:'row',flexWrap:'wrap',justifyContent:'space-between'}}>
-                            <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" variant="contained" onClick={(e) => setIsEditEnabled(!isEditEnabled)}>{isEditEnabled ? "Désactiver modification réservation" : "Modifier réservation"}</button>
-                            <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" variant="contained">Annuler réservation</button>
+                        <div style={{display:'flex',flexDirection:'row',flexWrap:'no-wrap',justifyContent:'space-between'}}>
+                            {/* <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" variant="contained" onClick={(e) => setIsEditEnabled(!isEditEnabled)}>{isEditEnabled ? "Désactiver modification réservation" : "Modifier réservation"}</button> */}
+                            <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained">Annuler réservation</button>
+                            <button  style={{minWidth:250,heigth:80}}  class="btn button_btn button_pink button_sm" variant="contained" onClick={(e) => validerReservation()}>Valider réservation</button>
+                       
                          </div>
                         
-                        {
-                            isConditionAccepted ?
-                            <div style={{display:'flex',flexDirection:'row',justifyContent:'flex-end'}}>
-                                <button enabled={isConditionAccepted} style={{marginTop:20,minWidth:250}}  class="btn button_btn button_pink button_sm" variant="contained" onClick={(e) => validerReservation()}>Valider réservation</button>
                        
-                            </div> : null
-                        }
                          
                         
                     </Box>
