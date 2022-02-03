@@ -40,8 +40,8 @@ function TarifReserves(props){
             const u = i;
            // console.log("u = " + u);
             const tarif = props.reservation.itineraires[props.indexItineraire].tarifReserves[i];
-            // console.log("tarifs");
-            // console.log(tarif);
+             console.log("tarifs");
+             console.log(tarif);
             const datedebut = new Date(tarif.dateSejour.debut);
             const datefin = new Date(tarif.dateSejour.fin);
             const months = ['jan','fev','mar', 'av','mai','juin','juil','août','sept','oct','nov','déc'];
@@ -49,9 +49,9 @@ function TarifReserves(props){
                 <div class="box_reservation">
                     
                     <div class="infos_chambre">
-                        <img  src='https://www.hotel-restaurant-colbert.com/wp-content/uploads/2012/06/Logo-Colbert1-Copier.jpg'/>
+                        <img  src={tarif.infoTypeChambre.photo[0]}/>
                         <div class="details_chambre">
-                            <p class="title_hotel">{tarif.infoTypeChambre.infoHotel.nom}</p>
+                            <p class="title_hotel">Chambre {(i+1)}</p>
                             <p class="chambre"> {tarif.nomTypeChambre} </p>
                             <p class="tarifs"> {tarif.nomTarif} </p>
                             <p class="nuites"> {getDiffDays(new Date(tarif.dateSejour.debut),new Date(tarif.dateSejour.fin))} nuités </p>

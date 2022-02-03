@@ -84,6 +84,8 @@ function ApplyReservation(props){
             setOpenLoad(true);
             setAlertSuccess(null);
             setAlertError(null);
+           // console.log("reservateur:");
+            // console.log(reservateur);
             callAPI('post', '/reservation/applyWithEmail', {_id: reservation._id, reservateur: reservateur, reservation: reservation}, handleResponse );
         }else{
             setConditionError(true);
@@ -315,13 +317,13 @@ function ApplyReservation(props){
                                             </div>
                                         :null
                                         }
-                                        <hr style={{marginLeft:'0.8em'}}></hr>
-                                        <h2 class="infos_heading"><span>Détails et préférences supplémentaires</span></h2>
-                                        <div class="details_reservation">
+                                        {/* <hr style={{marginLeft:'0.8em'}}></hr> */}
+                                        {/* <h2 class="infos_heading"><span>Détails et préférences supplémentaires</span></h2> */}
+                                        {/* <div class="details_reservation">
                                             <textarea value={reservateur.messageParticulier}
                                                 onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} class="text_reservation" id="details_reservation" maxlength="200" type="textarea" name="commentArea" aria-label="Veuillez noter vos demandes ou besoins spéciaux (maximum 200 caractères)" placeholder=""></textarea>
                                             <label class="label_reservation">Veuillez indiquer vos demandes ou besoins spéciaux.</label>
-                                        </div>
+                                        </div> */}
                                        
                                     </div>
                                     : <div class="champs">
