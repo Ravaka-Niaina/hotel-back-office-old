@@ -27,6 +27,7 @@ import {session} from '../../common/utilitySession.js';
 import NotEnoughAccessRight from '../../common/NotEnoughAccessRight';
 
 import ButtonLoading from "../buttonLoading.js"
+import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
 
 function PlanTarifaire(props){
   let i = -1;
@@ -139,6 +140,7 @@ function InsertTypeCHambre(){
     nom: null
   });
   const { _id } = useParams();
+  const [skeletonAffiche , setSkeleton] = useState(true);
   
   const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
   const hasARInsert = session.getInstance().hasOneOfTheseAccessRights(["insertTypeChambre", "superAdmin"]);
@@ -169,6 +171,7 @@ function InsertTypeCHambre(){
             }
         }
     setState(currentState);
+    setSkeleton(false);
 }
 
   useEffect(() => {
@@ -195,7 +198,6 @@ function InsertTypeCHambre(){
   const handleClose = () => setOpen(false);
 
   function setInfo(res){
-    console.log(res);
     let current = JSON.parse(JSON.stringify(state));
     for(let i = 0; i < res.listTarif.length; i++){
       res.listTarif[i].checked = false;
@@ -207,6 +209,7 @@ function InsertTypeCHambre(){
     }
     current.equipements = res.listEquipement;
     setState(current);
+    setSkeleton(false);
   }
 
   function handleCheckBoxPlanTarifaire(e, index){
@@ -394,8 +397,11 @@ function InsertTypeCHambre(){
 
   return (
     <div> 
-        <Navbar/>
+        <Navbar  currentPage={2}/>
               <div className="jumbotron">
+              {
+                  skeletonAffiche ? <SkelettonForm /> : <>
+
                 <h4 className="" id='title1'>{isInsert ? "Ajouter type chambre" : "Modifier type chambre"}</h4>
                 <CustomError errors={state.errors} />
                 <form className="needs-validation" className='forms' style={{marginTop:'15px'}}>
@@ -683,6 +689,8 @@ function InsertTypeCHambre(){
                      </div>
                     </div>
                 </form>
+                </>
+              }
               </div>
             </div>
   );

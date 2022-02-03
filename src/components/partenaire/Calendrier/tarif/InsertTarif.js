@@ -26,6 +26,7 @@ import ButtonLoading from "../../buttonLoading.js"
 import {session} from '../../../common/utilitySession.js';
 import Login from '../../../common/Authentification/Login.js';
 import NotEnoughAccessRight from '../../../common/NotEnoughAccessRight';
+import SkelettonForm from '../../../../SkeletonListe/SkeletonFormulaire.js';
 const utility = require('./utility.js');
 
 
@@ -59,9 +60,10 @@ function InsertTarif(){
     });
     const [btnLoad, setBtnLoad] = useState(false);
     const history = useHistory();
+    const [skeletonAffiche , setSkeleton] = useState(true);
+
 
     function setListTypeChambre(res){
-        console.log(res);
         let current = JSON.parse(JSON.stringify(planTarifaire));
         current.chambresAtrb = res.listType;
         current.politiqueAnnulAtrb = res.listPolitique;
@@ -69,7 +71,7 @@ function InsertTarif(){
             current.politiqueAnnulAtrb[i].checked = false;
         }
         setPlanTarifaire(current);
-        console.log(current);
+        setSkeleton(false);
     }
 
     const hasARInsert = session.getInstance().hasOneOfTheseAccessRights(["insertPlanTarifaire", "superAdmin"]);
@@ -132,6 +134,9 @@ function InsertTarif(){
             <div className="">
                     <div className="">
                         <div className="jumbotron">
+                            {
+                                skeletonAffiche ? <SkelettonForm /> : <>
+
                             <h1 className="text-center" id='title1'>Ajouter plan tarifaire</h1>
                             <CustomError errors={errors} />
                             <form className="needs-validation" style={{marginTop:'15px'}}>
@@ -349,7 +354,7 @@ function InsertTarif(){
                                         : null }
                                     </div>
                                     <div class="bouton-aligne">
-                                        <Link to={'/tarif'} style={{textDecoration:'none'}}>
+                                        <Link to={'/back/tarif'} style={{textDecoration:'none'}}>
                                         <Button variant="outlined" 
                                         id="btn2">
                                     <span style={{color:'#1976d2'}}>Retour</span>
@@ -358,6 +363,8 @@ function InsertTarif(){
                                     </div>
                                     </div>
                             </form>
+                             </>
+                            }
                         </div>
                     </div>
                 </div>

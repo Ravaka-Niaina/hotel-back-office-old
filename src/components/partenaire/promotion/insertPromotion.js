@@ -20,7 +20,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormLabel from '@mui/material/FormLabel';
-import ButtonLoading from "../buttonLoading.js"
+import ButtonLoading from "../buttonLoading.js";
+import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
 
 import { useState } from 'react';
 
@@ -114,6 +115,7 @@ function InsertPromotion(){
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [btnLoad, setBtnLoad] = useState(false);
+  const [skeletonAffiche , setSkeleton] = useState(true);
 
   const history = useHistory();
 
@@ -128,8 +130,8 @@ function InsertPromotion(){
       res.listTarif[i].checked = false;
     }
     current.planTarifaire = res.listTarif;
-    // state = current;
     setState(current);
+    setSkeleton(false);
 }
 
   useEffect(() => {
@@ -246,6 +248,9 @@ function InsertPromotion(){
 <form>
 <h4 className='enteteP'>Ajouter une nouvelle promotion</h4>
   <div className="block1">
+  {
+    skeletonAffiche ? <SkelettonForm  heigth = {300} />  : <>
+
   <h5>Détails de la promotion</h5>
    <div className="form-group" style={{marginTop:"15px"}}>
 <label id='bigLabel'>
@@ -275,74 +280,7 @@ handleCheckBoxTypeChambre={handleCheckBoxTypeChambre}
 
 <hr style={{width:'95%'}}></hr>
 
-  {/* <div className="form-group" style={{marginTop:"15px"}}>
-<label id='bigLabel'>
-Quelle remise voulez-vous offrir ?
-</label>
-
-<FormControl component="fieldset">
-  <FormLabel component="legend"></FormLabel>
-  <RadioGroup
-    aria-label=""
-    defaultValue=""
-    name="radio-buttons-group"
-  >
-    <FormControlLabel 
-    value="male" 
-    control={<Radio />} 
-    label={<p id='label'>Pourcentage</p>} 
-    onClick={() => {setVisibleP(true);setVisibleE(false)}}/>
-    <FormControlLabel 
-    value="female" 
-    control={<Radio />} 
-    label={<p id='label'>Euro</p>} 
-    onClick={() => {setVisibleE(true);setVisibleP(false)}}
-    />
-  </RadioGroup>
-</FormControl>
-
-{
-visibleP &&
-<TextField 
-id="outlined-basic" 
-label="" 
-variant="outlined" 
-className="form-control" 
-InputProps={{
-startAdornment: <InputAdornment position="start">
-    <strong>%</strong>
-</InputAdornment>,
-}}
-style={{width:"100px",marginTop:"15px"}}
-size="small"
-type="number" 
-name="remisePourcentage" 
-onChange={(e) => handleInputChange(e, "remisePourcentage")}
-/>
-}
-
-{
-  visibleE &&
-<TextField 
-id="outlined-basic" 
-label="" 
-variant="outlined" 
-className="form-control" 
-InputProps={{
-startAdornment: <InputAdornment position="start">
-    <strong>£</strong>
-</InputAdornment>,
-}}
-style={{width:"130px"}}
-size="small"
-type="number" 
-name="remiseEuro" 
-onChange={(e) => handleInputChange(e, "remiseEuro")}
-/>
-}
-
-
-  </div> */}
+  
 
 <div style={{marginTop:'0px'}}>
       <div>
@@ -393,10 +331,9 @@ onChange={(e) => handleInputChange(e, "remiseEuro")}
           </div>
       </RadioGroup>
   </div>
-
-
-
-  </div>
+  </>
+  }     
+</div>
   <div className='block2' style={{marginTop:"30px"}}>
 <h5>Dates de séjour</h5>
 <label style={{marginTop:"5px"}} id='bigLabel'>

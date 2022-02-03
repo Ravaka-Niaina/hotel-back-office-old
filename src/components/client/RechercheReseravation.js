@@ -13,6 +13,8 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 import {Button, IconButton, Typography, Toolbar, AppBar} from '@mui/material';
 import TextField from '@mui/material/TextField';
+import BtnLoad from '../partenaire/buttonLoading.js';
+import SkeletonForm from '../../SkeletonListe/SkeletonFormulaire.js';
 
 const div = {width : "520px" , border : "1px solid #887B62",padding : "10px"}
 const photo = { maxWidth: "100%",height: "auto"}
@@ -20,21 +22,27 @@ function ReponseList(props){
     let list = props.list.reservation.map(liste => {
         return (
             <div style={div}>
-                <img src="/hotel.jpg" style={photo}/> 
-                <span
-                    component="div"
-                    sx={{ display: {xs : "none" ,  sm: 'block' }, padding : "10px" }}
-                >
-                    Heritage Le Telfaire Golf and Wellness Resort 
-                </span><br/>
-                <span>{props.list.client.nom} , {props.list.client.prenom}</span><br/>
-                <span>{props.list.client.email} </span><br/><br/>
-                <strong style={{textDecoration : "underline"}}>N° Confirmation : </strong><span>{liste.numeroConfirmation} </span><hr/>
-                <Itineraire itineraire = {liste.itineraires}/>
-                <div style={{float : 'right'}}>
-                    <Button variant="contained" > AFFICHER LES INFORMATIONS </Button>  
-                </div>
-               
+                {
+                    props.skeleton ? <SkeletonForm /> : <>
+                    <img src="/hotel.jpg" style={photo}/> 
+                    <span
+                        component="div"
+                        sx={{ display: {xs : "none" ,  sm: 'block' }, padding : "10px" }}
+                    >
+                        Heritage Le Telfaire Golf and Wellness Resort 
+                    </span><br/>
+                    <span>{props.list.client.nom} , {props.list.client.prenom}</span><br/>
+                    <span>{props.list.client.email} </span><br/><br/>
+                    {/*
+                    <strong style={{textDecoration : "underline"}}>N° Confirmation : </strong><span>{liste.numeroConfirmation} </span><hr/> */}
+                    <Itineraire itineraire = {liste.itineraires}/>
+                    <div style={{float : 'right'}}>
+                        <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" 
+                            variant="contained" >AFFICHER LES INFORMATIONS</button>
+                        
+                    </div>
+                </>
+                }
             </div>
         )
     })
@@ -72,9 +80,11 @@ function Compte(props){
             <div style={{float : 'right'}}>  
                 {
                     props.grise ? 
-                    " " : 
-                    <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" variant="contained" onClick={() => props.conx()}>CONNEXION</button>
-                       
+                    " " : <>
+                        { props.btnLoad ?  <BtnLoad /> :
+                            <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" 
+                                variant="contained" onClick={() => props.conx()}>CONNEXION</button>
+                        } </>
                 }
                         
             </div> 
@@ -89,11 +99,14 @@ function Numero(props){
             <div style={{float : 'right'}}>  
                 {
                     props.grise ? 
-                        " " : 
-                        <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" variant="contained" 
-                            onClick={() => props.conx()}>
-                            RECHERCHE UNE RESERVATION
-                        </button>
+                        " " : <>
+                        { 
+                            props.btnLoad ?  <BtnLoad /> :
+                            <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" variant="contained" 
+                                onClick={() => props.conx()}>
+                                RECHERCHE UNE RESERVATION
+                            </button>
+                        } </>
                         
                 }
             </div> 
@@ -112,6 +125,8 @@ function RechercheReservation (){
     const [compte , setCompte] = useState({nom : "" , mdp :""});
     const [numero , setNumero] = useState({num : "" , email :""});
     const [pageCurrent , setPageCurrent] = useState(1);
+    const [btnLoad , setBtnLoad] = useState(false);
+    const [skeleton , setSkeleton] = useState(true);
 
     const Item = styled(Paper)(({ theme }) => ({
         ...theme.typography.body2,
@@ -164,7 +179,6 @@ function RechercheReservation (){
         
       }
       const callBack = (data) => {
-        console.log(data);
         if(data.status === 200){
             let current = {...list};
             current.reservation = data.reservation;
@@ -175,6 +189,8 @@ function RechercheReservation (){
             setMessageN("");
             vider(compte , 'nom' , 'mdp', setCompte);
             vider(numero , 'num' ,'email', setNumero);
+            setBtnLoad(false);
+            setSkeleton(false);
         }else if(data.status == 204){
             if(compte.nom !== "" && compte.mdp !== ""){
                 setMessageC(data.message);
@@ -184,18 +200,24 @@ function RechercheReservation (){
         }else if(data.status == 400){
             setMessageN(data.message);
         }
+        setBtnLoad(false);
       }
 
       const connexionC = () => {
+        setBtnLoad(true);
+        setSkeleton(true)
         CallAPI("post" , "/reservation/researchC" , {mdp : compte.mdp , nom : compte.nom, pageCurrent : pageCurrent} , callBack);
       }
 
       const connexionN = () => {
+        setBtnLoad(true);
+        setSkeleton(true);
         CallAPI("post" , "/reservation/researchN" , {numero : numero.num , email : numero.email} , callBack);
       }
 
       const suivant = (e, pageCurrent) => {
             setPageCurrent(pageCurrent+1)
+            setSkeleton(true);
             CallAPI("post" , "/reservation/researchC" , {mdp : compte.mdp , nom : compte.nom, pageCurrent : pageCurrent+1} , callBack);
             
       }
@@ -210,6 +232,7 @@ function RechercheReservation (){
       const precedent = (e , pageCurrent) => {
           let pageC = pageCurrent-1;
           setPageCurrent(pageC)
+          setSkeleton(true);
           CallAPI("post" , "/reservation/researchC" , {mdp : compte.mdp , nom : compte.nom, pageCurrent : pageC} , callBack);
           
      }
@@ -254,7 +277,7 @@ function RechercheReservation (){
                             }   
                         </div><br/>
                         <Box sx={{ display: { xs: 'none', md: 'flex'  }, gap : 1 , padding : "30px"}}>
-                            <ReponseList  list ={list} />
+                            <ReponseList  list ={list} skeleton={skeleton}/>
                         </Box> 
                     </div>:
                      <Box style={{marginTop :"auto" , marginButtom : "auto"}} >
@@ -286,7 +309,7 @@ function RechercheReservation (){
                                         value={compte.mdp}
                                         onChange={e => haddleChangeInputCompte(e,'mdp')}
                                     /><br/><br/>
-                                    <Compte grise = {isGriseConx} color = {color}  conx = {connexionC} /> 
+                                    <Compte grise = {isGriseConx} color = {color}  conx = {connexionC} btnLoad = {btnLoad}/> 
                                     <hr/>
                                     <Typography
                                         variant="h7"
@@ -295,7 +318,7 @@ function RechercheReservation (){
                                         sx={{ display: { xs: 'none', sm: 'block' } }}
                                     >
                                         <strong >Pas de compte en ligne ?</strong><br/>
-                                        <Link style={color}>Inscrivez-vous aujourd'hui</Link> pour gagner du temps lors de votre prochaine réservation.
+                                        <Link style={color} to='/front/register'>Inscrivez-vous aujourd'hui</Link> pour gagner du temps lors de votre prochaine réservation.
                                     </Typography>
                                 </div> 
                             </Grid>
@@ -325,7 +348,7 @@ function RechercheReservation (){
                                         value={compte.email}
                                         onChange={e => haddleChangeInputNumero(e, 'email')}
                                     /><br/><br/>
-                                    <Numero grise = {isGriseSerf} conx = {connexionN}/> <hr/>
+                                    <Numero grise = {isGriseSerf} conx = {connexionN} btnLoad = {btnLoad} /> <hr/>
                                     <Typography
                                         variant="h7"
                                         noWrap

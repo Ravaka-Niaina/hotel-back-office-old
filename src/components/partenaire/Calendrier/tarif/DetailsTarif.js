@@ -18,6 +18,8 @@ import ButtonLoading from "../../buttonLoading.js"
 
 import {session} from '../../../common/utilitySession.js';
 import Login from '../../../common/Authentification/Login.js';
+import SkelettonForm from '../../../../SkeletonListe/SkeletonFormulaire.js';
+
 const utility = require('./utility.js');
 
 function DetailsTarif(){
@@ -49,6 +51,7 @@ function DetailsTarif(){
     const [btnLoad, setBtnLoad] = useState(false);
     const { _id } = useParams();
     const history = useHistory();
+    const [skeletonAffiche , setSkeleton] = useState(true);
 
     function tryRedirect(res){
         setBtnLoad(false);
@@ -89,6 +92,7 @@ function DetailsTarif(){
     function setPlan(res){
         if(res.status === 200){
             setPlanTarifaire(res.planTarifaire);
+            setSkeleton(false);
         }else if(res.status === 401){//Unauthorized
             history.push('/back/login');
         }else if(res.status === 403){
@@ -114,6 +118,8 @@ function DetailsTarif(){
         <div className="">
             <Navbar currentPage={1}/>
             <div className="jumbotron">
+            {
+                skeletonAffiche ? <SkelettonForm /> : <>
                 <h1 className="" id='title1'>Modifier plan tarifaire</h1>
                 <CustomError errors={errors} />
                 <form className="needs-validation" style={{marginTop:'15px'}}>
@@ -328,7 +334,7 @@ function DetailsTarif(){
                         
                             </div>
                             <div class="bouton-aligne">
-                            <Link to='/back/typeChambre' style={{textDecoration:'none'}}>
+                            <Link to='/back/tarif' style={{textDecoration:'none'}}>
                                 <Button variant="contained" style={{backgroundColor:'#293846',color:'white',marginLeft:'20px'}}>
                                     Retour
                                 </Button>
@@ -336,6 +342,8 @@ function DetailsTarif(){
                         </div>
                     </div>
                 </form>
+                </>
+            }
             </div>
         </div>    
     );

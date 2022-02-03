@@ -26,6 +26,8 @@ function Global(){
     const[show , setShow] = useState(false);
     const[message  , setMessage] = useState("");
     const [griseAdd , setGrise] = useState(true);
+    const [skeletonAffiche , setSkeleton] = useState(true);
+
     const { _id } = useParams();      
     let [state , setState] = useState (
         {
@@ -176,7 +178,6 @@ function Global(){
     }
 
     const setListPolitiqueAnnulation = (data) => {
-        console.log(data);
         if(data.politique.nom != null){
                 let currentNom = JSON.parse(JSON.stringify(nom));
                 currentNom = data.politique.nom;
@@ -195,11 +196,11 @@ function Global(){
                 setVal(rest);
                 setShow(true);
                 setDatePrice(current);
-                
+ 
             }else{
                 console.log("datePriceVide")
             }
-            console.log(show);
+            setSkeleton(false);
         }else{
             console.log("setListPolitiqueAnnulation");
         }
@@ -210,10 +211,10 @@ function Global(){
         if(_id != null){
             callAPI('get', '/politique/detail/'+ _id, {}, setListPolitiqueAnnulation);
             console.log("modification")
-        }else(
+        }else{
             console.log("insertion")
-        )
-        
+            setSkeleton(false);
+        }  
     }, [_id])
 
 
@@ -295,8 +296,12 @@ function Global(){
 
         return (
             <>
-            <Navbar currentPage={4}/>
+                <Navbar currentPage={4}/>
+                    
                         <div className ="politiqueContent">
+                            {
+                             skeletonAffiche ?  <SkelettonForm heigth = {300} />  : 
+                             <>
                             <h4 className='entete'>Politique d'annulation</h4><hr/>
                             <label>Concellation preference</label><br/>
                             <span id='litleLabel'>Y a-t-il une période pendant laquelle le client peut annuler gratuitement?</span><br/>
@@ -447,10 +452,10 @@ function Global(){
                                                 </Button>
                                             </Link>
                                             </div>
-                                    </div> <br/>
-                                              
-                        </div>
-                        <SkelettonForm />
+                                    </div> <br/></>
+                                }
+                        </div>  
+                          
             </>
         );
     
