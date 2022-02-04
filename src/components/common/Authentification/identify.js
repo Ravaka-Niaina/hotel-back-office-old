@@ -8,9 +8,11 @@ import Button from '@mui/material/Button';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
+import callAPI from '../../../utility';
+import "./global.css";
 
 
-export default class searchTypeChambre extends React.Component {
+export default class SearchTypeChambre extends React.Component {
   // state = {
   //   name: '',
   // }
@@ -18,8 +20,14 @@ export default class searchTypeChambre extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      user: [],
-        email: ""
+        utilisateur:{
+          email:''
+        },
+        user:[],
+        email: "",
+        hideShowBtn1:true,
+        hideShowBtn2:false,
+
     };
 }
 
@@ -27,30 +35,49 @@ export default class searchTypeChambre extends React.Component {
   //   this.setState({ name: event.target.value });
   // }
 
+  handleEmailChange(event,inputName){
+    const currentState = JSON.parse(JSON.stringify(this.state));
+    currentState.utilisateur[inputName] = event.target.value;
+    this.setState(currentState);
+}
+  
+sendMailToCustomer(e){
+  e.preventDefault();
+  const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type' : 'application/json' },
+      body: JSON.stringify(this.state)
+  };
+  fetch(process.env.REACT_APP_BACK_URL + "/client/sendMailToCustomer",requestOptions)
+      .then(res => res.json())
+      .then(res => {this.setMessageRetour(res); console.log(res)});
+}
+
   handleInputChange(event, inputName){
     const currentState = JSON.parse(JSON.stringify(this.state));
     currentState[inputName] = event.target.value;
     this.setState(currentState);
 }
 
-  handleSubmit = event => {
-    event.preventDefault();
-    axios.get(`http://localhost:3000/user/search/${this.state.email}`)
-    .then(res => {
-        const user = {user : res.data.user};
-        console.log(user);
-        this.setState(user);
-      })
-  }
+handleSubmit = event => {
+  event.preventDefault();
+  axios.get(`http://localhost:3000/user/search/${this.state.email}`)
+  .then(res => {
+      const user = {user : res.data.user};
+      console.log(user);
+      this.setState(user);
+    })
+}
 
   render() {
     return (
       <div className="" style={{marginLeft:"auto",marginRight:"auto"}}>
-        <div className="header">Recherche un compte</div>
+        <h5 id='grandTitre'>Rechercher votre compte</h5>
         <form onSubmit={this.handleSubmit}>
         <div className="content">
           <div className="form">
 <div className="form-group" style={{paddingTop:"15px"}}>
+<p id='paragraphe'>Entrez votre e-mail</p>
 <TextField id="standard-basic" className="form-control" label="email" variant="outlined" style={{width:"400px"}}
 type="text" name="email" 
 onChange={(e) => this.handleInputChange(e, "email")}/>
@@ -58,38 +85,69 @@ onChange={(e) => this.handleInputChange(e, "email")}/>
           </div>
         </div>
         <div className="footer" style={{marginTop:'25px'}}> 
-<Button variant="contained" color="success" type='submit'>
+<Button variant="contained" color="primary" type='submit'>
 Search
 </Button>
 <br/>
-<Link to={'/promotion'}>
-<Button variant="contained" style={{marginTop:'20px'}}>
-Retour
-</Button>
-</Link>
         </div>
         </form>
-        <h5>Resultat du recherche</h5>   
+        <hr/>
+             
               {this.state.user.map((utilisateur) => (  
+               <div> 
                 <div id='result'>  
                   <p id='infoUser'>{utilisateur.prenom} {utilisateur.nom}</p>     
-                </div>,
+                </div>
                 <div>
-                  <p>
-                Comment voulez-vous recevoir votre code de réinitialisation du mot de passe ?
-                 </p> 
-                 <p>            
-                Envoyer le code par e-mail
+                 <p id="paragraphe">            
+                Envoyer le code par e-mail :
                  </p>  
-                 <p>            
-                {utilisateur.email}
+                 <p id='infoUser'> 
+                 {utilisateur.email}           
                  </p>
-<TextField id="standard-basic" label="email" variant="outlined" style={{width:"400px"}} type="hidden" name="email" value={utilisateur.email}/>
-<Button variant="contained" color="success" type='submit'>
-Continuer
-</Button>
-                </div>    
-              ))}  
+                </div> 
+                <TextField 
+                id="standard-basic" 
+                label="" 
+                variant="outlined" 
+                style={{width:"400px",display: "none"}} 
+                type="email" 
+                name="email" 
+                value={utilisateur.email}
+                onChange={(e) => this.handleEmailChange(e)} />
+                <div> 
+                <box> 
+                {this.state.hideShowBtn1?
+                <Link to={'/confirmation'} style={{textDecoration:'none'}}>
+                <Button 
+                variant="contained" 
+                color="success" 
+                type='submit' 
+                onClick={(e) => {this.sendMailToCustomer(e);this.setState({hideShowBtn2 :true,hideShowBtn1 :false})}}>
+                Ok
+                </Button>
+                </Link>
+                :
+                null
+                }
+                {this.state.hideShowBtn2?
+                <Link to={'/confirmation'} style={{textDecoration:'none'}}>
+                <Button variant="contained" color='secondary'>
+                 Continuer
+                </Button>
+                </Link>
+                :
+                null
+                }
+                <Link to={'/'} style={{textDecoration:'none'}}>
+                <Button variant="contained">
+                Ce n'est pas vous ?
+                </Button>
+                </Link>
+                </box> 
+                </div> 
+              </div>   
+              ))}   
       </div>
     )
   }

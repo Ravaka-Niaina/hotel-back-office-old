@@ -164,6 +164,13 @@ function Navbar(props) {
                                 <span style={{color:'black'}}>S'inscrire</span>
                             </Button>
                            </div>
+                           <div class="mdp">
+                           <Link to={'/login/identify'} style={{textDecoration:'none'}}>
+                            <Button  id="mdp">
+                            <span style={{color:'black'}}>Mot de passe oublié?</span>
+                            </Button>
+                            </Link>
+                            </div>
                           </div>
                           </Box>
                             

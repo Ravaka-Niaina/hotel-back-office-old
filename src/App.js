@@ -22,7 +22,9 @@ import Paiement from "./components/client/paiement";
 
 import Navbar from "./components/client/NavbarClient/Navbar";
 
-import searchUser from "./components/common/Authentification/identify";
+import SearchUser from "./components/common/Authentification/identify";
+import Confirmation from "./components/common/Authentification/confirmation";
+import RecoverPassword from "./components/common/Authentification/recoverPassword";
 import result from "./components/common/Authentification/result";
 
 
@@ -112,7 +114,9 @@ function App(){
         <Route path="/" exact component={AppClient} />
         <Route path="/front" exact component={AppClient} />
         <Route path="/front/login" exact component={Login} />
-        <Route path="/login/identify" exact component={searchUser} />
+        <Route path="/login/identify" exact component={SearchUser} />
+        <Route path="/confirmation" exact component={Confirmation} />
+        <Route path="/recover/password/:_id" exact component={RecoverPassword} />
         <Route path="/result" exact component={result} />
         <Route path="/front/Register" exact component={Register} />
         <Route path="/front/userList" exact component={listeUser} />

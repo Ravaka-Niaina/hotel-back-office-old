@@ -198,6 +198,7 @@ class DetailsPromotions extends React.Component{
       this.setState(currentState);
     }
 
+    
     setTarifs(res){
         console.log(res);      
         if(res.status === 200){
@@ -263,6 +264,7 @@ setListTypeChambre(res){
         toSend.typeChambre = typeChambre;
 
         console.log(toSend);
+     
         
         axios({
             method: 'post',
