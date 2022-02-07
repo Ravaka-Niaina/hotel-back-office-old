@@ -206,6 +206,8 @@ class Fact extends React.Component{
 
     printFacture(){
         let valider = null;
+        console.log(this.props.context.state.itineraires);
+        let toPay = 0;
         for(let i = 0; i < this.props.context.state.itineraires.length; i++){
             for(let u = 0; u < this.props.context.state.itineraires[i].tarifReserves.length; u++){
                 if(this.props.context.state.itineraires[i].tarifReserves[u].etat == undefined
@@ -214,15 +216,15 @@ class Fact extends React.Component{
                     break;
                 }
             }
-            if(valider != null){
-                break;
+            if(this.props.context.state.itineraires[i].toPay > 0){
+                toPay += this.props.context.state.itineraires[i].toPay;
             }
         }
         return(
             <div className={styles.printFacture}>
                 <div style={{textAlign:'center'}}>
                     <Itineraires context={this.props.context} annulerReservation={this.annulerReservation} />
-                    <p id='bigLabel'>TOTAL : </p>
+                    <p id='bigLabel'>TOTAL : {toPay}</p>
                     <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()} endIcon={<CallMissedOutgoingIcon/>}>Ajouter itinéraire</Button></p>
                 </div>
                 <Modal
