@@ -41,14 +41,25 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
     }else{
       temp.fin = day;
       temp.isDebut = true;
-      //closeOnce();
-      
-      let bigState = {...context.state};
-      bigState.dateSejour = temp;
-      console.log(bigState.dateSejour);
-      context.setState(bigState, () => {applyFilter()});
     }
+    if(temp.debut === temp.fin){
+      temp.fin = new Date(temp.fin);
+      temp.fin.setTime( temp.fin.getTime() + temp.fin.getTimezoneOffset() * 60 * 1000 );
+      temp.fin.setDate(temp.fin.getDate() + 1);
+      temp.fin = utility.getDate(temp.fin);
+    }else if(new Date(temp.debut) > new Date(temp.fin)){
+      temp.debut = temp.fin;
+      temp.fin = new Date(temp.fin);
+      temp.fin.setTime( temp.fin.getTime() + temp.fin.getTimezoneOffset() * 60 * 1000 );
+      temp.fin.setDate(temp.fin.getDate() + 1);
+      temp.fin = utility.getDate(temp.fin);
+    }
+    
+    let bigState = {...context.state};
+      bigState.dateSejour = temp;
+      context.setState(bigState, () => {applyFilter()});
     setBornes(temp);
+
     const dates = [temp.debut, temp.fin];
     context.haddleChangeDate(dates);
   };
@@ -101,6 +112,7 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
 
   const debut = new Date(bornes.debut);
   let fin = new Date(bornes.fin);
+  console.log(bornes.debut + " , " + bornes.fin);
   let today = new Date();
   today = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const monthDates = datesInMonth.map((i, key) => {
