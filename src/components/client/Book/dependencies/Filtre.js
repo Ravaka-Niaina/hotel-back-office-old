@@ -281,7 +281,7 @@ class Filtre extends React.Component{
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
                 open={this.props.context.state.showFiltre}
-                onClose={(e) => this.props.context.changeOpenFiltre()}
+                onClose={(e) => this.props.context.changeOpenFiltre(false)}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{
@@ -304,10 +304,10 @@ class Filtre extends React.Component{
                                             loading={this.props.loadingFilter}
                                             variant="contained"
                                         >
-                                            Apply
+                                            Appliquer
                                         </LoadingButton>
-                                        <Button size="small" variant="contained" onClick={(e) => this.props.context.changeOpenFiltre()}>
-                                            Close
+                                        <Button size="small" variant="contained" onClick={(e) => this.props.context.changeOpenFiltre(false)}>
+                                            Fermer
                                         </Button>
                                     </Stack>
                                 </FormGroup>

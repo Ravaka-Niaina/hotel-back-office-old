@@ -9,6 +9,7 @@ import LocalOfferIcon from '@mui/icons-material/LocalOffer';
 import ModeNightIcon from '@mui/icons-material/ModeNight';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import PolicyIcon from '@mui/icons-material/Policy';
+import CallMissedOutgoingIcon from '@mui/icons-material/CallMissedOutgoing';
 
 import {Card, CardContent, Typography, CardActions, Button, Box, Modal, TextField, IconButton} from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -209,7 +210,7 @@ class Fact extends React.Component{
             for(let u = 0; u < this.props.context.state.itineraires[i].tarifReserves.length; u++){
                 if(this.props.context.state.itineraires[i].tarifReserves[u].etat == undefined
                     || this.props.context.state.itineraires[i].tarifReserves[u].etat == 1){
-                    valider = (<p style={{textAlign:'center',paddingBottom:'12px'}}><Button size='medium' variant="contained"  onClick={(e) => this.validerReservation()}>Valider réservation</Button></p>);
+                    valider = (<p style={{textAlign:'center',paddingBottom:'12px'}}><Button size='medium' variant="contained"  onClick={(e) => this.validerReservation()} endIcon={<CallMissedOutgoingIcon/>}>Valider réservation</Button></p>);
                     break;
                 }
             }
@@ -218,11 +219,11 @@ class Fact extends React.Component{
             }
         }
         return(
-            <div>
+            <div className={styles.printFacture}>
                 <div style={{textAlign:'center'}}>
                     <Itineraires context={this.props.context} annulerReservation={this.annulerReservation} />
                     <p id='bigLabel'>TOTAL : </p>
-                    <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()}>Ajouter itinéraire</Button></p>
+                    <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()} endIcon={<CallMissedOutgoingIcon/>}>Ajouter itinéraire</Button></p>
                 </div>
                 <Modal
                     open={this.props.context.state.open}
@@ -247,7 +248,7 @@ class Fact extends React.Component{
                             onChange={(e) => this.props.context.handleChange("email", e.target.value)}/>
                             <br/>
                             <div style={{margin:'0 auto', width:'fit-content', marginTop:'20px'}}>
-                            <Button variant="contained" onClick={(e) => (this.validerReservation())}>Appliquer réservation</Button>
+                            <Button variant="contained" onClick={(e) => (this.validerReservation())} >Appliquer réservation</Button>
                             </div>
                         </Typography>
                     </Box>

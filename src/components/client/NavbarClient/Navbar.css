@@ -1,28 +1,24 @@
 header{
-    box-shadow: none !important;
-    background-color:rgb(246, 248, 252) !important;
-  }
-  header .MuiTypography-root,
-  header .MuiButton-root,
-  header .MuiButtonBase-root{
-    color: #333 !important;
-    border-color: rgba(128,128,128,1);
-  }
-  header .MuiButtonBase-root:nth-child(2){
-    color: #fff !important;
-    background-color: #333 !important;
-  }
+  box-shadow: none !important;
+  background-color:rgb(246, 248, 252) !important;
+}
+header .MuiTypography-root,
+header .MuiButton-root,
+header .MuiButtonBase-root{
+  color: #333 !important;
+  border-color: rgba(128,128,128,1);
+}
 
 #title11{
   text-align: center;
   font-family: 'Roboto';
   color: #1976d2;
   text-decoration: underline;
-  }
+}
 
-  div#buttons {
-    text-align: center;
-    margin-top: 10px;
+div#buttons {
+  text-align: center;
+  margin-top: 10px;
 }
 
 .register {
@@ -43,6 +39,10 @@ button#mdp {
 
 .title11{
 margin-top: 10px;
+}
+
+.MuiAvatar-img{
+  object-fit: contain !important;
 }
 
   

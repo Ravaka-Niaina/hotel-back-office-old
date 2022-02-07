@@ -26,29 +26,6 @@ const ValidationTextField = styled(TextField)({
     minWidth: minWidth
   },
 });
-
-/*
-const infoForm = {
-  urlSubmit: "/typeChambre/testInsert",
-  urlRedirectSuccess: "/typeChambre",
-  infoFields: [
-    { field: "id", type: "String", value: "", error: null, required: true, maxCharacters: 5},
-    { field: "nom", type: "String", value: "", error: null, required: true},
-    { field: "nbAdulte", type: "Integer", value: "", error: null, required: true, min: 0, max: 20 },
-    { field: "creation", type: "Date", value: "", error: null, required: true },
-    { field: "Password", type: "Password", value: "", error: null, required: true},
-    { label: "Equipements", field: "Eqpt", type: "Checkbox", options: [
-      {label: "Television", value: "TV", checked: false}, 
-      {value: "Wifi", checked: false}, 
-      {label: "Climatiseur", value: "clim", checked: false}]
-      , error: null, minToSelect: 1
-    },
-    { field: "Remboursable", type: "Radio", options: [{label: "Oui", value: "yes", checked: true}, {value: "no", checked: false}], error: null }
-  ]
-}
-*/
-
-
 export default class HtmlForm{
   constructor(infoForm, disposition, state, setState, history){
     this.state = state;

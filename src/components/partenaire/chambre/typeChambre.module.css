@@ -1,0 +1,7 @@
+.equipement{
+    width: 300px;
+}
+
+.equipement > svg{
+    color: #616569;
+}

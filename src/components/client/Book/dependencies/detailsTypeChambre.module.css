@@ -10,3 +10,23 @@
     width: 500px;
     height: 300px;
 }
+.equipements{
+    flex-direction: row;
+    display: flex;
+}
+.equipements div{
+    width: 30px;
+    height: 30px;
+    border: 1px solid #084298;
+    justify-content: center;
+    align-items: center;
+    margin-left: 5px;
+    display: flex;
+}
+.equipements div:first-child{
+    margin-left: 0 !important;
+}
+.equipements svg{
+    font-size: 22px !important;
+    color: #084298;
+}

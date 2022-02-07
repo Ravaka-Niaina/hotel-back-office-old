@@ -19,6 +19,7 @@ import Grid from '@mui/material/Grid';
 import Promotions from "./promotion";
 
 import styles from '../Book.module.css';
+import Footer from "./Footer.js";
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -104,7 +105,6 @@ class Scroll extends React.Component{
         }
         temp.isListTarifDispoReceived = true;
         setTimeout(()=>{this.setState(temp)}, 1500);
-        console.log(res);
     }
 
     componentDidMount(){
@@ -207,9 +207,9 @@ class Scroll extends React.Component{
         this.setState(current);
     }
 
-    changeOpenFiltre(){
+    changeOpenFiltre(open){
         let temp = {...this.state};
-        temp.showFiltre = !temp.showFiltre;
+        temp.showFiltre = open;
         this.setState(temp);
     }
     
@@ -235,6 +235,7 @@ class Scroll extends React.Component{
                             </Grid>
                         </Grid>
                     </Box>
+                    <Footer/>
                 </div>
                 <Backdrop
                     sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}

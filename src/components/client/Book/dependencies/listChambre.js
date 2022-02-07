@@ -1,7 +1,8 @@
-import React from 'react';
+import React from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import styles from '../Book.module.css';
 import {PersonOutline, LiveTv, Wifi, AcUnit, Iron, HotTub} from '@mui/icons-material';
+import * as MuiIcons from "@mui/icons-material"
 import {Paper} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {Front} from '../../../partenaire/chambre/utilityTypeChambre.js';
@@ -10,6 +11,7 @@ import SkeletonTarifDispo from './skeletons/skeletonTarifDispo.js';
 import DetailsTypeChambre from './detailsTypeChambre.js';
 import PhotoTypeChambre from './photoTypeChambre.js';
 import {Font} from '../../../partenaire/chambre/utilityTypeChambre.js';
+import callAPI from '../../../../utility';
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -46,31 +48,12 @@ function ListServiceTarif(props){
     return services;
 }
 
-function Equipements(props){
-    let list = [];
-    try{
-        for(let i = 0; i < props.equipements.length; i++){
-            list.push(
-                <li style={ {marginLeft : 10 , listStyle : 'none', width: '150px'} }>
-                    {
-                        props.equipements[i].font.startsWith("https://") ?
-                        <img src={props.equipements[i].font} style={{maxWidth:'20px', maxHeight: '200px', width: 'auto', height: 'auto', padding: '0 0'}}/>
-                        : <i class={props.equipements[i].font}></i>
-                    }
-                    &nbsp;{props.equipements[i].nom}
-                </li>
-            );
-        }
-    }catch(err){}
-    
-    return list;
-}
-
 class DChambre extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            showDetailsTypeChambre: false
+            showDetailsTypeChambre: false,
+            listTypeChambre : []
         };
     }
     switchShowDetailsTC(indexTypeChambre){
@@ -84,22 +67,10 @@ class DChambre extends React.Component{
         currentState.listTypeChambre = data.list;
         this.props.context.setState(currentState);  
         console.log(this.props.context.state);
-        this.state= {
-            listTypeChambre : []
-        }
-    }
-
-    setListTypeChambre(data){
-        let currentState = JSON.parse(JSON.stringify(this.props.context.state));
-        console.log(data);
-        currentState.listTypeChambre = data.list;                                         // lasa currentState ilai data (this.state) ilai data
-        this.props.context.setState(currentState);  
-        console.log(currentState);                 //modifier ilai state ho lasa donnee json
     }
 
     setListTypeC(data){
-        let currentState = JSON.parse(JSON.stringify(this.state));  
-        console.log(data);
+        let currentState = JSON.parse(JSON.stringify(this.state));
         currentState.listTypeChambre = data.list;                                         
         this.setState(currentState);               
     }
@@ -132,31 +103,16 @@ class DChambre extends React.Component{
                                     </span>
                                     <span>{typeChambre.description.substring(0,85) + "..."}</span>
                                     <DetailsTypeChambre context={this} typeChambre={typeChambre} indexTypeChambre={u} />
-                                    <div className={styles.equipements}>
-                                        {/* {
+                                        <div className={styles.equipements}>
+                                        {
                                             typeChambre.equipements.map(equipement => {
                                                 return(
-                                                    <Font font={equipement.font} />
+                                                    <div>
+                                                        {React.createElement(MuiIcons[equipement.tag])}
+                                                    </div>
                                                 );
                                             })
-                                        } */}
-                                        
-                                        <div>
-                                            <LiveTv/>
-                                        </div>
-                                        <div>
-                                            <Wifi/>
-                                        </div>
-                                        <div>
-                                            <AcUnit/>
-                                        </div>
-                                        <div>
-                                            <HotTub/>
-                                        </div>
-                                        <div>
-                                            <Iron/>
-                                        </div>
-                                       
+                                        }
                                     </div>
                                 </div>
                             </div>

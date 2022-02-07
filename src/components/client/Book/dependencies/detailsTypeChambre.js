@@ -7,6 +7,7 @@ import {PersonOutline} from '@mui/icons-material';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import * as MuiIcons from "@mui/icons-material"
 
 const HtmlTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
@@ -41,15 +42,15 @@ const DetailsTypeChambre = (props) => {
                                 <p>{props.typeChambre.description}</p>
                             </div>
                             <div class="col">
-                                <div>
-                                    <h4>Equipements:</h4>
-                                    <ul>
-                                        {props.typeChambre.equipements.map(equipement => {
-                                            return(
-                                                <li><Font font={equipement.font} /> <span>{equipement.nom}</span></li>
-                                            );
-                                        })}
-                                    </ul>
+                                <h4>Equipements:</h4>
+                                <div className={styles.equipements}>
+                                    {props.typeChambre.equipements.map(equipement => {
+                                        return(
+                                            <div>
+                                                {React.createElement(MuiIcons[equipement.tag])}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
                         </div>

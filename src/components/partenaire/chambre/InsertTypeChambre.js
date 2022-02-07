@@ -1,21 +1,13 @@
 import { useState } from 'react';
 import CustomError from '../../../CustomError';
-import axios from "axios";
 import React, {useEffect} from "react";
 import Navbar from "../Navbar/Navbar";
 import { Checkbox } from "@mui/material";
 import './typeChambre.css';
+import styles from './typeChambre.module.css'; 
 import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
 import {Link} from 'react-router-dom';
-import FormControl from '@mui/material/FormControl';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -27,6 +19,8 @@ import {session} from '../../common/utilitySession.js';
 import NotEnoughAccessRight from '../../common/NotEnoughAccessRight';
 
 import ButtonLoading from "../buttonLoading.js"
+
+import * as MuiIcons from "@mui/icons-material"
 
 function PlanTarifaire(props){
   let i = -1;
@@ -42,24 +36,11 @@ function PlanTarifaire(props){
           {tarif.nom}
                 </span>}
           style={{marginLeft:"20px",marginTop:'15px'}}
+          key={u}
         />
       );
   })
   return list;
-}
-
-function openEditEquipement(equipement, newIcon, setNewIcon, handleOpen){
-  const eq = {...equipement};
-  let icon = {...newIcon};
-  icon._id = eq._id;
-  icon.nom = eq.nom;
-  icon.font = eq.font;
-  setNewIcon(icon);
-  handleOpen();
-}
-
-function deleteEquipement(equipement, setListEquipement2){
-  callAPI('post', '/equipement/delete', {id: equipement._id}, setListEquipement2);
 }
 
 function Equipements(props){
@@ -76,34 +57,29 @@ function Equipements(props){
                 label=""
                 onChange={(e) => props.handleCheckBoxEquipement(e, u)}
                 style={{marginLeft:"20px"}}
+                key={u}
               />
             </td>
             <td>
-              <Font font={equipement.font} />
+              {React.createElement(MuiIcons[equipement.tag])}
             </td>
             <td>
-              {equipement.nom}
-            </td>
-            <td>
-            <EditIcon style={{color : "green"}} onClick={(e) => openEditEquipement(equipement, props.newIcon, props.setNewIcon, props.handleOpen)} />
-            </td>
-            <td>
-              <DeleteIcon style={{color : "red"}} onClick={(e) => deleteEquipement(equipement, props.setListEquipement2)} />
+              {equipement.label}
             </td>
           </tr>
           
         );
     })
-    const table = <table style={{width: "400px"}}>
-      {equipements}
+    const table = <table className={styles.equipement}>
+      <tbody>
+        {equipements}
+      </tbody>
     </table>
   return table;
 }
 function InsertTypeCHambre(){
   const noImage = '/no-image.jpg';
   let [val, setVal] = useState(1);
-  let [newIcon, setNewIcon] = useState({_id: null, font: "", nom: ""});
-  let [errInsertEq, setErrInsertEq] = useState(null);
   let [state, setState] = useState(
     {
       errors: [],
@@ -190,9 +166,6 @@ function InsertTypeCHambre(){
       <NotEnoughAccessRight />
     );
   }
-  
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
 
   function setInfo(res){
     console.log(res);
@@ -201,9 +174,8 @@ function InsertTypeCHambre(){
       res.listTarif[i].checked = false;
     }
     current.planTarifaire = res.listTarif;
-    
     for(let i = 0; i < res.listEquipement.length; i++){
-      res.listEquipement[i].checked = false;
+      res.listEquipement[i].checked = true;
     }
     current.equipements = res.listEquipement;
     setState(current);
@@ -348,53 +320,9 @@ function InsertTypeCHambre(){
     p: 4,
   };
 
-  function handleNewIconChange(e, fieldName){
-    let currentState = JSON.parse(JSON.stringify(newIcon));
-    currentState[fieldName] = e.target.value;
-    setNewIcon(currentState);
-    
-    let tempError = {...errorFont};
-    tempError[fieldName] = null;
-    setErrorFont(tempError);
-  }
-
-  function setListEquipement2(res){
-    if(res.status === 200){
-      setNewIcon({font: "", nom: ""});
-      let current = {...state};
-      current.equipements = res.equipements;
-      setState(current);
-      setOpen(false);
-    }else{
-      let temp = {...errorFont};
-      let errKeys = Object.keys(res.errors);
-      errKeys.map((k) => {
-        temp[k] = res.errors[k];
-      });
-      setErrorFont(temp);
-    }
-  }
-
-  function addEquipement(){
-    if(newIcon._id === null){
-      callAPI('post', '/equipement/insert', {icon: newIcon}, setListEquipement2);
-    }else{
-      callAPI('post', '/equipement/update', {icon: newIcon}, setListEquipement2);
-    }
-  }
-
-  function openAjouterEquipement(){
-    let temp = {...newIcon};
-    temp._id = null;
-    temp.font = "";
-    temp.nom = "";
-    setNewIcon(temp);
-    handleOpen();
-  }
-
   return (
     <div> 
-        <Navbar/>
+        <Navbar currentPage={2}/>
               <div className="jumbotron">
                 <h4 className="" id='title1'>{isInsert ? "Ajouter type chambre" : "Modifier type chambre"}</h4>
                 <CustomError errors={state.errors} />
@@ -545,7 +473,7 @@ function InsertTypeCHambre(){
                       placeholder=""
                       multiline
                       rows={2}
-                      rowsMax={4}
+                      rowsmax={4}
                       label={
                         <p id='libel'>
                             Description
@@ -569,62 +497,8 @@ function InsertTypeCHambre(){
                         <Equipements  
                           equipements={state.equipements} 
                           handleCheckBoxEquipement={handleCheckBoxEquipement}
-                          newIcon={newIcon}
-                          setNewIcon={setNewIcon}
-                          handleOpen={handleOpen}
-                          setListEquipement2={setListEquipement2}
                         />
                       </FormGroup>
-                      <Button onClick={openAjouterEquipement}>Ajouter equipement</Button>
-                      <Modal
-                        open={open}
-                        onClose={handleClose}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                      >
-                        <Box sx={style}>
-                          <Typography id="modal-modal-title" variant="h6" component="h2" align="center">
-                            {newIcon._id === null ? "Ajouter nouveau equipement" : "Modifier equipement"}
-                          </Typography>
-                          {errorFont.autre === null ? null : <div className="customError"><span>{errorFont.autre}</span></div>}
-                          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                          <div style={{marginLeft:'14px'}}>
-                            <TextField 
-                              id="outlined-basic"
-                              variant="outlined"
-                              size='small'
-                              className="form-control" 
-                              label="Font" 
-                              style={{width:"300px"}}
-                              type="text" 
-                              name="Font" 
-                              value={newIcon.font}
-                              onChange={(e) => handleNewIconChange(e, "font")}
-                              error={errorFont.font === null ? false : true}
-                              helperText={errorFont.font === null ? null : errorFont.font}
-                              />
-                              <TextField 
-                              id="outlined-basic"
-                              variant="outlined"
-                              size='small'
-                              className="form-control" 
-                              label="Nom" 
-                              style={{width:"300px",marginTop:'10px'}}
-                              type="text" 
-                              name="Nom" 
-                              value={newIcon.nom}
-                              onChange={(e) => handleNewIconChange(e, "nom")}
-                              error={errorFont.nom === null ? false : true}
-                              helperText={errorFont.nom === null ? null : errorFont.nom}
-                              />
-                            </div>
-                              <br/>
-                              <div style={{margin:'0 auto', width:'fit-content', marginTop:'20px'}}>
-                                <Button variant="contained" onClick={(e) => addEquipement()}>{newIcon._id === null ? "Ajouter equipement" : "Modifier equipement"}</Button>
-                              </div>
-                          </Typography>
-                        </Box>
-                      </Modal>
                     </div>
                     <div style={{marginTop:'15px'}}>
                       <div>

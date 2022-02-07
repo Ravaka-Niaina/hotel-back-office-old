@@ -126,19 +126,20 @@ body{
     position: absolute;
     bottom:0;
 }
-
 .equipements div{
-    width: 50px;
-    height: 50px;
+    width: 40px;
+    height: 40px;
     border: 1px solid #084298;
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-left: 10px;
+    margin-left: 8px;
 }
-
+.equipements div:first-child{
+    margin-left: 0 !important;
+}
 .equipements svg{
-    font-size: 32px !important;
+    font-size: 28px !important;
     color: #084298;
 }
 
@@ -151,6 +152,27 @@ body{
     list-style-type: none;
     width:100%;
     padding-left: 0;
+}
+
+.listTarif ul > li{
+    /* background-color: #f8f9fa; */
+    /*box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%); */
+}
+
+.listTarif ul > li > div:first-child span{
+    font-size: 14px;
+    text-transform: uppercase;
+    text-decoration: underline;
+    /* background-color: rgb(242 242 242); */
+    padding: 5px;
+    font-weight: bold;
+    /* box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%); */
+}
+
+.listTarif ul > li > div:nth-child(2) span svg{
+    margin-right: 5px;
+    margin-bottom: 8px;
+    margin-top: 8px;
 }
 
 .listTarif ul > li > div{
@@ -182,13 +204,17 @@ body{
 }
 
 .listTarif ul > li > div > div:nth-child(2){
-    background-color:#f6f8fd;
+    background-color:#f8f9fa;
     color: #000;
-    border-right: 5px solid #fff;
+    /* border-right: 5px solid #fff; */
 }
 
 .listTarif ul > li > div > div:nth-child(3){
-    background-color:#f6f8fd;
+    /* background-color:#e9ecef; */
+}
+
+.listTarif ul > li > div > div:nth-child(3) button{
+    background-color: rgba(128,128,128,1) !important;
 }
 
 .listTarif ul > li > div > div:nth-child(2) > span{
@@ -239,7 +265,7 @@ body{
 
 .afterProm{
     color: #c20808;
-    font-weight: bolder;
+    font-weight: 500;
 }
 
 .bookNow{
@@ -345,6 +371,14 @@ body{
     justify-content:space-evenly;
 }
 
+.printFacture p > button{
+    background-color: rgba(128,128,128,1) !important;
+}
+
+.printFacture p{
+    text-align: left !important;
+}
+
 /* filters */
 
 .filterModal,
@@ -357,16 +391,55 @@ body{
 }
 
 .filterModal > div > div{
-    margin-top: 30px;
-    height: 90%;
+    height: 100%;
     overflow-y: scroll;
     background-color: white;
     width: 700px;
-    padding-top:10px;
+}
+
+.filterModal form > div > div:nth-child(1){
+    margin-bottom: 50px;
+}
+
+.filterModal form > div > div:nth-child(1) > div:last-child fieldset > div{
+    flex-direction: row;
+    width:655px;
+}
+
+.filterModal form > div > div:nth-child(1) > div:last-child fieldset > div label{
+    flex: 1 1 300px;
 }
 
 .filterModal form > div > div:nth-child(2){
-    width: 50%;
-    margin: 10px auto;
+    width: 700px;
     justify-content: center;
+    position: absolute;
+    bottom: 0;
+    background-color:#fff;
+}
+
+.filterModal form > div > div:nth-child(2) > button{
+    margin: 10px;
+}
+
+/* footer page */
+
+.footer{
+    background-color: #f2f2f2;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    gap:10px;
+    box-shadow: 0 0px 10px rgb(0 0 0 / 14%), 0 5px 10px rgb(128 128 128);
+}
+.footer img{
+    width:100px;
+}
+.footer span{
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
+    font-size: 14px;
 }

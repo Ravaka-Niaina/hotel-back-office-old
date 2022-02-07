@@ -30,7 +30,7 @@ const BookComponent = (props) => {
         currentState.isListTarifDispoReceived = true;
         props.context.setState(currentState);
         setLoadingFilter(false);
-        props.context.changeOpenFiltre();
+        props.context.changeOpenFiltre(false);
     }
 
     function applyFilter(moreData){
@@ -111,38 +111,21 @@ const BookComponent = (props) => {
                 </div>
             } />
           
-          <Button variant="outlined" startIcon={<Search />} onClick={(e) => applyFilter()}>
+            <Button variant="outlined" startIcon={<Search />} onClick={(e) => applyFilter()}>
               Search
-          </Button>
-      </Box>
-    </Box>
-    <Box sx={{ display: { xs: 'none', md: 'flex'}}} className={styles.resultsFilter}>
-        <Button variant="outlined" startIcon={<ManageSearch />} onClick={(e) => props.context.changeOpenFiltre()}>
-            Filter
-        </Button>
-        <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{ display: { xs: 'none', sm: 'block' }, fontSize: '16px' }}
-        >
-            Group by :
-        </Typography>
-        <ToggleButtonGroup
-            color="primary"
-            exclusive
-            value={groupby}
-            onChange={handleGroupByChange}
-        >
-        <ToggleButton size="small" value="a">Type chambre</ToggleButton>
-        <ToggleButton size="small" value="b">Plan tarifaires</ToggleButton>
-        </ToggleButtonGroup>
-            <div>
-                <span><strong>{ props.context.state.listTypeChambre.length }</strong> matching rooms</span>
-            </div>
-    </Box>
-    <Filtre context={props.context} applyFilter={applyFilter} loadingFilter={loadingFilter} />
-  </div>
+            </Button>
+        </Box>
+        </Box>
+        <Box sx={{ display: { xs: 'none', md: 'flex'}}} className={styles.resultsFilter}>
+            <Button variant="outlined" startIcon={<ManageSearch />} onClick={(e) => props.context.changeOpenFiltre(true)}>
+                Filtrer
+            </Button>
+                <div>
+                    <span><strong>{ props.context.state.listTypeChambre.length }</strong> matching rooms</span>
+                </div>
+        </Box>
+        <Filtre context={props.context} applyFilter={applyFilter} loadingFilter={loadingFilter} />
+    </div>
 )};
 
 export default BookComponent;

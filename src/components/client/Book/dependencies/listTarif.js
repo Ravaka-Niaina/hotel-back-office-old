@@ -1,18 +1,18 @@
-import React , { useState } from 'react';
+import React from 'react';
 import Box from '@mui/material/Box'
 import Modal from '@mui/material/Modal';
-import axios from "axios";
 import AddIcon from '@mui/icons-material/Add';
 import {Button} from '@mui/material';
 import styles from '../Book.module.css';
 import {PersonOutline} from '@mui/icons-material';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
-import Skeleton from '@mui/material/Skeleton';
-import Stack from '@mui/material/Stack';
-
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import InfoPolitiqueAnnul from './infoPolitiqueAnnul.js';
+import { styled } from '@mui/material/styles';
 import callAPI from '../../../../utility.js';
 import numeroConfirmation from './numeroConfirmation.js';
+import PolicyIcon from '@mui/icons-material/Policy';
 
 const style = {
     position: 'absolute',
@@ -125,26 +125,40 @@ function ListTarif(props){
             callAPI("post" , "/reservation/insert" , data , setReservationEnCours);
         }
     }
+
+    const HtmlTooltip = styled(({ className, ...props }) => (
+        <Tooltip {...props} classes={{ popper: className }} />
+    ))(({ theme }) => ({
+        [`& .${tooltipClasses.tooltip}`]: {
+        backgroundColor: '#f5f5f9',
+        color: 'rgba(0, 0, 0, 0.87)',
+        maxWidth: 850,
+        fontSize: theme.typography.pxToRem(12),
+        border: '1px solid #dadde9',
+        },
+    }));
     
     let tarifs = props.tarifs.map(tarif => {
-             return (
+            const nbPers = props.context.state.guests.nbAdulte + props.context.state.guests.nbEnfant;
+            return (
                     <div className={styles.listTarif}>
                         <ul>
                             <li>
                                 <div className="row">
-                                    {tarif.conditionsAnnulation !== "" 
-                                        ?   <span>
-                                                <i class="fa fa-check" aria-hidden="true">
-                                                    {/* &nbsp;&nbsp;{tarif.conditionsAnnulation}  */}
-                                                </i>
-                                                &nbsp;&nbsp;Refundable rates
-                                            </span> : ""
-                                    }
+                                    <span>{tarif.nom}</span>
                                 </div>
-                                <div className="row">
-                                    <strong>
-                                        <u>{tarif.nom}</u>
-                                    </strong>
+                                <div class="row">
+                                    {tarif.politiqueAnnulAtrb !== undefined &&  tarif.politiqueAnnulAtrb[0] !== undefined? <HtmlTooltip
+                                                                    title={
+                                                                        <InfoPolitiqueAnnul 
+                                                                            checkIn={tarif.dateSejour.debut} 
+                                                                            politique={tarif.politiqueAnnulAtrb[0]} 
+                                                                    />}
+                                                                    placement="left-start"
+                                                                >
+                                                                    <span><PolicyIcon/>{tarif.politiqueAnnulAtrb[0].nom}</span>
+                                                                </HtmlTooltip> : ""
+                                    }
                                 </div>
                                 {
                                     tarif.minPrix && tarif.minPrix.versions ? tarif.minPrix.versions.map(version => {
@@ -156,12 +170,8 @@ function ListTarif(props){
                                                     {/*<ListServiceTarif services={tarif.services} />*/}
                                                 </div>
                                                 <div class="col"> 
-                                                    { version.prixOriginal ? <span className={styles.beforeProm}>&nbsp;{version.prixOriginal + " EUR "}</span> : null }
-                                                    <span className={styles.afterProm}>&nbsp;{version.prix + " EUR "}</span>
-                                                </div>
-                                                <div class="col">
-                                                    <span>Per Night</span>
-                                                    <span>including Taxes & Fees</span>
+                                                    { version.prixOriginal ? <span className={styles.beforeProm}>&nbsp;{(version.prixOriginal * nbPers) + " EUR "}</span> : null }
+                                                    <span className={styles.afterProm}>&nbsp;{(version.prix * nbPers) + " EUR "}</span>
                                                 </div>
                                                 <div className={styles.bookNow}>
                                                     <Button variant="contained"
