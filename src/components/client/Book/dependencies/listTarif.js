@@ -13,6 +13,7 @@ import { styled } from '@mui/material/styles';
 import callAPI from '../../../../utility.js';
 import numeroConfirmation from './numeroConfirmation.js';
 import PolicyIcon from '@mui/icons-material/Policy';
+import {getDiffDays} from '../../../../utility/utilityDate.js';
 
 const style = {
     position: 'absolute',
@@ -140,7 +141,7 @@ function ListTarif(props){
     }));
     
     let tarifs = props.tarifs.map(tarif => {
-            const nbPers = props.context.state.guests.nbAdulte + props.context.state.guests.nbEnfant;
+            const nbNuit =  getDiffDays(new Date(tarif.dateSejour.debut), new Date(tarif.dateSejour.fin));
             return (
                     <div className={styles.listTarif}>
                         <ul>
@@ -171,8 +172,8 @@ function ListTarif(props){
                                                     {/*<ListServiceTarif services={tarif.services} />*/}
                                                 </div>
                                                 <div class="col"> 
-                                                    { version.prixOriginal ? <span className={styles.beforeProm}>&nbsp;{(version.prixOriginal * nbPers) + " EUR "}</span> : null }
-                                                    <span className={styles.afterProm}>&nbsp;{(version.prix * nbPers) + " EUR "}</span>
+                                                    { version.prixOriginal ? <span className={styles.beforeProm}>&nbsp;{(version.prixOriginal * nbNuit) + " EUR "}</span> : null }
+                                                    <span className={styles.afterProm}>&nbsp;{(version.prix * nbNuit) + " EUR "}</span>
                                                 </div>
                                                 <div className={styles.bookNow}>
                                                     <Button variant="contained"
