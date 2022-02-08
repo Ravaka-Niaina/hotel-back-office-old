@@ -1,4 +1,5 @@
 import  React,{useEffect}  from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -36,6 +37,9 @@ import callAPI from '../../../utility.js';
 import FooterList from './FooterList.js';
 import ValidationSuppression from './ValidationSuppression.js';
 import {session} from '../utilitySession.js';
+
+import Login from '../../common/Authentification/Login.js';
+import NotEnoughAccessRight from '../NotEnoughAccessRight.js';
 
 const moment = require('moment');
 
@@ -173,6 +177,8 @@ export default function Recherche(props){
     const [openModalDelete, setOpenModalDelete] = React.useState(false);
     const [toDelete, setToDelete] = React.useState({_id: null, nom: null});
 
+    const history = useHistory();
+
     let hasARToViewInsert = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToViewInsert);
     let hasARToDelete = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToDelete);
     let hasARToViewDetails = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToViewDetails);
@@ -242,32 +248,43 @@ export default function Recherche(props){
             setIsLoading(false);
         });
     };
-
+    
     useEffect(() => {
-
-        rechercher(1);
-        let temp = [];
-        props.fieldsToPrint.map(infoField => {
-          if(infoField.field !== "_id" && !infoField.forcePrint){
-            temp.push({
-              id: infoField.field,
-              numeric: infoField.type === "Integer" || infoField.type === "Float" ? true : false,
-              disablePadding: false,
-              label: infoField.label
-            });
-          }
-        });
-        temp.push({
-          id: "actions",
-          numeric: false,
-          disablePadding: false,
-          label: "Actions"
-        });
-        setHeadCells(temp);
+          rechercher(1);
+          let temp = [];
+          props.fieldsToPrint.map(infoField => {
+            if(infoField.field !== "_id" && !infoField.forcePrint){
+              temp.push({
+                id: infoField.field,
+                numeric: infoField.type === "Integer" || infoField.type === "Float" ? true : false,
+                disablePadding: false,
+                label: infoField.label
+              });
+            }
+          });
+          temp.push({
+            id: "actions",
+            numeric: false,
+            disablePadding: false,
+            label: "Actions"
+          });
+          setHeadCells(temp);
     }, []);
     
     const [message, setMessage] = React.useState("");
     const [isLoading, setIsLoading] = React.useState(true);
+
+    const isConnected = session.getInstance().isConnected();
+    if(!isConnected){
+        return(<Login urlRedirect={window.location.href} />);
+    }
+    const hasARViewList = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToViewList ? props.accessRightToViewList : []);
+    console.log(hasARViewList);
+    console.log(props.accessRightToViewList);
+    if(!hasARViewList && !hasARToViewInsert && !hasARToViewDetails && !hasARToDelete){
+      console.log("tsy mety");
+      return(<NotEnoughAccessRight />);
+    }
 
     const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * nbContent - rows.length) : 0;
@@ -297,8 +314,7 @@ export default function Recherche(props){
                 />
                 <Button onClick={(e) => rechercher(1)}><SearchIcon style={{color:"blue"}} /></Button>
             </div> <br/><br/>
-
-            {
+            { hasARViewList ? <>{
                 isLoading ? <Paper sx={{ width: '100%', mb: 2 }}><Skeleton /></Paper> :<>
             <Paper sx={{ width: '100%', mb: 2 }}>
             
@@ -397,7 +413,8 @@ export default function Recherche(props){
               currentNumPage={currentNumPage} setCurrentNumPage={setCurrentNumPage}
               nbPage={nbPage} rechercher={rechercher}
             /></>
-            }
+            }</> : null }
+            
           </Box>
           <ValidationSuppression 
             openModalDelete={openModalDelete}

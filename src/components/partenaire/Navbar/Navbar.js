@@ -97,7 +97,7 @@ function Navbar(props) {
                 <Tab value={6} component={Link} icon={<FormatListBulletedOutlinedIcon />} to="/front" iconPosition="start" label="Client" />
                 <Tab value={7} icon={<PersonPinIcon />} iconPosition="start" label="Mon compte" />
                 { showPartenaire ? <Tab value={8} component={Link} to="/back/user" icon={<PersonPinIcon />} iconPosition="start" label="Partenaires" /> : null }
-                { showDroitAcces ? <Tab value={8} component={Link} to="/back/accessRight" icon={<PersonPinIcon />} iconPosition="start" label="Droit d'accès" /> : null }
+                { showDroitAcces ? <Tab value={9} component={Link} to="/back/accessRight" icon={<PersonPinIcon />} iconPosition="start" label="Droit d'accès" /> : null }
                 <Drop click = {handleChange} close ={handleClose} open={open} anchorEl={anchorEl} />
                 <DropHisto click = {handleChange} close ={handleClose1} open={open1} anchorEl={anchorEl1} />
             </Tabs>

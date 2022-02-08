@@ -1,6 +1,6 @@
-import Rechercher from '../common/List/Recherche.js';
+import Rechercher from '../../common/List/Recherche.js';
 
-const btnInsert = {urlRedirect: "/typeChambre/insert", label: "Ajouter type chambre"};
+const btnInsert = {urlRedirect: "/back/typeChambre/insert", label: "Ajouter type chambre"};
 const urlSearch = "/typeChambre/TC";
 const method = "post";
 const tableName = "typeChambre";
@@ -20,12 +20,17 @@ const fieldsToPrint = [
     {field: "superficie", label: "Superficie", type: "Float"}
 ];
 const nbContent = 5;
-const urlEdit = "/typeChambre/details/";
+const urlEdit = "/back/typeChambre/details/";
 const rowsPerPageOptions = [5, 10, 20];
+const accessRightToViewList = ["superAdmin", "getListTypeChambre"];
+const accessRightToViewInsert = ["superAdmin", "insertTypeChambre"];
+const accessRightToDelete = ["superAdmin", "deleteTypeChambre"];
+const accessRightToViewDetails = ["superAdmin", "getTypeChambre", "updateTypeChambre"];
 
 export default function ListTypeChambre(){
     return(
         <Rechercher 
+            currentPage={1}
             btnInsert={btnInsert}
             urlSearch={urlSearch}
             tableName={tableName}
@@ -34,6 +39,10 @@ export default function ListTypeChambre(){
             urlEdit={urlEdit}
             nbContent={nbContent}
             rowsPerPageOptions={rowsPerPageOptions}
+            accessRightToViewList={accessRightToViewList}
+            accessRightToViewInsert={accessRightToViewInsert}
+            accessRightToViewDetails={accessRightToViewDetails}
+            accessRightToDelete={accessRightToDelete}
         />
     );
 }

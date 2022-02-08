@@ -22,6 +22,7 @@ const fieldsToPrint = [
 const nbContent = 5;
 const urlEdit = "/back/typeChambre/details/";
 const rowsPerPageOptions = [5, 10, 20];
+const accessRightToViewList = ["superAdmin", "getListTypeChambre"];
 const accessRightToViewInsert = ["superAdmin", "insertTypeChambre"];
 const accessRightToDelete = ["superAdmin", "deleteTypeChambre"];
 const accessRightToViewDetails = ["superAdmin", "getTypeChambre", "updateTypeChambre"];
@@ -38,6 +39,7 @@ export default function ListTypeChambre(){
             urlEdit={urlEdit}
             nbContent={nbContent}
             rowsPerPageOptions={rowsPerPageOptions}
+            accessRightToViewList={accessRightToViewList}
             accessRightToViewInsert={accessRightToViewInsert}
             accessRightToViewDetails={accessRightToViewDetails}
             accessRightToDelete={accessRightToDelete}

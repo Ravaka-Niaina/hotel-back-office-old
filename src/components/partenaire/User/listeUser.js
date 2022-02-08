@@ -30,6 +30,7 @@ const rowsPerPageOptions = [5, 10, 20];
 const accessRightToViewInsert = ["superAdmin", "insertPartenaire"];
 const accessRightToDelete = ["superAdmin", "deletePartenaire"];
 const accessRightToViewDetails = ["superAdmin", "getPartenaire", "updatePartenaire", "assocPartnerWithAR", "disocPartnerWithAR"];
+const accessRightToViewList = ["superAdmin", "getListPartenaire"];
 
 const ListeUser = () => {
     const hasAR = session.getInstance().hasOneOfTheseAccessRights(["insertPartenaire", "getPartenaire", "updatePartenaire", "deletePartenaire", "superAdmin"]);
@@ -50,6 +51,7 @@ const ListeUser = () => {
             urlEdit={urlEdit}
             nbContent={nbContent}
             rowsPerPageOptions={rowsPerPageOptions}
+            accessRightToViewList={accessRightToViewList}
             accessRightToViewInsert={accessRightToViewInsert}
             accessRightToDelete={accessRightToDelete}
             accessRightToViewDetails={accessRightToViewDetails}

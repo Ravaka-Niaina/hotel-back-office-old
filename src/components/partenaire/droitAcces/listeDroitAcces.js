@@ -5,7 +5,7 @@ import Login from '../../common/Authentification/Login.js';
 
 const btnInsert = {urlRedirect: "/back/accessRight/insert", label: "Ajout droit d'accés"};
 const urlSearch = "/droitAcces/list";
-const method = "get";
+const method = "post";
 const tableName = "droitAcces";
 const fieldsToSearch = [
     {name: "_id", type: "String"},
@@ -21,6 +21,7 @@ const rowsPerPageOptions = [5, 10, 20];
 const accessRightToViewInsert = ["superAdmin"];
 const accessRightToDelete = ["superAdmin", "deleteDroitAcces"];
 const accessRightToViewDetails = ["superAdmin", "getDroitAcces", "updateDroitAcces"];
+const accessRightToViewList = ["superAdmin", "getListDroitAcces"];
 
 const ListeDroitAcces = () => {
     const hasAR = session.getInstance().hasOneOfTheseAccessRights(["insertDroitAcces", "superAdmin"]);
@@ -32,7 +33,7 @@ const ListeDroitAcces = () => {
 
     return(
         <Rechercher 
-            currentPage={8}
+            currentPage={9}
             method={method}
             btnInsert={btnInsert}
             urlSearch={urlSearch}
@@ -42,6 +43,7 @@ const ListeDroitAcces = () => {
             urlEdit={urlEdit}
             nbContent={nbContent}
             rowsPerPageOptions={rowsPerPageOptions}
+            accessRightToViewList={accessRightToViewList}
             accessRightToViewInsert={accessRightToViewInsert}
             accessRightToDelete={accessRightToDelete}
             accessRightToViewDetails={accessRightToViewDetails}
