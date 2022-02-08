@@ -151,19 +151,19 @@ function ListTarif(props){
                                 </div>
                                 <div class="row">
                                     {tarif.politiqueAnnulAtrb !== undefined &&  tarif.politiqueAnnulAtrb[0] !== undefined? <HtmlTooltip
-                                                                    title={
-                                                                        <InfoPolitiqueAnnul 
-                                                                            checkIn={tarif.dateSejour.debut} 
-                                                                            politique={tarif.politiqueAnnulAtrb[0]} 
-                                                                    />}
-                                                                    placement="left-start"
-                                                                >
-                                                                    <span><PolicyIcon/>{tarif.politiqueAnnulAtrb[0].nom}</span>
-                                                                </HtmlTooltip> : ""
+                                            title={
+                                                <InfoPolitiqueAnnul 
+                                                    checkIn={tarif.dateSejour.debut} 
+                                                    politique={tarif.politiqueAnnulAtrb[0]} 
+                                            />}
+                                            placement="left-start"
+                                        >
+                                            <span><PolicyIcon/>{tarif.politiqueAnnulAtrb[0].nom}</span>
+                                        </HtmlTooltip> : ""
                                     }
                                 </div>
                                 {
-                                    tarif.minPrix && tarif.minPrix.versions ? tarif.minPrix.versions.map(version => {
+                                    tarif.toPayStay.map(version => {
                                         return(
                                             <div className="row" style={{marginTop: "5px"}}>
                                                 <div>
@@ -172,8 +172,8 @@ function ListTarif(props){
                                                     {/*<ListServiceTarif services={tarif.services} />*/}
                                                 </div>
                                                 <div class="col"> 
-                                                    { version.prixOriginal ? <span className={styles.beforeProm}>&nbsp;{(version.prixOriginal * nbNuit) + " EUR "}</span> : null }
-                                                    <span className={styles.afterProm}>&nbsp;{(version.prix * nbNuit) + " EUR "}</span>
+                                                    { version.prixOriginal ? <span className={styles.beforeProm}>&nbsp;{(version.prixOriginal) + " EUR "}</span> : null }
+                                                    <span className={styles.afterProm}>&nbsp;{(version.prix) + " EUR "}</span>
                                                 </div>
                                                 <div className={styles.bookNow}>
                                                     <Button variant="contained"
@@ -186,7 +186,7 @@ function ListTarif(props){
                                                 </div>
                                             </div>
                                         );
-                                    }) : null
+                                    })
                                 }
                             </li><br/>
                         </ul>
