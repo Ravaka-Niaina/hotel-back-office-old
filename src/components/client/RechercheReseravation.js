@@ -13,6 +13,9 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 
 import {Button, IconButton, Typography, Toolbar, AppBar} from '@mui/material';
 import TextField from '@mui/material/TextField';
+import BtnLoad from '../partenaire/buttonLoading.js';
+import SkeletonForm from '../../SkeletonListe/SkeletonFormulaire.js';
+import './researchReservationCSS.css';
 
 const div = {width : "520px" , border : "1px solid #887B62",padding : "10px"}
 const photo = { maxWidth: "100%",height: "auto"}
@@ -20,21 +23,27 @@ function ReponseList(props){
     let list = props.list.reservation.map(liste => {
         return (
             <div style={div}>
-                <img src="/hotel.jpg" style={photo}/> 
-                <span
-                    component="div"
-                    sx={{ display: {xs : "none" ,  sm: 'block' }, padding : "10px" }}
-                >
-                    Heritage Le Telfaire Golf and Wellness Resort 
-                </span><br/>
-                <span>{props.list.client.nom} , {props.list.client.prenom}</span><br/>
-                <span>{props.list.client.email} </span><br/><br/>
-                <strong style={{textDecoration : "underline"}}>N° Confirmation : </strong><span>{liste.numeroConfirmation} </span><hr/>
-                <Itineraire itineraire = {liste.itineraires}/>
-                <div style={{float : 'right'}}>
-                    <Button variant="contained" > AFFICHER LES INFORMATIONS </Button>  
-                </div>
-               
+                {
+                    props.skeleton ? <SkeletonForm /> : <>
+                    <img src="/hotel.jpg" style={photo}/> 
+                    <span
+                        component="div"
+                        sx={{ display: {xs : "none" ,  sm: 'block' }, padding : "10px" }}
+                    >
+                        Heritage Le Telfaire Golf and Wellness Resort 
+                    </span><br/>
+                    <span>{props.list.client.nom} , {props.list.client.prenom}</span><br/>
+                    <span>{props.list.client.email} </span><br/><br/>
+                    {/*
+                    <strong style={{textDecoration : "underline"}}>N° Confirmation : </strong><span>{liste.numeroConfirmation} </span><hr/> */}
+                    <Itineraire itineraire = {liste.itineraires}/>
+                    <div style={{float : 'right'}}>
+                        <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" 
+                            variant="contained" >AFFICHER LES INFORMATIONS</button>
+                        
+                    </div>
+                </>
+                }
             </div>
         )
     })
@@ -72,12 +81,11 @@ function Compte(props){
             <div style={{float : 'right'}}>  
                 {
                     props.grise ? 
-                        <Button variant="contained"  disabled>
-                            CONNEXION
-                        </Button> : 
-                        <Button variant="contained" onClick={() => props.conx()}>
-                            CONNEXION
-                        </Button>
+                    " " : <>
+                        { props.btnLoad ?  <BtnLoad /> :
+                            <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" 
+                                variant="contained" onClick={() => props.conx()}>CONNEXION</button>
+                        } </>
                 }
                         
             </div> 
@@ -92,15 +100,18 @@ function Numero(props){
             <div style={{float : 'right'}}>  
                 {
                     props.grise ? 
-                        <Button variant="contained"  disabled>
-                            RECHERCHE UNE RESERVATION
-                        </Button> : 
-                        <Button variant="contained"  onClick={() => props.conx()}>
-                            RECHERCHE UNE RESERVATION
-                        </Button >
+                        " " : <>
+                        { 
+                            props.btnLoad ?  <BtnLoad /> :
+                            <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" variant="contained" 
+                                onClick={() => props.conx()}>
+                                RECHERCHE UNE RESERVATION
+                            </button>
+                        } </>
+                        
                 }
             </div> 
-        </Box><br/><br/>
+        </Box><br/><br/><br/>
         </>
     );
 }
@@ -115,6 +126,10 @@ function RechercheReservation (){
     const [compte , setCompte] = useState({nom : "" , mdp :""});
     const [numero , setNumero] = useState({num : "" , email :""});
     const [pageCurrent , setPageCurrent] = useState(1);
+    const [btnLoad , setBtnLoad] = useState(false);
+    const [skeleton , setSkeleton] = useState(true);
+    const [errorEmpty, setErrorEmpty] = useState({nom:false,mdp: false, num: false, email: false});
+
 
     const Item = styled(Paper)(({ theme }) => ({
         ...theme.typography.body2,
@@ -124,16 +139,22 @@ function RechercheReservation (){
 
     
       const style = {
-        fontFamily: 'Arial, Helvetica , sans-serif',
-        color: '#887B62',
-        textAlign: 'center',
-        textDecoration: "underline",
-        display: { xs: 'none', sm: 'block' },
+        // fontFamily: 'Arial, Helvetica , sans-serif',
+        // color: '#887B62',
+        // textAlign: 'center',
+        // textDecoration: "underline",
+        // display: { xs: 'none', sm: 'block' },
+        margin: "0",
+        padding:" 0",
+        border:" 0",
+        fontSize: "100%",
+        font: "inherit",
+        verticalAlign: "baseline"
       }
 
       const border = {
           border : "1px solid #887B62",
-          padding : "50px"
+          padding : "10px"
       }
 
       const color ={
@@ -167,7 +188,6 @@ function RechercheReservation (){
         
       }
       const callBack = (data) => {
-        console.log(data);
         if(data.status === 200){
             let current = {...list};
             current.reservation = data.reservation;
@@ -178,6 +198,8 @@ function RechercheReservation (){
             setMessageN("");
             vider(compte , 'nom' , 'mdp', setCompte);
             vider(numero , 'num' ,'email', setNumero);
+            setBtnLoad(false);
+            setSkeleton(false);
         }else if(data.status == 204){
             if(compte.nom !== "" && compte.mdp !== ""){
                 setMessageC(data.message);
@@ -187,18 +209,24 @@ function RechercheReservation (){
         }else if(data.status == 400){
             setMessageN(data.message);
         }
+        setBtnLoad(false);
       }
 
       const connexionC = () => {
+        setBtnLoad(true);
+        setSkeleton(true)
         CallAPI("post" , "/reservation/researchC" , {mdp : compte.mdp , nom : compte.nom, pageCurrent : pageCurrent} , callBack);
       }
 
       const connexionN = () => {
+        setBtnLoad(true);
+        setSkeleton(true);
         CallAPI("post" , "/reservation/researchN" , {numero : numero.num , email : numero.email} , callBack);
       }
 
       const suivant = (e, pageCurrent) => {
             setPageCurrent(pageCurrent+1)
+            setSkeleton(true);
             CallAPI("post" , "/reservation/researchC" , {mdp : compte.mdp , nom : compte.nom, pageCurrent : pageCurrent+1} , callBack);
             
       }
@@ -213,6 +241,7 @@ function RechercheReservation (){
       const precedent = (e , pageCurrent) => {
           let pageC = pageCurrent-1;
           setPageCurrent(pageC)
+          setSkeleton(true);
           CallAPI("post" , "/reservation/researchC" , {mdp : compte.mdp , nom : compte.nom, pageCurrent : pageC} , callBack);
           
      }
@@ -222,129 +251,157 @@ function RechercheReservation (){
         setIsGriseSerf(true);
         setPageCurrent(1);
      }
+     const handleEmptyNumero = (field) => {
+        let current = {...numero}
+        let errors_input = {...errorEmpty};
+
+        if(current[field] ==='' ||current[field] === null){
+            errors_input[field] = true;
+        }else{
+            errors_input[field] = false;
+        }
+        setErrorEmpty(errors_input);
+
+     }
+
+     const handleEmptyCompte = (field) => {
+        let current = {...compte};
+        let errors_input = {...errorEmpty};
+
+        if(current[field]==='' ||current[field]===null){
+            errors_input[field] = true;
+        }else{
+            errors_input[field] = false;
+        }
+        setErrorEmpty(errors_input);
+
+     }
 
     return (
-            <div>
+            <div style={{background: "rgba(255,255,255,1)" }}>
                 <NavBar clickRetour = {clickRetour}/><br/>
-               {response ?  
-                    <Typography
-                    variant="h4" align = "center"
-                    noWrap
-                    component="div"
-                    sx={style}
-                    >
-                        Liste des reservations
-                    </Typography> : 
-                    <Typography
-                    variant="h4" align = "center"
-                    noWrap
-                    component="div"
-                    sx={style}
-                    >
-                        Rechercher une réservation
-                    </Typography> }
-                
-                    {response ? 
-                    <div>
-                        <div style={{float : 'left' , fontSize :"450px" , width :"30px",cursor:"pointer"}}>  
-                            {
-                                pageCurrent == 1 ? " " : <ChevronLeftIcon   onClick={(e) => precedent(e ,pageCurrent)}/>
-                            }
-                        </div>  
-                        <div style={{float : 'right' , fontSize :"500px",  width :"30px" , cursor:"pointer"}}> 
-                            {
-                                list.reservation.length < 3 ? " " : <ChevronRightIcon onClick={(e) => suivant(e , pageCurrent)}/>
-                            }   
-                        </div><br/>
-                        <Box sx={{ display: { xs: 'none', md: 'flex'  }, gap : 1 , padding : "30px"}}>
-                            <ReponseList  list ={list} />
-                        </Box> 
-                    </div>:
+                    <h1 id="pageTitle">
+                        <span>Rechercher une réservation</span>
+                    </h1>  
                      <Box style={{marginTop :"auto" , marginButtom : "auto"}} >
                         <Grid container spacing={2} style={{padding : "30px"}}>
                             <Grid item xs={6}>
                                 <div style={border}>
                                     {messageCompte ? <Alert severity="error">{ messageCompte}</Alert> : ""}
-                                    <Typography
-                                        variant="h5"
-                                        noWrap 
-                                        component="div"
-                                        sx={{ display: { xs: 'none', sm: 'block' } }}
-                                    >
-                                        Avec votre compte
-                                    </Typography><br/>
-                                    <TextField sx={{ input: color}}
-                                        label = "Nom d'utilisateur"
-                                        id="outlined-size-small"
-                                        style={{width : "100%"}}
-                                        value={compte.nom}
-                                        name='nom' 
-                                        onChange={e => haddleChangeInputCompte(e , 'nom')}
-                                    /><br/><br/>
-                                    <TextField sx={{ input: color}}
-                                        type ="password"
-                                        label = "Mot de passe"
-                                        id="outlined-size-small"
-                                        style={{width : "100%"}}
-                                        value={compte.mdp}
-                                        onChange={e => haddleChangeInputCompte(e,'mdp')}
-                                    /><br/><br/>
-                                    <Compte grise = {isGriseConx} color = {color}  conx = {connexionC} /> 
+                                    <h2 class='h2'>
+                                        <span>  Avec votre compte </span>
+                                    </h2>
+                                    <div class="input-fieldR">
+                                        <input type="text" value={compte.nom} onChange={e => haddleChangeInputCompte(e, 'nom')}
+                                            onBlur={(e) => handleEmptyCompte("nom")} required />
+                                            <label>Nom d'utilisateur <span class="red_required">*</span></label>
+                                                {
+                                                    errorEmpty.nom ?
+                                                    <>
+                                                        <div class="error_text">
+                                                            nom vide
+                                                        </div>
+                                                    </>
+                                                    : null
+                                                }
+                                    </div>
+                                     <div class="input-fieldR">
+                                        <input type="text" value={compte.mdp} onChange={e => haddleChangeInputCompte(e, 'mdp')}
+                                            onBlur={(e) => handleEmptyCompte("mdp")} required />
+                                            <label>Mot de passe <span class="red_required">*</span></label>
+                                            {
+                                                errorEmpty.mdp ?
+                                                <>
+                                                    <div class="error_text">
+                                                        Mot de passe vide
+                                                    </div>
+                                                </>
+                                                : null
+                                            }
+                                    </div>
+                                    <Compte grise = {isGriseConx} color = {color}  conx = {connexionC} btnLoad = {btnLoad}/> 
                                     <hr/>
-                                    <Typography
-                                        variant="h7"
-                                        noWrap
-                                        component="div"
-                                        sx={{ display: { xs: 'none', sm: 'block' } }}
-                                    >
-                                        <strong >Pas de compte en ligne ?</strong><br/>
-                                        <Link style={color}>Inscrivez-vous aujourd'hui</Link> pour gagner du temps lors de votre prochaine réservation.
-                                    </Typography>
+                                    <h3 class="app_subheading2 app_bold">
+                                        <span >Pas de compte en ligne ?</span>
+                                    </h3>
+                                    <p>
+                                        <Link style={color} to='/front/register'>Inscrivez-vous aujourd'hui</Link>
+                                        <span>  pour gagner du temps lors de votre prochaine réservation.</span>
+                                    </p>
+                                    
                                 </div> 
                             </Grid>
                             <Grid item xs={6}>
                                 <div style={border}> 
-                                {messageNumero ? <Alert severity="error">{messageNumero}</Alert> : ""}   
-                                    <Typography
-                                        variant="h5"
-                                        noWrap 
-                                        component="div"
-                                        sx={{ display: { xs: 'none', sm: 'block' } }}
-                                    >
-                                        Avec numéro de confirmation ou numéro d'itinéraire
-                                    </Typography><br/>
-                                    <TextField sx={{ input: color}}
-                                        label = "Numéro de confirmation ou  d'itinéraire"
-                                        id="outlined-size-small"
-                                        style={{width : "100%"}}
-                                        value={compte.num}
-                                        onChange={e => haddleChangeInputNumero(e, 'num')}
-                                    /><br/><br/>
-                                    <TextField  sx={{ input: color}}
-                                        type ="email"
-                                        label = "Adresse e-mail"
-                                        id="outlined-size-small"
-                                        style={{width : "100%"}}
-                                        value={compte.email}
-                                        onChange={e => haddleChangeInputNumero(e, 'email')}
-                                    /><br/><br/>
-                                    <Numero grise = {isGriseSerf} conx = {connexionN}/> <hr/>
-                                    <Typography
-                                        variant="h7"
-                                        noWrap
-                                        component="div"
-                                        sx={{ display: { xs: 'none', sm: 'block' } }}
-                                    >
-                                        <strong >Vous ne connaissez pas votre numéro de confirmation ?</strong><br/>
-                                        <span>Votre numéro de confirmation a été envoyé par e-mail au moment de la réservation.</span><br/>
-                                        <span>Veuillez consulter cet e-mail pour retrouver le numéro.</span>
-                                    </Typography>
+                                    {messageNumero ? <Alert severity="error">{messageNumero}</Alert> : ""} 
+
+                                    <h2 class='h2'>
+                                        <span>  Avec  numéro d'itinéraire </span>
+                                    </h2>
+                                    <div class="input-fieldR">
+                                        <input type="text" value={compte.num} onChange={e => haddleChangeInputNumero(e, 'num')}
+                                            onBlur={(e) => handleEmptyNumero("num")} required />
+                                            <label>Numéro d'itinéraire<span class="red_required">*</span></label>
+                                            {
+                                                errorEmpty.num ?
+                                                <div class="error_text">
+                                                    Veuillez indiquer un numéro d'itinéraire 
+                                                </div>
+                                                : null
+                                            }
+                                    </div>
+                                     <div class="input-fieldR">
+                                        <input type="text" value={compte.email} onChange={e => haddleChangeInputNumero(e, 'email')}
+                                            onBlur={(e) => handleEmptyNumero("email")} required />
+                                            <label>Adresse e-mail <span class="red_required">*</span></label>
+                                            {
+                                                errorEmpty.email ?
+                                                    <div class="error_text">
+                                                        Veuillez indiquer une adresse e-mail ou un ID de programme de fidélité
+                                                    </div>
+                                                : null
+                                            }
+                                    </div>
+                                    <Numero grise = {isGriseSerf} conx = {connexionN} btnLoad = {btnLoad} />
+                                    <div class='divFooterR'>
+                                        <h3 class="app_subheading2 app_bold">
+                                            <span >Vous ne connaissez pas votre numéro de confirmation ?</span>
+                                        </h3>
+                                            <p>
+                                                <span >
+                                                    Votre numéro de confirmation a été envoyé par e-mail au moment de la réservation
+                                                    Veuillez consulter cet e-mail pour retrouver le numéro.
+                                                </span>
+                                            </p>
+                                        
+                                    </div>
 
                                 </div> 
                             </Grid>
                         </Grid>
                     </Box> 
-                    }
+                        {
+                            response ?  <>
+                            <h1 id="pageTitle">
+                                <span> Liste des reservations </span>
+                            </h1> 
+                             <div>
+                                <div style={{float : 'left' , fontSize :"450px" , width :"30px",cursor:"pointer"}}>  
+                                    {
+                                        pageCurrent == 1 ? " " : <ChevronLeftIcon   onClick={(e) => precedent(e ,pageCurrent)}/>
+                                    }
+                                </div>  
+                                <div style={{float : 'right' , fontSize :"500px",  width :"30px" , cursor:"pointer"}}> 
+                                    {
+                                        list.reservation.length < 3 ? " " : <ChevronRightIcon onClick={(e) => suivant(e , pageCurrent)}/>
+                                    }   
+                                </div><br/>
+                                <Box sx={{ display: { xs: 'none', md: 'flex'  }, gap : 1 , padding : "30px"}}>
+                                    <ReponseList  list ={list} skeleton={skeleton}/>
+                                </Box> 
+                            </div> 
+                            </> : ""
+                        }
                 </div>
     );
 }

@@ -140,7 +140,7 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
           <div>
           {i.price !== undefined ? 
             <div>
-              {i.promotions !== undefined && i.promotions.length > 0 ?
+              {i.promotions !== undefined && i.promotions.length > 0 && getDate(fin) !== getDate(i.date)?
                 <HtmlTooltip
                   title={ getHtmlPromo(i.prixOriginal, i.promotions) }
                 >

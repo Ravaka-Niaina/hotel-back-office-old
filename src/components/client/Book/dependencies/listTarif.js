@@ -119,9 +119,10 @@ function ListTarif(props){
                 dateReservation: getDate(Date.now()),
                 guests: props.context.state.guests,
                 idTypeChambre : idTypeChambre,
-                nbPers: nbPers
+                nbPers: nbPers,
+                numeroConfirmation : numeroConfirm
             });
-            const data = {itineraires: itineraires , numeroIntineraire : Random};
+            const data = {itineraires: itineraires , numeroIntineraire : Random };
             callAPI("post" , "/reservation/insert" , data , setReservationEnCours);
         }
     }

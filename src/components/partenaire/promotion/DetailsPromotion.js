@@ -22,7 +22,8 @@ import callAPI from '../../../utility';
 
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
-import ButtonLoading from "../buttonLoading.js"
+import ButtonLoading from "../buttonLoading.js";
+import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
 
 function getNDigits(number, digit){
   digit = digit + '';
@@ -140,8 +141,9 @@ class DetailsPromotions extends React.Component{
             ,isLeadHour: true
             , tarifs: []
             , typeChambres : []
-            , previewPhoto: [this.noImage],
-              btnLoad : false
+            , previewPhoto: [this.noImage]
+            ,  btnLoad : false
+            , skeletonAffiche : true
         }
         this.handleCheckBoxPlanTarifaire = this.handleCheckBoxPlanTarifaire.bind(this);
         this.handleCheckBoxTypeChambre = this.handleCheckBoxTypeChambre.bind(this);
@@ -152,7 +154,6 @@ class DetailsPromotions extends React.Component{
     }
 
     setDetailsPromotion(data){
-      console.log(data);
       let currentState = JSON.parse(JSON.stringify(this.state));
       currentState.promotion = data.promotion;
       currentState.promotion.dateDebutS = getDate(currentState.promotion.dateDebutS);
@@ -175,12 +176,11 @@ class DetailsPromotions extends React.Component{
           }
         }
       }
-
+      currentState.skeletonAffiche = false;
       this.setState(currentState);
     }
 
      tryRedirect(res){
-      console.log(res);
       let currentState = JSON.parse(JSON.stringify(this.state));
       let keys = Object.keys(currentState.error);
       keys.map((k) => {
@@ -357,37 +357,37 @@ setListTypeChambre(res){
     render(){
         return(
 <div className="block">
-<form>
-<h4 className='entete'>Modifier promotion</h4>
-<CustomError errors={this.state.errors} />
-  <div className="block1">
-  <h6>Détails de la promotion</h6>
-   <div className="form-group" style={{marginTop:"15px"}}>
-<label id='bigLabel'>
-À quels plans tarifaires cette promotion s'appliquera-t-elle ?
-</label>
-<p id='litleLabel' style={{textDecoration:'underline',marginLeft:'12px'}}>Sélectionnez au moins 1 plan tarifaire</p>
-<div className="form-group"  style={{marginTop:"1px"}}>
-<FormGroup>
-<PlanTarifaire planTarifaire={this.state.tarifs} handleCheckBoxPlanTarifaire={this.handleCheckBoxPlanTarifaire}/>
-{this.state.error.planTarifaire === null ? null : <div className="customError"><span>{this.state.error.planTarifaire}</span></div>}
-</FormGroup> 
-  </div>    
-   </div>
-<label id='bigLabel'>
-Quelles chambres ?
-</label>
-<p id='litleLabel' style={{textDecoration:'underline',marginLeft:'12px'}}>Sélectionnez au moins 1 type de chambre</p>
-  <div className="form-group"  style={{marginTop:"5px"}}>
-  <FormGroup>
-<TypeChambre typeChambre={this.state.typeChambres} handleCheckBoxTypeChambre={this.handleCheckBoxTypeChambre}/>
-{this.state.error.typeChambre === null ? null : <div className="customError"><span>{this.state.error.typeChambre}</span></div>}
-</FormGroup>    
-  </div>
+      <form>
+          <h4 className='entete'>Modifier promotion</h4>
+          <CustomError errors={this.state.errors} />
+        <div className="block1">
+          {
+            this.state.skeletonAffiche ? <SkelettonForm  heigth = {300} />  : <>
+              <h6>Détails de la promotion</h6>
+              <div className="form-group" style={{marginTop:"15px"}}>
+                <label id='bigLabel'> À quels plans tarifaires cette promotion s'appliquera-t-elle ?</label>
+                <p id='litleLabel' style={{textDecoration:'underline',marginLeft:'12px'}}>Sélectionnez au moins 1 plan tarifaire</p>
+                <div className="form-group"  style={{marginTop:"1px"}}>
+                  <FormGroup>
+                    <PlanTarifaire planTarifaire={this.state.tarifs} handleCheckBoxPlanTarifaire={this.handleCheckBoxPlanTarifaire}/>
+                      {this.state.error.planTarifaire === null ? null : <div className="customError"><span>{this.state.error.planTarifaire}</span></div>}
+                  </FormGroup> 
+                </div>    
+              </div>
+              <label id='bigLabel'>
+              Quelles chambres ?
+              </label>
+              <p id='litleLabel' style={{textDecoration:'underline',marginLeft:'12px'}}>Sélectionnez au moins 1 type de chambre</p>
+                <div className="form-group"  style={{marginTop:"5px"}}>
+                  <FormGroup>
+                  <TypeChambre typeChambre={this.state.typeChambres} handleCheckBoxTypeChambre={this.handleCheckBoxTypeChambre}/>
+                {this.state.error.typeChambre === null ? null : <div className="customError"><span>{this.state.error.typeChambre}</span></div>}
+                </FormGroup>    
+              </div>  
+      
+      <hr style={{width:'95%'}}></hr>
 
-<hr style={{width:'95%'}}></hr>
-
-<div style={{marginTop:'0px'}}>
+    <div style={{marginTop:'0px'}}>
       <div>
           <label className="" style={{textDecoration: 'underline',fontFamily:'Roboto',fontSize:'15px',marginLeft:'0px'}} >
               Remise {this.state.isRemiseEuro ? "Euro" : "Pourcentage"} 
@@ -437,11 +437,13 @@ Quelles chambres ?
               </div>
           </div>
       </RadioGroup>
-  </div>
-
+  </div></>
+  }
   </div>
 
   <div className='block2' style={{marginTop:"30px"}}>
+  {
+            this.state.skeletonAffiche ? <SkelettonForm  heigth = {300} />  : <>
 <h6>Dates de séjour</h6>
 <label id='bigLabel' style={{marginTop:"5px"}}>
 Quand les clients peuvent-ils profiter de cette promotion ?
@@ -678,32 +680,35 @@ onChange={(e) => this.handleInputChange3( e, "weekDays", "dimanche")}
 />
    </p> 
   </div>
-
+  </>
+  }
   </div>
 
   <div className="block3">
-   <div className="form-group" style={{}}>
-<h6>Nom de la promotion </h6>
-<label id='bigLabel'>
-Comment voulez-vous nommer cette promotion ?
-</label>
-<TextField 
-id="outlined-basic" 
-label="Nom"
-variant="outlined"
-className="form-control" 
-style={{width:"400px"}}
-size="small"
-type="text" 
-name="nom" 
-onChange={(e) => this.handleInputChange(e, "nom")} 
-value={this.state.promotion.nom}
-style={{marginTop:"15px"}}
-error={this.state.error.nom === null ? false : true}
-helperText={this.state.error.nom === null ? null : this.state.error.nom}
-/>
+    {
+            this.state.skeletonAffiche ? <SkelettonForm  heigth = {300} />  : <>
+    <div className="form-group" style={{}}>
+      <h6>Nom de la promotion </h6>
+        <label id='bigLabel'> Comment voulez-vous nommer cette promotion ?</label>
+        <TextField 
+          id="outlined-basic" 
+          label="Nom"
+          variant="outlined"
+          className="form-control" 
+          style={{width:"400px"}}
+          size="small"
+          type="text" 
+          name="nom" 
+          onChange={(e) => this.handleInputChange(e, "nom")} 
+          value={this.state.promotion.nom}
+          style={{marginTop:"15px"}}
+          error={this.state.error.nom === null ? false : true}
+          helperText={this.state.error.nom === null ? null : this.state.error.nom}
+        />
+   </div>   
+    </>
+  }  
    </div>     
-   </div>    
     
   <div className="pied" style={{marginTop:'25px'}}>   
    <div class="bouton-aligne">  
@@ -729,6 +734,7 @@ helperText={this.state.error.nom === null ? null : this.state.error.nom}
    </div>
   </div>
  </form>
+ 
 </div>
         );
     }
