@@ -204,6 +204,7 @@ function Global(){
         }else{
             console.log("setListPolitiqueAnnulation");
         }
+        setGrise(false);
        
     }
 
