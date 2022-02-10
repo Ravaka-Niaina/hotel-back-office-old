@@ -28,8 +28,6 @@ export function callAPI(method, url, data, callback){
     .catch(err =>{console.log(err); console.log("erreur");} );
 }
 export function getDiffDays(StartDate, EndDate){
-    //  console.log("Date full year");
-    //  console.log(typeof(EndDate));
      var nDays = ( Date.UTC(EndDate.getFullYear(), EndDate.getMonth(), EndDate.getDate()) -
      Date.UTC(StartDate.getFullYear(), StartDate.getMonth(), StartDate.getDate())) / 86400000;
     return nDays;

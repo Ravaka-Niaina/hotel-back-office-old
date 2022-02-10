@@ -9,6 +9,7 @@ const getDateAnnulation = (checkIn, nbJour) => {
 };
 
 const InfoPolitiqueAnnul = (props) => {
+    console.log(props.politique);
     let politiques = [];
     const tarif = props.tarif;
     const datedebut = new Date(props.checkIn);
