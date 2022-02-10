@@ -10,6 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import callAPI from '../../../utility';
 import "./global.css";
+import Alert from '@mui/material/Alert';
 
 
 export default class Confirmation extends React.Component {
@@ -26,14 +27,23 @@ export default class Confirmation extends React.Component {
     };
 }
 
+tryRedirect(res){
+  let currentState = JSON.parse(JSON.stringify(this.state));
+  if(res.status === 200){
+    this.props.history.push('/recover/password/' + this.state.client._id);
+  }
+  this.setState(currentState);
+}
+
 search(e){
   e.preventDefault();
   axios.get(`http://localhost:3000/client/search/${this.state.codeR}`)
   .then(res => {
       const client = {client : res.data.client};
-      // console.log(user);
       this.setState(client);
+      this.tryRedirect(res.data);
     })
+    .catch(err => console.log(err));
 }
 
 handleInputChange(event, inputName){
@@ -44,52 +54,63 @@ handleInputChange(event, inputName){
 
   render() {
     return (
+    <div id="division">  
       <div className="">
        <h5 id="grandTitre">
        Entrez le code de sécurité
        </h5>
+       <hr/>
        <p id="paragraphe">
        Merci de vérifier dans vos e-mails que vous avez reçu un message avec votre code. Celui-ci est composé de 4 chiffres.
        </p>
-
        <form>
         <div className="content">
           <div className="form">
+            <div>
+              {console.log(this.state.client)}
+              {(this.state.client == null) ?
+              <Alert severity="error">Les chiffres saisis ne correspondent pas à votre code. Veuillez réessayer.</Alert>
+              :
+              null
+              }
+            </div>
             <div className="form-group" style={{paddingTop:"15px"}}>
               <TextField 
               id="standard-basic" 
               className="form-control" 
-              label="code" 
+              label="Entrez le code" 
               variant="outlined" 
               style={{width:"400px"}}
               type="text" 
               name="codeR"
+              size="small"
+              fullWidth
               onChange={(e) => this.handleInputChange(e, "codeR")}/>
             </div>
                       </div>
                     </div>
                     <div className="footer" style={{marginTop:'25px'}}>
           <box> 
-            {this.state.hideShowBtn1?
+
             <Button 
             variant="contained" 
             color="success" 
             type='submit' 
-            onClick={(e) => {this.search(e);this.setState({hideShowBtn2 :true,hideShowBtn1 :false})}}>
+            style={{fontWeight:'bold'}}
+            onClick={(e) => {this.search(e)}}>
             Envoyer
             </Button>
-            :null}
-            {this.state.hideShowBtn2?
-            <Link to={'/recover/password/' + this.state.client._id} style={{textDecoration:'none'}}>
-            <Button variant="contained" style={{marginTop:'20px'}}>
-            Continuer
+
+            <Link to={'/'} style={{textDecoration:'none',marginLeft: "10px"}}>
+            <Button style={{backgroundColor: "gainsboro",color: "black",fontWeight: "bold"}}>
+            Annuler
             </Button>
             </Link>
-            :null}
           </box>
                 </div>
         </form>  
       </div>
+    </div>
     )
   }
 }

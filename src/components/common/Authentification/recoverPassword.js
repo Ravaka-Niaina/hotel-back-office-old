@@ -20,6 +20,12 @@ export default class RecoverPassword extends React.Component {
         mdp:""
         },
         customer:[],
+        password:""
+        ,errors: [],
+        error: {
+          password: null,
+        },
+
     };
 }
 
@@ -48,27 +54,35 @@ componentDidMount(){
 }
 
 tryRedirect(res){
-  console.log(res);
   let currentState = JSON.parse(JSON.stringify(this.state));
+
+  let keys = Object.keys(currentState.error);
+  keys.map((k) => {
+    currentState.error[k] = null;
+  });
+
   if(res.status === 200){
     this.props.history.push('/');
+  }else{
+    currentState.errors = res.errors;
+    keys = Object.keys(res.errors);
+    keys.map((k) => {
+        currentState.error[k] = res.errors[k];
+    });
   }
-  // else if(res.status === 401){//Unauthorized
-  //   this.props.history.push('/');
-  // }
   this.setState(currentState);
 }
 
 handleInputChange(event, inputName){
   const currentState = JSON.parse(JSON.stringify(this.state));
-  currentState.client[inputName] = event.target.value;
+  currentState[inputName] = event.target.value;
+  currentState.error[inputName] = null;
   this.setState(currentState);
 }
 
 update(e){
   e.preventDefault();
-  console.log(this.state.client);
-  let toSend = JSON.parse(JSON.stringify(this.state.client));
+  let toSend = JSON.parse(JSON.stringify(this.state));
   axios({
       method: 'post',
       url: process.env.REACT_APP_BACK_URL + "/client/update",
@@ -82,14 +96,14 @@ update(e){
 
   render() {
     return (
-      <div className="">
-       <h5 className="">
+      <div id="division">
+       <h5 id='grandTitre'>
        Entrez le code de sécurité
        </h5>
-       <p className="">
+       <hr/>
+       <p id='paragraphe'>
        Merci de vérifier dans vos e-mails que vous avez reçu un message avec votre code. Celui-ci est composé de 4 chiffres.
        </p>
-
        <form onSubmit={this.handleSubmit}>
         <div className="content">
           <div className="form">
@@ -112,8 +126,12 @@ update(e){
             className="form-control"  
             style={{width:"200px"}}
             type="text" 
-            name="mdp" 
-            onChange={(e) => this.handleInputChange(e, "mdp")}
+            name="password" 
+            fullWidth
+            size='small'
+            onChange={(e) => this.handleInputChange(e, "password")}
+            error={this.state.error.password === null ? false : true}
+            helperText={this.state.error.password === null ? null : this.state.error.password}
             />
             </div>
                       </div>
@@ -122,10 +140,9 @@ update(e){
             <Button variant="contained" color="success" onClick={(e) => this.update(e)}>
             continuer
             </Button>
-            <br/>
-            <Link>
-            <Button variant="contained" style={{marginTop:'20px'}}>
-            Retour
+            <Link to={'/'} style={{textDecoration:'none',marginLeft: "10px"}}>
+            <Button style={{backgroundColor: "gainsboro",color: "black",fontWeight: "bold"}}>
+            Annuler
             </Button>
             </Link>
         </div>

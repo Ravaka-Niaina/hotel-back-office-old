@@ -1,0 +1,33 @@
+#division {
+    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    width: 550px;
+    margin-top: 170px;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+#grandTitre {
+    font-family: roboto,sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+#paragraphe {
+    font-family: roboto,sans-serif;
+    font-size: 17px;
+}
+
+#infoUser{
+    font-family: roboto ,sans-serif;
+    font-size: 17px;   
+}
+
+#division2 {
+    margin-top: 85px;
+}
+
+#btn-group{
+float: right;
+}

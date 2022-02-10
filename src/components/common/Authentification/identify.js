@@ -10,6 +10,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import callAPI from '../../../utility';
 import "./global.css";
+import Alert from '@mui/material/Alert';
 
 
 export default class SearchTypeChambre extends React.Component {
@@ -50,7 +51,6 @@ sendMailToCustomer(e){
   };
   fetch(process.env.REACT_APP_BACK_URL + "/client/sendMailToCustomer",requestOptions)
       .then(res => res.json())
-      .then(res => {this.setMessageRetour(res); console.log(res)});
 }
 
   handleInputChange(event, inputName){
@@ -64,91 +64,114 @@ handleSubmit = event => {
   axios.get(`http://localhost:3000/user/search/${this.state.email}`)
   .then(res => {
       const user = {user : res.data.user};
-      console.log(user);
       this.setState(user);
     })
 }
-
   render() {
     return (
-      <div className="" style={{marginLeft:"auto",marginRight:"auto"}}>
-        <h5 id='grandTitre'>Rechercher votre compte</h5>
+    <div id='division'>  
+      <div className="division1">
+        <h5 id='grandTitre'>Retrouvez votre compte</h5>
+        <hr/>
         <form onSubmit={this.handleSubmit}>
         <div className="content">
           <div className="form">
 <div className="form-group" style={{paddingTop:"15px"}}>
-<p id='paragraphe'>Entrez votre e-mail</p>
-<TextField id="standard-basic" className="form-control" label="email" variant="outlined" style={{width:"400px"}}
-type="text" name="email" 
+<p id='paragraphe'>Veuillez entrer votre adresse e-mail pour rechercher votre compte.</p>
+<TextField 
+id="standard-basic" 
+className="form-control" 
+label="Adresse email" 
+variant="outlined"
+type="text" 
+name="email" 
+size="small"
+fullWidth
 onChange={(e) => this.handleInputChange(e, "email")}/>
 </div>
+
           </div>
         </div>
-        <div className="footer" style={{marginTop:'25px'}}> 
-<Button variant="contained" color="primary" type='submit'>
-Search
+        <div id="btn-group" style={{marginTop:'25px'}}> 
+<Link to={'/'} style={{textDecoration:'none',marginLeft: "10px"}}>
+<Button style={{backgroundColor: "gainsboro",color: "black",fontWeight: "bold"}}>
+Annuler
+</Button>
+</Link>
+<Button variant="contained" color="primary" type='submit' style={{fontWeight: "bold",marginLeft:'10px'}}>
+Rechercher
 </Button>
 <br/>
         </div>
         </form>
-        <hr/>
-             
-              {this.state.user.map((utilisateur) => (  
-               <div> 
-                <div id='result'>  
-                  <p id='infoUser'>{utilisateur.prenom} {utilisateur.nom}</p>     
-                </div>
-                <div>
-                 <p id="paragraphe">            
-                Envoyer le code par e-mail :
-                 </p>  
-                 <p id='infoUser'> 
-                 {utilisateur.email}           
-                 </p>
-                </div> 
-                <TextField 
-                id="standard-basic" 
-                label="" 
-                variant="outlined" 
-                style={{width:"400px",display: "none"}} 
-                type="email" 
-                name="email" 
-                value={utilisateur.email}
-                onChange={(e) => this.handleEmailChange(e)} />
-                <div> 
-                <box> 
-                {this.state.hideShowBtn1?
-                <Link to={'/confirmation'} style={{textDecoration:'none'}}>
-                <Button 
-                variant="contained" 
-                color="success" 
-                type='submit' 
-                onClick={(e) => {this.sendMailToCustomer(e);this.setState({hideShowBtn2 :true,hideShowBtn1 :false})}}>
-                Ok
-                </Button>
-                </Link>
-                :
-                null
-                }
-                {this.state.hideShowBtn2?
-                <Link to={'/confirmation'} style={{textDecoration:'none'}}>
-                <Button variant="contained" color='secondary'>
-                 Continuer
-                </Button>
-                </Link>
-                :
-                null
-                }
-                <Link to={'/'} style={{textDecoration:'none'}}>
-                <Button variant="contained">
-                Ce n'est pas vous ?
-                </Button>
-                </Link>
-                </box> 
-                </div> 
-              </div>   
-              ))}   
+        
+
+
+<div id='division2'>
+{(this.state.user !== null) ?
+<div> 
+<div id='result'>  
+  <p id='infoUser'>{this.state.user.prenom} {this.state.user.nom}</p>     
+</div>
+<div>
+{(this.state.user.length !== 0)?
+  <p id="paragraphe" style={{textDecoration:'underline'}}>            
+ Envoyer le code par e-mail :
+  </p> 
+ :
+ null
+ }   
+ <p id='infoUser'> 
+ {this.state.user.email}           
+ </p>
+</div> 
+<TextField 
+id="standard-basic" 
+label="" 
+variant="outlined" 
+style={{width:"400px",display: "none"}} 
+type="email" 
+name="email" 
+value={this.state.user.email}
+onChange={(e) => this.handleEmailChange(e)} />
+<div> 
+<box> 
+{(this.state.hideShowBtn1 && (this.state.user.length !== 0))?
+<div>
+<Link to={'/confirmation'} style={{textDecoration:'none'}}>
+<Button 
+variant="contained" 
+color="success" 
+type='submit' 
+style={{fontWeight:'bold'}}
+onClick={(e) => {this.sendMailToCustomer(e);this.setState({hideShowBtn2 :true,hideShowBtn1 :false})}}>
+Ok
+</Button>
+</Link>
+</div>
+:
+null
+}
+{(this.state.hideShowBtn2 && (this.state.user.length !== 0))?
+<div>
+<Link to={'/confirmation'} style={{textDecoration:'none'}}>
+<Button variant="contained" color='secondary' style={{fontWeight:'bold'}}>
+ Continuer
+</Button>
+</Link>
+</div>
+:
+null
+} 
+</box> 
+</div>
+</div>
+:
+<Alert severity="error">Cette compte n'existe pas</Alert>
+}  
+</div>    
       </div>
+</div>
     )
   }
 }
