@@ -164,6 +164,13 @@ function Navbar(props) {
                             <Button sx={{width: 200}} variant="contained" onClick={(e) => login(e)}>
                                 <span style={{color:'white'}}>Se connecter</span>
                             </Button>
+                            <div class="mdp">
+                           <Link to={'/login/identify'} style={{textDecoration:'none'}}>
+                            <Button  id="mdp">
+                            <span style={{color:'black'}}>Mot de passe oublié?</span>
+                            </Button>
+                            </Link>
+                            </div>
                            </div>
                            <div class="register">
                             <Button id="register" sx={{width: 200}} onClick={(e) => register(e)}>
