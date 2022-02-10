@@ -164,7 +164,6 @@ function Navbar(props) {
                             <Button sx={{width: 200}} variant="contained" onClick={(e) => login(e)}>
                                 <span style={{color:'white'}}>Se connecter</span>
                             </Button>
-<<<<<<< HEAD
                             <div class="mdp">
                            <Link to={'/login/identify'} style={{textDecoration:'none'}}>
                             <Button  id="mdp">
@@ -172,8 +171,6 @@ function Navbar(props) {
                             </Button>
                             </Link>
                             </div>
-=======
->>>>>>> 9287bb5f (login & inscription client user)
                            </div>
                            <div class="register">
                             <Button id="register" sx={{width: 200}} onClick={(e) => register(e)}>
@@ -186,10 +183,6 @@ function Navbar(props) {
                       </>
                   } 
               />
-<<<<<<< HEAD
-=======
-
->>>>>>> 9287bb5f (login & inscription client user)
               </Fade>
             )}
           </Popper>

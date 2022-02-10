@@ -125,7 +125,7 @@ update(e){
             variant="outlined" 
             className="form-control"  
             style={{width:"200px"}}
-            type="text" 
+            type="password" 
             name="password" 
             fullWidth
             size='small'
