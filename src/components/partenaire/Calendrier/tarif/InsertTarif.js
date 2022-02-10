@@ -226,12 +226,18 @@ function InsertTarif(){
                                     </div>
                                     <div style={{marginTop:'10px'}}>
                                         <div>
-                                            <label className="" style={{textDecoration: 'underline',marginLeft:'0px'}} id='bigLabel'>Date de séjour </label> 
+                                            <label className="" style={{textDecoration: 'underline',marginLeft:'0px'}} id='bigLabel'>Date de séjour</label> 
+                                        </div>
+                                        <div>
+                                            <label>Quand les clients peuvent-ils séjourner chez vous pour bénéficier de ce tarif ?</label>
+                                        </div>
+                                        <div>
+                                            <label>Sélectionner une période</label>
                                         </div>
                                         <div className="row" style={{marginTop:'15px'}}>
                                             <div className="col">
                                                     <TextField
-                                                    label="Début"
+                                                    label="Du"
                                                     type='date'
                                                     InputLabelProps={{
                                                         shrink: true,
@@ -246,7 +252,7 @@ function InsertTarif(){
                                             </div>
                                             <div className="col">
                                                     <TextField
-                                                    label="Fin"
+                                                    label="Au"
                                                     type='date'
                                                     InputLabelProps={{
                                                         shrink: true,
@@ -272,7 +278,7 @@ function InsertTarif(){
                                                 checked={leadMaxInfini}
                                                 onClick={(e) => switchInfini()}
                                                 control={<Radio />}
-                                                label={<span id="litleLabel">Lead max infini</span>}
+                                                label={<span id="litleLabel">Pas de fin</span>}
                                             />
                                         </div>
                                         <RadioGroup
