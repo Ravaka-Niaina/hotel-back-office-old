@@ -97,7 +97,7 @@ const BookComponent = (props) => {
                         size="small" 
                         id="outlined-number"
                         label="Occupancy"
-                        value={props.context.state.guests.nbAdulte + " adults - " + props.context.state.guests.nbEnfant + " children"}
+                        value={ (!props.context.state.guests.nbAdulte ? 0 : props.context.state.guests.nbAdulte)  + " adults - " + (!props.context.state.guests.nbEnfant ? 0 : props.context.state.guests.nbEnfant)  + " children"}
                         InputProps={{
                             startAdornment: <InputAdornment position="start"><PersonOutline/></InputAdornment>,
                             endAdornment:<InputAdornment position="end"><ArrowDropDown/></InputAdornment>,

@@ -53,6 +53,7 @@ const DateIndicator = ({ activeDates, selectDate, setSelectDate, bornes, setBorn
       temp.fin.setTime( temp.fin.getTime() + temp.fin.getTimezoneOffset() * 60 * 1000 );
       temp.fin.setDate(temp.fin.getDate() + 1);
       temp.fin = utility.getDate(temp.fin);
+      temp.isDebut = false;
     }
     
     let bigState = {...context.state};
