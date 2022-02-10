@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
 import CustomError from '../../../CustomError';
 import axios from "axios";
@@ -41,48 +40,6 @@ function PlanTarifaire(props){
           style={{marginLeft:"20px"}}
         />
       );
-=======
-// import { TextField } from "@mui/material";
-import CustomError from '../../../CustomError'
-import axios from 'axios'
-import React, { useEffect } from 'react'
-import { Checkbox } from '@mui/material'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
-import { useHistory } from 'react-router-dom'
-import FormGroup from '@mui/material/FormGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import callAPI from '../../../utility.js'
-
-import { Link } from 'react-router-dom'
-import FormControl from '@mui/material/FormControl'
-import './promotion.css'
-import InputAdornment from '@mui/material/InputAdornment'
-
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
-import FormLabel from '@mui/material/FormLabel'
-import ButtonLoading from '../buttonLoading.js'
-import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js'
-
-import { useState } from 'react'
-
-function PlanTarifaire(props) {
-  let i = -1
-  let list = props.planTarifaire.map((tarif) => {
-    i++
-    let u = i
-    return (
-      <FormControlLabel
-        checked={tarif.checked}
-        control={<Checkbox />}
-        onChange={(e) => props.handleCheckBoxPlanTarifaire(e, u)}
-        label={<span id="label">{tarif.nom}</span>}
-        style={{ marginLeft: '20px' }}
-      />
-    )
->>>>>>> a51b94db5211d2202ed209e4ba8cb5a4733f24ae
   })
   return list
 }
