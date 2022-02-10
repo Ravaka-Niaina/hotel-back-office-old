@@ -103,9 +103,9 @@ function Navbar(props) {
                     <PopupState variant="popper" popupId="demo-popup-popper">
       {(popupState) => (
         <div>
-          <Button variant="contained" {...bindToggle(popupState)}>
-            Connexion
-          </Button>
+          <Button variant="outlined" startIcon={<Login />} onClick={(e) => login(e)} {...bindToggle(popupState)}>
+                Se connecter
+            </Button>
           <Popper {...bindPopper(popupState)} transition>
             {({ TransitionProps }) => (
               <Fade {...TransitionProps} timeout={350}>
@@ -189,10 +189,6 @@ function Navbar(props) {
         </div>
       )}
     </PopupState>
-
-                        <Button variant="outlined" startIcon={<Login />}>
-                            Sign in
-                        </Button>
                         <Button size="small">EUR</Button>
                         <IconButton
                             size="large"
