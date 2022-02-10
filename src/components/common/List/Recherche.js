@@ -250,7 +250,10 @@ export default function Recherche(props){
     };
     
     useEffect(() => {
-          rechercher(1);
+          const hasARViewList = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToViewList ? props.accessRightToViewList : []);
+          if(hasARViewList){
+            rechercher(1);
+          }
           let temp = [];
           props.fieldsToPrint.map(infoField => {
             if(infoField.field !== "_id" && !infoField.forcePrint){

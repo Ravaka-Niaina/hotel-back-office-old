@@ -26,6 +26,7 @@ const rowsPerPageOptions = [5, 10, 20];
 const accessRightToViewInsert = ["superAdmin", "insertPlanTarifaire"];
 const accessRightToDelete = ["superAdmin", "deletePlanTarifaire"];
 const accessRightToViewDetails = ["superAdmin", "getPlanTarifaire", "updatePlanTarifaire"];
+const accessRightToViewList = ["superAdmin", "getListPromotion"];
 
 export default function ListPromotion(){
     return(
@@ -42,6 +43,7 @@ export default function ListPromotion(){
             accessRightToViewInsert={accessRightToViewInsert}
             accessRightToViewDetails={accessRightToViewDetails}
             accessRightToDelete={accessRightToDelete}
+            accessRightToViewList={accessRightToViewList}
         />
     );
 }

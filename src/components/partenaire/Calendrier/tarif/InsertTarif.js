@@ -61,7 +61,8 @@ function InsertTarif(){
     const [btnLoad, setBtnLoad] = useState(false);
     const history = useHistory();
     const [skeletonAffiche , setSkeleton] = useState(true);
-
+    const [leadMaxInfini, setLeadMaxInfini] = useState(false);
+    const [isLeadMaxDisabled, setIsLeadMaxDisabled] = useState(false);
 
     function setListTypeChambre(res){
         let current = JSON.parse(JSON.stringify(planTarifaire));
@@ -124,8 +125,16 @@ function InsertTarif(){
         e.preventDefault();
         setBtnLoad(true);
         const current = utility.getPlan(planTarifaire);
-        console.log(current);
+        current.leadMaxInfini = leadMaxInfini;
         callAPI('post', '/planTarifaire/insert', current, tryRedirect);
+    }
+
+    function switchInfini(){
+        setLeadMaxInfini(!leadMaxInfini);
+        setIsLeadMaxDisabled(!isLeadMaxDisabled);
+        let current = {...planTarifaire};
+        current.lead.max = "";
+        setPlanTarifaire(current);
     }
 
     return(
@@ -217,12 +226,18 @@ function InsertTarif(){
                                     </div>
                                     <div style={{marginTop:'10px'}}>
                                         <div>
-                                            <label className="" style={{textDecoration: 'underline',marginLeft:'0px'}} id='bigLabel'>Date de séjour </label> 
+                                            <label className="" style={{textDecoration: 'underline',marginLeft:'0px'}} id='bigLabel'>Date de séjour</label> 
+                                        </div>
+                                        <div>
+                                            <label>Quand les clients peuvent-ils séjourner chez vous pour bénéficier de ce tarif ?</label>
+                                        </div>
+                                        <div>
+                                            <label>Sélectionner une période</label>
                                         </div>
                                         <div className="row" style={{marginTop:'15px'}}>
                                             <div className="col">
                                                     <TextField
-                                                    label="Début"
+                                                    label="Du"
                                                     type='date'
                                                     InputLabelProps={{
                                                         shrink: true,
@@ -237,7 +252,7 @@ function InsertTarif(){
                                             </div>
                                             <div className="col">
                                                     <TextField
-                                                    label="Fin"
+                                                    label="Au"
                                                     type='date'
                                                     InputLabelProps={{
                                                         shrink: true,
@@ -258,25 +273,20 @@ function InsertTarif(){
                                                 Lead { planTarifaire.isLeadHour ? "hour" : "day"} 
                                             </label>
                                         </div>
+                                        <div>
+                                            <FormControlLabel
+                                                checked={leadMaxInfini}
+                                                onClick={(e) => switchInfini()}
+                                                control={<Radio />}
+                                                label={<span id="litleLabel">Pas de fin</span>}
+                                            />
+                                        </div>
                                         <RadioGroup
                                             aria-label="Lead"
                                             defaultValue="hour"
                                             name="radio-buttons-group"
                                         >
                                             <div className ="row" style={{marginTop:'15px'}}>
-                                                <div className ="col">
-                                                    <TextField
-                                                    label="Max"
-                                                    type='number'
-                                                    id='lead'
-                                                    size='small'
-                                                    value={planTarifaire.lead.max}
-                                                    placeholder='Hour/Date'
-                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "lead", "max")}
-                                                    error={error.leadMax === null ? false : true}
-                                                    helperText={error.leadMax === null ? null : error.leadMax}
-                                                    /> 
-                                                </div>
                                                 <div className ="col">
                                                     <TextField
                                                     label="Min"
@@ -288,6 +298,20 @@ function InsertTarif(){
                                                     onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "lead", "min")}
                                                     error={error.leadMin === null ? false : true}
                                                     helperText={error.leadMin === null ? null : error.leadMin}
+                                                    /> 
+                                                </div>
+                                                <div className ="col">
+                                                    <TextField
+                                                    label="Max"
+                                                    type='number'
+                                                    id='lead'
+                                                    size='small'
+                                                    value={planTarifaire.lead.max}
+                                                    placeholder='Hour/Date'
+                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "lead", "max")}
+                                                    error={error.leadMax === null ? false : true}
+                                                    helperText={error.leadMax === null ? null : error.leadMax}
+                                                    disabled={isLeadMaxDisabled}
                                                     /> 
                                                 </div>
                                                 <div className ="col">

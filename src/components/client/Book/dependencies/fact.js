@@ -74,6 +74,7 @@ function Reservations(props){
             i++;
             const u = i;
             const nbNuit = getDiffDays(new Date(tarif.dateSejour.debut), new Date(tarif.dateSejour.fin));
+            console.log(tarif.politiqueAnnulAtrb);
             if(tarif.etat == 1 || tarif.etat == undefined){
                 return (
                         <Card className={styles.stay}>
@@ -85,7 +86,7 @@ function Reservations(props){
                             </div>
                             <div>
                                 <span><PersonOutlineIcon/>x {tarif.nbPers} personnes</span>
-                                {tarif.politiqueAnnulAtrb ? 
+                                {tarif.politiqueAnnulAtrb && tarif.politiqueAnnulAtrb.length !== 0 ? 
                                     <HtmlTooltip
                                         title={
                                             <InfoPolitiqueAnnul 

@@ -65,6 +65,20 @@ function ApplyReservation(props){
     const [isConnectionShowing, setIsConnectionShowing] = useState(false);
     const [isConditionAccepted, setIsConditionAccepted] = useState(false);
     const [conditionError, setConditionError] = useState(false);
+    const [showResults, setShowResults] = useState(false);
+
+    const register = (e) => {
+        e.preventDefault();
+        const data = {
+            nom: reservateur.nom.trim(),
+            prenom: reservateur.prenom.trim(),
+            email: reservateur.email.trim(),
+            mdp: user.mdp.trim(),
+            confirmMdp: user.confirmMdp.trim()
+        };
+        callAPI('post', '/user/register', data, function(){});
+    };
+
 
     function handleResponse(res){
         console.log(res);
@@ -175,6 +189,12 @@ function ApplyReservation(props){
             setConditionError(false);
         }
         setIsConditionAccepted(!isConditionAccepted);
+    }
+
+    function handleChangeInfoUser(field, value){
+        let current = JSON.parse(JSON.stringify(user));
+        current[field] = value;
+        setUser(current);
     }
 
     function handleChangeInfoUser(field, value){
@@ -306,14 +326,18 @@ function ApplyReservation(props){
                                         {isConnectionShowing ?
                                             <div class="password_quick">
                                                     <div class="input-field">
-                                                        <input type="password" required />
+                                                        <input type="password" value={user.mdp} required 
+                                                        onChange={(e) => handleChangeInfoUser("mdp", e.target.value)} />
                                                             <label>Mot de passe <span class="red_required">*</span></label>
                                                     </div>
                                                     
                                                     <div class="input-field">
-                                                        <input type="password" required />
+                                                        <input type="password" required
+                                                        value={user.confirmMdp}
+                                                        onChange={(e) => handleChangeInfoUser("confirmMdp", e.target.value)} />
                                                         <label>Confirmer le mot de passe <span class="red_required">*</span></label>
                                                     </div>
+                                                    <br/>
                                             </div>
                                         :null
                                         }
@@ -375,8 +399,7 @@ function ApplyReservation(props){
                         <div style={{display:'flex',flexDirection:'row',flexWrap:'no-wrap',justifyContent:'space-between'}}>
                             {/* <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" variant="contained" onClick={(e) => setIsEditEnabled(!isEditEnabled)}>{isEditEnabled ? "Désactiver modification réservation" : "Modifier réservation"}</button> */}
                             <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained">Annuler réservation</button>
-                            <button  style={{minWidth:250,heigth:80}}  class="btn button_btn button_pink button_sm" variant="contained" onClick={(e) => validerReservation()}>Valider réservation</button>
-                       
+                            <button  style={{minWidth:250,heigth:80}}  class="btn button_btn button_pink button_sm" variant="contained" onClick={(e) => {validerReservation();register(e)}}>Valider réservation</button>
                          </div>
                         
                        

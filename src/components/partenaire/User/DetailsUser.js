@@ -52,7 +52,7 @@ const DetailsUser = () => {
     const { _id } = useParams();
     const history = useHistory();
 
-    const hasAR = session.getInstance().hasOneOfTheseAccessRights(["getPartenaire", "updatePartenaire", "superAdmin"]);
+    const hasAR = session.getInstance().hasOneOfTheseAccessRights(["getPartenaire", "updatePartenaire", "assocPartnerWithAR", "disocPartnerWithAR", "superAdmin"]);
     const canUpdate = session.getInstance().hasOneOfTheseAccessRights(["updatePartenaire", "superAdmin"]);
     const setDetailsUser = (data) => {
         if(data.status === 401){

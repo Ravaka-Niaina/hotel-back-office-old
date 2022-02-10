@@ -22,7 +22,9 @@ import Paiement from "./components/client/paiement";
 
 import Navbar from "./components/client/NavbarClient/Navbar";
 
-import searchUser from "./components/common/Authentification/identify";
+import SearchUser from "./components/common/Authentification/identify";
+import Confirmation from "./components/common/Authentification/confirmation";
+import RecoverPassword from "./components/common/Authentification/recoverPassword";
 import result from "./components/common/Authentification/result";
 
 
@@ -35,6 +37,7 @@ import  InsertPromotion  from "./components/partenaire/promotion/insertPromotion
 import Global from "./components/partenaire/politique/global.js";
 import ListPolitique from "./components/partenaire/politique/LPolitique.js"
 import testData from "./components/partenaire/politique/listpolitique.js"
+import ListeReservation from "./components/partenaire/reservation/ListReservation.js";
 
 import  Front_client  from "./front_client/front_client";
 
@@ -110,11 +113,15 @@ function App(){
         <Route path="/back/politique/detail/:_id" exact component={Global} />
         <Route path="/back/politique/list" exact component={ListPolitique} />
         <Route path="/back/politique/testData" exact component={testData} />
+        <Route path="/back/reservation" exact component={ListeReservation} />
+
 
         <Route path="/" exact component={AppClient} />
         <Route path="/front" exact component={AppClient} />
         <Route path="/front/login" exact component={Login} />
-        <Route path="/login/identify" exact component={searchUser} />
+        <Route path="/login/identify" exact component={SearchUser} />
+        <Route path="/confirmation" exact component={Confirmation} />
+        <Route path="/recover/password/:_id" exact component={RecoverPassword} />
         <Route path="/result" exact component={result} />
         <Route path="/front/Register" exact component={Register} />
         <Route path="/front/userList" exact component={listeUser} />

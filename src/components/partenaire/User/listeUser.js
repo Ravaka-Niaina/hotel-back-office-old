@@ -33,7 +33,7 @@ const accessRightToViewDetails = ["superAdmin", "getPartenaire", "updatePartenai
 const accessRightToViewList = ["superAdmin", "getListPartenaire"];
 
 const ListeUser = () => {
-    const hasAR = session.getInstance().hasOneOfTheseAccessRights(["insertPartenaire", "getPartenaire", "updatePartenaire", "deletePartenaire", "superAdmin"]);
+    const hasAR = session.getInstance().hasOneOfTheseAccessRights(["getListPartenaire", "insertPartenaire", "getPartenaire", "updatePartenaire", "deletePartenaire", "superAdmin"]);
     if(!session.getInstance().isConnected()){
         return(<Login urlRedirect={window.location.href} />);
     }else if(!hasAR){

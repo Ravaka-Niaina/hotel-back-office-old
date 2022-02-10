@@ -24,7 +24,7 @@ const accessRightToViewDetails = ["superAdmin", "getDroitAcces", "updateDroitAcc
 const accessRightToViewList = ["superAdmin", "getListDroitAcces"];
 
 const ListeDroitAcces = () => {
-    const hasAR = session.getInstance().hasOneOfTheseAccessRights(["insertDroitAcces", "superAdmin"]);
+    const hasAR = session.getInstance().hasOneOfTheseAccessRights(["insertDroitAcces", "updateDroitAcces", "deleteDroitAcces", "getListDroitAcces", "superAdmin"]);
     if(!session.getInstance().isConnected()){
         return(<Login urlRedirect={window.location.href} />);
     }else if(!hasAR){

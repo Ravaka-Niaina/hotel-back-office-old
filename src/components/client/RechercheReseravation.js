@@ -196,18 +196,21 @@ function RechercheReservation (){
             setResponse(true)
             setMessageC("");
             setMessageN("");
-            vider(compte , 'nom' , 'mdp', setCompte);
-            vider(numero , 'num' ,'email', setNumero);
+            // vider(compte , 'nom' , 'mdp', setCompte);
+            // vider(numero , 'num' ,'email', setNumero);
             setBtnLoad(false);
             setSkeleton(false);
         }else if(data.status == 204){
             if(compte.nom !== "" && compte.mdp !== ""){
                 setMessageC(data.message);
+                setResponse(false)
             }else{
                 setMessageN(data.message);
+                setResponse(false)
             }
         }else if(data.status == 400){
             setMessageN(data.message);
+            setResponse(false)
         }
         setBtnLoad(false);
       }
