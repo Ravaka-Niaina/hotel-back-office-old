@@ -52,6 +52,8 @@ function DetailsTarif(){
     const { _id } = useParams();
     const history = useHistory();
     const [skeletonAffiche , setSkeleton] = useState(true);
+    const [leadMaxInfini, setLeadMaxInfini] = useState(false);
+    const [isLeadMaxDisabled, setIsLeadMaxDisabled] = useState(false);
 
     function tryRedirect(res){
         setBtnLoad(false);
@@ -86,11 +88,14 @@ function DetailsTarif(){
     function update(e){
         setBtnLoad(true);
         const current = utility.getPlan(planTarifaire);
+        current.leadMaxInfini = leadMaxInfini;
         callAPI('post', '/planTarifaire/update', current, tryRedirect);
     }
 
     function setPlan(res){
         if(res.status === 200){
+            setLeadMaxInfini(res.planTarifaire.leadMaxInfini);
+            setIsLeadMaxDisabled(res.planTarifaire.leadMaxInfini);
             setPlanTarifaire(res.planTarifaire);
             setSkeleton(false);
         }else if(res.status === 401){//Unauthorized
@@ -113,6 +118,14 @@ function DetailsTarif(){
             history.push('/notEnoughAccessRight');
         }
       }, [_id]);
+
+    function switchInfini(){
+        setLeadMaxInfini(!leadMaxInfini);
+        setIsLeadMaxDisabled(!isLeadMaxDisabled);
+        let current = {...planTarifaire};
+        current.lead.max = "";
+        setPlanTarifaire(current);
+    }
 
     return(
         <div className="">
@@ -241,6 +254,14 @@ function DetailsTarif(){
                                     Lead { planTarifaire.isLeadHour ? "hour" : "day"} 
                                 </label>
                             </div>
+                            <div>
+                                <FormControlLabel
+                                    checked={leadMaxInfini}
+                                    onClick={(e) => switchInfini()}
+                                    control={<Radio />}
+                                    label={<span id="litleLabel">Lead max infini</span>}
+                                />
+                            </div>
                             <RadioGroup
                                 aria-label="Lead"
                                 name="radio-buttons-group"
@@ -270,6 +291,7 @@ function DetailsTarif(){
                                         onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "lead", "max")}
                                         error={error.leadMax === null ? false : true}
                                         helperText={error.leadMax === null ? null : error.leadMax}
+                                        disabled={isLeadMaxDisabled}
                                         /> 
                                     </div>
                                     <div className ="col">
@@ -326,7 +348,7 @@ function DetailsTarif(){
                             ? <>{ btnLoad 
                                 ? <ButtonLoading /> 
                                 : <Button variant="contained"  style={{backgroundColor:'#FA8072'}} onClick={(e) => update(e)}>
-                                        Modifier
+                                    Modifier
                                  </Button> }
                              </>
                             : null }

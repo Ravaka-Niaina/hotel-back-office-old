@@ -135,7 +135,9 @@ class DetailsPromotions extends React.Component{
               ,lead: {min: '', max: ''}
               ,remise:''
               ,isLeadHour:''
-              ,isRemiseEuro: ''
+              ,isRemiseEuro: '',
+              leadMaxInfini: false,
+              isLeadMaxDisabled: false
             }
             ,isRemiseEuro: true
             ,isLeadHour: true
@@ -145,6 +147,7 @@ class DetailsPromotions extends React.Component{
             ,  btnLoad : false
             , skeletonAffiche : true
         }
+        console.log(this.state.promotion.leadMaxInfini);
         this.handleCheckBoxPlanTarifaire = this.handleCheckBoxPlanTarifaire.bind(this);
         this.handleCheckBoxTypeChambre = this.handleCheckBoxTypeChambre.bind(this);
         this.setDetailsPromotion = this.setDetailsPromotion.bind(this);
@@ -158,6 +161,7 @@ class DetailsPromotions extends React.Component{
       currentState.promotion = data.promotion;
       currentState.promotion.dateDebutS = getDate(currentState.promotion.dateDebutS);
       currentState.promotion.dateFinS = getDate(currentState.promotion.dateFinS);
+      currentState.promotion.isLeadMaxDisabled = currentState.promotion.leadMaxInfini ? true : false;
 
       currentState.typeChambres = data.listTypeChambre;
       for(let i = 0; i < currentState.typeChambres.length; i++){
@@ -353,6 +357,15 @@ setListTypeChambre(res){
         currentState.newIcon[fieldName] = e.target.value;
         this.setState(currentState);
     }
+
+    switchInfini(){
+      let current = {...this.state};
+      console.log(current.promotion.leadMaxInfini + " , " + current.promotion.isLeadMaxDisabled);
+      current.promotion.leadMaxInfini = !current.promotion.leadMaxInfini;
+      current.promotion.isLeadMaxDisabled = !current.promotion.isLeadMaxDisabled;
+      current.promotion.lead.max = "";
+      this.setState(current);
+    }
   
     render(){
         return(
@@ -514,6 +527,14 @@ helperText={this.state.error.sejourMin === null ? null : this.state.error.sejour
               Lead { this.state.isLeadHour ? "hour" : "day"} 
           </label>
       </div>
+      <div>
+        <FormControlLabel
+          checked={this.state.promotion.leadMaxInfini}
+          control={<Checkbox/>}
+          onClick={(e) => this.switchInfini()}
+          label={<span id="litleLabel">Lead max infini</span>}
+        />
+      </div>
       <RadioGroup
           aria-label="Lead"
           defaultValue="hour"
@@ -542,10 +563,10 @@ helperText={this.state.error.sejourMin === null ? null : this.state.error.sejour
                   onChange={(e) => this.handleInputChange2( e, "lead", "max")}
                   error={this.state.error.leadMax === null ? false : true}
                   helperText={this.state.error.leadMax === null ? null : this.state.error.leadMax}
+                  disabled={this.state.promotion.isLeadMaxDisabled}
                   /> 
               </div>
               <div className ="col">
-                {console.log(this.state.isLeadHour)}
                   <FormControlLabel 
                   value="hour" 
                   checked={this.state.promotion.isLeadHour ? true : false}

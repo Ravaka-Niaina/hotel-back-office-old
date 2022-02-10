@@ -38,8 +38,8 @@ const BookComponent = (props) => {
         if((props.context.state.guests.nbEnfant > 0 || props.context.state.guests.nbAdulte > 0)){
             props.context.handleChange("errFiltre", null);
             const data = {
-                filtres: moreData, 
-                guests: props.context.state.guests, 
+                filtres: moreData,
+                guests: props.context.state.guests,
                 dateDebut: props.context.state.dateSejour.debut,
                 dateFin: props.context.state.dateSejour.fin
             }

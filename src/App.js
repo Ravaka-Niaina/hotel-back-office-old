@@ -35,6 +35,7 @@ import  InsertPromotion  from "./components/partenaire/promotion/insertPromotion
 import Global from "./components/partenaire/politique/global.js";
 import ListPolitique from "./components/partenaire/politique/LPolitique.js"
 import testData from "./components/partenaire/politique/listpolitique.js"
+import ListeReservation from "./components/partenaire/reservation/ListReservation.js";
 
 import  Front_client  from "./front_client/front_client";
 
@@ -110,6 +111,8 @@ function App(){
         <Route path="/back/politique/detail/:_id" exact component={Global} />
         <Route path="/back/politique/list" exact component={ListPolitique} />
         <Route path="/back/politique/testData" exact component={testData} />
+        <Route path="/back/reservation" exact component={ListeReservation} />
+
 
         <Route path="/" exact component={AppClient} />
         <Route path="/front" exact component={AppClient} />
