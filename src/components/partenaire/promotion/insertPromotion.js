@@ -44,6 +44,7 @@ function PlanTarifaire(props){
   return list
 }
 
+
 function TypeChambre(props) {
   console.log(props.typeChambre)
   let i = -1
@@ -456,9 +457,6 @@ function InsertPromotion() {
                 </div>
               </div>
             </RadioGroup>
-          </div>
-<<<<<<< HEAD
-      </RadioGroup>
   </div>
 
   <div className="form-group" style={{marginTop:"40px"}}>
@@ -502,175 +500,7 @@ function InsertPromotion() {
   <div className="form-group" style={{marginTop:"15px"}}> 
     <label id='bigLabel'> Tarif réduit disponible uniquement pendant : </label>
    <p>
-    <FormControlLabel 
-      control={<Checkbox/>}
-      type='number' 
-      label={<p id='label'>Lundi</p>}
-      value='1'
-      name="lundi"  
-      onChange={(e) => handleInputChange3( e, "weekDays", "lundi")} 
-    />
-    <FormControlLabel 
-      control={<Checkbox/>} 
-      type='number' 
-      label={<p id='label'>Mardi</p>}
-      value='1'
-      name="mardi"  
-      onChange={(e) => handleInputChange3( e, "weekDays", "mardi")} 
-    />
-
-    <FormControlLabel 
-      control={<Checkbox/>} 
-      type='number'  
-      label={<p id='label'>Mercredi</p>}
-      value='1'
-      name="mercredi" 
-      onChange={(e) => handleInputChange3( e, "weekDays", "mercredi")}  
-    />
-
-    <FormControlLabel 
-      control={<Checkbox/>} 
-      type='number'   
-      label={<p id='label'>Jeudi</p>} 
-      value='1'
-      name="jeudi"  
-      onChange={(e) => handleInputChange3( e, "weekDays", "jeudi")} 
-    />
-
-    <FormControlLabel 
-      control={<Checkbox/>} 
-      type='number' 
-      label={<p id='label'>Vendredi</p>} 
-      value='1'
-      name="vendredi"  
-      onChange={(e) => handleInputChange3( e, "weekDays", "vendredi")} 
-    />
-
-    <FormControlLabel 
-      control={<Checkbox/>} 
-      type='number'  
-      label={<p id='label'>Samedi</p>} 
-      value='1'
-      name="samedi"  
-      onChange={(e) => handleInputChange3( e, "weekDays", "samedi")} 
-    />
-
-    <FormControlLabel 
-      control={<Checkbox/>} 
-      type='number' 
-      label={<p id='label'>Dimanche</p>} 
-      value='1'
-      name="dimanche"  
-      onChange={(e) => handleInputChange3( e, "weekDays", "dimanche")} 
-    />
-   </p> 
-  </div>
-
-   <div className="form-group" style={{}}>
-    <h5>Nom de la promotion </h5>
-      <label id='bigLabel'>
-        Comment voulez-vous nommer cette promotion ?
-      </label>
-      <TextField 
-        id="outlined-basic" 
-        label="Nom"
-        variant="outlined"
-        className="form-control" 
-        style={{width:"400px"}}
-        size="small"
-        type="text" 
-        name="nom" 
-        onChange={(e) => handleInputChange(e, "nom")} 
-        value={state.nom}
-        style={{marginTop:"15px"}}
-        error={state.error.nom === null ? false : true}
-        helperText={state.error.nom === null ? null : state.error.nom}
-      /> 
-   </div><br/>  
-   <div>    
-    <div class="bouton-aligne" >  
-        {
-          btnLoad ? <ButtonLoading /> :
-          <Button  
-            variant="contained" 
-            type='submit' 
-            style={{textDecoration:'none',backgroundColor:'#2ac4ea'}}
-            onClick={(e) => insert(e)}>
-            <span style={{color:'white'}}>Ajouter</span>
-          </Button>
-        }
-      </div>
-    <div class="bouton-aligne">
-      <Link to={'/back/promotion'} style={{textDecoration:'none'}}>
-        <Button variant="outlined" 
-        id="btn2"
-        >
-        <span style={{color:'#1976d2'}}>Retour</span>
-        </Button>
-      </Link>
-    </div>
-   </div>
-   </>
-  }
-</div>
-</>
-  );
-=======
-
-          <div className="form-group" style={{ marginTop: '40px' }}>
-            <label id="bigLabel">
-              Nombre de jour d'attribution de la promotion
-            </label>
-
-            <div className="form-group" style={{ marginTop: '25px' }}>
-              <p>
-                <TextField
-                  id="outlined-basic"
-                  label="Premier jour"
-                  variant="outlined"
-                  className="form-control"
-                  style={{ width: '200px' }}
-                  type="number"
-                  name="premierJour"
-                  value={state.premierJour}
-                  onChange={(e) => handleInputChange(e, 'premierJour')}
-                  size="small"
-                  error={state.error.premierJour === null ? false : true}
-                  helperText={
-                    state.error.premierJour === null
-                      ? null
-                      : state.error.premierJour
-                  }
-                />
-
-                <TextField
-                  id="outlined-basic"
-                  label="Dernier jour"
-                  variant="outlined"
-                  className="form-control"
-                  style={{ width: '200px', marginLeft: '20px' }}
-                  type="number"
-                  name="dernierJour"
-                  value={state.dernierJour}
-                  onChange={(e) => handleInputChange(e, 'dernierJour')}
-                  size="small"
-                  error={state.error.dernierJour === null ? false : true}
-                  helperText={
-                    state.error.dernierJour === null
-                      ? null
-                      : state.error.dernierJour
-                  }
-                />
-              </p>
-            </div>
-          </div>
-
-          <div className="form-group" style={{ marginTop: '15px' }}>
-            <label id="bigLabel">
-              Tarif réduit disponible uniquement pendant :
-            </label>
-            <p>
-              <FormControlLabel
+   <FormControlLabel
                 control={<Checkbox />}
                 type="number"
                 label={<p id="label">Lundi</p>}
@@ -733,61 +563,57 @@ function InsertPromotion() {
                 onChange={(e) => handleInputChange3(e, 'weekDays', 'dimanche')}
               />
             </p>
-          </div>
-        </div>
+  </div>
 
-        <div className="block3">
-          <div className="form-group" style={{}}>
-            <h5>Nom de la promotion </h5>
-            <label id="bigLabel">
-              Comment voulez-vous nommer cette promotion ?
-            </label>
-
-            <TextField
-              id="outlined-basic"
-              label="Nom"
-              variant="outlined"
-              className="form-control"
-              style={{ width: '400px' }}
-              size="small"
-              type="text"
-              name="nom"
-              onChange={(e) => handleInputChange(e, 'nom')}
-              value={state.nom}
-              style={{ marginTop: '15px' }}
-              error={state.error.nom === null ? false : true}
-              helperText={state.error.nom === null ? null : state.error.nom}
-            />
-          </div>
-        </div>
-
-        <div className="pied" style={{ marginTop: '25px' }}>
-          <div class="bouton-aligne">
-            {btnLoad ? (
-              <ButtonLoading />
-            ) : (
-              <Button
-                variant="contained"
-                type="submit"
-                style={{ textDecoration: 'none', backgroundColor: '#2ac4ea' }}
-                onClick={(e) => insert(e)}
-              >
-                <span style={{ color: 'white' }}>Ajouter</span>
-              </Button>
-            )}
-          </div>
-          <div class="bouton-aligne">
-            <Link to={'/back/promotion'} style={{ textDecoration: 'none' }}>
-              <Button variant="outlined" id="btn2">
-                <span style={{ color: '#1976d2' }}>Retour</span>
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </form>
+   <div className="form-group" style={{}}>
+    <h5>Nom de la promotion </h5>
+      <label id='bigLabel'>
+        Comment voulez-vous nommer cette promotion ?
+      </label>
+      <TextField 
+        id="outlined-basic" 
+        label="Nom"
+        variant="outlined"
+        className="form-control" 
+        style={{width:"400px"}}
+        size="small"
+        type="text" 
+        name="nom" 
+        onChange={(e) => handleInputChange(e, "nom")} 
+        value={state.nom}
+        style={{marginTop:"15px"}}
+        error={state.error.nom === null ? false : true}
+        helperText={state.error.nom === null ? null : state.error.nom}
+      /> 
+   </div><br/>  
+   <div>    
+    <div class="bouton-aligne" >  
+        {
+          btnLoad ? <ButtonLoading /> :
+          <Button  
+            variant="contained" 
+            type='submit' 
+            style={{textDecoration:'none',backgroundColor:'#2ac4ea'}}
+            onClick={(e) => insert(e)}>
+            <span style={{color:'white'}}>Ajouter</span>
+          </Button>
+        }
+      </div>
+    <div class="bouton-aligne">
+      <Link to={'/back/promotion'} style={{textDecoration:'none'}}>
+        <Button variant="outlined" 
+        id="btn2"
+        >
+        <span style={{color:'#1976d2'}}>Retour</span>
+        </Button>
+      </Link>
     </div>
-  )
->>>>>>> a51b94db5211d2202ed209e4ba8cb5a4733f24ae
+   </div>
+   </>
+  }
+</div>
+</>
+  );
 }
 
 export default InsertPromotion
