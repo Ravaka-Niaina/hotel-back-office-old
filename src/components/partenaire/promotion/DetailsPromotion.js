@@ -358,11 +358,10 @@ setListTypeChambre(res){
         return(
 <div className="block">
       <form>
-          <h4 className='entete'>Modifier promotion</h4>
           <CustomError errors={this.state.errors} />
-        <div className="block1">
           {
             this.state.skeletonAffiche ? <SkelettonForm  heigth = {300} />  : <>
+              <h4 id='title1'>Modifier promotion</h4>
               <h6>Détails de la promotion</h6>
               <div className="form-group" style={{marginTop:"15px"}}>
                 <label id='bigLabel'> À quels plans tarifaires cette promotion s'appliquera-t-elle ?</label>
@@ -375,137 +374,129 @@ setListTypeChambre(res){
                 </div>    
               </div>
               <label id='bigLabel'>
-              Quelles chambres ?
+                Quelles chambres ?
               </label>
               <p id='litleLabel' style={{textDecoration:'underline',marginLeft:'12px'}}>Sélectionnez au moins 1 type de chambre</p>
                 <div className="form-group"  style={{marginTop:"5px"}}>
                   <FormGroup>
-                  <TypeChambre typeChambre={this.state.typeChambres} handleCheckBoxTypeChambre={this.handleCheckBoxTypeChambre}/>
-                {this.state.error.typeChambre === null ? null : <div className="customError"><span>{this.state.error.typeChambre}</span></div>}
-                </FormGroup>    
-              </div>  
-      
-      <hr style={{width:'95%'}}></hr>
-
-    <div style={{marginTop:'0px'}}>
-      <div>
-          <label className="" style={{textDecoration: 'underline',fontFamily:'Roboto',fontSize:'15px',marginLeft:'0px'}} >
-              Remise {this.state.isRemiseEuro ? "Euro" : "Pourcentage"} 
-          </label>
-      </div>
-      <RadioGroup
-          aria-label="euro"
-          defaultValue="euro"
-          name="radio-buttons-group"
-      >
-          <div className ="row" style={{marginTop:'15px'}}>
-              <div className ="col">
-                  <TextField
-                  label="Remise"
-                  type='number'
-                  id=''
-                  size='small'
-                  value={this.state.promotion.remise}
-                  placeholder='Hour/Date'
-                  onChange={(e) => this.handleInputRemiseChange( e, "remise")}
-                  error={this.state.error.remise === null ? false : true}
-                  helperText={this.state.error.remise === null ? null : this.state.error.remise}
-                  />
+                    <TypeChambre typeChambre={this.state.typeChambres} handleCheckBoxTypeChambre={this.handleCheckBoxTypeChambre}/>
+                    {this.state.error.typeChambre === null ? null : <div className="customError"><span>{this.state.error.typeChambre}</span></div>}
+                  </FormGroup>    
+                </div>  
+              <hr style={{width:'95%'}}></hr>
+              <div style={{marginTop:'0px'}}>
+                <div>
+                    <label className="" style={{textDecoration: 'underline',fontFamily:'Roboto',fontSize:'15px',marginLeft:'0px'}} >
+                        Remise {this.state.isRemiseEuro ? "Euro" : "Pourcentage"} 
+                    </label>
+                </div>
+                <RadioGroup
+                    aria-label="euro"
+                    defaultValue="euro"
+                    name="radio-buttons-group"
+                >
+                    <div className ="row" style={{marginTop:'15px'}}>
+                        <div className ="col">
+                            <TextField
+                            label="Remise"
+                            type='number'
+                            id=''
+                            size='small'
+                            value={this.state.promotion.remise}
+                            placeholder='Hour/Date'
+                            onChange={(e) => this.handleInputRemiseChange( e, "remise")}
+                            error={this.state.error.remise === null ? false : true}
+                            helperText={this.state.error.remise === null ? null : this.state.error.remise}
+                            />
+                        </div>
+                        {console.log()}
+                        <div className ="col">
+                            <FormControlLabel 
+                            value="euro" 
+                            checked={this.state.promotion.isRemiseEuro ? true : false}
+                            onClick={(e) => this.handleIsRemiseEuroChange(true,'isRemiseEuro')}
+                            control={<Radio />}
+                            label={
+                            <span id='litleLabel'>
+                            Euro
+                            </span>} />
+                        </div>
+                        <div className ="col">
+                            <FormControlLabel  
+                            value="pourcentage" 
+                            checked={this.state.promotion.isRemiseEuro ? false : true}
+                            onClick={(e) => this.handleIsRemiseEuroChange(false,'isRemiseEuro')} 
+                            control={<Radio />} 
+                            label={
+                                <span id='litleLabel'>
+                                  Pourcentage
+                                </span>} /> 
+                        </div>
+                    </div>
+                </RadioGroup>
               </div>
-              {console.log()}
-              <div className ="col">
-                  <FormControlLabel 
-                  value="euro" 
-                  checked={this.state.promotion.isRemiseEuro ? true : false}
-                  onClick={(e) => this.handleIsRemiseEuroChange(true,'isRemiseEuro')}
-                  control={<Radio />}
-                  label={
-                  <span id='litleLabel'>
-                  Euro
-                  </span>} />
-              </div>
-              <div className ="col">
-                  <FormControlLabel  
-                  value="pourcentage" 
-                  checked={this.state.promotion.isRemiseEuro ? false : true}
-                  onClick={(e) => this.handleIsRemiseEuroChange(false,'isRemiseEuro')} 
-                  control={<Radio />} 
-                  label={
-                      <span id='litleLabel'>
-                        Pourcentage
-                      </span>} /> 
-              </div>
-          </div>
-      </RadioGroup>
-  </div></>
-  }
-  </div>
+      <h6>Dates de séjour</h6>  
+      <label id='bigLabel' style={{marginTop:"5px"}}>
+        Quand les clients peuvent-ils profiter de cette promotion ?
+      </label>
+      <p id='litleLabel' style={{textDecoration:'underline',marginLeft:'12px'}}>Sélectionnez au moins 1 date</p>
+        <div className="form-group" style={{marginTop:"25px"}}>
+          <p>
+          <TextField id="outlined-basic" 
+            label="Date debut" 
+            InputLabelProps={{
+            shrink: true,
+            }}
+            variant="outlined" 
+            className="form-control"  
+            style={{width:"200px"}}
+            type="date" 
+            name="dateDebutS" 
+            value={this.state.promotion.dateDebutS}
+            onChange={(e) => this.handleInputChange(e, "dateDebutS")}
+            error={this.state.error.dateDebutS === null ? false : true}
+            helperText={this.state.error.dateDebutS === null ? null : this.state.error.dateDebutS}
+            size="small"
+          />
 
-  <div className='block2' style={{marginTop:"30px"}}>
-  {
-            this.state.skeletonAffiche ? <SkelettonForm  heigth = {300} />  : <>
-<h6>Dates de séjour</h6>
-<label id='bigLabel' style={{marginTop:"5px"}}>
-Quand les clients peuvent-ils profiter de cette promotion ?
-</label>
-<p id='litleLabel' style={{textDecoration:'underline',marginLeft:'12px'}}>Sélectionnez au moins 1 date</p>
-  <div className="form-group" style={{marginTop:"25px"}}>
-   <p>
-<TextField id="outlined-basic" 
-label="Date debut" 
-InputLabelProps={{
-shrink: true,
-}}
-variant="outlined" 
-className="form-control"  
-style={{width:"200px"}}
-type="date" 
-name="dateDebutS" 
-value={this.state.promotion.dateDebutS}
-onChange={(e) => this.handleInputChange(e, "dateDebutS")}
-error={this.state.error.dateDebutS === null ? false : true}
-helperText={this.state.error.dateDebutS === null ? null : this.state.error.dateDebutS}
-size="small"
-/>
-
-  <TextField id="outlined-basic" 
-label="Date fin" 
-InputLabelProps={{
-  shrink: true,
-  }}
-variant="outlined" 
-className="form-control"  
-style={{width:"200px",marginLeft:'20px'}}
-type="date" 
-name="dateFinS" 
-value={this.state.promotion.dateFinS}
-onChange={(e) => this.handleInputChange(e, "dateFinS")}
-error={this.state.error.dateFinS === null ? false : true}
-helperText={this.state.error.dateFinS === null ? null : this.state.error.dateFinS}
-size="small"
-/>
-   </p>
-  </div>
+          <TextField id="outlined-basic" 
+            label="Date fin" 
+            InputLabelProps={{
+              shrink: true,
+              }}
+            variant="outlined" 
+            className="form-control"  
+            style={{width:"200px",marginLeft:'20px'}}
+            type="date" 
+            name="dateFinS" 
+            value={this.state.promotion.dateFinS}
+            onChange={(e) => this.handleInputChange(e, "dateFinS")}
+            error={this.state.error.dateFinS === null ? false : true}
+            helperText={this.state.error.dateFinS === null ? null : this.state.error.dateFinS}
+            size="small"
+        />
+      </p>
+    </div>
 
    <div className="form-group" style={{marginTop:"30px"}}>
-<label id='bigLabel'>
-Sejour minimum
-</label>
-<TextField 
-id="outlined-basic" 
-label="Sejour minimum"
-variant="outlined"
-className="form-control" 
-style={{width:"400px",height:'20px'}}
-size="small"
-type="text" 
-name="sejourMin" 
-value={this.state.promotion.sejourMin}
-onChange={(e) => this.handleInputChange(e, "sejourMin")} 
-style={{marginTop:"15px"}}
-error={this.state.error.sejourMin === null ? false : true}
-helperText={this.state.error.sejourMin === null ? null : this.state.error.sejourMin}
-/>
+      <label id='bigLabel'>
+        Sejour minimum
+      </label>
+      <TextField 
+        id="outlined-basic" 
+        label="Sejour minimum"
+        variant="outlined"
+        className="form-control" 
+        style={{width:"400px",height:'20px'}}
+        size="small"
+        type="text" 
+        name="sejourMin" 
+        value={this.state.promotion.sejourMin}
+        onChange={(e) => this.handleInputChange(e, "sejourMin")} 
+        style={{marginTop:"15px"}}
+        error={this.state.error.sejourMin === null ? false : true}
+        helperText={this.state.error.sejourMin === null ? null : this.state.error.sejourMin}
+      />
    </div>
 
    <div style={{marginTop:'0px'}}>
@@ -572,121 +563,112 @@ helperText={this.state.error.sejourMin === null ? null : this.state.error.sejour
   </div>
   
   <div className="form-group" style={{marginTop:"40px"}}>
-<label id='bigLabel'>
-Nombre de jour d'attribution de la promotion
-</label>
+    <label id='bigLabel'>
+          Nombre de jour d'attribution de la promotion
+    </label>
 
-<div className="form-group" style={{marginTop:"25px"}}>
-<p>
-<TextField id="outlined-basic" 
-label="Premier jour" 
-variant="outlined" 
-className="form-control"  
-style={{width:"200px"}}
-type="number" 
-name="premierJour" 
-value={this.state.promotion.premierJour}
-onChange={(e) => this.handleInputChange(e, "premierJour")}
-size="small"
-error={this.state.error.premierJour === null ? false : true}
-helperText={this.state.error.premierJour === null ? null : this.state.error.premierJour}
-/>
+    <div className="form-group" style={{marginTop:"25px"}}>
+        <p>
+          <TextField id="outlined-basic" 
+            label="Premier jour" 
+            variant="outlined" 
+            className="form-control"  
+            style={{width:"200px"}}
+            type="number" 
+            name="premierJour" 
+            value={this.state.promotion.premierJour}
+            onChange={(e) => this.handleInputChange(e, "premierJour")}
+            size="small"
+            error={this.state.error.premierJour === null ? false : true}
+            helperText={this.state.error.premierJour === null ? null : this.state.error.premierJour}
+          />
 
-  <TextField id="outlined-basic" 
-label="Dernier jour" 
-variant="outlined" 
-className="form-control"  
-style={{width:"200px",marginLeft:'20px'}}
-type="number" 
-name="dernierJour"
-value={this.state.promotion.dernierJour}
-onChange={(e) => this.handleInputChange(e, "dernierJour")}
-size="small"
-error={this.state.error.dernierJour === null ? false : true}
-helperText={this.state.error.dernierJour === null ? null : this.state.error.dernierJour}
-/>
-   </p>
+            <TextField id="outlined-basic" 
+              label="Dernier jour" 
+              variant="outlined" 
+              className="form-control"  
+              style={{width:"200px",marginLeft:'20px'}}
+              type="number" 
+              name="dernierJour"
+              value={this.state.promotion.dernierJour}
+              onChange={(e) => this.handleInputChange(e, "dernierJour")}
+              size="small"
+              error={this.state.error.dernierJour === null ? false : true}
+              helperText={this.state.error.dernierJour === null ? null : this.state.error.dernierJour}
+            />
+        </p>
    </div>
   </div>
 
    <div className="form-group" style={{marginTop:"15px"}}>
-<label id='bigLabel'>
-Tarif réduit disponible uniquement pendant :
+      <label id='bigLabel'>
+          Tarif réduit disponible uniquement pendant :
+      </label>
+        <p>
+      <FormControlLabel  
+        label={<p id='label'>Lundi</p>}
+        value='1'
+        checked={this.state.promotion.weekDays.lundi === 1 ? true : false}
+        name="lundi"
+        control={<Checkbox/>}
+        onChange={(e) => this.handleInputChange3( e, "weekDays", "lundi")} 
+      />
 
-</label>
-   <p>
-<FormControlLabel  
-label={<p id='label'>Lundi</p>}
-value='1'
-checked={this.state.promotion.weekDays.lundi === 1 ? true : false}
-name="lundi"
-control={<Checkbox/>}
-onChange={(e) => this.handleInputChange3( e, "weekDays", "lundi")} 
-/>
+      <FormControlLabel  
+        label={<p id='label'>Mardi</p>}
+        value='1'
+        checked={this.state.promotion.weekDays.mardi === 1 ? true : false}
+        name="mardi"  
+        control={<Checkbox/>}
+        onChange={(e) => this.handleInputChange3( e, "weekDays", "mardi")} 
+      />
 
+      <FormControlLabel  
+        label={<p id='label'>Mercredi</p>}
+        value='1'
+        checked={this.state.promotion.weekDays.mercredi === 1 ? true : false}
+        name="mercredi"  
+        control={<Checkbox/>}
+        onChange={(e) => this.handleInputChange3( e, "weekDays", "mercredi")} 
+      />
 
-<FormControlLabel  
-label={<p id='label'>Mardi</p>}
-value='1'
-checked={this.state.promotion.weekDays.mardi === 1 ? true : false}
-name="mardi"  
-control={<Checkbox/>}
-onChange={(e) => this.handleInputChange3( e, "weekDays", "mardi")} 
-/>
+      <FormControlLabel  
+        label={<p id='label'>Jeudi</p>}
+        value='1'
+        checked={this.state.promotion.weekDays.jeudi === 1 ? true : false}
+        name="jeudi"  
+        control={<Checkbox/>}
+        onChange={(e) => this.handleInputChange3( e, "weekDays", "jeudi")} 
+      />
 
-<FormControlLabel  
-label={<p id='label'>Mercredi</p>}
-value='1'
-checked={this.state.promotion.weekDays.mercredi === 1 ? true : false}
-name="mercredi"  
-control={<Checkbox/>}
-onChange={(e) => this.handleInputChange3( e, "weekDays", "mercredi")} 
-/>
+      <FormControlLabel  
+        label={<p id='label'>Vendredi</p>}
+        value='1'
+        checked={this.state.promotion.weekDays.vendredi === 1 ? true : false}
+        name="vendredi"  
+        control={<Checkbox/>}
+        onChange={(e) => this.handleInputChange3( e, "weekDays", "vendredi")} 
+      />
 
-<FormControlLabel  
-label={<p id='label'>Jeudi</p>}
-value='1'
-checked={this.state.promotion.weekDays.jeudi === 1 ? true : false}
-name="jeudi"  
-control={<Checkbox/>}
-onChange={(e) => this.handleInputChange3( e, "weekDays", "jeudi")} 
-/>
+      <FormControlLabel  
+        label={<p id='label'>Samedi</p>}
+        value='1'
+        checked={this.state.promotion.weekDays.samedi === 1 ? true : false}
+        name="samedi"  
+        control={<Checkbox/>}
+        onChange={(e) => this.handleInputChange3( e, "weekDays", "samedi")} 
+      />
 
-<FormControlLabel  
-label={<p id='label'>Vendredi</p>}
-value='1'
-checked={this.state.promotion.weekDays.vendredi === 1 ? true : false}
-name="vendredi"  
-control={<Checkbox/>}
-onChange={(e) => this.handleInputChange3( e, "weekDays", "vendredi")} 
-/>
-
-<FormControlLabel  
-label={<p id='label'>Samedi</p>}
-value='1'
-checked={this.state.promotion.weekDays.samedi === 1 ? true : false}
-name="samedi"  
-control={<Checkbox/>}
-onChange={(e) => this.handleInputChange3( e, "weekDays", "samedi")} 
-/>
-
-<FormControlLabel  
-label={<p id='label'>Dimanche</p>}
-value='1'
-checked={this.state.promotion.weekDays.dimanche === 1 ? true : false}
-name="dimanche"  
-control={<Checkbox/>}
-onChange={(e) => this.handleInputChange3( e, "weekDays", "dimanche")} 
-/>
-   </p> 
+      <FormControlLabel  
+        label={<p id='label'>Dimanche</p>}
+        value='1'
+        checked={this.state.promotion.weekDays.dimanche === 1 ? true : false}
+        name="dimanche"  
+        control={<Checkbox/>}
+        onChange={(e) => this.handleInputChange3( e, "weekDays", "dimanche")} 
+      />
+    </p> 
   </div>
-  </>
-  }
-  </div>
-
-  <div className="block3">
-    {
-            this.state.skeletonAffiche ? <SkelettonForm  heigth = {300} />  : <>
     <div className="form-group" style={{}}>
       <h6>Nom de la promotion </h6>
         <label id='bigLabel'> Comment voulez-vous nommer cette promotion ?</label>
@@ -705,23 +687,19 @@ onChange={(e) => this.handleInputChange3( e, "weekDays", "dimanche")}
           error={this.state.error.nom === null ? false : true}
           helperText={this.state.error.nom === null ? null : this.state.error.nom}
         />
-   </div>   
-    </>
-  }  
-   </div>     
-    
+   </div><br/>
   <div className="pied" style={{marginTop:'25px'}}>   
    <div class="bouton-aligne">  
-   {
-     this.state.btnLoad ? <ButtonLoading /> :
-    <Button  
-      variant="contained" 
-      type='submit' 
-      style={{backgroundColor:'#FA8072'}}
-      onClick={(e) => this.update(e)}>
-      <span style={{color:'white'}}>Modifier</span>
-    </Button>
-    }
+      {
+        this.state.btnLoad ? <ButtonLoading /> :
+        <Button  
+          variant="contained" 
+          type='submit' 
+          style={{backgroundColor:'#FA8072'}}
+          onClick={(e) => this.update(e)}>
+          <span style={{color:'white'}}>Modifier</span>
+        </Button>
+        }
    </div>
    <div class="bouton-aligne">
     <Link to={'/back/promotion'} style={{textDecoration:'none'}}>
@@ -733,6 +711,8 @@ onChange={(e) => this.handleInputChange3( e, "weekDays", "dimanche")}
     </Link>
    </div>
   </div>
+  </>
+} 
  </form>
  
 </div>
