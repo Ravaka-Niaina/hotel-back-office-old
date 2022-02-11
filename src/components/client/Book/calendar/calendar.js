@@ -40,6 +40,7 @@ const BaeCalendar = ({
   activeDates,
   onDateSelect,
   context,
+  priceCheapestRate,
   check,
 }) => {
   const [open, setOpen] = React.useState(false)
@@ -108,6 +109,27 @@ const BaeCalendar = ({
     context.setState(temp)
     getPrix(selectDate, monthLater)
   }
+  
+  let prixFinal = JSON.parse(JSON.stringify(prix));
+
+  if(prixFinal !== null && priceCheapestRate !== null){
+    for(let i = 0; i < prixFinal.length; i++){
+      let tmp = new Date(prixFinal[i].month);
+      tmp.setTime( tmp.getTime() + tmp.getTimezoneOffset() * 60 * 1000 );
+      for(let u = 0; u < prixFinal[i].prices.length; u++){
+        for(let v = 0; v < priceCheapestRate.length; v++){
+          if(getDate(tmp) === priceCheapestRate[v].date){
+            prixFinal[i].prices[u] = {
+              aPayer: priceCheapestRate[v].aPayer, 
+              prixOriginal: priceCheapestRate[v].prixOriginal,
+              promotions: priceCheapestRate[v].promotions};
+            break;
+          }
+        }
+        tmp.setDate(tmp.getDate() + 1);
+      }
+    }
+  }
 
   return (
     <HtmlTooltip
@@ -130,7 +152,7 @@ const BaeCalendar = ({
                 setSelectDate={setSelectDate}
                 bornes={bornes}
                 setBornes={setBornes}
-                prix={prix}
+                prix={prixFinal}
                 context={context}
                 closeOnce={closeOnce}
                 applyFilter={applyFilter}
@@ -145,7 +167,7 @@ const BaeCalendar = ({
                 setSelectDate={setMonthLater}
                 bornes={bornes}
                 setBornes={setBornes}
-                prix={prix}
+                prix={prixFinal}
                 context={context}
                 closeOnce={closeOnce}
                 applyFilter={applyFilter}

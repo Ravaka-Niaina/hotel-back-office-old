@@ -138,7 +138,6 @@ const DateIndicator = ({
 
   const debut = new Date(bornes.debut)
   let fin = new Date(bornes.fin)
-  console.log(bornes.debut + ' , ' + bornes.fin)
   let today = new Date()
   today = new Date(today.getFullYear(), today.getMonth(), today.getDate())
   const monthDates = datesInMonth.map((i, key) => {
