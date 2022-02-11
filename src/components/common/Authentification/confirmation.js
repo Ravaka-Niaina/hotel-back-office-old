@@ -37,13 +37,11 @@ tryRedirect(res){
 
 search(e){
   e.preventDefault();
-  axios.get(`http://localhost:3000/client/search/${this.state.codeR}`)
-  .then(res => {
-      const client = {client : res.data.client};
-      this.setState(client);
-      this.tryRedirect(res.data);
-    })
-    .catch(err => console.log(err));
+  callAPI('get', '/client/search/' + this.state.codeR, {}, (data) => {
+    const client = {client : data.client};
+    this.setState(client);
+    this.tryRedirect(data);
+  });
 }
 
 handleInputChange(event, inputName){
