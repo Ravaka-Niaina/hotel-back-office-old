@@ -13,6 +13,8 @@ import {EventNote, ExpandMore} from '@mui/icons-material';
 const BookComponent = (props) => {
     const [groupby, setGroupBy] = React.useState('a');
     const [priceCheapestRate, setPriceCheapestRate] = React.useState(null);
+    const [reloadSelectedDatePrices, setReloadSelectedDatePrices] = React.useState(false);
+
     const handleGroupByChange = (event, g) => {
         if(g !== null){
         setGroupBy(g);
@@ -33,10 +35,14 @@ const BookComponent = (props) => {
         setLoadingFilter(false);
         props.context.changeOpenFiltre(false);
         setPriceCheapestRate(res.prixNuiteeCalendrier);
+        setReloadSelectedDatePrices(false);
     }
 
-    function applyFilter(moreData){
+    function applyFilter(moreData, reloadDate){
         setLoadingFilter(true);
+        if(reloadDate){
+            setReloadSelectedDatePrices(true);
+        }
         if((props.context.state.guests.nbEnfant > 0 || props.context.state.guests.nbAdulte > 0)){
             props.context.handleChange("errFiltre", null);
             const data = {
@@ -56,7 +62,8 @@ const BookComponent = (props) => {
         <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection:'column' }} className={styles.filter}>
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
             <BaeCalendar context = {props.context} applyFilter={applyFilter} dateSejour={props.context.state.dateSejour}
-                priceCheapestRate={priceCheapestRate} check={
+                priceCheapestRate={priceCheapestRate} reloadSelectedDatePrices={reloadSelectedDatePrices} 
+                check={
                 <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection:'column' }} className={styles.filter2}>
                     <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
                         <TextField

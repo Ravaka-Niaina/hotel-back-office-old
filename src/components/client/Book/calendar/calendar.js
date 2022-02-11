@@ -42,6 +42,7 @@ const BaeCalendar = ({
   context,
   priceCheapestRate,
   check,
+  reloadSelectedDatePrices
 }) => {
   const [open, setOpen] = React.useState(false)
   const [firstTime, setFirstTime] = React.useState(true)
@@ -54,7 +55,7 @@ const BaeCalendar = ({
 
   let oneMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0)
   const [monthLater, setMonthLater] = useState(oneMonth)
-
+  const [reloadAllPrices, setReloadAllPrices] = useState(false);
   const [bornes, setBornes] = useState({
     debut: null,
     fin: null,
@@ -84,11 +85,13 @@ const BaeCalendar = ({
         temp.dateSejour.fin = getDate(checkOut)
         context.setState(temp)
       }
-      setPrix(res.result)
+      setPrix(res.result);
+      setReloadAllPrices(false);
     }
   }
 
   function getPrix(dateDebut, dateFin) {
+    setReloadAllPrices(true);
     let debut = new Date(dateDebut)
     debut.setDate(1)
     let fin = new Date(dateFin)
@@ -99,8 +102,9 @@ const BaeCalendar = ({
   }
 
   useEffect(() => {
-    getPrix(selectDate, monthLater)
-    setOpen(true)
+    getPrix(selectDate, monthLater);
+    setReloadAllPrices(true);
+    setOpen(true);
   }, [])
 
   function reload() {
@@ -130,7 +134,7 @@ const BaeCalendar = ({
       }
     }
   }
-
+  console.log(selectDate);
   return (
     <HtmlTooltip
       title={
@@ -156,6 +160,8 @@ const BaeCalendar = ({
                 context={context}
                 closeOnce={closeOnce}
                 applyFilter={applyFilter}
+                reloadAllPrices={reloadAllPrices}
+                reloadSelectedDatePrices={reloadSelectedDatePrices}
               />
             </div>
             <div className={`bae-calendar-container ${themes[theme]}`}>
@@ -171,6 +177,8 @@ const BaeCalendar = ({
                 context={context}
                 closeOnce={closeOnce}
                 applyFilter={applyFilter}
+                reloadAllPrices={reloadAllPrices}
+                reloadSelectedDatePrices={reloadSelectedDatePrices}
               />
             </div>
           </Box>
