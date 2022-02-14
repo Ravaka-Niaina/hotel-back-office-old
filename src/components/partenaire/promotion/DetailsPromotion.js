@@ -136,8 +136,8 @@ class DetailsPromotions extends React.Component{
               ,remise:''
               ,isLeadHour:''
               ,isRemiseEuro: '',
-              leadMaxInfini: false,
-              isLeadMaxDisabled: false
+              leadMinInfini: false,
+              isLeadMinDisabled: false
             }
             ,isRemiseEuro: true
             ,isLeadHour: true
@@ -147,7 +147,7 @@ class DetailsPromotions extends React.Component{
             ,  btnLoad : false
             , skeletonAffiche : true
         }
-        console.log(this.state.promotion.leadMaxInfini);
+        console.log(this.state.promotion.leadMinInfini);
         this.handleCheckBoxPlanTarifaire = this.handleCheckBoxPlanTarifaire.bind(this);
         this.handleCheckBoxTypeChambre = this.handleCheckBoxTypeChambre.bind(this);
         this.setDetailsPromotion = this.setDetailsPromotion.bind(this);
@@ -161,7 +161,7 @@ class DetailsPromotions extends React.Component{
       currentState.promotion = data.promotion;
       currentState.promotion.dateDebutS = getDate(currentState.promotion.dateDebutS);
       currentState.promotion.dateFinS = getDate(currentState.promotion.dateFinS);
-      currentState.promotion.isLeadMaxDisabled = currentState.promotion.leadMaxInfini ? true : false;
+      currentState.promotion.isLeadMinDisabled = currentState.promotion.leadMinInfini ? true : false;
 
       currentState.typeChambres = data.listTypeChambre;
       for(let i = 0; i < currentState.typeChambres.length; i++){
@@ -360,10 +360,10 @@ setListTypeChambre(res){
 
     switchInfini(){
       let current = {...this.state};
-      console.log(current.promotion.leadMaxInfini + " , " + current.promotion.isLeadMaxDisabled);
-      current.promotion.leadMaxInfini = !current.promotion.leadMaxInfini;
-      current.promotion.isLeadMaxDisabled = !current.promotion.isLeadMaxDisabled;
-      current.promotion.lead.max = "";
+      console.log(current.promotion.leadMinInfini + " , " + current.promotion.isLeadMinDisabled);
+      current.promotion.leadMinInfini = !current.promotion.leadMinInfini;
+      current.promotion.isLeadMinDisabled = !current.promotion.isLeadMinDisabled;
+      current.promotion.lead.min = "";
       this.setState(current);
     }
   
@@ -529,10 +529,10 @@ helperText={this.state.error.sejourMin === null ? null : this.state.error.sejour
       </div>
       <div>
         <FormControlLabel
-          checked={this.state.promotion.leadMaxInfini}
+          checked={this.state.promotion.leadMinInfini ? true : false}
           control={<Checkbox/>}
           onClick={(e) => this.switchInfini()}
-          label={<span id="litleLabel">Lead max infini</span>}
+          label={<span id="litleLabel">Lead min infini</span>}
         />
       </div>
       <RadioGroup
@@ -551,6 +551,7 @@ helperText={this.state.error.sejourMin === null ? null : this.state.error.sejour
                   onChange={(e) => this.handleInputChange2( e, "lead", "min")}
                   error={this.state.error.leadMin === null ? false : true}
                   helperText={this.state.error.leadMin === null ? null : this.state.error.leadMin}
+                  disabled={this.state.promotion.isLeadMinDisabled}
                   /> 
               </div>
               <div className ="col">
@@ -563,7 +564,7 @@ helperText={this.state.error.sejourMin === null ? null : this.state.error.sejour
                   onChange={(e) => this.handleInputChange2( e, "lead", "max")}
                   error={this.state.error.leadMax === null ? false : true}
                   helperText={this.state.error.leadMax === null ? null : this.state.error.leadMax}
-                  disabled={this.state.promotion.isLeadMaxDisabled}
+                  
                   /> 
               </div>
               <div className ="col">

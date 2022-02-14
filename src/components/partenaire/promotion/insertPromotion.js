@@ -112,8 +112,8 @@ function InsertPromotion() {
   const handleClose = () => setOpen(false)
   const [btnLoad, setBtnLoad] = useState(false)
   const [skeletonAffiche, setSkeleton] = useState(true)
-  const [leadMaxInfini, setLeadMaxInfini] = useState(false);
-  const [isLeadMaxDisabled, setIsLeadMaxDisabled] = useState(false);
+  const [leadMinInfini, setLeadMinInfini] = useState(false);
+  const [isLeadMinDisabled, setIsLeadMinDisabled] = useState(false);
 
   const history = useHistory();
 
@@ -192,7 +192,7 @@ function InsertPromotion() {
       }
     }
     toSend.typeChambre = selectedTypeC;
-    toSend.leadMaxInfini = leadMaxInfini;
+    toSend.leadMinInfini = leadMinInfini;
     callAPI('post', '/promotion/create', toSend, tryRedirect);
   }
 
@@ -238,10 +238,10 @@ function InsertPromotion() {
   }
 
   function switchInfini(){
-    setLeadMaxInfini(!leadMaxInfini);
-    setIsLeadMaxDisabled(!isLeadMaxDisabled);
+    setLeadMinInfini(!leadMinInfini);
+    setIsLeadMinDisabled(!isLeadMinDisabled);
     let current = {...state};
-    current.lead.max = "";
+    current.lead.min = "";
     setState(current);
   }
 
@@ -462,10 +462,10 @@ function InsertPromotion() {
             </div>
             <div>
               <FormControlLabel
-                checked={leadMaxInfini}
+                checked={leadMinInfini}
                 onClick={(e) => switchInfini()}
                 control={<Radio />}
-                label={<span id="litleLabel">Lead max infini</span>}
+                label={<span id="litleLabel">Lead min infini</span>}
               />
             </div>
             <RadioGroup
@@ -487,6 +487,7 @@ function InsertPromotion() {
                     helperText={
                       state.error.leadMin === null ? null : state.error.leadMin
                     }
+                    disabled={isLeadMinDisabled}
                   />
                 </div>
                 <div className="col">
@@ -502,7 +503,6 @@ function InsertPromotion() {
                     helperText={
                       state.error.leadMax === null ? null : state.error.leadMax
                     }
-                    disabled={isLeadMaxDisabled}
                   />
                 </div>
                 <div className="col">
