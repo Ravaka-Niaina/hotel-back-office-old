@@ -40,7 +40,9 @@ const BaeCalendar = ({
   activeDates,
   onDateSelect,
   context,
+  priceCheapestRate,
   check,
+  reloadSelectedDatePrices
 }) => {
   const [open, setOpen] = React.useState(false)
   const [firstTime, setFirstTime] = React.useState(true)
@@ -53,7 +55,7 @@ const BaeCalendar = ({
 
   let oneMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0)
   const [monthLater, setMonthLater] = useState(oneMonth)
-
+  const [reloadAllPrices, setReloadAllPrices] = useState(false);
   const [bornes, setBornes] = useState({
     debut: null,
     fin: null,
@@ -83,11 +85,13 @@ const BaeCalendar = ({
         temp.dateSejour.fin = getDate(checkOut)
         context.setState(temp)
       }
-      setPrix(res.result)
+      setPrix(res.result);
+      setReloadAllPrices(false);
     }
   }
 
   function getPrix(dateDebut, dateFin) {
+    setReloadAllPrices(true);
     let debut = new Date(dateDebut)
     debut.setDate(1)
     let fin = new Date(dateFin)
@@ -98,8 +102,9 @@ const BaeCalendar = ({
   }
 
   useEffect(() => {
-    getPrix(selectDate, monthLater)
-    setOpen(true)
+    getPrix(selectDate, monthLater);
+    setReloadAllPrices(true);
+    setOpen(true);
   }, [])
 
   function reload() {
@@ -108,7 +113,28 @@ const BaeCalendar = ({
     context.setState(temp)
     getPrix(selectDate, monthLater)
   }
+  
+  let prixFinal = JSON.parse(JSON.stringify(prix));
 
+  if(prixFinal !== null && priceCheapestRate !== null){
+    for(let i = 0; i < prixFinal.length; i++){
+      let tmp = new Date(prixFinal[i].month);
+      tmp.setTime( tmp.getTime() + tmp.getTimezoneOffset() * 60 * 1000 );
+      for(let u = 0; u < prixFinal[i].prices.length; u++){
+        for(let v = 0; v < priceCheapestRate.length; v++){
+          if(getDate(tmp) === priceCheapestRate[v].date){
+            prixFinal[i].prices[u] = {
+              aPayer: priceCheapestRate[v].aPayer, 
+              prixOriginal: priceCheapestRate[v].prixOriginal,
+              promotions: priceCheapestRate[v].promotions};
+            break;
+          }
+        }
+        tmp.setDate(tmp.getDate() + 1);
+      }
+    }
+  }
+  console.log(selectDate);
   return (
     <HtmlTooltip
       title={
@@ -130,10 +156,12 @@ const BaeCalendar = ({
                 setSelectDate={setSelectDate}
                 bornes={bornes}
                 setBornes={setBornes}
-                prix={prix}
+                prix={prixFinal}
                 context={context}
                 closeOnce={closeOnce}
                 applyFilter={applyFilter}
+                reloadAllPrices={reloadAllPrices}
+                reloadSelectedDatePrices={reloadSelectedDatePrices}
               />
             </div>
             <div className={`bae-calendar-container ${themes[theme]}`}>
@@ -145,10 +173,12 @@ const BaeCalendar = ({
                 setSelectDate={setMonthLater}
                 bornes={bornes}
                 setBornes={setBornes}
-                prix={prix}
+                prix={prixFinal}
                 context={context}
                 closeOnce={closeOnce}
                 applyFilter={applyFilter}
+                reloadAllPrices={reloadAllPrices}
+                reloadSelectedDatePrices={reloadSelectedDatePrices}
               />
             </div>
           </Box>

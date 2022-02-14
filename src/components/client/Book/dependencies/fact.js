@@ -207,7 +207,6 @@ class Fact extends React.Component{
 
     printFacture(){
         let valider = null;
-        console.log(this.props.context.state.itineraires);
         let toPay = 0;
         for(let i = 0; i < this.props.context.state.itineraires.length; i++){
             for(let u = 0; u < this.props.context.state.itineraires[i].tarifReserves.length; u++){
