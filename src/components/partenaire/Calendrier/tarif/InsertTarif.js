@@ -61,8 +61,8 @@ function InsertTarif(){
     const [btnLoad, setBtnLoad] = useState(false);
     const history = useHistory();
     const [skeletonAffiche , setSkeleton] = useState(true);
-    const [leadMaxInfini, setLeadMaxInfini] = useState(false);
-    const [isLeadMaxDisabled, setIsLeadMaxDisabled] = useState(false);
+    const [leadMinInfini, setLeadMinInfini] = useState(false);
+    const [isLeadMinDisabled, setIsLeadMinDisabled] = useState(false);
 
     function setListTypeChambre(res){
         let current = JSON.parse(JSON.stringify(planTarifaire));
@@ -125,15 +125,15 @@ function InsertTarif(){
         e.preventDefault();
         setBtnLoad(true);
         const current = utility.getPlan(planTarifaire);
-        current.leadMaxInfini = leadMaxInfini;
+        current.leadMinInfini = leadMinInfini;
         callAPI('post', '/planTarifaire/insert', current, tryRedirect);
     }
 
     function switchInfini(){
-        setLeadMaxInfini(!leadMaxInfini);
-        setIsLeadMaxDisabled(!isLeadMaxDisabled);
+        setLeadMinInfini(!leadMinInfini);
+        setIsLeadMinDisabled(!isLeadMinDisabled);
         let current = {...planTarifaire};
-        current.lead.max = "";
+        current.lead.min = "";
         setPlanTarifaire(current);
     }
 
@@ -186,6 +186,7 @@ function InsertTarif(){
                                             helperText={error.description === null ? null : error.description}
                                         />
                                     </div>
+
                                     <div style={{marginTop:'60px'}}>
                                         <div>
                                             <label className="" style={{textDecoration: 'underline'}} id='bigLabel'>Date de réservation </label> 
@@ -275,7 +276,7 @@ function InsertTarif(){
                                         </div>
                                         <div>
                                             <FormControlLabel
-                                                checked={leadMaxInfini}
+                                                checked={leadMinInfini}
                                                 onClick={(e) => switchInfini()}
                                                 control={<Radio />}
                                                 label={<span id="litleLabel">Pas de fin</span>}
@@ -291,27 +292,25 @@ function InsertTarif(){
                                                     <TextField
                                                     label="Min"
                                                     type='number'
-                                                    id='lead'
                                                     size='small'
                                                     value={planTarifaire.lead.min}
                                                     placeholder='Hour/Date'
                                                     onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "lead", "min")}
                                                     error={error.leadMin === null ? false : true}
                                                     helperText={error.leadMin === null ? null : error.leadMin}
+                                                    disabled={isLeadMinDisabled}
                                                     /> 
                                                 </div>
                                                 <div className ="col">
                                                     <TextField
                                                     label="Max"
                                                     type='number'
-                                                    id='lead'
                                                     size='small'
                                                     value={planTarifaire.lead.max}
                                                     placeholder='Hour/Date'
                                                     onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "lead", "max")}
                                                     error={error.leadMax === null ? false : true}
                                                     helperText={error.leadMax === null ? null : error.leadMax}
-                                                    disabled={isLeadMaxDisabled}
                                                     /> 
                                                 </div>
                                                 <div className ="col">
