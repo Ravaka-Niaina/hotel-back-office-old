@@ -456,7 +456,7 @@ function InsertPromotion() {
                   />
                 </div>
               </div>
-            </RadioGroup>
+        </RadioGroup>
   </div>
 
   <div className="form-group" style={{marginTop:"40px"}}>
