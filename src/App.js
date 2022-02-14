@@ -107,7 +107,7 @@ function App(){
 
         <Route path="/back/promotion" exact component={PromotionList} />
         <Route path="/back/promotion/insert" exact component={InsertPromotion} />
-        <Route path="/back/promotion/detail/:_id" exact component={DetailsPromotion} />
+        <Route path="/back/promotion/detail/:_id" exact component={InsertPromotion} />
 
         <Route path="/back/politique" exact component={Global} />
         <Route path="/back/politique/detail/:_id" exact component={Global} />

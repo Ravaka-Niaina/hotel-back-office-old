@@ -137,7 +137,9 @@ class DetailsPromotions extends React.Component{
               ,isLeadHour:''
               ,isRemiseEuro: '',
               leadMaxInfini: false,
-              isLeadMaxDisabled: false
+              isLeadMaxDisabled: false,
+              dateFinSejourInfini: false,
+              isDateFinSejourDisabled: false
             }
             ,isRemiseEuro: true
             ,isLeadHour: true
@@ -147,7 +149,6 @@ class DetailsPromotions extends React.Component{
             ,  btnLoad : false
             , skeletonAffiche : true
         }
-        console.log(this.state.promotion.leadMaxInfini);
         this.handleCheckBoxPlanTarifaire = this.handleCheckBoxPlanTarifaire.bind(this);
         this.handleCheckBoxTypeChambre = this.handleCheckBoxTypeChambre.bind(this);
         this.setDetailsPromotion = this.setDetailsPromotion.bind(this);
@@ -162,7 +163,8 @@ class DetailsPromotions extends React.Component{
       currentState.promotion.dateDebutS = getDate(currentState.promotion.dateDebutS);
       currentState.promotion.dateFinS = getDate(currentState.promotion.dateFinS);
       currentState.promotion.isLeadMaxDisabled = currentState.promotion.leadMaxInfini ? true : false;
-
+      currentState.promotion.isDateFinSejourDisabled = currentState.promotion.dateFinSejourInfini ? true : false;
+      
       currentState.typeChambres = data.listTypeChambre;
       for(let i = 0; i < currentState.typeChambres.length; i++){
         for(let u = 0; u < currentState.promotion.typeChambre.length; u++ ){
@@ -209,8 +211,7 @@ class DetailsPromotions extends React.Component{
       this.setState(currentState);
     }
 
-    setTarifs(res){
-        console.log(res);      
+    setTarifs(res){   
         if(res.status === 200){
             let currentState = JSON.parse(JSON.stringify(this.state));
             for(let i = 0; i < res.list.length; i++){
@@ -219,33 +220,28 @@ class DetailsPromotions extends React.Component{
                         res.list[i].checked = true;
                         break;
                     }
-                    console.log("nadalo");
                      res.list[i].checked = false;
                 }
             }
             currentState.tarifs = res.list;
             this.setState(currentState);
-            console.log(currentState);
         }    
     }
 
 setListTypeChambre(res){
       if(res.status === 200){
         let currentState = JSON.parse(JSON.stringify(this.state));
-        console.log(currentState);
         for(let i = 0; i < res.list.length; i++){
             for(let u = 0; u < currentState.promotion.typeChambre.length; u++ ){
                 if(res.list[i]._id == currentState.promotion.typeChambre[u]){
                     res.list[i].checked = true;
                     break;
                 }
-                console.log("nadalo");
                  res.list[i].checked = false;
             }
         }
         currentState.typeChambres = res.list;
         this.setState(currentState);
-        console.log(currentState);
     }
   }
 
@@ -255,7 +251,6 @@ setListTypeChambre(res){
 
     update(e){
         e.preventDefault();
-        console.log(this.state.promotion);
         let toSend = JSON.parse(JSON.stringify(this.state.promotion));
         let planTarifaire = [];
         for(let i = 0; i < this.state.tarifs.length; i++){
@@ -272,6 +267,8 @@ setListTypeChambre(res){
             }
         }
         toSend.typeChambre = typeChambre;
+        toSend.isDateFinSejourDisabled = undefined;
+        toSend.isLeadMaxDisabled = undefined;
         let current = {...this.state};
         current.btnLoad = true;
         this.setState(current);
@@ -295,7 +292,6 @@ setListTypeChambre(res){
     }
 
     handleInputRemiseChange( e, name1){
-      console.log(e.target.value);
       let current = JSON.parse(JSON.stringify(this.state));
       current.promotion[name1] = e.target.value;
       this.setState(current)
@@ -308,25 +304,16 @@ setListTypeChambre(res){
             }
 
     handleInputChange2( e, name1, name2){
-      console.log(e.target.value);
       let current = JSON.parse(JSON.stringify(this.state));
       current.promotion[name1][name2] = e.target.value;
       this.setState(current)
       }
 
     handleInputChange3( e, name1, name2){
-      console.log(e.target.value);
       let current = JSON.parse(JSON.stringify(this.state));
       current.promotion[name1][name2]= e.target.checked ? 1 : "";
       this.setState(current)
       }
-
-    // handleInputChange3( e, name1, name2){
-    //     console.log(e.target.value);
-    //     let current = JSON.parse(JSON.stringify(this.state));
-    //     current.promotion[name1][name2] = Number.parseInt(e.target.value);
-    //     this.setState(current)
-    //     }
       
     handleIsLeadHourChange(value,index){
       let temp = {...this.state};
@@ -360,10 +347,18 @@ setListTypeChambre(res){
 
     switchInfini(){
       let current = {...this.state};
-      console.log(current.promotion.leadMaxInfini + " , " + current.promotion.isLeadMaxDisabled);
       current.promotion.leadMaxInfini = !current.promotion.leadMaxInfini;
       current.promotion.isLeadMaxDisabled = !current.promotion.isLeadMaxDisabled;
       current.promotion.lead.max = "";
+      this.setState(current);
+    }
+
+    switchDateFinSejourInfini(){
+      let current = {...this.state};
+      current.promotion.dateFinSejourInfini = !current.promotion.dateFinSejourInfini;
+      current.promotion.isDateFinSejourDisabled = !current.promotion.isDateFinSejourDisabled;
+      current.promotion.dateFinS = "";
+      console.log(current.promotion.dateFinSejourInfini);
       this.setState(current);
     }
   
@@ -425,7 +420,6 @@ setListTypeChambre(res){
                   helperText={this.state.error.remise === null ? null : this.state.error.remise}
                   />
               </div>
-              {console.log()}
               <div className ="col">
                   <FormControlLabel 
                   value="euro" 
@@ -459,13 +453,13 @@ setListTypeChambre(res){
             this.state.skeletonAffiche ? <SkelettonForm  heigth = {300} />  : <>
 <h6>Dates de séjour</h6>
 <label id='bigLabel' style={{marginTop:"5px"}}>
-Quand les clients peuvent-ils profiter de cette promotion ?
+Quand les clients peuvent-ils séjourner chez vous pour bénéficier de ce tarif ?
 </label>
-<p id='litleLabel' style={{textDecoration:'underline',marginLeft:'12px'}}>Sélectionnez au moins 1 date</p>
+<p id='litleLabel' style={{textDecoration:'underline',marginLeft:'12px'}}>Sélectionner une période</p>
   <div className="form-group" style={{marginTop:"25px"}}>
    <p>
 <TextField id="outlined-basic" 
-label="Date debut" 
+label="Du" 
 InputLabelProps={{
 shrink: true,
 }}
@@ -481,25 +475,31 @@ helperText={this.state.error.dateDebutS === null ? null : this.state.error.dateD
 size="small"
 />
 
-  <TextField id="outlined-basic" 
-label="Date fin" 
-InputLabelProps={{
-  shrink: true,
-  }}
-variant="outlined" 
-className="form-control"  
-style={{width:"200px",marginLeft:'20px'}}
-type="date" 
-name="dateFinS" 
-value={this.state.promotion.dateFinS}
-onChange={(e) => this.handleInputChange(e, "dateFinS")}
-error={this.state.error.dateFinS === null ? false : true}
-helperText={this.state.error.dateFinS === null ? null : this.state.error.dateFinS}
-size="small"
+<TextField id="outlined-basic" 
+  label="Au" 
+  InputLabelProps={{
+    shrink: true,
+    }}
+  variant="outlined" 
+  className="form-control"  
+  style={{width:"200px",marginLeft:'20px'}}
+  type="date" 
+  name="dateFinS" 
+  value={this.state.promotion.dateFinS}
+  onChange={(e) => this.handleInputChange(e, "dateFinS")}
+  error={this.state.error.dateFinS === null ? false : true}
+  helperText={this.state.error.dateFinS === null ? null : this.state.error.dateFinS}
+  size="small"
+  disabled={this.state.promotion.isDateFinSejourDisabled}
 />
    </p>
   </div>
-
+  <p><FormControlLabel
+      checked={this.state.promotion.dateFinSejourInfini}
+      onClick={(e) => this.switchDateFinSejourInfini()}
+      control={<Checkbox />}
+      label={<span id="litleLabel">Pas de fin</span>}
+  /></p>
    <div className="form-group" style={{marginTop:"30px"}}>
 <label id='bigLabel'>
 Sejour minimum
