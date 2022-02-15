@@ -55,6 +55,7 @@ function PlanTarifaire(props){
   return list
 }
 
+
 function TypeChambre(props) {
   let i = -1;
   let typeChambre = props.typeChambre.map((typeC) => {
