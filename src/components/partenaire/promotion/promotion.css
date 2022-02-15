@@ -153,7 +153,6 @@ input#nom {
 #title1{
     font-family: 'Roboto', sans-serif;
     color: #1976d2;
-<<<<<<< HEAD
 }
 
 .adjacentInputLabel > div{
@@ -168,6 +167,4 @@ input#nom {
     display: inline-block;
     margin-top: 22px;
     margin-left: 25px;
-=======
->>>>>>> 6100dc181135386bb19098d9c136d928ed98265c
 }
