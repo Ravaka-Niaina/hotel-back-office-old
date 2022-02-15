@@ -68,7 +68,9 @@ function ApplyReservation(props){
     const [isConditionAccepted, setIsConditionAccepted] = useState(false);
     const [conditionError, setConditionError] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [load, setLoad] = useState(false);
 
+    
     function handleResponse(res){
         console.log(res);
         setOpenLoad(false);
@@ -85,10 +87,16 @@ function ApplyReservation(props){
         setShowModal(!showModal);
     }
     function handleResponse1(res){
-        console.log(res);
+        if(res.status == 200){
+            history.push('/');
+        }else{
+            setAlertError(res.errors[0].message);
+            window.location.href = '#error';
+        }
     }
 
     function annulerReservation(){
+        setLoad(true);
         callAPI('post', '/reservation/annulerReservationWithEmail', {_id: reservation._id, reservateur: reservateur, reservation: reservation , email : reservateur.email}, handleResponse1 );
      }
 
@@ -371,7 +379,7 @@ function ApplyReservation(props){
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <ModalAnnulation ShowModalAnnulation={ShowModalAnnulation} showModal={showModal}  annulerReservation={annulerReservation} />        
+            <ModalAnnulation ShowModalAnnulation={ShowModalAnnulation} showModal={showModal}  annulerReservation={annulerReservation} load ={load}  />        
         </>
     );
 

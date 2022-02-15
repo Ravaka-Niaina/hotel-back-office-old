@@ -1,7 +1,10 @@
-import  React from 'react';
+import  React, {useState} from 'react';
 import {Button, Box, Modal} from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
 import CircularProgress from '@mui/material/CircularProgress';
+import ButtonLoad from '../partenaire/buttonLoading.js';
+
+
 
 const style = {
     position: 'absolute',
@@ -14,9 +17,9 @@ const style = {
     borderRadius: 2,
     p: 4,
   };
+ 
 
 const annulerReservation = (props) => {
-  
     return (
         <Modal
             open={props.showModal}
@@ -31,8 +34,13 @@ const annulerReservation = (props) => {
                     <strong>Voulez-vous vraiment annuler réservation  ?</strong><br/>
                     <br/>
                     <div style={{width: "fit-content", margin: "0 auto"}}>
-                        <Button variant ="contained" sx={{marginRight: 5}} color="warning" onClick = {(e) => props.annulerReservation()}>Oui</Button>
-                        <Button variant ="contained" color="success" onClick = {(e) => props.ShowModalAnnulation()}>Non</Button>
+                        {   
+                            props.load ? <ButtonLoad/> :
+                             <div class="bouton-aligne">
+                                 <Button variant ="contained" sx={{marginRight: 5}} color="warning" onClick = {(e) => props.annulerReservation()}>Oui</Button>
+                                 <Button variant ="contained" color="success" onClick = {(e) => props.ShowModalAnnulation()}>Non</Button>
+                            </div>
+                        }
                     </div>
                 </div>
                 
