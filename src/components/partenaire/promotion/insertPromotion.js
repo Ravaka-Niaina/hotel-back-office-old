@@ -1,24 +1,24 @@
-import useEffect from 'react'
-import { useState } from 'react'
-import { Checkbox } from '@mui/material'
-import 'bootstrap/dist/css/bootstrap.min.css'
-import TextField from '@mui/material/TextField'
-import Button from '@mui/material/Button'
+import { useState } from 'react';
+import {useEffect} from "react";
+import { Checkbox } from "@mui/material";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import { useHistory } from 'react-router-dom'
-import FormGroup from '@mui/material/FormGroup'
-import FormControlLabel from '@mui/material/FormControlLabel'
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { useParams } from 'react-router-dom'
+import {Link} from 'react-router-dom';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
 
-import { Link } from 'react-router-dom'
-
-import Radio from '@mui/material/Radio'
-import RadioGroup from '@mui/material/RadioGroup'
-import ButtonLoading from '../buttonLoading.js'
-import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js'
-
-import './promotion.css'
-import callAPI from '../../../utility.js'
+import callAPI from '../../../utility.js';
+import ButtonLoading from "../buttonLoading.js";
+import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
 import  Navbar  from "../Navbar/Navbar";
+import JoursPromotion from "./JoursPromotion.js";
+
+import "./promotion.css";
 
 function getNDigits(number, digit){
   digit = digit + '';
@@ -37,30 +37,29 @@ function getDate(date){
   return date;
 }
 
-function PlanTarifaire(props) {
-  let i = -1
-  let list = props.planTarifaire.map((tarif) => {
-    i++
-    let u = i
-    return (
-      <FormControlLabel
+function PlanTarifaire(props){
+  let i = -1;
+  let list = props.planTarifaire.map(tarif => {
+    i++;
+    let u = i;
+    return(
+      <FormControlLabel 
         checked={tarif.checked}
-        control={<Checkbox />}
+        control={<Checkbox/>}
         onChange={(e) => props.handleCheckBoxPlanTarifaire(e, u)}
-        label={<span id="label">{tarif.nom}</span>}
-        style={{ marginLeft: '20px' }}
+        label={<span id='label'>{tarif.nom}</span>}
+        style={{marginLeft:"20px"}}
       />
-    )
+    );
   })
   return list
 }
 
 function TypeChambre(props) {
-  console.log(props.typeChambre)
-  let i = -1
+  let i = -1;
   let typeChambre = props.typeChambre.map((typeC) => {
-    i++
-    let u = i
+    i++;
+    let u = i;
     return (
       <FormControlLabel
         checked={typeC.checked}
@@ -71,11 +70,12 @@ function TypeChambre(props) {
       />
     )
   })
-  return typeChambre
+  return typeChambre;
 }
 
-export default function InsertPromotion() {
+function InsertPromotion() {
   const [isDateFinSejourDisabled, setIsDateFinSejourDisabled] = useState(false);
+
   let [state, setState] = useState({
     errors: [],
     error: {
@@ -91,7 +91,9 @@ export default function InsertPromotion() {
       dateDebutS: null,
       dateFinS: null,
       debutReserv: null,
-      finReserv: null
+      finReserv: null,
+      planTarifaire: null,
+      typeChambre: null
     },
     nom: '',
     planTarifaire: [],
@@ -115,7 +117,7 @@ export default function InsertPromotion() {
     isRemiseEuro: true,
     remise: '',
   })
-
+  
   const [btnLoad, setBtnLoad] = useState(false)
   const [skeletonAffiche, setSkeleton] = useState(true)
   const [leadMaxInfini, setLeadMaxInfini] = useState(false);
@@ -125,6 +127,13 @@ export default function InsertPromotion() {
   const [debutReserv, setDebutReserv] = useState("");
   const [finReserv, setFinReserv] = useState("");
   const [areDateReservDisabled, setAreDateReservDisabled] = useState(true);
+  const [leadMinInfini, setLeadMinInfini] = useState(false);
+  const [isLeadMinDisabled, setIsLeadMinDisabled] = useState(false);
+  const [allRates, setAllRates] = useState(true);
+  const [allRoomTypes, setAllRoomTypes] = useState(true);
+  const [reservAllTime, setReservAllTime] = useState(false);
+  const [allDays, setAllDays] = useState(true);
+  const [isWithLead, setIsWithLead] = useState(true);
 
   const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
   
@@ -132,43 +141,112 @@ export default function InsertPromotion() {
 
   const { _id } = useParams();
 
+  function removeError(fields){
+    let current = {...state};
+
+  }
+
+  function setAllRatesChecked(checked){
+    let current = {...state};
+    for(let i = 0; i < current.planTarifaire.length; i++){
+      current.planTarifaire[i].checked = checked;
+    }
+    setState(current);
+  }
+
+  function setAllRoomTypesChecked(checked){
+    let current = {...state};
+    for(let i = 0; i < current.planTarifaire.length; i++){
+      current.planTarifaire[i].checked = checked;
+    }
+    setState(current);
+  }
+
   function setListTypeChambre(res) {
     let current = JSON.parse(JSON.stringify(state))
     for (let i = 0; i < res.listTypeChambre.length; i++) {
-      res.listTypeChambre[i].checked = false
+      res.listTypeChambre[i].checked = true;
     }
-    current.typeChambre = res.listTypeChambre
+    current.typeChambre = res.listTypeChambre;
 
     for (let i = 0; i < res.listTarif.length; i++) {
-      res.listTarif[i].checked = false
+      res.listTarif[i].checked = true;
     }
-    current.planTarifaire = res.listTarif
+    current.planTarifaire = res.listTarif;
+
+    setIsWithLead(!isWithLead);
+    current.lead.min = "";
+    current.lead.max = "";
+    
     setState(current)
+
     setSkeleton(false)
+    switchReservAllTime();
   }
 
   function setDetailsPromotion(data){
-    let current = JSON.parse(JSON.stringify(state));
     let error = {...state.error};
+    let current = JSON.parse(JSON.stringify(state));
     current = data.promotion;
     current.error = error;
     current.dateDebutS = getDate(current.dateDebutS);
     current.dateFinS = getDate(current.dateFinS);
+
     setDateFinSejourInfini(data.promotion.dateFinSejourInfini);
     setLeadMaxInfini(data.promotion.leadMaxInfini);
     setIsLeadMaxDisabled(data.promotion.leadMaxInfini ? true : false);
     setIsDateFinSejourDisabled(data.promotion.dateFinSejourInfini ? true : false);
+    setReservAllTime(data.promotion.reservAllTime);
+    setDebutReserv(data.promotion.debutReserv);
+    setFinReserv(data.promotion.finReserv);
+    setIsWithLead(data.promotion.isWithLead);
 
     let tmp = data.listTypeChambre;
+    let tmpAllRoomTypes = true;
     for(let i = 0; i < tmp.length; i++){
+      tmp[i].checked = false;
+      let roomTypeFound = false;
       for(let u = 0; u < current.typeChambre.length; u++){
         if(tmp[i]._id == current.typeChambre[u]){
           tmp[i].checked = true;
+          roomTypeFound = true;
+          break;
         }
+      }
+      if(!roomTypeFound){
+        tmpAllRoomTypes = false;
       }
     }
     current.typeChambre = tmp;
-    console.log(current);
+    setAllRoomTypes(tmpAllRoomTypes);
+
+    let tmpAllRates = true;
+    for(let i = 0; i < data.listTarif.length; i++){
+      data.listTarif[i].checked = false;
+      let rateFound = false;
+      for(let u = 0; u < current.planTarifaire.length; u++){
+        if(data.listTarif[i]._id === current.planTarifaire[u]){
+          data.listTarif[i].checked = true;
+          rateFound = true;
+          break;
+        }
+      }
+      if(!rateFound){
+        tmpAllRates = false;
+      }
+    }
+    current.planTarifaire = data.listTarif;
+    setAllRates(tmpAllRates);
+
+    let days = Object.keys(data.promotion.weekDays);
+    let tmpAllDays = true;
+    for(let i = 0; i < days.length; i++){
+      if(data.promotion.weekDays[days[i]] === ""){
+        tmpAllDays = false;
+        break;
+      }
+    }
+    setAllDays(tmpAllDays);
 
     setState(current);
     setSkeleton(false);
@@ -176,26 +254,48 @@ export default function InsertPromotion() {
 
   useEffect(() => {
     if(isInsert){
-      callAPI('get', '/TCTarif/list', {}, setListTypeChambre)
+      callAPI('get', '/TCTarif/list', {}, setListTypeChambre);
     }else{
-      callAPI('get', '/promotion/detail/'+ _id, {}, setDetailsPromotion);
+      callAPI('get', '/promotion/detail/' + _id, {}, setDetailsPromotion);
     }
   }, [])
 
   function handleCheckBoxPlanTarifaire(e, index) {
-    let current = JSON.parse(JSON.stringify(state))
-    current.planTarifaire[index].checked = e.target.checked
-    setState(current)
+    let current = JSON.parse(JSON.stringify(state));
+    current.planTarifaire[index].checked = e.target.checked;
+    setState(current);
+
+    let tmpAllRates = true;
+    for(let i = 0; i < current.planTarifaire.length; i++){
+      if(current.planTarifaire[i].checked === false){
+        tmpAllRates = false;
+      }
+    }
+    setAllRates(tmpAllRates);
   }
 
   function handleCheckBoxTypeChambre(e, index) {
     let current = JSON.parse(JSON.stringify(state))
     current.typeChambre[index].checked = e.target.checked
-    setState(current)
+    setState(current);
+
+    let tmpAllRoomTypes = true;
+    for(let i = 0; i < current.typeChambre.length; i++){
+      if(current.typeChambre[i].checked === false){
+        tmpAllRoomTypes = false;
+      }
+    }
+    setAllRoomTypes(tmpAllRoomTypes);
+  }
+
+  function handleFinReservChange(value){
+    setFinReserv(value);
+    let current = JSON.parse(JSON.stringify(state))
+    current.error.finReserv = null;
+    setState(current);
   }
 
   function tryRedirect(res) {
-    console.log(res)
     let currentState = JSON.parse(JSON.stringify(state))
     let keys = Object.keys(currentState.error)
     keys.map((k) => {
@@ -205,22 +305,21 @@ export default function InsertPromotion() {
       history.push('/back/promotion')
     } else if (res.status === 401) {
       //Unauthorized
-      setBtnLoad(false)
       history.push('/back/login')
     } else {
       setBtnLoad(false)
-      console.log(res.errors)
+      console.log(res.errors);
       let keys = Object.keys(res.errors)
       keys.map((k) => {
         currentState.error[k] = res.errors[k]
       })
     }
     setState(currentState)
+    setBtnLoad(false);
   }
 
   function insert(e) {
     e.preventDefault()
-    console.log('Envoie en attente...')
     setBtnLoad(true)
     let toSend = JSON.parse(JSON.stringify(state))
     let selectedPlan = []
@@ -229,7 +328,7 @@ export default function InsertPromotion() {
         selectedPlan.push(state.planTarifaire[i]._id)
       }
     }
-    toSend.planTarifaire = selectedPlan
+    toSend.planTarifaire = selectedPlan;
 
     let selectedTypeC = []
     for (let i = 0; i < state.typeChambre.length; i++) {
@@ -237,13 +336,47 @@ export default function InsertPromotion() {
         selectedTypeC.push(state.typeChambre[i]._id)
       }
     }
+
     toSend.typeChambre = selectedTypeC;
-    toSend.leadMaxInfini = leadMaxInfini;
+    toSend.leadMinInfini = leadMinInfini;
     toSend.dateFinSejourInfini = dateFinSejourInfini;
     toSend.debutReserv = debutReserv;
     toSend.finReserv = finReserv;
     toSend.reservAToutMoment = reservAToutMoment;
+    toSend.isWithLead = isWithLead;
+    toSend.reservAllTime = reservAllTime;
     callAPI('post', '/promotion/create', toSend, tryRedirect);
+  }
+
+  function update(e){
+    e.preventDefault();
+    let toSend = JSON.parse(JSON.stringify(state));
+    let planTarifaire = [];
+    for(let i = 0; i < state.planTarifaire.length; i++){
+      if(state.planTarifaire[i].checked){
+          planTarifaire.push(state.planTarifaire[i]._id);
+      }
+    }
+    toSend.planTarifaire = planTarifaire;
+
+    let typeChambre = [];
+    for(let i = 0; i < state.typeChambre.length; i++){
+      if(state.typeChambre[i].checked){
+        typeChambre.push(state.typeChambre[i]._id);
+      }
+    }
+    
+    toSend.typeChambre = typeChambre;
+    toSend.leadMinInfini = leadMinInfini;
+    toSend.dateFinSejourInfini = dateFinSejourInfini;
+    toSend.debutReserv = debutReserv;
+    toSend.finReserv = finReserv;
+    toSend.reservAToutMoment = reservAToutMoment;
+    toSend.isWithLead = isWithLead;
+    toSend.reservAllTime = reservAllTime;
+    setBtnLoad(true);
+
+    callAPI('post', '/promotion/updateP', toSend, tryRedirect);
   }
 
   function handleInputChange(event, inputName) {
@@ -253,25 +386,41 @@ export default function InsertPromotion() {
     setState(currentState)
   }
 
-  function handleInputChange2(e, name1, name2) {
-    console.log(e.target.value)
-    let current = JSON.parse(JSON.stringify(state))
-    current[name1][name2] = e.target.value
-    setState(current)
+  function handleLeadMinChange(value){
+    let current = JSON.parse(JSON.stringify(state));
+    current.lead.min = value;
+    current.error.leadMin = null;
+    setState(current);
   }
 
-  function handleInputChange3(e, name1, name2) {
-    console.log(e.target.checked);
+  function handleLeadMaxChange(value){
+    let current = JSON.parse(JSON.stringify(state));
+    current.lead.max = value;
+    current.error.leadMax = null;
+    setState(current);
+  }
+
+  function handleInputChange3(e, name1, name2, isJourProm) {
     let current = JSON.parse(JSON.stringify(state))
     current[name1][name2] = e.target.checked ? 1 : "";
-    console.log(current)
+    if(isJourProm){
+      let days = Object.keys(current.weekDays);
+      let tmpAllDays = true;
+      for(let i = 0; i < days.length; i++){
+        if(current.weekDays[days[i]] === ""){
+          tmpAllDays = false;
+          break;
+        }
+      }
+      setAllDays(tmpAllDays);
+    }
     setState(current)
   }
 
   function handleInputRemiseChange(e, name1) {
-    console.log(e.target.value)
     let current = JSON.parse(JSON.stringify(state))
     current[name1] = e.target.value
+    current.error.remise = null;
     setState(current)
   }
 
@@ -287,10 +436,10 @@ export default function InsertPromotion() {
     setState(temp)
   }
 
-  function switchInfini(){
-    setLeadMaxInfini(!leadMaxInfini);
-    setIsLeadMaxDisabled(!isLeadMaxDisabled);
+  function switchIsWithLead(){
+    setIsWithLead(!isWithLead);
     let current = {...state};
+    current.lead.min = "";
     current.lead.max = "";
     setState(current);
   }
@@ -315,528 +464,533 @@ export default function InsertPromotion() {
     setFinReserv("");
   }
 
+  function switchAllRatesSelected(){
+    setAllRatesChecked(!allRates);
+    setAllRates(!allRates);
+  }
+
+  function switchAllRoomTypesSelected(){
+    let current = {...state};
+    for(let i = 0; i < current.typeChambre.length; i++){
+      current.typeChambre[i].checked = !allRoomTypes;
+    }
+    setState(current);
+    setAllRoomTypes(!allRoomTypes);
+  }
+
+  function switchReservAllTime(){
+    if(reservAllTime){
+      setDebutReserv("");
+      setFinReserv("");
+    }else{
+      setFinReserv(state.dateFinS);
+      const now = getDate(new Date());
+      setDebutReserv(now);
+    }
+    setReservAllTime(!reservAllTime);
+  }
+
+  function switchAllDays(){
+    setAllDays(!allDays);
+    let current = {...state};
+    let days = Object.keys(current.weekDays);
+    for(let i = 0; i < days.length; i++){
+      current.weekDays[days[i]] = allDays ? '' : 1;
+    }
+    setState(current);
+  }
+
   return (
     <>
-      <Navbar currentPage={8}/><br/>
+      <Navbar currentPage={3}/>
       <div className="block">
-        <form>
-          <h4 className="enteteP">Ajouter une nouvelle promotion</h4>
-          <div className="block1">
-            {skeletonAffiche ? (
-              <SkelettonForm heigth={300} />
-            ) : (
-              <>
-                <h5>Détails de la promotion</h5>
-                <div className="form-group" style={{ marginTop: '15px' }}>
-                  <label id="bigLabel">
-                    À quels plans tarifaires cette promotion s'appliquera-t-elle ?
-                  </label>
-                  <p
-                    id="litleLabel"
-                    style={{ marginLeft: '15px', marginTop: '5px' }}
-                  >
-                    Sélectionnez au moins 1 plan tarifaire
-                  </p>
-                  <div className="form-group" style={{ marginTop: '1px' }}>
-                    <FormGroup>
-                      <PlanTarifaire
-                        planTarifaire={state.planTarifaire}
-                        handleCheckBoxPlanTarifaire={handleCheckBoxPlanTarifaire}
-                      />
-                      {state.error.planTarifaire === null ? null : (
-                        <div className="customError">
-                          <span>{state.error.planTarifaire}</span>
-                        </div>
-                      )}
-                    </FormGroup>
-                  </div>
+        {
+          skeletonAffiche ? <SkelettonForm  heigth = {300} />  : <>
+          <h4 id="title1">{isInsert ? "Ajouter une nouvelle promotion" : "Modifier une promotion"}</h4><br/>
+          <h5>Détails de la promotion</h5>
+            <div className="form-group" style={{marginTop:"15px"}}>
+              <label id='bigLabel'>À quels plans tarifaires cette promotion s'appliquera-t-elle ?</label>
+              <RadioGroup
+                aria-label="Pourcentage"
+                defaultValue="euro"
+                name="radio-buttons-group"
+              >
+                <div>
+                  <FormControlLabel 
+                    checked={allRates}
+                    onClick={(e) => switchAllRatesSelected()} 
+                    control={<Radio />} 
+                    label={
+                    <span id='litleLabel'>
+                      Tous les plans tarifaires
+                    </span>}
+                  />
                 </div>
-                <label id="bigLabel">Quelles chambres ?</label>
-                <p
-                  id="litleLabel"
-                  style={{ marginLeft: '15px', marginTop: '5px' }}
-                >
-                  Sélectionnez au moins 1 type de chambre
-                </p>
-                <div className="form-group" style={{ marginTop: '5px' }}>
-                  <FormGroup>
-                    <TypeChambre
-                      typeChambre={state.typeChambre}
-                      handleCheckBoxTypeChambre={handleCheckBoxTypeChambre}
-                    />
-                    {state.error.typeChambre === null ? null : (
-                      <div className="customError">
-                        <span>{state.error.typeChambre}</span>
-                      </div>
-                    )}
-                  </FormGroup>
-                </div>
-
-                <hr style={{ width: '95%' }}></hr>
-
-                <div style={{ marginTop: '0px' }}>
-                  <div>
-                    <label
-                      className=""
-                      style={{
-                        textDecoration: 'underline',
-                        fontFamily: 'Roboto',
-                        fontSize: '15px',
-                        marginLeft: '0px',
-                      }}
-                    >
-                      Remise {state.isRemiseEuro ? 'Euro' : 'Pourcentage'}
-                    </label>
-                  </div>
-                  <RadioGroup
-                    aria-label="Pourcentage"
-                    defaultValue="euro"
-                    name="radio-buttons-group"
-                  >
-                    <div className="row" style={{ marginTop: '15px' }}>
-                      <div className="col">
-                        <TextField
-                          label="Remise"
-                          type="number"
-                          id=""
-                          size="small"
-                          value={state.remise.euro}
-                          placeholder="Hour/Date"
-                          onChange={(e) => handleInputRemiseChange(e, 'remise')}
-                          error={state.error.remise === null ? false : true}
-                          helperText={
-                            state.error.remise === null
-                              ? null
-                              : state.error.remise
-                          }
-                        />
-                      </div>
-                      <div className="col">
-                        <FormControlLabel
-                          value="euro"
-                          onClick={(e) => handleIsRemiseEuroChange(true)}
-                          control={<Radio />}
-                          label={<span id="litleLabel">Euro</span>}
-                        />
-                      </div>
-                      <div className="col">
-                        <FormControlLabel
-                          value="pourcentage"
-                          onClick={(e) => handleIsRemiseEuroChange(false)}
-                          control={<Radio />}
-                          label={<span id="litleLabel">Pourcentage</span>}
-                        />
-                      </div>
-                    </div>
-                  </RadioGroup>
-                </div>
-              </>
-            )}
-          </div>
-          <div className="block2" style={{ marginTop: '30px' }}>
-            <h5>Dates de séjour</h5>
-            <label style={{ marginTop: '5px' }} id="bigLabel">
-            Quand les clients peuvent-ils séjourner chez vous pour bénéficier de ce tarif ?
-            </label>
-            <p id="litleLabel" style={{ marginLeft: '15px', marginTop: '5px' }}>
-            Sélectionner une période
-            </p>
-            <div className="form-group" style={{ marginTop: '25px' }}>
-              <p>
-                <TextField
-                  id="outlined-basic"
-                  label="Du"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  variant="outlined"
-                  className="form-control"
-                  style={{ width: '200px' }}
-                  type="date"
-                  name="dateDebutS"
-                  value={state.dateDebutS}
-                  onChange={(e) => handleInputChange(e, 'dateDebutS')}
-                  size="small"
-                  error={state.error.dateDebutS === null ? false : true}
-                  helperText={
-                    state.error.dateDebutS === null
-                      ? null
-                      : state.error.dateDebutS
-                  }
-                />
-
-                <TextField
-                  id="outlined-basic"
-                  label="Au"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  variant="outlined"
-                  className="form-control"
-                  style={{ width: '200px', marginLeft: '20px' }}
-                  type="date"
-                  name="dateFinS"
-                  value={state.dateFinS}
-                  onChange={(e) => handleInputChange(e, 'dateFinS')}
-                  size="small"
-                  error={state.error.dateFinS === null ? false : true}
-                  helperText={
-                    state.error.dateFinS === null ? null : state.error.dateFinS
-                  }
-                  disabled={isDateFinSejourDisabled}
-                />
-              </p>
-              <p><FormControlLabel
-                  checked={dateFinSejourInfini}
-                  onClick={(e) => switchDateFinSejourInfini()}
+                <div>
+                  <FormControlLabel  
+                  checked={!allRates} 
+                  onClick={(e) => switchAllRatesSelected()} 
                   control={<Radio />}
-                  label={<span id="litleLabel">Pas de fin</span>}
-              /></p>
-            </div>
-
-            <h5>Date de réservation</h5>
-            <label style={{ marginTop: '5px' }} id="bigLabel">
-              Quand les clients peuvent-ils réserver chez vous pour bénéficier de ce tarif ?
-            </label>
-            <div className="form-group" style={{ marginTop: '25px' }}>
-              <p><FormControlLabel
-                checked={reservAToutMoment}
-                onClick={(e) => switchReservAToutMoment()}
-                control={<Radio />}
-                label={<span id="litleLabel">A tout moment</span>}
-              /></p>
-              <p><FormControlLabel
-                checked={!reservAToutMoment}
-                onClick={(e) => switchReservAToutMoment()}
-                control={<Radio />}
-                label={<span id="litleLabel">Sélectionner une période</span>}
-              /></p>
-            </div>
-            <div className="form-group" style={{ marginTop: '25px' }}>
-              <p>
-                <TextField
-                  id="outlined-basic"
-                  label="Du"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  variant="outlined"
-                  className="form-control"
-                  style={{ width: '200px' }}
-                  type="date"
-                  name="debutReserv"
-                  value={debutReserv}
-                  onChange={(e) => setDebutReserv(e.target.value)}
-                  size="small"
-                  error={state.error.debutReserv === null ? false : true}
-                  helperText={
-                    state.error.debutReserv === null
-                    ? null
-                    : state.error.debutReserv
-                  }
-                  disabled={areDateReservDisabled}
-                />
-
-                <TextField
-                  id="outlined-basic"
-                  label="Au"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  variant="outlined"
-                  className="form-control"
-                  style={{ width: '200px', marginLeft: '20px' }}
-                  type="date"
-                  name="finReserv"
-                  value={finReserv}
-                  onChange={(e) => setFinReserv(e.target.value)}
-                  size="small"
-                  error={state.error.finReserv === null ? false : true}
-                  helperText={
-                    state.error.finReserv === null ? null : state.error.finReserv
-                  }
-                  disabled={areDateReservDisabled}
-                />
-              </p>
+                  label={
+                    <span id='litleLabel'>
+                      Plans tarifaires séléctionnés
+                    </span>} />
+                </div>
+              </RadioGroup>
+              <p id='litleLabel' style={{marginLeft:"15px",marginTop:'5px'}}>Veuillez sélectionnez au moins 1 plan tarifaire</p>
+              <div className="form-group"  style={{marginTop:"1px"}}>
+                  <FormGroup>
+                    <PlanTarifaire planTarifaire={state.planTarifaire} handleCheckBoxPlanTarifaire={handleCheckBoxPlanTarifaire}/>
+                    {state.error.planTarifaire === null ? null : <div className="customError"><span>{state.error.planTarifaire}</span></div>}
+                  </FormGroup>
+              </div>
             </div>
             
-            <div className="form-group" style={{ marginTop: '30px', marginRight: '25px' }}>
-              <label id="bigLabel">Sejour minimum</label>
-              <TextField
-                id="outlined-basic"
-                label="Sejour minimum"
-                variant="outlined"
-                className="form-control"
-                size="small"
-                type="number"
-                name="sejourMin"
-                value={state.sejourMin}
-                onChange={(e) => handleInputChange(e, 'sejourMin')}
-                style={{ marginTop: '15px' }}
-                error={state.error.sejourMin === null ? false : true}
-                helperText={
-                  state.error.sejourMin === null ? null : state.error.sejourMin
-                }
-              />
-            </div>
-
-            <div style={{ marginTop: '0px' }}>
+            <label id='bigLabel'>
+              À quels hébergements cette promotion s'appliquera-t-elle ?
+            </label>
+            <RadioGroup
+              aria-label="Pourcentage"
+              defaultValue="euro"
+              name="radio-buttons-group"
+            >
               <div>
-                <label
-                  className=""
-                  style={{
-                    textDecoration: 'underline',
-                    fontFamily: 'Roboto',
-                    fontSize: '15px',
-                    marginLeft: '0px',
-                  }}
-                >
-                  Lead {state.isLeadHour ? 'hour' : 'day'}
+                <FormControlLabel 
+                checked={allRoomTypes}
+                onClick={(e) => switchAllRoomTypesSelected()} 
+                control={<Radio />} 
+                label={
+                <span id='litleLabel'>
+                  Tous les hébergements des plans tarifaires sélectionnés
+                </span>} />
+              </div>
+              <div>
+                <FormControlLabel  
+                checked={!allRoomTypes} 
+                onClick={(e) => switchAllRoomTypesSelected()} 
+                control={<Radio />}
+                label={
+                  <span id='litleLabel'>
+                    Hébergements sélectionnés
+                  </span>} />
+              </div>
+            </RadioGroup>
+              <p id='litleLabel' style={{marginLeft:"15px",marginTop:'5px'}}>Veuillez sélectionner au moins 1 type d'hébergement.</p>
+              <div className="form-group"  style={{marginTop:"5px"}}>
+                <FormGroup>
+                    <TypeChambre 
+                        typeChambre={state.typeChambre} 
+                        handleCheckBoxTypeChambre={handleCheckBoxTypeChambre}
+                      />
+                      {state.error.typeChambre === null ? null : <div className="customError"><span>{state.error.typeChambre}</span></div>}
+                </FormGroup>    
+              </div>
+          <hr style={{width:'95%'}}></hr>
+          <div style={{marginTop:'0px'}}>
+              <div>
+                <label className="" style={{textDecoration: 'underline',fontFamily:'Roboto',fontSize:'15px',marginLeft:'0px'}} >
+                  Valeur de la promotion
                 </label>
               </div>
               <div>
-                <FormControlLabel
-                  checked={leadMaxInfini}
-                  onClick={(e) => switchInfini()}
-                  control={<Radio />}
-                  label={<span id="litleLabel">Lead max infini</span>}
-                />
+                <label style={{marginTop:"5px"}} id='bigLabel'>
+                  Quelle réduction souhaitez-vous proposer ?
+                </label>
+              </div>
+              <div>
+                <label style={{marginTop:"5px"}} id='bigLabel'>
+                  Sélectionnez le type et valeur de la réduction que vous voulez appliquer
+                </label>
               </div>
               <RadioGroup
-                aria-label="Lead"
-                defaultValue="hour"
+                aria-label="Pourcentage"
+                defaultValue="euro"
                 name="radio-buttons-group"
               >
-                <div className="row" style={{ marginTop: '15px' }}>
-                  <div className="col">
+                <div className ="row" style={{marginTop:'15px'}}>
+                  <div className ="col">
                     <TextField
-                      label="Min"
-                      type="number"
-                      id="lead"
-                      size="small"
-                      value={state.lead.min}
-                      placeholder="Hour/Date"
-                      onChange={(e) => handleInputChange2(e, 'lead', 'min')}
-                      error={state.error.leadMin === null ? false : true}
-                      helperText={
-                        state.error.leadMin === null ? null : state.error.leadMin
-                      }
+                      label="Remise"
+                      type='number'
+                      id=''
+                      size='small'
+                      value={state.remise}
+                      onChange={(e) => handleInputRemiseChange( e, "remise")}
+                      error={state.error.remise === null ? false : true}
+                      helperText={state.error.remise === null ? null : state.error.remise}
                     />
                   </div>
-                  <div className="col">
-                    <TextField
-                      label="Max"
-                      type="number"
-                      id="lead"
-                      size="small"
-                      value={state.lead.max}
-                      placeholder="Hour/Date"
-                      onChange={(e) => handleInputChange2(e, 'lead', 'max')}
-                      error={state.error.leadMax === null ? false : true}
-                      helperText={
-                        state.error.leadMax === null ? null : state.error.leadMax
-                      }
-                      disabled={isLeadMaxDisabled}
-                    />
-                  </div>
-                  <div className="col">
+                  <div className ="col">
                     <FormControlLabel
-                      value="hour"
-                      onClick={(e) => handleIsLeadHourChange(true)}
-                      control={<Radio />}
-                      label={<span id="litleLabel">Hour</span>}
-                    />
+                    checked={state.isRemiseEuro ? true : false}
+                    onClick={(e) => handleIsRemiseEuroChange(true)} 
+                    control={<Radio />} 
+                    label={
+                    <span id='litleLabel'>
+                    Euro
+                    </span>} />
                   </div>
-                  <div className="col">
-                    <FormControlLabel
-                      value="day"
-                      onClick={(e) => handleIsLeadHourChange(false)}
-                      control={<Radio />}
-                      label={<span id="litleLabel">Day</span>}
-                    />
+                  <div className ="col">
+                      <FormControlLabel  
+                      checked={state.isRemiseEuro ? false : true}
+                      onClick={(e) => handleIsRemiseEuroChange(false)} 
+                      control={<Radio />} 
+                      label={
+                        <span id='litleLabel'>
+                          Pourcentage
+                        </span>} />
                   </div>
                 </div>
               </RadioGroup>
-            </div>
-
-            <div className="form-group" style={{ marginTop: '40px' }}>
-              <label id="bigLabel">
-                Nombre de jour d'attribution de la promotion
-              </label>
-
-              <div className="form-group" style={{ marginTop: '25px' }}>
-                <p>
-                  <TextField
-                    id="outlined-basic"
-                    label="Premier jour"
-                    variant="outlined"
-                    className="form-control"
-                    style={{ width: '200px' }}
-                    type="number"
-                    name="premierJour"
-                    value={state.premierJour}
-                    onChange={(e) => handleInputChange(e, 'premierJour')}
-                    size="small"
-                    error={state.error.premierJour === null ? false : true}
-                    helperText={
-                      state.error.premierJour === null
-                        ? null
-                        : state.error.premierJour
-                    }
-                  />
-
-                  <TextField
-                    id="outlined-basic"
-                    label="Dernier jour"
-                    variant="outlined"
-                    className="form-control"
-                    style={{ width: '200px', marginLeft: '20px' }}
-                    type="number"
-                    name="dernierJour"
-                    value={state.dernierJour}
-                    onChange={(e) => handleInputChange(e, 'dernierJour')}
-                    size="small"
-                    error={state.error.dernierJour === null ? false : true}
-                    helperText={
-                      state.error.dernierJour === null
-                        ? null
-                        : state.error.dernierJour
-                    }
-                  />
-                </p>
-              </div>
-            </div>
-
-            <div className="form-group" style={{ marginTop: '15px' }}>
-              <label id="bigLabel">
-                Tarif réduit disponible uniquement pendant :
-              </label>
-              <p>
-                <FormControlLabel
-                  control={<Checkbox />}
-                  type="number"
-                  label={<p id="label">Lundi</p>}
-                  checked={state.weekDays.lundi === 1 ? true : false}
-                  name="lundi"
-                  onChange={(e) => handleInputChange3(e, 'weekDays', 'lundi')}
-                />
-
-                <FormControlLabel
-                  control={<Checkbox />}
-                  type="number"
-                  label={<p id="label">Mardi</p>}
-                  checked={state.weekDays.mardi === 1 ? true : false}
-                  name="mardi"
-                  onChange={(e) => handleInputChange3(e, 'weekDays', 'mardi')}
-                />
-
-                <FormControlLabel
-                  control={<Checkbox />}
-                  type="number"
-                  label={<p id="label">Mercredi</p>}
-                  checked={state.weekDays.mercredi === 1 ? true : false}
-                  name="mercredi"
-                  onChange={(e) => handleInputChange3(e, 'weekDays', 'mercredi')}
-                />
-
-                <FormControlLabel
-                  control={<Checkbox />}
-                  type="number"
-                  label={<p id="label">Jeudi</p>}
-                  checked={state.weekDays.jeudi === 1 ? true : false}
-                  name="jeudi"
-                  onChange={(e) => handleInputChange3(e, 'weekDays', 'jeudi')}
-                />
-
-                <FormControlLabel
-                  control={<Checkbox />}
-                  type="number"
-                  label={<p id="label">Vendredi</p>}
-                  checked={state.weekDays.vendredi === 1 ? true : false}
-                  name="vendredi"
-                  onChange={(e) => handleInputChange3(e, 'weekDays', 'vendredi')}
-                />
-
-                <FormControlLabel
-                  control={<Checkbox />}
-                  type="number"
-                  label={<p id="label">Samedi</p>}
-                  checked={state.weekDays.samedi === 1 ? true : false}
-                  name="samedi"
-                  onChange={(e) => handleInputChange3(e, 'weekDays', 'samedi')}
-                />
-
-                <FormControlLabel
-                  control={<Checkbox />}
-                  type="number"
-                  label={<p id="label">Dimanche</p>}
-                  checked={state.weekDays.dimanche === 1 ? true : false}
-                  name="dimanche"
-                  onChange={(e) => handleInputChange3(e, 'weekDays', 'dimanche')}
-                />
-              </p>
-            </div>
           </div>
+          
+          <div className="form-group">
+            <h5>Dates de séjour</h5>
+            <label style={{marginTop:"5px"}} id='bigLabel'>
+              Quand les clients peuvent-ils séjourner chez vous en bénéficiant de cette promotion ?
+            </label>
+            <p id='litleLabel' style={{marginLeft:"15px",marginTop:'5px'}}>Sélectionner une période</p>
+            <div className="form-group" style={{marginTop:"25px"}}>
+            <p>
+                        
+              <TextField id="outlined-basic" 
+                label="Du" 
+                InputLabelProps={{
+                shrink: true,
+                }}
+                variant="outlined" 
+                className="form-control"  
+                style={{width:"200px"}}
+                type="date" 
+                name="dateDebutS" 
+                value={state.dateDebutS}
+                onChange={(e) => handleInputChange(e, "dateDebutS")}
+                size="small"
+                error={state.error.dateDebutS === null ? false : true}
+                helperText={state.error.dateDebutS === null ? null : state.error.dateDebutS}
+              />
 
-          <div className="block3">
-            <div className="form-group" style={{marginRight: '25px'}}>
-              <h5>Nom de la promotion </h5>
-              <label id="bigLabel">
-                Comment voulez-vous nommer cette promotion ?
-              </label>
-
-              <TextField
-                id="outlined-basic"
-                label="Nom"
+              <TextField id="outlined-basic"
+                label="Au"
+                InputLabelProps={{
+                shrink: true,
+                }}
+                variant="outlined" 
+                className="form-control"  
+                style={{width:"200px",marginLeft:'20px'}}
+                type="date" 
+                name="dateFinS" 
+                value={state.dateFinS}
+                onChange={(e) => {handleInputChange(e, "dateFinS"); 
+                setFinReserv(reservAllTime ? e.target.value : finReserv)}}
+                size="small"
+                error={state.error.dateFinS === null ? false : true}
+                helperText={state.error.dateFinS === null ? null : state.error.dateFinS}
+              />
+            </p>
+          </div>
+          
+          <div className="form-group">
+            <h5>Période de réservation - facultatif</h5>
+            <label style={{marginTop:"5px"}} id='bigLabel'>
+              Quand les clients peuvent-ils réserver cette promotion?
+            </label>
+            <RadioGroup
+              aria-label="Pourcentage"
+              defaultValue="euro"
+              name="radio-buttons-group"
+            >
+              <div>
+                <FormControlLabel 
+                checked={reservAllTime}
+                onClick={(e) => switchReservAllTime()} 
+                control={<Radio />}
+                label={
+                <span id='litleLabel'>
+                  A tout moment
+                </span>} />
+              </div>
+              <div>
+                <FormControlLabel
+                checked={!reservAllTime}
+                onClick={(e) => switchReservAllTime()}
+                control={<Radio />}
+                label={
+                  <span id='litleLabel'>
+                    Sélectionner une période
+                  </span>} />
+              </div>
+            </RadioGroup>
+            <p>
+              <TextField id="outlined-basic" 
+                label="Du" 
+                InputLabelProps={{
+                shrink: true,
+                }}
                 variant="outlined"
                 className="form-control"
-                style={{ width: '400px' }}
+                style={{width:"200px"}}
+                type="date"
+                name="debutReserv"
+                value={debutReserv}
+                onChange={(e) => setDebutReserv(e.target.value)}
                 size="small"
-                type="text"
-                name="nom"
-                onChange={(e) => handleInputChange(e, 'nom')}
-                value={state.nom}
-                style={{ marginTop: '15px' }}
-                error={state.error.nom === null ? false : true}
-                helperText={state.error.nom === null ? null : state.error.nom}
+                error={state.error.debutReserv === null ? false : true}
+                helperText={state.error.debutReserv === null ? null : state.error.debutReserv}
+                disabled={reservAllTime}
               />
-            </div>
-          </div>
 
-          <div className="pied" style={{ marginTop: '25px' }}>
-            <div class="bouton-aligne">
-              { 
-                btnLoad 
-                  ? <ButtonLoading />
-                  : <>{ isInsert 
-                      ? <Button
-                        variant="contained"
-                        type="submit"
-                        style={{ textDecoration: 'none', backgroundColor: '#2ac4ea' }}
-                        onClick={(e) => insert(e)}
-                      >
-                        <span style={{ color: 'white' }}>Ajouter</span>
-                      </Button>
-                      :  <Button  
-                      variant="contained" 
-                      type='submit' 
-                      style={{backgroundColor:'#FA8072'}}
-                      onClick={(e) => this.update(e)}>
-                      <span style={{color:'white'}}>Modifier</span>
-                    </Button> } 
-                  </>
-              }
-            </div>
-            <div class="bouton-aligne">
-              <Link to={'/back/promotion'} style={{ textDecoration: 'none' }}>
-                <Button variant="outlined" id="btn2">
-                  <span style={{ color: '#1976d2' }}>Retour</span>
-                </Button>
-              </Link>
-            </div>
+              <TextField id="outlined-basic" 
+                label="Au" 
+                InputLabelProps={{
+                shrink: true,
+                }}
+                variant="outlined" 
+                className="form-control"  
+                style={{width:"200px",marginLeft:'20px'}}
+                type="date" 
+                name="finReserv"
+                value={finReserv}
+                onChange={(e) => handleFinReservChange(e.target.value)}
+                size="small"
+                error={state.error.finReserv === null ? false : true}
+                helperText={state.error.finReserv === null ? null : state.error.finReserv}
+                disabled={reservAllTime}
+              />
+            </p>
           </div>
-        </form>
+    </div>
+
+   <div className="form-group" style={{marginTop:"30px"}}>
+    <h5>Séjour minimum</h5>
+    <label id='bigLabel'>
+      Combien de temps les clients doivent-ils séjourner dans votre établissement pour bénéficier de cette promotion ?
+    </label>
+    <div className="adjacentInputLabel">
+      <div className="col">
+        <TextField 
+          id="outlined-basic"
+          variant="outlined"
+          label="" 
+          style={{width:"200px", marginTop:"15px"}}
+          size="small"
+          type="number" 
+          name="sejourMin"
+          value={state.sejourMin}
+          onChange={(e) => handleInputChange(e, "sejourMin")}
+          error={state.error.sejourMin === null ? false : true}
+          helperText={state.error.sejourMin === null ? null : state.error.sejourMin}
+          InputLabelProps={{shrink: false}}
+        />
       </div>
-    </>
-  )
+      <div className="col">
+        <span >nuits ou plus</span>
+      </div>
+    </div>
+   </div>
+
+   <div className="form-group" style={{marginTop:"30px"}}>
+    <div>
+      <label className="" style={{textDecoration: 'underline',fontFamily:'Roboto',fontSize:'15px',marginLeft:'0px'}} >
+        Période réservable (Min lead et Max lead)
+      </label>
+    </div>
+
+    <div>
+      <FormControlLabel
+        checked={isWithLead}
+        onClick={(e) => switchIsWithLead()}
+        control={<Radio />}
+        label={<span id="litleLabel">Cette promotion est elle disponible uniquement pendant une plage de nombre de jour?</span>}
+      />
+    </div>
+    <label id='bigLabel'>
+      Si oui, la question suivante se pose
+      Combien de temps à l'avance les clients doivent-ils réserver
+      pour bénéficier de cette promotion ?
+    </label>
+    <RadioGroup
+      aria-label="Lead"
+      defaultValue="hour"
+      name="radio-buttons-group"
+    >
+      <div className ="row" style={{marginTop:'15px'}}>
+        <div className="col">
+          <FormControlLabel
+            value="hour"
+            onClick={(e) => handleIsLeadHourChange(true)}
+            control={<Radio />}
+            label={<span id="litleLabel">Hour</span>}
+          />
+        </div>
+        <div className="col">
+          <FormControlLabel
+            value="day"
+            onClick={(e) => handleIsLeadHourChange(false)}
+            control={<Radio />}
+            label={<span id="litleLabel">Day</span>}
+          />
+        </div>
+      </div>
+    </RadioGroup>
+
+    <div className="adjacentInputLabel fixAdjacentInputLabel">
+      <div className="col">
+        <TextField 
+          id="outlined-basic"
+          variant="outlined"
+          label=""
+          placeholder={isWithLead ? undefined : "99999"}
+          type="number"
+          size="small"
+          value={state.lead.min}
+          onChange={(e) => {handleLeadMinChange(e.target.value)}}
+          error={state.error.leadMin === null ? false : true}
+          helperText={ state.error.leadMin === null ? null : state.error.leadMin }
+          disabled={!isWithLead}
+          InputLabelProps={{shrink: false}}
+        />
+      </div>
+      <div className="col">
+        <span >jours minimum</span>
+      </div>
+    </div>
+
+    <div className="adjacentInputLabel">
+      <div className="col">
+        <TextField 
+          id="outlined-basic"
+          variant="outlined"
+          label=""
+          placeholder={isWithLead ? undefined : "0"}
+          type="number"
+          size="small"
+          value={state.lead.max}
+          onChange={(e) => handleLeadMaxChange(e.target.value)}
+          error={state.error.leadMax === null ? false : true}
+          helperText={ state.error.leadMax === null ? null : state.error.leadMax }
+          disabled={!isWithLead}
+          InputLabelProps={{shrink: false}}
+        />
+      </div>
+      <div className="col">
+        <span >jours maximum avant l’arrivée</span>
+      </div>
+    </div>
+  </div>
+
+  <div className="form-group" style={{marginTop:"40px"}}>
+    <label id='bigLabel'>
+      Nombre de jour d'attribution de la promotion
+    </label>
+    <div className="form-group" style={{marginTop:"25px"}}>
+      <p>
+        <TextField id="outlined-basic" 
+          label="Premier jour" 
+          variant="outlined" 
+          className="form-control"  
+          style={{width:"200px"}}
+          type="number" 
+          name="premierJour" 
+          value={state.premierJour}
+          onChange={(e) => handleInputChange(e, "premierJour")}
+          size="small"
+          error={state.error.premierJour === null ? false : true}
+          helperText={state.error.premierJour === null ? null : state.error.premierJour}
+        />
+
+        <TextField id="outlined-basic" 
+          label="Dernier jour" 
+          variant="outlined" 
+          className="form-control"  
+          style={{width:"200px",marginLeft:'20px'}}
+          type="number" 
+          name="dernierJour"
+          value={state.dernierJour}
+          onChange={(e) => handleInputChange(e, "dernierJour")}
+          size="small"
+          error={state.error.dernierJour === null ? false : true}
+          helperText={state.error.dernierJour === null ? null : state.error.dernierJour}
+          />
+        </p>
+      </div>
+    </div>
+  
+  <div className="form-group" style={{marginTop:"15px"}}> 
+    <label id='bigLabel'>Jour d’attribution de la promotion</label>
+    <div>
+      <FormControlLabel
+        checked={!allDays}
+        onClick={(e) => switchAllDays()}
+        control={<Radio />}
+        label={<span id="litleLabel">Cette promotion est elle attribuée à des jours spécifiques du séjour?</span>}
+      />
+    </div>
+   <p>
+    <JoursPromotion state={state} handleInputChange3={handleInputChange3} setAllDays={setAllDays} />
+  </p>
+  </div>
+
+   <div className="form-group" style={{}}>
+    <h5>Nom de la promotion </h5>
+      <label id='bigLabel'>
+        Comment voulez-vous nommer cette promotion ?
+      </label>
+      <TextField 
+        id="outlined-basic" 
+        label="Nom"
+        variant="outlined"
+        className="form-control" 
+        style={{width:"400px"}}
+        size="small"
+        type="text" 
+        name="nom" 
+        onChange={(e) => handleInputChange(e, "nom")} 
+        value={state.nom}
+        style={{marginTop:"15px"}}
+        error={state.error.nom === null ? false : true}
+        helperText={state.error.nom === null ? null : state.error.nom}
+      /> 
+   </div><br/>
+   <div>
+    <div class="bouton-aligne">
+      {
+        btnLoad
+          ? <ButtonLoading />
+          : <>{ isInsert
+              ? <Button
+                variant="contained"
+                type="submit"
+                style={{ textDecoration: 'none', backgroundColor: '#2ac4ea' }}
+                onClick={(e) => insert(e)}
+              >
+                <span style={{ color: 'white' }}>Ajouter</span>
+              </Button>
+              :  <Button  
+              variant="contained" 
+              type='submit' 
+              style={{backgroundColor:'#FA8072'}}
+              onClick={(e) => update(e)}>
+              <span style={{color:'white'}}>Modifier</span>
+            </Button> } 
+          </>
+      }
+    </div>
+    <div class="bouton-aligne">
+      <Link to={'/back/promotion'} style={{textDecoration:'none'}}>
+        <Button variant="outlined" 
+        id="btn2"
+        >
+        <span style={{color:'#1976d2'}}>Retour</span>
+        </Button>
+      </Link>
+    </div>
+   </div>
+   </>
+  }
+</div>
+</>
+  );
 }
+
+export default InsertPromotion

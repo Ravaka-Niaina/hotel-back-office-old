@@ -98,11 +98,11 @@ update(e){
     return (
       <div id="division">
        <h5 id='grandTitre'>
-       Entrez le code de sécurité
+       Choisissez un nouveau mot de passe
        </h5>
        <hr/>
        <p id='paragraphe'>
-       Merci de vérifier dans vos e-mails que vous avez reçu un message avec votre code. Celui-ci est composé de 4 chiffres.
+       Créez un mot de passe d’au moins 5 caractères. Un mot de passe fort est une combinaison de lettres, de chiffres et de signes de ponctuation.
        </p>
        <form onSubmit={this.handleSubmit}>
         <div className="content">

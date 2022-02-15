@@ -14,6 +14,7 @@ import callAPI from '../../../../utility.js';
 import numeroConfirmation from './numeroConfirmation.js';
 import PolicyIcon from '@mui/icons-material/Policy';
 import {getDiffDays} from '../../../../utility/utilityDate.js';
+import ButtonLoading from '../../../partenaire/buttonLoading.js';
 
 const style = {
     position: 'absolute',
@@ -62,12 +63,14 @@ function getDate(date){
 
 function ListTarif(props){
     const [error, setError] = React.useState(null);
+    const [showButton, setShowButton] = React.useState(false);
     function setReservationEnCours(res){
         if(res.status === 200){
             props.context.setReservationEnCours(res.reservation);
         }else{
             console.log(res);
         }
+        setShowButton(false);
     }
 
     function NumeroIntineraire (random , nameHotel ,TChambre){
@@ -93,6 +96,7 @@ function ListTarif(props){
     }
 
     function addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre){
+        setShowButton(true);
         if(props.context.state.itineraires.length === 0){
             let temp = {...props.context.state};
             temp.err = "Veuillez d'abord choisir une date de sejour";
@@ -176,13 +180,14 @@ function ListTarif(props){
                                                     <span className={styles.afterProm}>&nbsp;{(version.prix) + " EUR "}</span>
                                                 </div>
                                                 <div className={styles.bookNow}>
-                                                    <Button variant="contained"
+                                                    {showButton ? <ButtonLoading />
+                                                    : <Button variant="contained"
                                                         onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre, version.nbPers , props.nameTC)}
                                                         endIcon={<AddIcon/>}
                                                         className="bookNow"
                                                     >
                                                         Book
-                                                    </Button>
+                                                    </Button> }
                                                 </div>
                                             </div>
                                         );

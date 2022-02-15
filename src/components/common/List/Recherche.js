@@ -129,22 +129,19 @@ EnhancedTableHead.propTypes = {
 };
 
 function removeSpecialCharFromDate(date, type){
-  let test = new Date(date);
-  if(test + "" !== "Invalid Date"){
-    date = "" + date;
-    if(date.includes(" ")){
-      if(type === "Date"){
-        date = date.split(" ")[0];
-      }
-    }else if(date.includes("T")){
-      const elts = date.split("T");
-      if(type === "Date"){
-        date = elts[0];
-      }else{
-        const datePart = elts[0];
-        const timePart = elts[1].split("Z")[0];
-        date = datePart + " " + timePart;
-      }
+  date = "" + date;
+  if(date.includes(" ")){
+    if(type === "Date"){
+      date = date.split(" ")[0];
+    }
+  }else if(date.includes("T")){
+    const elts = date.split("T");
+    if(type === "Date"){
+      date = elts[0];
+    }else{
+      const datePart = elts[0];
+      const timePart = elts[1].split("Z")[0];
+      date = datePart + " " + timePart;
     }
   }
   return date;
@@ -243,6 +240,7 @@ export default function Recherche(props){
             "numPage": numPage
         };
         callAPI(props.method ? props.method : "post", props.urlSearch, data, (data) => {
+            console.log(data);
             rearrangeCells(data);
             setListResult(data.list);
             setNbPage(data.nbPage);
@@ -284,7 +282,10 @@ export default function Recherche(props){
         return(<Login urlRedirect={window.location.href} />);
     }
     const hasARViewList = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToViewList ? props.accessRightToViewList : []);
+    console.log(hasARViewList);
+    console.log(props.accessRightToViewList);
     if(!hasARViewList && !hasARToViewInsert && !hasARToViewDetails && !hasARToDelete){
+      console.log("tsy mety");
       return(<NotEnoughAccessRight />);
     }
 
@@ -373,7 +374,7 @@ export default function Recherche(props){
                                         );
                                     })
                                 }
-                                <TableCell align="right">
+                                <TableCell align="rigth">
                                     { 
                                       hasARToViewDetails
                                       ? <Link to={props.urlEdit + row._id}>

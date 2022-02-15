@@ -15,6 +15,7 @@ import {Card, CardContent, Typography, CardActions, Button, Box, Modal, TextFiel
 import { styled } from '@mui/material/styles';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
+import callAPI from '../../../../utility';
 import {setValue} from '../../../../utility2.js';
 import SkeletonFacture from './skeletons/skeletonFacture.js';
 import InfoPolitiqueAnnul from './infoPolitiqueAnnul.js';
@@ -176,17 +177,10 @@ class Fact extends React.Component{
     }
 
     componentDidMount(){
-        axios({
-            method: 'get',
-            url: process.env.REACT_APP_BACK_URL + '/reservation/',
-            withCredentials: true,
-            data: {}
-        })
-        .then(res => {
-            let reserv = res.data.reservation === null ? null : res.data.reservation[0];
-            console.log(reserv);
+        callAPI('get', '/reservation', {}, (data) => {
+            let reserv = data.reservation === null ? null : data.reservation[0];
             this.props.context.setReservationEnCours(reserv, true);
-        }).catch(err => console.log(err));
+        });
     }
 
     annulerReservation(context, idReservation, indexItineraire, indexTarifReserve){

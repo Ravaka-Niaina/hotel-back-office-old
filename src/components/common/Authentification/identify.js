@@ -61,11 +61,10 @@ sendMailToCustomer(e){
 
 handleSubmit = event => {
   event.preventDefault();
-  axios.get(`http://localhost:3000/user/search/${this.state.email}`)
-  .then(res => {
-      const user = {user : res.data.user};
+  callAPI('get', '/user/search/' + this.state.email, {}, (data) => {
+    const user = {user : data.user};
       this.setState(user);
-    })
+  });
 }
   render() {
     return (
