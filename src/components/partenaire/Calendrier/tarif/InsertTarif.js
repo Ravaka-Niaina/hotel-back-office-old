@@ -62,14 +62,11 @@ function InsertTarif(){
     const [skeletonAffiche , setSkeleton] = useState(true);
     const [leadMinInfini, setLeadMinInfini] = useState(false);
     const [isLeadMinDisabled, setIsLeadMinDisabled] = useState(false);
-<<<<<<< HEAD
     const [reservAToutMoment, setReservAToutMoment] = useState(true);
     const [areDateReservDisabled, setAreDateReservDisabled] = useState(true);
     const { _id } = useParams();
 
     const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
-=======
->>>>>>> 6100dc181135386bb19098d9c136d928ed98265c
 
     function setListTypeChambre(res){
         let current = JSON.parse(JSON.stringify(planTarifaire));
@@ -162,10 +159,7 @@ function InsertTarif(){
         setBtnLoad(true);
         const current = utility.getPlan(planTarifaire);
         current.leadMinInfini = leadMinInfini;
-<<<<<<< HEAD
         current.reservAToutMoment = reservAToutMoment;
-=======
->>>>>>> 6100dc181135386bb19098d9c136d928ed98265c
         callAPI('post', '/planTarifaire/insert', current, tryRedirect);
     }
 
