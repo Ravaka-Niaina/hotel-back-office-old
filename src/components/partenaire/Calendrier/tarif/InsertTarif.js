@@ -64,6 +64,7 @@ function InsertTarif(){
     const [isLeadMinDisabled, setIsLeadMinDisabled] = useState(false);
     const [reservAToutMoment, setReservAToutMoment] = useState(true);
     const [areDateReservDisabled, setAreDateReservDisabled] = useState(true);
+    const [aucunFinDateSejour, setAucunFinDateSejour] = useState(false);
     const { _id } = useParams();
 
     const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
@@ -88,6 +89,7 @@ function InsertTarif(){
             setIsLeadMinDisabled(res.planTarifaire.leadMinInfini);
             setPlanTarifaire(res.planTarifaire);
             setSkeleton(false);
+            setAucunFinDateSejour(res.planTarifaire.aucunFinDateSejour);
         }else if(res.status === 401){//Unauthorized
             history.push('/back/login');
         }else if(res.status === 403){
@@ -151,6 +153,7 @@ function InsertTarif(){
         const current = utility.getPlan(planTarifaire);
         current.leadMinInfini = leadMinInfini;
         current.reservAToutMoment = reservAToutMoment;
+        current.aucunFinDateSejour = aucunFinDateSejour;
         callAPI('post', '/planTarifaire/update', current, tryRedirect);
     }
 
@@ -160,6 +163,7 @@ function InsertTarif(){
         const current = utility.getPlan(planTarifaire);
         current.leadMinInfini = leadMinInfini;
         current.reservAToutMoment = reservAToutMoment;
+        current.aucunFinDateSejour = aucunFinDateSejour;
         callAPI('post', '/planTarifaire/insert', current, tryRedirect);
     }
 
@@ -183,6 +187,13 @@ function InsertTarif(){
         let tarifTmp = {...planTarifaire};
         tarifTmp.dateReservation = {debut: "", fin: ""};
         setPlanTarifaire(tarifTmp);
+    }
+
+    function switchAucunFinDateSejour(){
+        let tmp = {...planTarifaire};
+        tmp.dateSejour.fin = "";
+        setPlanTarifaire(tmp);
+        setAucunFinDateSejour(!aucunFinDateSejour);
     }
 
     return(
@@ -334,8 +345,17 @@ function InsertTarif(){
                                                         utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "dateSejour", "fin", true)}}
                                                     error={error.dateSejourFin === null ? false : true}
                                                     helperText={error.dateSejourFin === null ? null : error.dateSejourFin}
+                                                    disabled={aucunFinDateSejour}
                                                     /> 
                                             </div>
+                                        </div>
+                                        <div>
+                                            <FormControlLabel
+                                                checked={aucunFinDateSejour}
+                                                onClick={(e) => switchAucunFinDateSejour()}
+                                                control={<Radio />}
+                                                label={<span id="litleLabel">Pas de fin</span>}
+                                            />
                                         </div>
                                     </div>
                                     <div style={{marginTop:'0px'}}>
