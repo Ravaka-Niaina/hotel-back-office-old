@@ -31,8 +31,14 @@ const annulerReservation = (props) => {
             
                 <div>
                     <div><WarningIcon style={{color : "yellow"}} /></div>
-                    <strong>Voulez-vous vraiment annuler réservation  ?</strong><br/>
-                    <br/>
+                    {   
+                            props.load ? <strong>Annulation en cours ...</strong> :
+                            <>
+                                <strong>Voulez-vous vraiment annuler réservation  ?</strong>
+                               
+                            </>
+                    }
+                    <br/><br/>
                     <div style={{width: "fit-content", margin: "0 auto"}}>
                         {   
                             props.load ? <ButtonLoad/> :
