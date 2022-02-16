@@ -13,7 +13,9 @@ import { styled } from '@mui/material/styles';
 import callAPI from '../../../../utility.js';
 import numeroConfirmation from './numeroConfirmation.js';
 import PolicyIcon from '@mui/icons-material/Policy';
-
+import Reservation from '../../reservation';
+import axios from "axios";
+import {session} from "../../../../components/common/utilitySession.js";
 const style = {
     position: 'absolute',
     top: '50%',
@@ -63,7 +65,17 @@ function ListTarif(props){
     const [error, setError] = React.useState(null);
     function setReservationEnCours(res){
         if(res.status === 200){
+            console.log("add reservation");
+            console.log(res.reservation);
             props.context.setReservationEnCours(res.reservation);
+        }else{
+            console.log(res);
+        }
+    }
+    function typeChambre(res){
+        
+        if(res.status === 200){
+         
         }else{
             console.log(res);
         }
@@ -91,7 +103,7 @@ function ListTarif(props){
         
     }
 
-    function addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre){
+    function addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre,tarif){
         if(props.context.state.itineraires.length === 0){
             let temp = {...props.context.state};
             temp.err = "Veuillez d'abord choisir une date de sejour";
@@ -113,17 +125,55 @@ function ListTarif(props){
             //numero confirmation
             const numeroConfirm = numeroConfirmation(0,props.context.state.nameHotel, TChambre);
             console.log(numeroConfirm);
-            itineraires[lastItineraire].tarifReserves.push({
-                idTarif: id, 
-                dateSejour: dateSejour,
-                dateReservation: getDate(Date.now()),
-                guests: props.context.state.guests,
-                idTypeChambre : idTypeChambre,
-                nbPers: nbPers,
-                numeroConfirmation : numeroConfirm
-            });
-            const data = {itineraires: itineraires , numeroIntineraire : Random };
-            callAPI("post" , "/reservation/insert" , data , setReservationEnCours);
+          
+            // const data = {itineraires: itineraires , numeroIntineraire : Random };
+            //  callAPI("get" , "/TypeChambre/detailsChambre/"+idTypeChambre , {} , typeChambre);
+                
+                let headers = {
+                    idsession: session.getInstance().getId(),
+                    ispartner: session.getInstance().getIsPartner()
+                };
+                const session_temp = localStorage.getItem("session_temp");
+                if(session_temp !== null){
+                    headers.session_temp = session_temp;
+                }
+                axios({
+                    method: "get",      
+                    url: process.env.REACT_APP_BACK_URL + "/TypeChambre/detailsChambre/"+idTypeChambre,
+                    withCredentials: true,
+                    data: {},
+                    headers: headers
+                })
+                .then(res => {                                           
+                    let typeChambre = res.data.typeChambre;
+                    console.log("typeChambre");
+                    console.log(typeChambre);
+                    if(res.data.status==200){
+                        itineraires[lastItineraire].tarifReserves.push({
+                            idTarif: id, 
+                            dateSejour: dateSejour,
+                            dateReservation: getDate(Date.now()),
+                            guests: props.context.state.guests,
+                            idTypeChambre : idTypeChambre,
+                            nbPers: nbPers,
+                            numeroConfirmation : numeroConfirm,
+                            nomTypeChambre:typeChambre.nomTypeChambre,
+                            politiqueAnnulAtrb:tarif.politiqueAnnulAtrb,
+                            nomTarif:tarif.nom,
+                            toPay:{afterProm:100,beforeProm:100},
+                        }); 
+                          
+                        let reserv = props.context.state.reservationEnCours;
+                        reserv.itineraires=itineraires;
+                        console.log(reserv);
+                        props.context.setReservationEnCours(reserv);
+                    }
+                })
+                .catch(err =>{console.log(err); console.log("erreur");} );
+
+
+         
+
         }
     }
 
@@ -141,6 +191,8 @@ function ListTarif(props){
     
     let tarifs = props.tarifs.map(tarif => {
             const nbPers = props.context.state.guests.nbAdulte + props.context.state.guests.nbEnfant;
+            console.log("tarifs negga");
+            console.log(tarif);
             return (
                     <div className={styles.listTarif}>
                         <ul>
@@ -176,7 +228,7 @@ function ListTarif(props){
                                                 </div>
                                                 <div className={styles.bookNow}>
                                                     <Button variant="contained"
-                                                        onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre, version.nbPers , props.nameTC)}
+                                                        onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre, version.nbPers , props.nameTC,tarif)}
                                                         endIcon={<AddIcon/>}
                                                         className="bookNow"
                                                     >

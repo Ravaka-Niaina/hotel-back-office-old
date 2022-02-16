@@ -18,12 +18,13 @@ import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import {setValue} from '../../../../utility2.js';
 import SkeletonFacture from './skeletons/skeletonFacture.js';
 import InfoPolitiqueAnnul from './infoPolitiqueAnnul.js';
-
+import { useCookies,Cookies,withCookies } from "react-cookie";
+import { instanceOf } from 'prop-types';
 import './filtre.css';
 import styles from '../Book.module.css';
 
 import {getDiffDays} from '../../../../utility/utilityDate.js';
-
+const name_cookies="reservation-real";
 function PrintDateSejour(props){
     // itineraire, borne, handleChange, label
     let retour = [];
@@ -74,7 +75,10 @@ function Reservations(props){
             i++;
             const u = i;
             const nbNuit = getDiffDays(new Date(tarif.dateSejour.debut), new Date(tarif.dateSejour.fin));
+            // 
+            // console.log(tarif);
             if(tarif.etat == 1 || tarif.etat == undefined){
+                console.log("Tarif");
                 return (
                         <Card className={styles.stay}>
                         <CardContent>
@@ -119,6 +123,8 @@ function Reservations(props){
 
 function Itineraires(props){
     let itineraires = [];
+    console.log("itinerarairs");
+    console.log(props.context.state.itineraires);
     for(let i = 0; i < props.context.state.itineraires.length; i++){
         itineraires.push(
             <Box className={styles.sidetitle}>
@@ -142,8 +148,10 @@ function Itineraires(props){
 }
 
 class Fact extends React.Component{
+   
     constructor(props){
         super(props);
+        const cookies= props;
         this.style = {
             position: 'absolute',
             top: '50%',
@@ -155,7 +163,11 @@ class Fact extends React.Component{
             boxShadow: 24,
             p: 4,
           };
+        
+
     }
+    
+    
 
     validerReservation(){
         this.props.context.handleChange("err", null);
@@ -175,41 +187,58 @@ class Fact extends React.Component{
     }
 
     componentDidMount(){
-        axios({
-            method: 'get',
-            url: process.env.REACT_APP_BACK_URL + '/reservation/',
-            withCredentials: true,
-            data: {}
-        })
-        .then(res => {
-            let reserv = res.data.reservation === null ? null : res.data.reservation[0];
-            console.log(reserv);
-            this.props.context.setReservationEnCours(reserv, true);
-        }).catch(err => console.log(err));
+        // console.log("reservation from cookies");
+        // // console.log(this.props.context.state.reservationEnCours);
+        // console.log("fact did mount");
+        this.props.context.setReservationEnCours(null, true);
+        // axios({
+        //     method: 'get',
+        //     url: process.env.REACT_APP_BACK_URL + '/reservation/',
+        //     withCredentials: true,
+        //     data: {}
+        // })
+        // .then(res => {
+        //     let reserv = res.data.reservation === null ? null : res.data.reservation[0];
+        //     console.log(reserv);
+        //     
+        // }).catch(err => console.log(err));
     }
 
     annulerReservation(context, idReservation, indexItineraire, indexTarifReserve){
-        const data = { _id: idReservation, indexItineraire: indexItineraire, indexTarifReserve: indexTarifReserve };
-        console.log(data);
-        console.log(context.state.itineraires);
-        axios({
-            method: 'post',
-            url: process.env.REACT_APP_BACK_URL + '/reservation/delete',
-            withCredentials: true,
-            data: data
-        })
-        .then(res => { 
-            console.log(res);                                               
-            context.setReservationEnCours(res.data.reservation)})
-        .catch(err => console.log(err));
+        // const data = { _id: idReservation, indexItineraire: indexItineraire, indexTarifReserve: indexTarifReserve };
+        // console.log(data);
+        // console.log(context.state.itineraires);
+        // axios({
+        //     method: 'post',
+        //     url: process.env.REACT_APP_BACK_URL + '/reservation/delete',
+        //     withCredentials: true,
+        //     data: data
+        // })
+        // .then(res => { 
+        //     console.log(res);                                               
+        //     context.setReservationEnCours(res.data.reservation)})
+        // .catch(err => console.log(err));
+        let reservation = context.state.reservationEnCours;
+        try{
+            reservation.itineraires[indexItineraire].tarifReserves.splice(indexTarifReserve, 1); 
+            if(reservation.itineraires[indexItineraire].tarifReserves.length ==0){
+                reservation.itineraires.splice(indexItineraire,1);
+            }
+            
+        }catch(e){
+
+        }
+        context.setReservationEnCours(reservation);
     }
 
     printFacture(){
         let valider = null;
-        console.log(this.props.context.state.itineraires);
+         console.log("pin facture");
         let toPay = 0;
         for(let i = 0; i < this.props.context.state.itineraires.length; i++){
+            
             for(let u = 0; u < this.props.context.state.itineraires[i].tarifReserves.length; u++){
+                
                 if(this.props.context.state.itineraires[i].tarifReserves[u].etat == undefined
                     || this.props.context.state.itineraires[i].tarifReserves[u].etat == 1){
                     valider = (<p style={{textAlign:'center',paddingBottom:'12px'}}><Button size='medium' variant="contained"  onClick={(e) => this.validerReservation()} endIcon={<CallMissedOutgoingIcon/>}>Valider réservation</Button></p>);
@@ -220,6 +249,7 @@ class Fact extends React.Component{
                 toPay += this.props.context.state.itineraires[i].toPay;
             }
         }
+        
         return(
             <div className={styles.printFacture}>
                 <div style={{textAlign:'center'}}>
@@ -275,6 +305,7 @@ class Fact extends React.Component{
     }
 
     render(){
+        
         return(
             <div>
                 {this.props.context.state.isFactureReceived ? this.printFacture() : <SkeletonFacture />}
