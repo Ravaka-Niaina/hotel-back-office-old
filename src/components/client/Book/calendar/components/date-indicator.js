@@ -2,6 +2,7 @@ import { styled } from '@mui/material/styles'
 import Button from '@mui/material/Button'
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
+import RefreshDay from './RefreshDay.js';
 
 import background from './cross.png'
 import {
@@ -36,6 +37,8 @@ const DateIndicator = ({
   context,
   closeOnce,
   applyFilter,
+  reloadAllPrices,
+  reloadSelectedDatePrices
 }) => {
   const changeDate = (day) => {
     context.state.listTypeChambre = []
@@ -72,7 +75,7 @@ const DateIndicator = ({
     let bigState = { ...context.state }
     bigState.dateSejour = temp
     context.setState(bigState, () => {
-      applyFilter()
+      applyFilter(undefined, true);
     })
     setBornes(temp)
 
@@ -138,7 +141,6 @@ const DateIndicator = ({
 
   const debut = new Date(bornes.debut)
   let fin = new Date(bornes.fin)
-  console.log(bornes.debut + ' , ' + bornes.fin)
   let today = new Date()
   today = new Date(today.getFullYear(), today.getMonth(), today.getDate())
   const monthDates = datesInMonth.map((i, key) => {
@@ -157,6 +159,12 @@ const DateIndicator = ({
       }
     }
 
+    let reloadDate = false
+    if(reloadSelectedDatePrices){
+      if (debut <= temp && fin >= temp) {
+        reloadDate = true;
+      }
+    }
     if (debut <= temp && fin >= temp) {
       notValid = notValid + ' active'
     }
@@ -164,7 +172,8 @@ const DateIndicator = ({
       <div>
         {i.currentMonth ? (
           <div>
-            {i.price !== undefined ? (
+            {reloadAllPrices || reloadDate ? <RefreshDay />
+            : <>{i.price !== undefined ? (
               <div>
                 {i.promotions !== undefined &&
                 i.promotions.length > 0 &&
@@ -212,7 +221,7 @@ const DateIndicator = ({
                   {getDayOfMonth(i.date)}
                 </div>
               </div>
-            )}
+            )}</>}
           </div>
         ) : null}
       </div>

@@ -52,8 +52,8 @@ function DetailsTarif(){
     const { _id } = useParams();
     const history = useHistory();
     const [skeletonAffiche , setSkeleton] = useState(true);
-    const [leadMaxInfini, setLeadMaxInfini] = useState(false);
-    const [isLeadMaxDisabled, setIsLeadMaxDisabled] = useState(false);
+    const [leadMinInfini, setLeadMinInfini] = useState(false);
+    const [isLeadMinDisabled, setIsLeadMinDisabled] = useState(false);
 
     function tryRedirect(res){
         setBtnLoad(false);
@@ -88,14 +88,15 @@ function DetailsTarif(){
     function update(e){
         setBtnLoad(true);
         const current = utility.getPlan(planTarifaire);
-        current.leadMaxInfini = leadMaxInfini;
+        // console.log(current);
+        current.leadMinInfini = leadMinInfini;
         callAPI('post', '/planTarifaire/update', current, tryRedirect);
     }
 
     function setPlan(res){
         if(res.status === 200){
-            setLeadMaxInfini(res.planTarifaire.leadMaxInfini);
-            setIsLeadMaxDisabled(res.planTarifaire.leadMaxInfini);
+            setLeadMinInfini(res.planTarifaire.leadMinInfini);
+            setIsLeadMinDisabled(res.planTarifaire.leadMinInfini);
             setPlanTarifaire(res.planTarifaire);
             setSkeleton(false);
         }else if(res.status === 401){//Unauthorized
@@ -120,10 +121,10 @@ function DetailsTarif(){
       }, [_id]);
 
     function switchInfini(){
-        setLeadMaxInfini(!leadMaxInfini);
-        setIsLeadMaxDisabled(!isLeadMaxDisabled);
+        setLeadMinInfini(!leadMinInfini);
+        setIsLeadMinDisabled(!isLeadMinDisabled);
         let current = {...planTarifaire};
-        current.lead.max = "";
+        current.lead.min = "";
         setPlanTarifaire(current);
     }
 
@@ -255,11 +256,12 @@ function DetailsTarif(){
                                 </label>
                             </div>
                             <div>
+                                {console.log(leadMinInfini)}
                                 <FormControlLabel
-                                    checked={leadMaxInfini}
+                                    checked={leadMinInfini}
                                     onClick={(e) => switchInfini()}
                                     control={<Radio />}
-                                    label={<span id="litleLabel">Lead max infini</span>}
+                                    label={<span id="litleLabel">Lead min infini</span>}
                                 />
                             </div>
                             <RadioGroup
@@ -272,12 +274,12 @@ function DetailsTarif(){
                                         label="Min"
                                         type='number'
                                         size='small'
-                                        id='lead'
                                         value={planTarifaire.lead.min}
                                         placeholder='Hour/Date'
                                         onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "lead", "min")}
                                         error={error.leadMin === null ? false : true}
                                         helperText={error.leadMin === null ? null : error.leadMin}
+                                        disabled={isLeadMinDisabled}
                                         /> 
                                     </div>
                                     <div className ="col">
@@ -285,13 +287,12 @@ function DetailsTarif(){
                                         label="Max"
                                         type='number'
                                         size='small'
-                                        id='lead'
                                         value={planTarifaire.lead.max}
                                         placeholder='Hour/Date'
                                         onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "lead", "max")}
                                         error={error.leadMax === null ? false : true}
                                         helperText={error.leadMax === null ? null : error.leadMax}
-                                        disabled={isLeadMaxDisabled}
+                                        
                                         /> 
                                     </div>
                                     <div className ="col">

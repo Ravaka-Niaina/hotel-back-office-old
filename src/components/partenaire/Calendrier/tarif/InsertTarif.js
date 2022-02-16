@@ -1,11 +1,8 @@
 import TextField from '@mui/material/TextField';
-import OutlinedInput from '@mui/material/OutlinedInput';
-//import TimePicker from '@mui/lab/TimePicker';
-//import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
 import CustomError from '../../../../CustomError';
 import {useEffect, useRef} from "react";
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import {Link} from 'react-router-dom';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -14,9 +11,7 @@ import './insertTarif.css';
 import Box from '@mui/material/Box';
 
 import Button from '@mui/material/Button';
-import React from 'react'
 import callAPI from '../../../../utility';
-import FormGroup from '@mui/material/FormGroup';
 import  Navbar  from "../../Navbar/Navbar";
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -43,7 +38,9 @@ function InsertTarif(){
         leadMin: null, 
         leadMax: null,
         chambresAtrb: null,
-        politiqueAnnulAtrb: null
+        politiqueAnnulAtrb: null,
+        debutReserv: null,
+        finReserv: null
     });
     const [planTarifaire, setPlanTarifaire] = useState({
         nom: '',
@@ -56,13 +53,20 @@ function InsertTarif(){
         chambresAtrb: [],
         politiqueAnnulAtrb: [
 
-        ]
+        ],
+        debutReserv: null,
+        finReserv: null
     });
     const [btnLoad, setBtnLoad] = useState(false);
     const history = useHistory();
     const [skeletonAffiche , setSkeleton] = useState(true);
-    const [leadMaxInfini, setLeadMaxInfini] = useState(false);
-    const [isLeadMaxDisabled, setIsLeadMaxDisabled] = useState(false);
+    const [leadMinInfini, setLeadMinInfini] = useState(false);
+    const [isLeadMinDisabled, setIsLeadMinDisabled] = useState(false);
+    const [reservAToutMoment, setReservAToutMoment] = useState(true);
+    const [areDateReservDisabled, setAreDateReservDisabled] = useState(true);
+    const { _id } = useParams();
+
+    const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
 
     function setListTypeChambre(res){
         let current = JSON.parse(JSON.stringify(planTarifaire));
@@ -75,15 +79,36 @@ function InsertTarif(){
         setSkeleton(false);
     }
 
+    function setPlan(res){
+        console.log(res);
+        if(res.status === 200){
+            setReservAToutMoment(res.planTarifaire.reservAToutMoment);
+            setAreDateReservDisabled(res.planTarifaire.reservAToutMoment ? true : false);
+            setLeadMinInfini(res.planTarifaire.leadMinInfini);
+            setIsLeadMinDisabled(res.planTarifaire.leadMinInfini);
+            setPlanTarifaire(res.planTarifaire);
+            setSkeleton(false);
+        }else if(res.status === 401){//Unauthorized
+            history.push('/back/login');
+        }else if(res.status === 403){
+            history.push('/notEnoughAccessRight');
+        }
+    }
+
     const hasARInsert = session.getInstance().hasOneOfTheseAccessRights(["insertPlanTarifaire", "superAdmin"]);
+    const hasARGet = session.getInstance().hasOneOfTheseAccessRights(["getPlanTarifaire", "superAdmin"]);
+    const hasARUpdate = session.getInstance().hasOneOfTheseAccessRights(["updatePlanTarifaire", "superAdmin"]);
 
     useEffect(() => {
         const isConnected = session.getInstance().isConnected();
         if(!isConnected){
             return(<Login urlRedirect={window.location.href} />);
         }
-        if(hasARInsert){
+
+        if(hasARInsert && isInsert){
             callAPI('get', '/TCTarif/TPAvecPA', {}, setListTypeChambre);
+        }else if((hasARGet || hasARUpdate) && !isInsert){
+            callAPI('get', "/planTarifaire/details/" + _id, {}, setPlan);
         }else{
             history.push('/notEnoughAccessRight');
         }
@@ -121,20 +146,43 @@ function InsertTarif(){
         setError(temp);
     }
 
+    function update(e){
+        setBtnLoad(true);
+        const current = utility.getPlan(planTarifaire);
+        current.leadMinInfini = leadMinInfini;
+        current.reservAToutMoment = reservAToutMoment;
+        callAPI('post', '/planTarifaire/update', current, tryRedirect);
+    }
+
     function insert(e){
         e.preventDefault();
         setBtnLoad(true);
         const current = utility.getPlan(planTarifaire);
-        current.leadMaxInfini = leadMaxInfini;
+        current.leadMinInfini = leadMinInfini;
+        current.reservAToutMoment = reservAToutMoment;
         callAPI('post', '/planTarifaire/insert', current, tryRedirect);
     }
 
     function switchInfini(){
-        setLeadMaxInfini(!leadMaxInfini);
-        setIsLeadMaxDisabled(!isLeadMaxDisabled);
+        setLeadMinInfini(!leadMinInfini);
+        setIsLeadMinDisabled(!isLeadMinDisabled);
         let current = {...planTarifaire};
-        current.lead.max = "";
+        current.lead.min = "";
         setPlanTarifaire(current);
+    }
+
+    function switchReservAToutMoment(){
+        let errorTmp = {...error};
+        errorTmp.dateReservationDebut = null;
+        errorTmp.dateReservationFin = null;
+        setError(errorTmp);
+    
+        setReservAToutMoment(!reservAToutMoment);
+        setAreDateReservDisabled(!areDateReservDisabled);
+
+        let tarifTmp = {...planTarifaire};
+        tarifTmp.dateReservation = {debut: "", fin: ""};
+        setPlanTarifaire(tarifTmp);
     }
 
     return(
@@ -146,7 +194,7 @@ function InsertTarif(){
                             {
                                 skeletonAffiche ? <SkelettonForm /> : <>
 
-                            <h1 className="text-center" id='title1'>Ajouter plan tarifaire</h1>
+                            <h1 className="text-center" id='title1'>{isInsert ? "Ajouter plan tarifaire" : "Modifier plan tarifaire"}</h1>
                             <CustomError errors={errors} />
                             <form className="needs-validation" style={{marginTop:'15px'}}>
                                 <Box>
@@ -186,43 +234,66 @@ function InsertTarif(){
                                             helperText={error.description === null ? null : error.description}
                                         />
                                     </div>
+
                                     <div style={{marginTop:'60px'}}>
                                         <div>
                                             <label className="" style={{textDecoration: 'underline'}} id='bigLabel'>Date de réservation </label> 
                                         </div>
-                                            <div className="row" style={{marginTop:'20px'}}>
-                                                <utility.DateReservAuto planTarifaire={planTarifaire} setPlanTarifaire={setPlanTarifaire} />
-                                                <div className="col">
-                                                    <TextField
-                                                    label="Début"
-                                                    type='date'
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                        }}
-                                                    size='small'
-                                                    value={planTarifaire.dateReservation.debut}
-                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "dateReservation", "debut")}
-                                                    error={error.dateReservationDebut === null ? false : true}
-                                                    helperText={error.dateReservationDebut === null ? null : error.dateReservationDebut}
-                                                    /> 
+                                        <div>
+                                            <label>Quand les clients peuvent-ils réserver chez vous pour bénéficier de ce tarif?</label>
+                                        </div>
+                                        <div className="form-group" style={{ marginTop: '25px' }}>
+                                            <p><FormControlLabel
+                                                checked={reservAToutMoment}
+                                                onClick={(e) => switchReservAToutMoment()}
+                                                control={<Radio />}
+                                                label={<span id="litleLabel">A tout moment</span>}
+                                            /></p>
+                                            <p><FormControlLabel
+                                                checked={!reservAToutMoment}
+                                                onClick={(e) => switchReservAToutMoment()}
+                                                control={<Radio />}
+                                                label={<span id="litleLabel">Sélectionner une période</span>}
+                                            /></p>
+                                        </div>
+                                        <p id="litleLabel" style={{ marginLeft: '15px', marginTop: '5px' }}>
+                                            Sélectionner une période
+                                        </p>
+                                        <div className="row" style={{marginTop:'20px'}}>
+                                            <utility.DateReservAuto planTarifaire={planTarifaire} setPlanTarifaire={setPlanTarifaire} />
+                                            <div className="col">
+                                                <TextField
+                                                label="Du"
+                                                type='date'
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                    }}
+                                                size='small'
+                                                value={planTarifaire.dateReservation.debut}
+                                                onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "dateReservation", "debut")}
+                                                error={error.dateReservationDebut === null ? false : true}
+                                                helperText={error.dateReservationDebut === null ? null : error.dateReservationDebut}
+                                                disabled={areDateReservDisabled}
+                                                />
 
-                                                </div>
-                                                <div className="col">
-                                                    <TextField
-                                                    label="Fin"
-                                                    type='date'
-                                                    InputLabelProps={{
-                                                        shrink: true,
-                                                        }}
-                                                    size='small'
-                                                    value={planTarifaire.dateReservation.fin}
-                                                    onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "dateReservation", "fin")}
-                                                    error={error.dateReservationFin === null ? false : true}
-                                                    helperText={error.dateReservationFin === null ? null : error.dateReservationFin}
-                                                    /> 
-
-                                                </div>
                                             </div>
+                                            <div className="col">
+                                                <TextField
+                                                label="Au"
+                                                type='date'
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                    }}
+                                                size='small'
+                                                value={planTarifaire.dateReservation.fin}
+                                                onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "dateReservation", "fin")}
+                                                error={error.dateReservationFin === null ? false : true}
+                                                helperText={error.dateReservationFin === null ? null : error.dateReservationFin}
+                                                disabled={areDateReservDisabled}
+                                                /> 
+
+                                            </div>
+                                        </div>
                                     </div>
                                     <div style={{marginTop:'10px'}}>
                                         <div>
@@ -275,7 +346,7 @@ function InsertTarif(){
                                         </div>
                                         <div>
                                             <FormControlLabel
-                                                checked={leadMaxInfini}
+                                                checked={leadMinInfini}
                                                 onClick={(e) => switchInfini()}
                                                 control={<Radio />}
                                                 label={<span id="litleLabel">Pas de fin</span>}
@@ -291,27 +362,25 @@ function InsertTarif(){
                                                     <TextField
                                                     label="Min"
                                                     type='number'
-                                                    id='lead'
                                                     size='small'
                                                     value={planTarifaire.lead.min}
                                                     placeholder='Hour/Date'
                                                     onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "lead", "min")}
                                                     error={error.leadMin === null ? false : true}
                                                     helperText={error.leadMin === null ? null : error.leadMin}
+                                                    disabled={isLeadMinDisabled}
                                                     /> 
                                                 </div>
                                                 <div className ="col">
                                                     <TextField
                                                     label="Max"
                                                     type='number'
-                                                    id='lead'
                                                     size='small'
                                                     value={planTarifaire.lead.max}
                                                     placeholder='Hour/Date'
                                                     onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "lead", "max")}
                                                     error={error.leadMax === null ? false : true}
                                                     helperText={error.leadMax === null ? null : error.leadMax}
-                                                    disabled={isLeadMaxDisabled}
                                                     /> 
                                                 </div>
                                                 <div className ="col">
@@ -365,7 +434,7 @@ function InsertTarif(){
 
                                 <div className="pied" style={{marginTop:'30px'}}>   
                                     <div class="bouton-aligne">
-                                        { hasARInsert 
+                                        { hasARInsert && isInsert
                                         ? <>{ btnLoad ? <ButtonLoading />
                                             : <Button  
                                                 variant="contained" 
@@ -376,6 +445,15 @@ function InsertTarif(){
                                             </Button>
                                         } </>
                                         : null }
+
+                                        {hasARUpdate && !isInsert
+                                        ? <>{ btnLoad 
+                                            ? <ButtonLoading /> 
+                                            : <Button variant="contained"  style={{backgroundColor:'#FA8072'}} onClick={(e) => update(e)}>
+                                                Modifier
+                                            </Button> }
+                                        </>
+                                        : null }
                                     </div>
                                     <div class="bouton-aligne">
                                         <Link to={'/back/tarif'} style={{textDecoration:'none'}}>
@@ -385,7 +463,7 @@ function InsertTarif(){
                                         </Button>
                                         </Link>
                                     </div>
-                                    </div>
+                                </div>
                             </form>
                              </>
                             }
