@@ -61,8 +61,6 @@ const CalendarComponent = () => {
                 data: {dateDebut: getDate(value[0].format()), dateFin: getDate(value[1].format())}
             })
             .then(res => {
-                console.log(res.data);
-                //setDateMin(new Date(res.data.dateMin));
                 let tmp = [];
                 for(var i = 0; i < res.data.typeChambre.length; i++) {
                     tmp.push(
