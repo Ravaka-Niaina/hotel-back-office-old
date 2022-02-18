@@ -52,6 +52,8 @@ function DetailsTarif(){
     const { _id } = useParams();
     const history = useHistory();
     const [skeletonAffiche , setSkeleton] = useState(true);
+    const [leadMinInfini, setLeadMinInfini] = useState(false);
+    const [isLeadMinDisabled, setIsLeadMinDisabled] = useState(false);
 
     function tryRedirect(res){
         setBtnLoad(false);
@@ -86,11 +88,15 @@ function DetailsTarif(){
     function update(e){
         setBtnLoad(true);
         const current = utility.getPlan(planTarifaire);
+        // console.log(current);
+        current.leadMinInfini = leadMinInfini;
         callAPI('post', '/planTarifaire/update', current, tryRedirect);
     }
 
     function setPlan(res){
         if(res.status === 200){
+            setLeadMinInfini(res.planTarifaire.leadMinInfini);
+            setIsLeadMinDisabled(res.planTarifaire.leadMinInfini);
             setPlanTarifaire(res.planTarifaire);
             setSkeleton(false);
         }else if(res.status === 401){//Unauthorized
@@ -113,6 +119,14 @@ function DetailsTarif(){
             history.push('/notEnoughAccessRight');
         }
       }, [_id]);
+
+    function switchInfini(){
+        setLeadMinInfini(!leadMinInfini);
+        setIsLeadMinDisabled(!isLeadMinDisabled);
+        let current = {...planTarifaire};
+        current.lead.min = "";
+        setPlanTarifaire(current);
+    }
 
     return(
         <div className="">
@@ -241,6 +255,15 @@ function DetailsTarif(){
                                     Lead { planTarifaire.isLeadHour ? "hour" : "day"} 
                                 </label>
                             </div>
+                            <div>
+                                {console.log(leadMinInfini)}
+                                <FormControlLabel
+                                    checked={leadMinInfini}
+                                    onClick={(e) => switchInfini()}
+                                    control={<Radio />}
+                                    label={<span id="litleLabel">Lead min infini</span>}
+                                />
+                            </div>
                             <RadioGroup
                                 aria-label="Lead"
                                 name="radio-buttons-group"
@@ -251,12 +274,12 @@ function DetailsTarif(){
                                         label="Min"
                                         type='number'
                                         size='small'
-                                        id='lead'
                                         value={planTarifaire.lead.min}
                                         placeholder='Hour/Date'
                                         onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "lead", "min")}
                                         error={error.leadMin === null ? false : true}
                                         helperText={error.leadMin === null ? null : error.leadMin}
+                                        disabled={isLeadMinDisabled}
                                         /> 
                                     </div>
                                     <div className ="col">
@@ -264,12 +287,12 @@ function DetailsTarif(){
                                         label="Max"
                                         type='number'
                                         size='small'
-                                        id='lead'
                                         value={planTarifaire.lead.max}
                                         placeholder='Hour/Date'
                                         onChange={(e) => utility.handleInputChange2(planTarifaire, setPlanTarifaire, error, setError, e, "lead", "max")}
                                         error={error.leadMax === null ? false : true}
                                         helperText={error.leadMax === null ? null : error.leadMax}
+                                        
                                         /> 
                                     </div>
                                     <div className ="col">
@@ -326,7 +349,7 @@ function DetailsTarif(){
                             ? <>{ btnLoad 
                                 ? <ButtonLoading /> 
                                 : <Button variant="contained"  style={{backgroundColor:'#FA8072'}} onClick={(e) => update(e)}>
-                                        Modifier
+                                    Modifier
                                  </Button> }
                              </>
                             : null }

@@ -12,7 +12,6 @@ import  InsertTypeChambre  from "./components/partenaire/chambre/InsertTypeChamb
 import  ListTypeChambre  from "./components/partenaire/chambre/ListTChambre.js";
 
 import  InsertTarif  from "./components/partenaire/Calendrier/tarif/InsertTarif.js";
-import  DetailsTarif  from "./components/partenaire/Calendrier/tarif/DetailsTarif.js";
 
 import Tarif from "./components/partenaire/Calendrier/tarif/Tarif.js";
 import LTarif from "./components/partenaire/Calendrier/tarif/LTarif.js";
@@ -22,7 +21,9 @@ import Paiement from "./components/client/paiement";
 
 import Navbar from "./components/client/NavbarClient/Navbar";
 
-import searchUser from "./components/common/Authentification/identify";
+import SearchUser from "./components/common/Authentification/identify";
+import Confirmation from "./components/common/Authentification/confirmation";
+import RecoverPassword from "./components/common/Authentification/recoverPassword";
 import result from "./components/common/Authentification/result";
 
 
@@ -35,6 +36,7 @@ import  InsertPromotion  from "./components/partenaire/promotion/insertPromotion
 import Global from "./components/partenaire/politique/global.js";
 import ListPolitique from "./components/partenaire/politique/LPolitique.js"
 import testData from "./components/partenaire/politique/listpolitique.js"
+import ListeReservation from "./components/partenaire/reservation/ListReservation.js";
 
 import  Front_client  from "./front_client/front_client";
 
@@ -48,7 +50,6 @@ import Calendrier from "./components/partenaire/Calendrier/Calendrier";
 import  Devis  from "./front_client/devis";
 import  guest  from "./components/partenaire/guest.js";
 import  hideShow  from "./hideShow.js";
-import  DetailsPromotion  from "./components/partenaire/promotion/DetailsPromotion.js";
 
 import DropDown from './pagination/pagination.js';
 import {BrowserRouter as Router, Route , useHistory ,Switch} from 'react-router-dom';
@@ -96,7 +97,7 @@ function App(){
         <Route path="/back/tarif" exact component={LTarif} />
         <Route path="/back/tarif/calendar" exact component={CalendarComponent} />
         <Route path="/back/tarif/insert" exact component={InsertTarif}/>
-        <Route path="/back/tarif/details/:_id" exact component={DetailsTarif} />
+        <Route path="/back/tarif/details/:_id" exact component={InsertTarif} />
 
         <Route path="/back/typeChambre" exact component={ListTypeChambre} />
         <Route path="/back/TypeChambre/insert" exact component={InsertTypeChambre} />
@@ -104,17 +105,21 @@ function App(){
 
         <Route path="/back/promotion" exact component={PromotionList} />
         <Route path="/back/promotion/insert" exact component={InsertPromotion} />
-        <Route path="/back/promotion/detail/:_id" exact component={DetailsPromotion} />
+        <Route path="/back/promotion/detail/:_id" exact component={InsertPromotion} />
 
         <Route path="/back/politique" exact component={Global} />
         <Route path="/back/politique/detail/:_id" exact component={Global} />
         <Route path="/back/politique/list" exact component={ListPolitique} />
         <Route path="/back/politique/testData" exact component={testData} />
+        <Route path="/back/reservation" exact component={ListeReservation} />
+
 
         <Route path="/" exact component={AppClient} />
         <Route path="/front" exact component={AppClient} />
         <Route path="/front/login" exact component={Login} />
-        <Route path="/login/identify" exact component={searchUser} />
+        <Route path="/login/identify" exact component={SearchUser} />
+        <Route path="/confirmation" exact component={Confirmation} />
+        <Route path="/recover/password/:_id" exact component={RecoverPassword} />
         <Route path="/result" exact component={result} />
         <Route path="/front/Register" exact component={Register} />
         <Route path="/front/userList" exact component={listeUser} />

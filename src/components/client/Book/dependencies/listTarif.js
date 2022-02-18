@@ -16,6 +16,9 @@ import PolicyIcon from '@mui/icons-material/Policy';
 import Reservation from '../../reservation';
 import axios from "axios";
 import {session} from "../../../../components/common/utilitySession.js";
+import {getDiffDays} from '../../../../utility/utilityDate.js';
+import ButtonLoading from '../../../partenaire/buttonLoading.js';
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -63,6 +66,7 @@ function getDate(date){
 
 function ListTarif(props){
     const [error, setError] = React.useState(null);
+    const [showButton, setShowButton] = React.useState(false);
     function setReservationEnCours(res){
         if(res.status === 200){
             console.log("add reservation");
@@ -71,6 +75,7 @@ function ListTarif(props){
         }else{
             console.log(res);
         }
+        setShowButton(false);
     }
     function typeChambre(res){
         
@@ -103,7 +108,7 @@ function ListTarif(props){
         
     }
 
-    function addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre,tarif){
+    function addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre,tarif,toPay){
         if(props.context.state.itineraires.length === 0){
             let temp = {...props.context.state};
             temp.err = "Veuillez d'abord choisir une date de sejour";
@@ -124,7 +129,7 @@ function ListTarif(props){
             const Random = NumeroIntineraire(props.context.state.random , props.context.state.nameHotel,TChambre);
             //numero confirmation
             const numeroConfirm = numeroConfirmation(0,props.context.state.nameHotel, TChambre);
-            console.log(numeroConfirm);
+            // console.log(numeroConfirm);
           
             // const data = {itineraires: itineraires , numeroIntineraire : Random };
             //  callAPI("get" , "/TypeChambre/detailsChambre/"+idTypeChambre , {} , typeChambre);
@@ -160,7 +165,7 @@ function ListTarif(props){
                             nomTypeChambre:typeChambre.nomTypeChambre,
                             politiqueAnnulAtrb:tarif.politiqueAnnulAtrb,
                             nomTarif:tarif.nom,
-                            toPay:{afterProm:100,beforeProm:100},
+                            toPay:{afterProm:toPay.prix,beforeProm:toPay.prixOriginal},
                         }); 
                           
                         let reserv = props.context.state.reservationEnCours;
@@ -191,8 +196,9 @@ function ListTarif(props){
     
     let tarifs = props.tarifs.map(tarif => {
             const nbPers = props.context.state.guests.nbAdulte + props.context.state.guests.nbEnfant;
-            console.log("tarifs negga");
-            console.log(tarif);
+            // console.log("tarifs negga");
+            // console.log(tarif);
+            const nbNuit =  getDiffDays(new Date(tarif.dateSejour.debut), new Date(tarif.dateSejour.fin));
             return (
                     <div className={styles.listTarif}>
                         <ul>
@@ -202,19 +208,19 @@ function ListTarif(props){
                                 </div>
                                 <div class="row">
                                     {tarif.politiqueAnnulAtrb !== undefined &&  tarif.politiqueAnnulAtrb[0] !== undefined? <HtmlTooltip
-                                                                    title={
-                                                                        <InfoPolitiqueAnnul 
-                                                                            checkIn={tarif.dateSejour.debut} 
-                                                                            politique={tarif.politiqueAnnulAtrb[0]} 
-                                                                    />}
-                                                                    placement="left-start"
-                                                                >
-                                                                    <span><PolicyIcon/>{tarif.politiqueAnnulAtrb[0].nom}</span>
-                                                                </HtmlTooltip> : ""
+                                            title={
+                                                <InfoPolitiqueAnnul 
+                                                    checkIn={tarif.dateSejour.debut} 
+                                                    politique={tarif.politiqueAnnulAtrb[0]} 
+                                            />}
+                                            placement="left-start"
+                                        >
+                                            <span><PolicyIcon/>{tarif.politiqueAnnulAtrb[0].nom}</span>
+                                        </HtmlTooltip> : ""
                                     }
                                 </div>
                                 {
-                                    tarif.minPrix && tarif.minPrix.versions ? tarif.minPrix.versions.map(version => {
+                                    tarif.toPayStay.map(version => {
                                         return(
                                             <div className="row" style={{marginTop: "5px"}}>
                                                 <div>
@@ -223,21 +229,21 @@ function ListTarif(props){
                                                     {/*<ListServiceTarif services={tarif.services} />*/}
                                                 </div>
                                                 <div class="col"> 
-                                                    { version.prixOriginal ? <span className={styles.beforeProm}>&nbsp;{(version.prixOriginal * nbPers) + " EUR "}</span> : null }
-                                                    <span className={styles.afterProm}>&nbsp;{(version.prix * nbPers) + " EUR "}</span>
+                                                    { version.prixOriginal ? <span className={styles.beforeProm}>&nbsp;{(version.prixOriginal) + " EUR "}</span> : null }
+                                                    <span className={styles.afterProm}>&nbsp;{(version.prix) + " EUR "}</span>
                                                 </div>
                                                 <div className={styles.bookNow}>
                                                     <Button variant="contained"
-                                                        onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre, version.nbPers , props.nameTC,tarif)}
+                                                        onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre, version.nbPers , props.nameTC,tarif,version)}
                                                         endIcon={<AddIcon/>}
                                                         className="bookNow"
                                                     >
                                                         Book
-                                                    </Button>
+                                                    </Button> 
                                                 </div>
                                             </div>
                                         );
-                                    }) : null
+                                    })
                                 }
                             </li><br/>
                         </ul>

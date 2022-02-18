@@ -204,6 +204,7 @@ function Global(){
         }else{
             console.log("setListPolitiqueAnnulation");
         }
+        setGrise(false);
        
     }
 
@@ -302,7 +303,7 @@ function Global(){
                             {
                              skeletonAffiche ?  <SkelettonForm heigth = {300} />  : 
                              <>
-                            <h4 className='entete'>Politique d'annulation</h4><hr/>
+                            <h4 id="title1">Politique d'annulation</h4><hr/>
                             <label>Concellation preference</label><br/>
                             <span id='litleLabel'>Y a-t-il une période pendant laquelle le client peut annuler gratuitement?</span><br/>
                             <RadioGroup

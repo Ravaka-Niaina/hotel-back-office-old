@@ -219,6 +219,8 @@ class Scroll extends React.Component{
         if(reservation === null){
             const { cookies } = this.props;
             let reservationCookies=cookies.get(name_cookies);
+            console.log("reservationCookies");
+            console.log(reservationCookies);
             if(reservationCookies==null){
                 reservationCookies =empty_reservation;
                 let datenow =Date.now();
@@ -228,8 +230,7 @@ class Scroll extends React.Component{
             }
             currentState.reservationEnCours=reservationCookies;
             currentState.itineraires = reservationCookies.itineraires;
-            console.log("reservationCookies");
-            console.log(reservationCookies);
+           
         }else{
           
             currentState.itineraires = reservation.itineraires;

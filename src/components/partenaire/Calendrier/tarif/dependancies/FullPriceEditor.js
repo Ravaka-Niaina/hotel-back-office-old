@@ -5,11 +5,14 @@ import AdapterMoment from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import moment from 'moment';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+
 import styles from '../CalendarComponent.module.css';
 
 import callAPI from '../../../../../utility';
 import { useHistory } from 'react-router-dom';
 import ButtonLoading from "../../../buttonLoading.js"
+import {handleErrorConfigPrix, getChosenRateError, 
+    removeChosenRateError, removeErrorConfigPrix} from "./FullPriceEditor/errorHandler.js";
 
 const getDaysBetweenDates = function(startDate, endDate) {
     var now = startDate.clone(), dates = [];
@@ -177,6 +180,7 @@ const FullPriceEditor = (props) => {
         setAllDays(true);
         setValue("open");
         setRate(1);
+        removeChosenRateError(error, setError);
     }
 
     const [rate,setRate] = useState(1);
@@ -196,52 +200,34 @@ const FullPriceEditor = (props) => {
 
     let rates = [];
     for(let i = 0; i < tarifs.length; i++){
+        const err = getChosenRateError(error, tarifs[i]._id);
         rates.push(
-            <FormControlLabel
-                style={{padding: 0}}
-                label={tarifs[i].nom}
-                onChange={(e) => handleRateChange(i, e.target.checked)}
-                control={<Checkbox checked={tarifs[i].checked} />}
-            />
+            <>
+                <FormControlLabel
+                    style={{padding: 0}}
+                    label={tarifs[i].nom}
+                    error={"erreur"}
+                    onChange={(e) => handleRateChange(i, e.target.checked)}
+                    control={<Checkbox checked={tarifs[i].checked} />}
+                    helperText={"test "}
+                />
+                {err === null ? null : <div style={{color: "#D32F2F", font: "13px Roboto,Helvetica,Arial,sans-serif"}}><span>{err}</span></div> }
+            </>
         );
     }
 
     function refresh(res){
         console.log(res);
-        let tempError = {...error};
-        
-        const keysError = Object.keys(tempError);
-        keysError.map((k) => {
-            if(k === "versions"){
-                const keysVersions = Object.keys(tempError.versions);
-                keysVersions.map((k) => {
-                    tempError.versions[k] = null;
-                });
-            }else{
-                tempError[k] = null;
-            }
-        });
-        
         if(res.status === 200){
             console.log("Redirection en cours...");
             props.getPrix();
+            removeErrorConfigPrix(error, setError)
         }else{
             console.log("prix non configuré");
-            const keys = Object.keys(res.errors);
-            keys.map((k) => {
-                if( k === "versions"){
-                    const keysVersions = Object.keys(res.errors.versions);
-                    keysVersions.map((kv) => {
-                        const details = Object.keys(res.errors.versions[kv]);
-                        tempError.versions[kv] = res.errors.versions[kv][details[0]];
-                    })
-                }else{
-                    tempError[k] = res.errors[k];
-                }
-            });
+            handleErrorConfigPrix(res.errors, error, setError);
             props.setOpenLoad(false);
         }
-        setError(tempError);
+        
     }
 
     function savePrix(forTypeChambre, forTarif){

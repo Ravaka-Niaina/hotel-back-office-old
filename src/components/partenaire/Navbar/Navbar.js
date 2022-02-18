@@ -43,6 +43,7 @@ function Navbar(props) {
     const [showHistorique, setShowHistorique] = React.useState(true);
     const [showPartenaire, setShowPartenaire] = React.useState(true);
     const [showDroitAcces, setShowDroitAcces] = React.useState(true);
+    const [showReservation, setShowReservation] = React.useState(true);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -80,8 +81,9 @@ function Navbar(props) {
         setShowPromotion(session.getInstance().hasOneOfTheseAccessRights(["superAdmin", "insertPromotion", "getPromotion", "updatePromotion", "deletePromotion"]));
         // setShowPolitique(session.getInstance().hasOneOfTheseAccessRights(["superAdmin", "insertPolitique", "getPolitique", "updatePolitique", "deletePolitique"]));
         // setShowHistorique() = // a implementer
-        setShowPartenaire(session.getInstance().hasOneOfTheseAccessRights(["superAdmin", "insertPartenaire", "getPartenaire", "updatePartenaire", "deletePartenaire"]));
-        setShowDroitAcces(session.getInstance().hasOneOfTheseAccessRights(["superAdmin", "insertDroitAcces", "getDroitAcces", "updateDroitAcces", "deleteDroitAcces"]));
+        setShowPartenaire(session.getInstance().hasOneOfTheseAccessRights(["superAdmin", "getListPartenaire", "insertPartenaire", "getPartenaire", "updatePartenaire", "deletePartenaire"]));
+        setShowDroitAcces(session.getInstance().hasOneOfTheseAccessRights(["superAdmin", "getListDroitAcces", "insertDroitAcces", "getDroitAcces", "updateDroitAcces", "deleteDroitAcces"]));
+        setShowReservation(session.getInstance().hasOneOfTheseAccessRights(["superAdmin", "getListReservation"]));
     }, []);
     
     
@@ -98,6 +100,7 @@ function Navbar(props) {
                 <Tab value={7} icon={<PersonPinIcon />} iconPosition="start" label="Mon compte" />
                 { showPartenaire ? <Tab value={8} component={Link} to="/back/user" icon={<PersonPinIcon />} iconPosition="start" label="Partenaires" /> : null }
                 { showDroitAcces ? <Tab value={9} component={Link} to="/back/accessRight" icon={<PersonPinIcon />} iconPosition="start" label="Droit d'accès" /> : null }
+                { showReservation ? <Tab value={10} component={Link} to="/back/reservation" icon={<PersonPinIcon />} iconPosition="start" label="Réservation" /> : null }
                 <Drop click = {handleChange} close ={handleClose} open={open} anchorEl={anchorEl} />
                 <DropHisto click = {handleChange} close ={handleClose1} open={open1} anchorEl={anchorEl1} />
             </Tabs>

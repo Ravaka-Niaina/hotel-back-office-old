@@ -15,6 +15,7 @@ import {Card, CardContent, Typography, CardActions, Button, Box, Modal, TextFiel
 import { styled } from '@mui/material/styles';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 
+import callAPI from '../../../../utility';
 import {setValue} from '../../../../utility2.js';
 import SkeletonFacture from './skeletons/skeletonFacture.js';
 import InfoPolitiqueAnnul from './infoPolitiqueAnnul.js';
@@ -89,7 +90,7 @@ function Reservations(props){
                             </div>
                             <div>
                                 <span><PersonOutlineIcon/>x {tarif.nbPers} personnes</span>
-                                {tarif.politiqueAnnulAtrb ? 
+                                {tarif.politiqueAnnulAtrb && tarif.politiqueAnnulAtrb.length !== 0 ? 
                                     <HtmlTooltip
                                         title={
                                             <InfoPolitiqueAnnul 
@@ -123,9 +124,12 @@ function Reservations(props){
 
 function Itineraires(props){
     let itineraires = [];
-    console.log("itinerarairs");
-    console.log(props.context.state.itineraires);
     for(let i = 0; i < props.context.state.itineraires.length; i++){
+        let itineraire=props.context.state.itineraires[i];
+        let toPay=0;
+        for(let u = 0; u < itineraire.tarifReserves.length; u++){
+            toPay += itineraire.tarifReserves[u].toPay.afterProm;
+        }
         itineraires.push(
             <Box className={styles.sidetitle}>
                 <Card><p>
@@ -138,7 +142,7 @@ function Itineraires(props){
                 <Reservations context={props.context} indexItineraire={i} annulerReservation={props.annulerReservation} />
                 <Card>
                     <p>
-                    Total : <span>{props.context.state.itineraires[i].toPay ? props.context.state.itineraires[i].toPay.toFixed(2) : ""} EUR</span>
+                    Total : <span>{toPay} EUR</span>
                     </p>
                 </Card>
             </Box>
@@ -187,7 +191,7 @@ class Fact extends React.Component{
     }
 
     componentDidMount(){
-        // console.log("reservation from cookies");
+        console.log("check cookies");
         // // console.log(this.props.context.state.reservationEnCours);
         // console.log("fact did mount");
         this.props.context.setReservationEnCours(null, true);
@@ -233,21 +237,30 @@ class Fact extends React.Component{
 
     printFacture(){
         let valider = null;
-         console.log("pin facture");
+        
         let toPay = 0;
         for(let i = 0; i < this.props.context.state.itineraires.length; i++){
-            
+         
             for(let u = 0; u < this.props.context.state.itineraires[i].tarifReserves.length; u++){
-                
                 if(this.props.context.state.itineraires[i].tarifReserves[u].etat == undefined
                     || this.props.context.state.itineraires[i].tarifReserves[u].etat == 1){
                     valider = (<p style={{textAlign:'center',paddingBottom:'12px'}}><Button size='medium' variant="contained"  onClick={(e) => this.validerReservation()} endIcon={<CallMissedOutgoingIcon/>}>Valider réservation</Button></p>);
                     break;
                 }
             }
-            if(this.props.context.state.itineraires[i].toPay > 0){
-                toPay += this.props.context.state.itineraires[i].toPay;
+           
+            
+        }
+        for(let i = 0; i < this.props.context.state.itineraires.length; i++){
+            let toPayItineraire =0;
+            for(let u = 0; u < this.props.context.state.itineraires[i].tarifReserves.length; u++){
+                toPayItineraire += this.props.context.state.itineraires[i].tarifReserves[u].toPay.afterProm;
+              
             }
+           
+            
+            toPay += toPayItineraire;
+            
         }
         
         return(

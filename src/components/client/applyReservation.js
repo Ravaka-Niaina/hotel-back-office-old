@@ -22,6 +22,8 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import './confirmation_reservation.css';
 import PaiementField from './applyReservation/PaiementField';
 import { is } from 'date-fns/locale';
+import ModalAnnulation from '../common/ModalAnnulation.js';
+
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
   
@@ -65,7 +67,10 @@ function ApplyReservation(props){
     const [isConnectionShowing, setIsConnectionShowing] = useState(false);
     const [isConditionAccepted, setIsConditionAccepted] = useState(false);
     const [conditionError, setConditionError] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [load, setLoad] = useState(false);
 
+    
     function handleResponse(res){
         console.log(res);
         setOpenLoad(false);
@@ -78,6 +83,22 @@ function ApplyReservation(props){
             window.location.href = '#error';
         }
     }
+    function ShowModalAnnulation(){
+        setShowModal(!showModal);
+    }
+    function handleResponse1(res){
+        if(res.status == 200){
+            history.push('/');
+        }else{
+            setAlertError(res.errors[0].message);
+            window.location.href = '#error';
+        }
+    }
+
+    function annulerReservation(){
+        setLoad(true);
+        callAPI('post', '/reservation/annulerReservationWithEmail', {_id: reservation._id, reservateur: reservateur, reservation: reservation , email : reservateur.email}, handleResponse1 );
+     }
 
     function validerReservation(){
         if(isConditionAccepted){
@@ -226,31 +247,7 @@ function ApplyReservation(props){
                                             autoComplete="off"
                                             class="container_infos"
                                         >
-                                            {/* <TextField
-                                                id="outlined-required"
-                                                label="Nom"
-                                                placeholder="dupond"
-                                                value={reservateur.nom}
-                                                onChange={(e) => handleChangeInfoReservateur("nom", e.target.value)} />
-                                            <TextField
-                                                id="outlined-required"
-                                                label="Email"
-                                                placeholder="dupond@gmail.com"
-                                                type="email"
-                                                value={reservateur.email}
-                                                onChange={(e) => handleChangeInfoReservateur("email", e.target.value)} />
-                                            <TextField
-                                                id="outlined-required"
-                                                label="Tel"
-                                                placeholder="034 00 000 00"
-                                                value={reservateur.tel}
-                                                onChange={(e) => handleChangeInfoReservateur("tel", e.target.value)} />
-                                            <TextField 
-                                                label="Message particulier"
-                                                placeholder="Votre message"
-                                                value={reservateur.messageParticulier}
-                                                onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} />         */}
-                                                <div class="input-field">
+                                            <div class="input-field">
                                                     <input type="text" value={reservateur.prenom}
                                                 onChange={(e) => handleChangeInfoReservateur("prenom", e.target.value)} onBlur={(e) => handleEmptyInfoReservateur("prenom")} required />
                                                     <label>Prénom <span class="red_required">*</span></label>
@@ -317,14 +314,7 @@ function ApplyReservation(props){
                                             </div>
                                         :null
                                         }
-                                        {/* <hr style={{marginLeft:'0.8em'}}></hr> */}
-                                        {/* <h2 class="infos_heading"><span>Détails et préférences supplémentaires</span></h2> */}
-                                        {/* <div class="details_reservation">
-                                            <textarea value={reservateur.messageParticulier}
-                                                onChange={(e) => handleChangeInfoReservateur("messageParticulier", e.target.value)} class="text_reservation" id="details_reservation" maxlength="200" type="textarea" name="commentArea" aria-label="Veuillez noter vos demandes ou besoins spéciaux (maximum 200 caractères)" placeholder=""></textarea>
-                                            <label class="label_reservation">Veuillez indiquer vos demandes ou besoins spéciaux.</label>
-                                        </div> */}
-                                       
+                                        
                                     </div>
                                     : <div class="champs">
                                         <Champs label="Nom" value={reservateur.nom.trim() !== "" ? reservateur.nom : "vide"} />
@@ -366,15 +356,9 @@ function ApplyReservation(props){
                             </div>
                             <p style={{marginLeft:'0.8rem',fontSize:14}}>En effectuant cette réservation, j'accepte les <span> <a href='' style={{textDecoration:'none',color:'#587817'}}> conditions de réservation. </a> </span> </p>
                         </div>
-                        {/* <Stack direction="row" spacing={2}>
-                            <Button variant="contained">Imprimer</Button>
-                            <Button variant="contained">Partager</Button>
-                            <Button variant="contained">Ajouter au calendrier</Button>
-                        </Stack> */}
                         <br />
                         <div style={{display:'flex',flexDirection:'row',flexWrap:'no-wrap',justifyContent:'space-between'}}>
-                            {/* <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" variant="contained" onClick={(e) => setIsEditEnabled(!isEditEnabled)}>{isEditEnabled ? "Désactiver modification réservation" : "Modifier réservation"}</button> */}
-                            <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained">Annuler réservation</button>
+                            <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained" onClick={(e) => ShowModalAnnulation()}>Annuler réservation</button>
                             <button  style={{minWidth:250,heigth:80}}  class="btn button_btn button_pink button_sm" variant="contained" onClick={(e) => validerReservation()}>Valider réservation</button>
                        
                          </div>
@@ -394,7 +378,8 @@ function ApplyReservation(props){
                 open={openLoad}
             >
                 <CircularProgress color="inherit" />
-            </Backdrop>        
+            </Backdrop>
+            <ModalAnnulation ShowModalAnnulation={ShowModalAnnulation} showModal={showModal}  annulerReservation={annulerReservation} load ={load}  />        
         </>
     );
 
