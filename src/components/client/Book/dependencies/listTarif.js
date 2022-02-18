@@ -117,7 +117,7 @@ function ListTarif(props){
             const Random = NumeroIntineraire(props.context.state.random , props.context.state.nameHotel,TChambre);
             //numero confirmation
             const numeroConfirm = numeroConfirmation(0,props.context.state.nameHotel, TChambre);
-            console.log(numeroConfirm);
+
             itineraires[lastItineraire].tarifReserves.push({
                 idTarif: id, 
                 dateSejour: dateSejour,
@@ -125,7 +125,8 @@ function ListTarif(props){
                 guests: props.context.state.guests,
                 idTypeChambre : idTypeChambre,
                 nbPers: nbPers,
-                numeroConfirmation : numeroConfirm
+                numeroConfirmation : numeroConfirm,
+                reservateurWithEmail : {nom : "" , prenom : "" , email : '' , tel : '' }
             });
             const data = {itineraires: itineraires , numeroIntineraire : Random };
             callAPI("post" , "/reservation/insert" , data , setReservationEnCours);

@@ -10,6 +10,7 @@ import {getDiffDays} from '../../client/utility.js';
 import './Itineraires.css';
 import Box from '@mui/material/Box';
 import InputContact from './InputContact.js';
+
 function TarifReserves(props){
     const [annulChambre, setAnnulChambre] = useState(
         {
@@ -62,7 +63,10 @@ function TarifReserves(props){
 
                     </div> 
                     <div class="input_utilisateur">
-                        <InputContact isEditEnabled={props.isEditEnabled} reservateur={props.reservateur} />
+                        <InputContact isEditEnabled={props.isEditEnabled} reservateur={props.reservateur} 
+                                reservation ={props.reservation} setReservation = {props.setReservation} 
+                                indiceItineraire = {props.indexItineraire} 
+                                indiceTarifReserver = {i}/>
 
                     </div>
                     
