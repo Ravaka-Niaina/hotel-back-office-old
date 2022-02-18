@@ -56,6 +56,7 @@ class Scroll extends React.Component{
         let expiration = new Date(datenow + duree_cookie*60000);
     
         this.state = {
+            err: null,
             openChangeDateSejour: false,
             changeDateSejour: true, 
             resultApplyReservation: null,
@@ -69,7 +70,6 @@ class Scroll extends React.Component{
             itineraires: [],
             showFiltre : false,
             open: false,
-            err: null,
             email: "",
             reload: true,
             openCalendar: false,
@@ -99,17 +99,19 @@ class Scroll extends React.Component{
         let datenow =Date.now();
         let currentState = JSON.parse(JSON.stringify(this.state));
         let dateexpiration =new Date(currentState.expirationCookie);
-        console.log("check expiration:"+dateexpiration+" vs "+new Date(datenow) );
+        // 
         if(datenow>dateexpiration.getTime()){
+            console.log("check expiration:"+dateexpiration+" vs "+new Date(datenow) );
             console.log("expire cookie");
             currentState.expirationCookie =new Date(datenow + duree_cookie*60000);
             currentState.reservationEnCours=empty_reservation;
-            currentState.itineraires = [];
-            // currentState.changeDateSejour = true;
-            // currentState.dateSejour.debut = "";
-            // currentState.dateSejour.fin = "";
-            // currentState.listTypeChambre = [];
             currentState.err="Votre réservation a expirée";
+            currentState.itineraires = [];
+            currentState.changeDateSejour = true;
+            currentState.dateSejour.debut = "";
+            currentState.dateSejour.fin = "";
+            currentState.listTypeChambre = [];
+            
             this.setState(currentState);
         }
     }
