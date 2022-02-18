@@ -85,9 +85,35 @@ class Scroll extends React.Component{
         };
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
         this.setResult = this.setResult.bind(this);
+        let that =this;
         this.handleChange = this.handleChange.bind(this);
+        const intervalId = setInterval(() => {
+            that.checkExpirationCookie();
+        }, 30000);
+      
     
     }
+  
+    
+    checkExpirationCookie(){
+        let datenow =Date.now();
+        let currentState = JSON.parse(JSON.stringify(this.state));
+        let dateexpiration =new Date(currentState.expirationCookie);
+        console.log("check expiration:"+dateexpiration+" vs "+new Date(datenow) );
+        if(datenow>dateexpiration.getTime()){
+            console.log("expire cookie");
+            currentState.expirationCookie =new Date(datenow + duree_cookie*60000);
+            currentState.reservationEnCours=empty_reservation;
+            currentState.itineraires = [];
+            // currentState.changeDateSejour = true;
+            // currentState.dateSejour.debut = "";
+            // currentState.dateSejour.fin = "";
+            // currentState.listTypeChambre = [];
+            currentState.err="Votre réservation a expirée";
+            this.setState(currentState);
+        }
+    }
+    
     handleChangeCookies(reservation,expirationTime) {
         console.log("set Cookies");
         const { cookies } = this.props;
@@ -220,8 +246,10 @@ class Scroll extends React.Component{
             const { cookies } = this.props;
             let reservationCookies=cookies.get(name_cookies);
             console.log("reservationCookies");
+            currentState.err="Votre réservation expirera dans "+duree_cookie+ " minutes";
             console.log(reservationCookies);
-            if(reservationCookies==null){
+            if(reservationCookies==null || reservationCookies==undefined){
+               
                 reservationCookies =empty_reservation;
                 let datenow =Date.now();
         
