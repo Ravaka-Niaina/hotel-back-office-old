@@ -24,7 +24,6 @@ const accessRightToViewDetails = ["superAdmin", "getReservation", "updateReserva
 const accessRightToViewList = ["superAdmin", "getListReservation"];
 
 const ListeReservation = () => {
-    /*
     const hasAR = session.getInstance().hasOneOfTheseAccessRights(["updateReservation", "deleteReservation", "getListReservation", "superAdmin"]);
     if(!session.getInstance().isConnected()){
         return(<Login urlRedirect={window.location.href} />);
@@ -36,7 +35,6 @@ const ListeReservation = () => {
         <Rechercher 
             currentPage={9}
             method={method}
-            btnInsert={btnInsert}
             urlSearch={urlSearch}
             tableName={tableName}
             fieldsToSearch={fieldsToSearch}
@@ -50,6 +48,5 @@ const ListeReservation = () => {
             accessRightToViewDetails={accessRightToViewDetails}
         />
     );
-    */
 }
 export default ListeReservation;
