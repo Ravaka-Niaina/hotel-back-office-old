@@ -273,7 +273,7 @@ function InsertTypeCHambre(){
                       Nom
                       </p>
                             } 
-                      style={{width:'370px'}}
+                      style={{width:'325px'}}
                       type="text" 
                       value={state.nom} onChange={(e) => handleInputChange(e, "nom")}
                       error={state.error.nom === null ? false : true}
@@ -289,7 +289,7 @@ function InsertTypeCHambre(){
                         </p>
                              } 
                       type="number"
-                      style={{width:'370px',marginLeft:'123px'}}
+                      style={{width:'325px',marginLeft:'123px'}}
                       value={state.chambreTotal} onChange={(e) => handleInputChange(e, "chambreTotal")}
                       error={state.error.chambreTotal === null ? false : true}
                       helperText={state.error.chambreTotal === null ? null : state.error.chambreTotal}
@@ -306,7 +306,7 @@ function InsertTypeCHambre(){
                           </p>
                               } 
                         type="number"
-                        style={{width:'370px'}}
+                        style={{width:'325px'}}
                         value={state.etage} onChange={(e) => handleInputChange(e, "etage")}
                         error={state.error.etage === null ? false : true}
                         helperText={state.error.etage === null ? null : state.error.etage}
@@ -321,7 +321,7 @@ function InsertTypeCHambre(){
                           </p>
                               } 
                         type="number" 
-                        style={{width:'370px',marginLeft:'123px'}}
+                        style={{width:'325px',marginLeft:'123px'}}
                         value={state.superficie} onChange={(e) => handleInputChange(e, "superficie")}
                         error={state.error.superficie === null ? false : true}
                         helperText={state.error.superficie === null ? null : state.error.superficie}
@@ -352,7 +352,7 @@ function InsertTypeCHambre(){
                       type="number"
                       value={state.nbAdulte}
                       onChange={(e) => handleInputChange(e, "nbAdulte")}
-                      style={{width:'370px'}}
+                      style={{width:'325px'}}
                       error={state.error.nbAdulte === null ? false : true}
                       helperText={state.error.nbAdulte === null ? null : state.error.nbAdulte}
                       />
@@ -368,7 +368,7 @@ function InsertTypeCHambre(){
                       type="number" 
                       value={state.nbEnfant}
                       onChange={(e) => handleInputChange(e, "nbEnfant")}
-                      style={{width:'370px',marginLeft:'123px'}}
+                      style={{width:'325px',marginLeft:'123px'}}
                       error={state.error.nbEnfant === null ? false : true}
                       helperText={state.error.nbEnfant === null ? null : state.error.nbEnfant}
                       />
