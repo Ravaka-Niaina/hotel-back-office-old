@@ -6,7 +6,6 @@ import styles from "./SkeletonPhotoChambre.module.css";
 
 export default function SkeletonPhotoChambre ({nbImage, setNbImage}) {
     let tmpNbImage = nbImage > 1 ? nbImage : 1;
-    tmpNbImage = 10;
     let skeletons = [];
     for(let i = 0; i < tmpNbImage; i++){
         skeletons.push(

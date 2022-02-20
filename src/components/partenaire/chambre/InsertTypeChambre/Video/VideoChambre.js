@@ -25,7 +25,6 @@ function addInputVideo(state, setState, context){
     }else{
         context.setState(currentState);
     }
-    
 }
 
 function removeInputVideo(state, setState, index, context){

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import CustomError from '../../../CustomError';
-import React, {useEffect} from "react";
+import {useEffect} from "react";
 import Navbar from "../Navbar/Navbar";
 import { Checkbox } from "@mui/material";
 import './typeChambre.css';
@@ -10,10 +10,9 @@ import {Link} from 'react-router-dom';
 
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom';
 
 import callAPI from '../../../utility';
-import {FileInput, Preview, Videos, Font} from './utilityTypeChambre.js';
 import {session} from '../../common/utilitySession.js';
 import NotEnoughAccessRight from '../../common/NotEnoughAccessRight';
 
@@ -62,7 +61,6 @@ function InsertTypeCHambre(){
       nom: '',
       nbAdulte: '',
       nbEnfant: '',
-      photo: [],
       
       chambreTotal:'',
       etage:'',
@@ -70,12 +68,13 @@ function InsertTypeCHambre(){
       description:'',
       planTarifaire: [],
       equipements: [],
-      preview: [noImage],
       videos: []
     }
   );
   const { _id } = useParams();
   const [skeletonAffiche , setSkeleton] = useState(true);
+  const [photo, setPhoto] = useState([]);
+  const [preview, setPreview] = useState([noImage]);
   
   const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
   const hasARInsert = session.getInstance().hasOneOfTheseAccessRights(["insertTypeChambre", "superAdmin"]);
@@ -84,35 +83,47 @@ function InsertTypeCHambre(){
   const fieldsToSet = ["_id", "nom", "nbAdulte", "nbEnfant", "photo",
       "chambreTotal", "etage", "superficie", "description",
       "planTarifaire", "equipements", "videos"];
-
+  
+  const [areImagesLoading, setAreImagesLoading] = useState(isInsert ? false : true);
   const [btnLoad, setBtnLoad] = useState(false);
   
   const setDetailsTypeChambre = (data) => {
     let currentState = {...state};
+
     if(data.status === 401){//Unauthorized
       history.push('/back/login');
     }else if(data.status === 403){
       history.push('/notEnoughAccessRight');
     }
+
     fieldsToSet.map(field => {
       currentState[field] = data.typeChambre[field];
     });
-    if(currentState.photo != '' || 
-        currentState.photo != undefined ||
-        currentState.photo != null){
-            currentState.preview = [];
-            for(let i = 0; i < currentState.photo.length; i++){
-                currentState.preview[i] = process.env.REACT_APP_BACK_URL + "/" + currentState.photo[i];
-            }
-        }
+
+    let tmpPhoto = JSON.parse(JSON.stringify(data.typeChambre.photo));
+    delete currentState.photo;
+    
+    if(photo != '' || 
+      photo != undefined ||
+      photo != null){
+      let tmpPreview = [];
+      for(let i = 0; i < tmpPhoto.length; i++){
+        tmpPreview[i] = process.env.REACT_APP_BACK_URL + "/" + tmpPhoto[i];
+      }
+      setPreview(tmpPreview);
+    }
+
+    setPhoto(tmpPhoto);
     setState(currentState);
     setSkeleton(false);
-}
+    setAreImagesLoading(false);
+  }
 
   useEffect(() => {
     if(isInsert && hasARInsert){
       callAPI('get', '/TCTarif/infoInsertTypeChambre', {}, setInfo);
     }else if(hasARGet || hasARUpdate){
+      setAreImagesLoading(true);
       callAPI("get", "/typeChambre/details/" + _id, {}, setDetailsTypeChambre);
     }
   }, [_id]);
@@ -193,6 +204,7 @@ function InsertTypeCHambre(){
       }
     }
     toSend.planTarifaire = selectedPlan;
+    toSend.photo = photo;
     callAPI('post', '/typeChambre/insert', toSend, tryRedirect);
   }
 
@@ -218,6 +230,7 @@ function InsertTypeCHambre(){
         }
     }
     toSend.planTarifaire = planTarifaire;
+    toSend.photo = photo;
     callAPI('post', '/typeChambre/update/', toSend, tryRedirect);
   }
 
@@ -226,15 +239,6 @@ function InsertTypeCHambre(){
       currentState[inputName] = event.target.value;
       currentState.error[inputName] = null;
       setState(currentState);
-  }
-
-  function handleVideoChange(e){
-    let currentState = JSON.parse(JSON.stringify(state));
-    currentState.videos = [];
-    for(let i = 0; i < e.target.files.length; i++){
-      currentState.videos.push({});
-    }
-    setState(currentState);
   }
 
   const style = {
@@ -323,7 +327,9 @@ function InsertTypeCHambre(){
                         helperText={state.error.superficie === null ? null : state.error.superficie}
                       />
                     </div>
-                    <PhotoChambre state={state} setState={setState} noImage={noImage} />
+                    <PhotoChambre state={state} setState={setState} noImage={noImage}
+                      photo={photo} setPhoto={setPhoto} preview={preview} setPreview={setPreview}
+                      areImagesLoading={areImagesLoading} setAreImagesLoading={setAreImagesLoading} />
                     <VideoChambre state={state} setState={setState} />
 
                     <div style={{marginTop:'10px'}}>
