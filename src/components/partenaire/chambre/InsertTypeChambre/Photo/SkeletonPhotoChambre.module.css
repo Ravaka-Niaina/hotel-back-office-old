@@ -1,0 +1,10 @@
+.photo{
+    margin-left: -5px;
+}
+.photo > div{
+    width: fit-content;
+    display: inline;
+    margin-bottom: 3px;
+    margin-left: 3px;
+    margin-right: 3px;
+}
