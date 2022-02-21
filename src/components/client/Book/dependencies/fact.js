@@ -180,7 +180,7 @@ class Fact extends React.Component{
         }else{
             console.log(res);
         }
-        setShowButton(false);
+      
     }
     validerReservation(){
         this.props.context.handleChange("err", null);
@@ -191,9 +191,12 @@ class Fact extends React.Component{
             if(this.props.context.state.reservationEnCours._id != ""){
                 idVide = false;
                 // this.props.context.props.history.push("/reservation/" + this.props.context.state.reservationEnCours._id + "/apply");
-                const itineraires =  props.context.state.itineraires;
+                const itineraires =  this.props.context.state.itineraires;
                 const data = {itineraires: itineraires};
-                callAPI("post" , "/reservation/insertReservationPanier" , data , reservationValide);
+                callAPI("post" , "/reservation/insertReservationPanier" , data , (res)=>{
+                    console.log("reservation panier");
+                    console.log(res);
+                });
             }
             if(this.props.context.state.email != ""){
                 emailVide = false;
