@@ -19,12 +19,13 @@ import callAPI from '../../../../utility';
 import {setValue} from '../../../../utility2.js';
 import SkeletonFacture from './skeletons/skeletonFacture.js';
 import InfoPolitiqueAnnul from './infoPolitiqueAnnul.js';
-
+import { useCookies,Cookies,withCookies } from "react-cookie";
+import { instanceOf } from 'prop-types';
 import './filtre.css';
 import styles from '../Book.module.css';
 
 import {getDiffDays} from '../../../../utility/utilityDate.js';
-
+const name_cookies="reservation-real";
 function PrintDateSejour(props){
     // itineraire, borne, handleChange, label
     let retour = [];
@@ -75,8 +76,10 @@ function Reservations(props){
             i++;
             const u = i;
             const nbNuit = getDiffDays(new Date(tarif.dateSejour.debut), new Date(tarif.dateSejour.fin));
-            console.log(tarif.politiqueAnnulAtrb);
+            // 
+            // console.log(tarif);
             if(tarif.etat == 1 || tarif.etat == undefined){
+                console.log("Tarif");
                 return (
                         <Card className={styles.stay}>
                         <CardContent>
@@ -122,6 +125,11 @@ function Reservations(props){
 function Itineraires(props){
     let itineraires = [];
     for(let i = 0; i < props.context.state.itineraires.length; i++){
+        let itineraire=props.context.state.itineraires[i];
+        let toPay=0;
+        for(let u = 0; u < itineraire.tarifReserves.length; u++){
+            toPay += itineraire.tarifReserves[u].toPay.afterProm;
+        }
         itineraires.push(
             <Box className={styles.sidetitle}>
                 <Card><p>
@@ -134,7 +142,7 @@ function Itineraires(props){
                 <Reservations context={props.context} indexItineraire={i} annulerReservation={props.annulerReservation} />
                 <Card>
                     <p>
-                    Total : <span>{props.context.state.itineraires[i].toPay ? props.context.state.itineraires[i].toPay.toFixed(2) : ""} EUR</span>
+                    Total : <span>{toPay} EUR</span>
                     </p>
                 </Card>
             </Box>
@@ -144,8 +152,10 @@ function Itineraires(props){
 }
 
 class Fact extends React.Component{
+   
     constructor(props){
         super(props);
+        const cookies= props;
         this.style = {
             position: 'absolute',
             top: '50%',
@@ -157,8 +167,21 @@ class Fact extends React.Component{
             boxShadow: 24,
             p: 4,
           };
-    }
+        
 
+    }
+    
+    
+    reservationValide(res){
+        if(res.status === 200){
+            console.log("validation reservation");
+            console.log(res.reservation);
+            // props.context.setReservationEnCours(res.reservation);
+        }else{
+            console.log(res);
+        }
+      
+    }
     validerReservation(){
         this.props.context.handleChange("err", null);
         this.props.context.handleChange("resultApplyReservation", null);
@@ -167,7 +190,18 @@ class Fact extends React.Component{
             let emailVide = true;
             if(this.props.context.state.reservationEnCours._id != ""){
                 idVide = false;
-                this.props.context.props.history.push("/reservation/" + this.props.context.state.reservationEnCours._id + "/apply");
+                // this.props.context.props.history.push("/reservation/" + this.props.context.state.reservationEnCours._id + "/apply");
+                const itineraires =  this.props.context.state.itineraires;
+                const data = {itineraires: itineraires};
+
+                callAPI("post" , "/reservation/insertReservationPanier" , data , (res)=>{
+                    console.log("reservation panier");
+                    console.log(res);
+                    if(res.status==200){
+                        this.props.context.clearCookies();
+                        this.props.context.props.history.push("/reservation/" + res.reservation._id + "/apply")
+                    }
+                });
             }
             if(this.props.context.state.email != ""){
                 emailVide = false;
@@ -177,32 +211,56 @@ class Fact extends React.Component{
     }
 
     componentDidMount(){
-        callAPI('get', '/reservation', {}, (data) => {
-            let reserv = data.reservation === null ? null : data.reservation[0];
-            this.props.context.setReservationEnCours(reserv, true);
-        });
+        console.log("check cookies");
+        // // console.log(this.props.context.state.reservationEnCours);
+        // console.log("fact did mount");
+        this.props.context.setReservationEnCours(null, true);
+        // axios({
+        //     method: 'get',
+        //     url: process.env.REACT_APP_BACK_URL + '/reservation/',
+        //     withCredentials: true,
+        //     data: {}
+        // })
+        // .then(res => {
+        //     let reserv = res.data.reservation === null ? null : res.data.reservation[0];
+        //     console.log(reserv);
+        //     
+        // }).catch(err => console.log(err));
     }
 
     annulerReservation(context, idReservation, indexItineraire, indexTarifReserve){
-        const data = { _id: idReservation, indexItineraire: indexItineraire, indexTarifReserve: indexTarifReserve };
-        console.log(data);
-        console.log(context.state.itineraires);
-        axios({
-            method: 'post',
-            url: process.env.REACT_APP_BACK_URL + '/reservation/delete',
-            withCredentials: true,
-            data: data
-        })
-        .then(res => { 
-            console.log(res);                                               
-            context.setReservationEnCours(res.data.reservation)})
-        .catch(err => console.log(err));
+        // const data = { _id: idReservation, indexItineraire: indexItineraire, indexTarifReserve: indexTarifReserve };
+        // console.log(data);
+        // console.log(context.state.itineraires);
+        // axios({
+        //     method: 'post',
+        //     url: process.env.REACT_APP_BACK_URL + '/reservation/delete',
+        //     withCredentials: true,
+        //     data: data
+        // })
+        // .then(res => { 
+        //     console.log(res);                                               
+        //     context.setReservationEnCours(res.data.reservation)})
+        // .catch(err => console.log(err));
+        let reservation = context.state.reservationEnCours;
+        try{
+            reservation.itineraires[indexItineraire].tarifReserves.splice(indexTarifReserve, 1); 
+            if(reservation.itineraires[indexItineraire].tarifReserves.length ==0){
+                reservation.itineraires.splice(indexItineraire,1);
+            }
+            
+        }catch(e){
+
+        }
+        context.setReservationEnCours(reservation);
     }
 
     printFacture(){
         let valider = null;
+        
         let toPay = 0;
         for(let i = 0; i < this.props.context.state.itineraires.length; i++){
+         
             for(let u = 0; u < this.props.context.state.itineraires[i].tarifReserves.length; u++){
                 if(this.props.context.state.itineraires[i].tarifReserves[u].etat == undefined
                     || this.props.context.state.itineraires[i].tarifReserves[u].etat == 1){
@@ -210,10 +268,21 @@ class Fact extends React.Component{
                     break;
                 }
             }
-            if(this.props.context.state.itineraires[i].toPay > 0){
-                toPay += this.props.context.state.itineraires[i].toPay;
-            }
+           
+            
         }
+        for(let i = 0; i < this.props.context.state.itineraires.length; i++){
+            let toPayItineraire =0;
+            for(let u = 0; u < this.props.context.state.itineraires[i].tarifReserves.length; u++){
+                toPayItineraire += this.props.context.state.itineraires[i].tarifReserves[u].toPay.afterProm;
+              
+            }
+           
+            
+            toPay += toPayItineraire;
+            
+        }
+        
         return(
             <div className={styles.printFacture}>
                 <div style={{textAlign:'center'}}>
@@ -269,6 +338,7 @@ class Fact extends React.Component{
     }
 
     render(){
+        
         return(
             <div>
                 {this.props.context.state.isFactureReceived ? this.printFacture() : <SkeletonFacture />}
