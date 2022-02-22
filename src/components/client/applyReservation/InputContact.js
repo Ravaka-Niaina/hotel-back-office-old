@@ -2,6 +2,7 @@ import { Box } from '@mui/material';
 import { useState } from 'react';
 import {Champs} from '../../common/commonAssets.js';
 function InputContact(props){
+
     const [reservateur, setReservateur] = useState({prenom:"",nom: "", email: "", tel: "", messageParticulier: ""});
     const [errorEmpty, setErrorEmpty] = useState({prenom:false,nom: false, email: false, tel: false, messageParticulier: false});
     
@@ -18,20 +19,27 @@ function InputContact(props){
             setReservateur({prenom:"",nom: "", email: "", tel: "", messageParticulier: ""});
         }
     }
-    function handleChangeInfoReservateur(field, value){
+    function handleChangeInfoReservateur(field, value, indice){
+    
         let current = JSON.parse(JSON.stringify(reservateur));
         let errorField = JSON.parse(JSON.stringify(errorEmpty));
         current[field] = value;
+
+        let reservation = {...props.reservation};
+        reservation.itineraires[props.indiceItineraire].tarifReserves[props.indiceTarifReserver].reservateurWithEmail[field] = value;
         if(value!=""){
             errorField[field] = false; 
+        }else{
+            errorField[field] = true; 
         }
+        props.setReservation(reservation);
         setReservateur(current);
         setErrorEmpty(errorField);
     }
     function handleEmptyInfoReservateur(field){
         let reserv = JSON.parse(JSON.stringify(reservateur));
         let current = JSON.parse(JSON.stringify(errorEmpty));
-       
+        
         if(reserv[field]==='' ||reserv[field]===null){
             current[field] = true;
         }else{
@@ -51,14 +59,17 @@ function InputContact(props){
                     </span> : null
                     }
                 </div>
-                {props.isEditEnabled ?
-                <h2 class="infos_heading" style={{fontSize:'1.1rem'}}><span>Pour qui réservez-vous ?</span></h2> : null }
-                {props.isEditEnabled ?
-                <div class="inscription_quick">
+                    {
+                        props.isEditEnabled ?
+                            <h2 class="infos_heading" style={{fontSize:'1.1rem'}}><span>Pour qui réservez-vous ?</span></h2> : null 
+                    }
+                {
+                    props.isEditEnabled ?
+                        <div class="inscription_quick">
                                 <input type="checkbox" id="inscription_quick" name="scales"  checked={isClientPrincipal} onChange={handleClientprincipal}
                                         />
                                 <label for="scales">Je suis le client principal.</label>
-                </div>
+                    </div>
                 : null }
                 {props.isEditEnabled ?
                 <div class="inscription_quick">
@@ -81,8 +92,8 @@ function InputContact(props){
                             >
                                 
                                     <div class="input-field">
-                                        <input type="text" value={reservateur.prenom}
-                                    onChange={(e) => handleChangeInfoReservateur("prenom", e.target.value)} onBlur={(e) => handleEmptyInfoReservateur("prenom")} required />
+                                        <input type="text" value={reservateur.prenom}  
+                                        onChange={(e) => handleChangeInfoReservateur("prenom", e.target.value )} onBlur={(e) => handleEmptyInfoReservateur("prenom")} required />
                                         <label>Prénom <span class="red_required">*</span></label>
                                         {
                                             errorEmpty.prenom ?

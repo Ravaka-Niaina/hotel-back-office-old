@@ -22,7 +22,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import './confirmation_reservation.css';
 import PaiementField from './applyReservation/PaiementField';
 import { is } from 'date-fns/locale';
-import ModalAnnulation from '../common/ModalAnnulation.js';
+
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -67,8 +67,6 @@ function ApplyReservation(props){
     const [isConnectionShowing, setIsConnectionShowing] = useState(false);
     const [isConditionAccepted, setIsConditionAccepted] = useState(false);
     const [conditionError, setConditionError] = useState(false);
-    const [showModal, setShowModal] = useState(false);
-    const [load, setLoad] = useState(false);
 
     
     function handleResponse(res){
@@ -83,30 +81,13 @@ function ApplyReservation(props){
             window.location.href = '#error';
         }
     }
-    function ShowModalAnnulation(){
-        setShowModal(!showModal);
-    }
-    function handleResponse1(res){
-        if(res.status == 200){
-            history.push('/');
-        }else{
-            setAlertError(res.errors[0].message);
-            window.location.href = '#error';
-        }
-    }
-
-    function annulerReservation(){
-        setLoad(true);
-        callAPI('post', '/reservation/annulerReservationWithEmail', {_id: reservation._id, reservateur: reservateur, reservation: reservation , email : reservateur.email}, handleResponse1 );
-     }
+    
 
     function validerReservation(){
         if(isConditionAccepted){
             setOpenLoad(true);
             setAlertSuccess(null);
             setAlertError(null);
-           // console.log("reservateur:");
-            // console.log(reservateur);
             callAPI('post', '/reservation/applyWithEmail', {_id: reservation._id, reservateur: reservateur, reservation: reservation}, handleResponse );
         }else{
             setConditionError(true);
@@ -358,7 +339,6 @@ function ApplyReservation(props){
                         </div>
                         <br />
                         <div style={{display:'flex',flexDirection:'row',flexWrap:'no-wrap',justifyContent:'space-between'}}>
-                            <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained" onClick={(e) => ShowModalAnnulation()}>Annuler réservation</button>
                             <button  style={{minWidth:250,heigth:80}}  class="btn button_btn button_pink button_sm" variant="contained" onClick={(e) => validerReservation()}>Valider réservation</button>
                        
                          </div>
@@ -379,7 +359,7 @@ function ApplyReservation(props){
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <ModalAnnulation ShowModalAnnulation={ShowModalAnnulation} showModal={showModal}  annulerReservation={annulerReservation} load ={load}  />        
+                  
         </>
     );
 
