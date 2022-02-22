@@ -94,25 +94,42 @@ class Scroll extends React.Component{
     
     }
   
-    
+    clearCookies(){
+        console.log("Clear cookies");
+        let datenow =Date.now();
+        let currentState = JSON.parse(JSON.stringify(this.state));
+        let expiration =datenow + duree_cookie*60000;
+        currentState.expirationCookie =new Date(expiration);
+        currentState.reservationEnCours=empty_reservation;
+        currentState.itineraires = [];
+        currentState.changeDateSejour = true;
+        currentState.dateSejour.debut = "";
+        currentState.dateSejour.fin = "";
+        currentState.listTypeChambre = [];
+        const { cookies } = this.props;
+        cookies.set(name_cookies, empty_reservation, { path: '/' ,expires:new Date(expiration)});
+        this.setState(currentState);
+        
+    }
     checkExpirationCookie(){
         let datenow =Date.now();
         let currentState = JSON.parse(JSON.stringify(this.state));
         let dateexpiration =new Date(currentState.expirationCookie);
         // 
         if(datenow>dateexpiration.getTime()){
-            console.log("check expiration:"+dateexpiration+" vs "+new Date(datenow) );
-            console.log("expire cookie");
-            currentState.expirationCookie =new Date(datenow + duree_cookie*60000);
-            currentState.reservationEnCours=empty_reservation;
-            currentState.err="Votre réservation a expirée";
-            currentState.itineraires = [];
-            currentState.changeDateSejour = true;
-            currentState.dateSejour.debut = "";
-            currentState.dateSejour.fin = "";
-            currentState.listTypeChambre = [];
+            // console.log("check expiration:"+dateexpiration+" vs "+new Date(datenow) );
+            // console.log("expire cookie");
+            // currentState.expirationCookie =new Date(datenow + duree_cookie*60000);
+            // currentState.reservationEnCours=empty_reservation;
+            // currentState.err="Votre réservation a expirée";
+            // currentState.itineraires = [];
+            // currentState.changeDateSejour = true;
+            // currentState.dateSejour.debut = "";
+            // currentState.dateSejour.fin = "";
+            // currentState.listTypeChambre = [];
+            this.clearCookies();
             
-            this.setState(currentState);
+          
         }
     }
     

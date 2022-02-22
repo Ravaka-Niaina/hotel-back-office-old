@@ -193,10 +193,12 @@ class Fact extends React.Component{
                 // this.props.context.props.history.push("/reservation/" + this.props.context.state.reservationEnCours._id + "/apply");
                 const itineraires =  this.props.context.state.itineraires;
                 const data = {itineraires: itineraires};
+
                 callAPI("post" , "/reservation/insertReservationPanier" , data , (res)=>{
                     console.log("reservation panier");
                     console.log(res);
                     if(res.status==200){
+                        this.props.context.clearCookies();
                         this.props.context.props.history.push("/reservation/" + res.reservation._id + "/apply")
                     }
                 });
