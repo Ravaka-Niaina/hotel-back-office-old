@@ -196,6 +196,9 @@ class Fact extends React.Component{
                 callAPI("post" , "/reservation/insertReservationPanier" , data , (res)=>{
                     console.log("reservation panier");
                     console.log(res);
+                    if(res.status==200){
+                        this.props.context.props.history.push("/reservation/" + res.reservation._id + "/apply")
+                    }
                 });
             }
             if(this.props.context.state.email != ""){
