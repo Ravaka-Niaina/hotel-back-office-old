@@ -44,6 +44,7 @@ function Navbar(props) {
     const [showPartenaire, setShowPartenaire] = React.useState(true);
     const [showDroitAcces, setShowDroitAcces] = React.useState(true);
     const [showReservation, setShowReservation] = React.useState(true);
+    const [nbNotifs, setNbNotifs] = React.useState(0);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -86,6 +87,22 @@ function Navbar(props) {
         setShowReservation(session.getInstance().hasOneOfTheseAccessRights(["superAdmin", "getListReservation"]));
     }, []);
     console.log("reservation = " + showReservation);
+
+    function getNotification(){
+        return new Promise((resolve, reject) => {
+            setInterval(() => {
+                callAPI('post', '/notifPartenaire', {}, (data) => {
+                    setNbNotifs(data.nbNotifs);
+                });
+            }, 10000);
+        });
+    }
+
+    getNotification();
+
+    function seeNotifications(){
+        history.push('/back/reservation');
+    }
     
     return (
         <nav className="navbar navbar-expand-lg navbar-dark" id="navbar">
@@ -112,16 +129,19 @@ function Navbar(props) {
                 width: 'fit-content',
                 }}
             >
-                <Badge
-                sx={{
-                    "& .MuiBadge-badge": {
-                    color: "white",
-                    backgroundColor: "red"
-                    }
-                }}
-                className="mail-button" badgeContent={4}>
-                    <NotificationsActiveOutlinedIcon fontSize="large" color="action" />
-                </Badge>
+                { nbNotifs > 0 
+                ? <Badge
+                    sx={{
+                        "& .MuiBadge-badge": {
+                        color: "white",
+                        backgroundColor: "red"
+                        }
+                    }}
+                    className="mail-button" badgeContent={nbNotifs}
+                    onClick={(e) => seeNotifications()} >
+                        <NotificationsActiveOutlinedIcon fontSize="large" color="action" onClick={(e) => seeNotifications()} />
+                    </Badge>
+                : <NotificationsActiveOutlinedIcon fontSize="large" color="action" /> }
                 <Divider orientation="vertical" variant="middle" flexItem />
                 <IconButton aria-label="fingerprint" color="success" onClick={(e) => logout(e)}>
                     <LogoutOutlinedIcon />

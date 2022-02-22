@@ -28,6 +28,7 @@ import NotEnoughAccessRight from '../../common/NotEnoughAccessRight.js';
 import InputRecherche from './InputRecherche.js';
 import EnhancedTableHead from './EnhancedTableHead.js';
 import {headCells, HtmlTooltip, descendingComparator, getComparator, stableSort} from './Dependencies.js';
+import { removeSpecialCharFromDate } from '../../../utility/utilityDate.js';
 
 export default function ListeReservation(props){
     const [order, setOrder] = useState('asc');
@@ -67,6 +68,7 @@ export default function ListeReservation(props){
     const [fin, setFin] = useState("");
     const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(0);
+    const [searchDateOfWhich, setSearchDateOfWich] = useState({checkIn: false, checkOut: false, reservation: false});
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
@@ -88,10 +90,33 @@ export default function ListeReservation(props){
         setOrderBy(property);
     };
 
-    function rechercher(){}
+    function rechercher(){
+        let choiceDateCateg = undefined;
+        let keys = Object.keys(searchDateOfWhich);
+        for(let i = 0; i < keys.length; i++){
+            if(searchDateOfWhich[keys[i]] === true){
+                choiceDateCateg = keys[i];
+                break;
+            }
+        }
+        let toSend = {
+            debut: debut,
+            fin: fin,
+            choiceDateCateg: choiceDateCateg
+        };
+        if(etat !== ""){
+            toSend.etat = Number.parseInt(etat);
+        }
+        callAPI('post', '/reservation/partenaire', toSend, setResult);
+    }
+
+    function setResult(data){
+        setListResult(data.list);
+        
+    }
 
     useEffect(() => {
-        
+        callAPI('post', '/reservation/partenaire', {}, setResult);
     }, []);
 
     const emptyRows =
@@ -107,7 +132,10 @@ export default function ListeReservation(props){
                 fin={fin} setFin={setFin}
                 etat={etat} setEtat={setEtat}
                 errorEtat={errorEtat} setErrorEtat={setErrorEtat}
-                arrayEtat={arrayEtat} setArrayEtat={setArrayEtat} />
+                arrayEtat={arrayEtat} setArrayEtat={setArrayEtat}
+                searchDateOfWhich={searchDateOfWhich}
+                setSearchDateOfWich={setSearchDateOfWich}
+                rechercher={rechercher} />
             {isLoading ? <Paper sx={{ width: '100%', mb: 2 }}><Skeleton /></Paper> :<>
             <Paper sx={{ width: '100%', mb: 2 }}>
                 <TableContainer>
@@ -139,36 +167,120 @@ export default function ListeReservation(props){
                             role="checkbox"
                             tabIndex={-1}
                             key={row._id}
-                            >
-                                {
-                                    Object.keys(row).map(k => {
+                            >   
+                                <TableCell
+                                    component="td"
+                                    align = "left"
+                                >
+                                    <ul>
+                                        {row.itineraires.map(itineraire => {
+                                            return(
+                                                <>
+                                                    <li>
+                                                        {itineraire.NumeroITineraire}
+                                                    </li>
+                                                </>
+                                            );
+                                        })}
+                                    </ul>
+                                </TableCell>
+                                <TableCell
+                                    component="td"
+                                    align = "left"
+                                >
+                                    Num reserv temp
+                                </TableCell>
+                                <TableCell
+                                    component="td"
+                                    align = "left"
+                                >
+                                    {row.reservateur.nom + " " + row.reservateur.prenom}
+                                </TableCell>
+                                <TableCell
+                                    component="td"
+                                    align = "left"
+                                >
+                                    <ul>
+                                        <li>Rabearisoa Miora</li>
+                                        <li>Andriatsitoaina Feno</li>
+                                        <li>Rabetrano Pierre</li>
+                                    </ul>
+                                </TableCell>
+                                <TableCell
+                                    component="td"
+                                    align = "left"
+                                >
+                                    {removeSpecialCharFromDate(row.dateValidation)}
+                                </TableCell>
+                                <TableCell
+                                    component="td"
+                                    align = "left"
+                                >
+                                    <ul>
+                                        {row.itineraires.map(itineraire => {
+                                            return(<li>{removeSpecialCharFromDate(itineraire.dateSejour.debut)}</li>)
+                                        })}
+                                    </ul>
+                                </TableCell>
+                                <TableCell
+                                    component="td"
+                                    align = "left"
+                                >
+                                    <ul>
+                                        {row.itineraires.map(itineraire => {
+                                            return(<li>{removeSpecialCharFromDate(itineraire.dateSejour.fin)}</li>)
+                                        })}
+                                    </ul>
+                                </TableCell>
+                                <TableCell
+                                    component="td"
+                                    align = "left"
+                                >
+                                    <ul>
+                                        {row.itineraires.map(itineraire => {
+                                            return(<li>{removeSpecialCharFromDate(itineraire.nights)}</li>)
+                                        })}
+                                    </ul>
+                                </TableCell>
+                                <TableCell
+                                    component="td"
+                                    align = "left"
+                                >
+                                    {row.itineraires.map(itineraire => {
                                         return(
-                                            <>
+                                            <ul>
                                                 {
-                                                k === "_id" ? null :
-                                                <TableCell
-                                                  component="td"
-                                                  align = "left"
-                                                >
-                                                  { 
-                                                    typeof(row[k]) === "object" ? 
-                                                    row[k].map(elt => {
-                                                      return(<li>{elt}</li>);
-                                                    })
-                                                    : <>{row[k]} </>
-                                                  }
-                                                </TableCell>
-                                            }
-                                            </>
+                                                    itineraire.tarifReserves.map(tarif => {
+                                                    return(
+                                                            <li>{tarif.nomTypeChambre}</li>
+                                                    );
+                                                })}
+                                            </ul>
                                         );
-                                    })
-                                }
-                                <TableCell align="rigth">
-                                    <Link to={props.urlEdit + row._id}>
-                                        <HtmlTooltip title="Editer"> 
-                                            <EditIcon style={{color : "green"}} />
-                                        </HtmlTooltip> 
-                                    </Link >
+                                    })}
+                                </TableCell>
+                                <TableCell
+                                    component="td"
+                                    align = "left"
+                                >
+                                    {row.itineraires.map(itineraire => {
+                                        return(
+                                            <ul>
+                                                {
+                                                    itineraire.tarifReserves.map(tarif => {
+                                                    return(
+                                                            <li>{tarif.nomTarif}</li>
+                                                    );
+                                                })}
+                                            </ul>
+                                        );
+                                    })}
+                                </TableCell>
+                                <TableCell
+                                    component="td"
+                                    align = "left"
+                                >
+                                    {row.etat}
                                 </TableCell>
                             </TableRow>
                         );

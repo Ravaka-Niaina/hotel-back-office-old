@@ -1,13 +1,26 @@
-import Radio from '@mui/material/Radio';
+import Checkbox from '@mui/material/Checkbox';
 import RadioGroup from '@mui/material/RadioGroup';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
+import Button from '@mui/material/Button';
 
 export default function InputRecherche({debut, setDebut, fin, setFin, etat, setEtat,
-    errorEtat, setErrorEtat, arrayEtat, setArrayEtat}){
+    errorEtat, setErrorEtat, arrayEtat, setArrayEtat, 
+    searchDateOfWhich, setSearchDateOfWich, rechercher}){
+
+    function handleChangeDateCateg(categChoice, checked){
+        let tmp = {...searchDateOfWhich};
+        let keys = Object.keys(tmp);
+        for(let i = 0; i < keys.length; i++){
+            tmp[keys[i]] = false;
+        }
+        tmp[categChoice] = checked;
+        setSearchDateOfWich(tmp);
+    }
+
     return(
         <>
             <Box
@@ -23,17 +36,19 @@ export default function InputRecherche({debut, setDebut, fin, setFin, etat, setE
                         id="outlined-size-small"
                         size="small" label ="Date début"
                         name="Search"
-                        type="text"
+                        type="date"
                         value={debut}
                         onChange={(e) => setDebut(e.target.value)}
+                        InputLabelProps={{ shrink: true }}
                     />
                     <TextField
                         id="outlined-size-small"
                         size="small" label ="Date fin"
                         name="Search"
-                        type="text"
+                        type="date"
                         value={fin}
                         onChange={(e) => setFin(e.target.value)}
+                        InputLabelProps={{ shrink: true }}
                     />
                 </div>
             </Box>
@@ -46,9 +61,9 @@ export default function InputRecherche({debut, setDebut, fin, setFin, etat, setE
                         aria-labelledby="demo-row-radio-buttons-group-label"
                         name="row-radio-buttons-group"
                     >
-                        <FormControlLabel value="female" control={<Radio />} label="Date d'arrivée" />
-                        <FormControlLabel value="male" control={<Radio />} label="Date de départ" />
-                        <FormControlLabel value="other" control={<Radio />} label="Date de réservation" />
+                        <FormControlLabel checked={searchDateOfWhich.checkIn} onChange={(e) => handleChangeDateCateg("checkIn", e.target.checked)} control={<Checkbox/>} label="Date d'arrivée" />
+                        <FormControlLabel checked={searchDateOfWhich.checkOut} onChange={(e) => handleChangeDateCateg("checkOut", e.target.checked)} control={<Checkbox/>} label="Date de départ" />
+                        <FormControlLabel checked={searchDateOfWhich.reservation} onChange={(e) => handleChangeDateCateg("reservation", e.target.checked)} control={<Checkbox/>} label="Date de réservation" />
                     </RadioGroup>
                 </FormControl>
             </div>
@@ -65,7 +80,7 @@ export default function InputRecherche({debut, setDebut, fin, setFin, etat, setE
                 <TextField
                     id="standard-select-currency-native"
                     select
-                    label="Etat de la réservation"
+                    label="Statut"
                     value={etat}
                     onChange={(e) => setEtat(e.target.value)}
                     SelectProps={{
@@ -80,6 +95,11 @@ export default function InputRecherche({debut, setDebut, fin, setFin, etat, setE
                         </option>
                     ))}
                 </TextField>
+            </Box>
+            <Box>
+                <Button variant="contained" onClick={(e) => rechercher()}>
+                        Rechercher
+                </Button>
             </Box>
 
         </>

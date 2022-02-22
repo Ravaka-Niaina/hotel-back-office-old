@@ -23,6 +23,7 @@ import { styled } from '@mui/material/styles';
 import Skeleton from '../../../SkeletonListe/skeleton';
 
 import callAPI from '../../../utility.js';
+import { removeSpecialCharFromDate } from '../../../utility/utilityDate.js';
 import FooterList from './FooterList.js';
 import ValidationSuppression from './ValidationSuppression.js';
 import {session} from '../utilitySession.js';
@@ -115,25 +116,6 @@ EnhancedTableHead.propTypes = {
     orderBy: PropTypes.string.isRequired,
     rowCount: PropTypes.number.isRequired,
 };
-
-function removeSpecialCharFromDate(date, type){
-  date = "" + date;
-  if(date.includes(" ")){
-    if(type === "Date"){
-      date = date.split(" ")[0];
-    }
-  }else if(date.includes("T")){
-    const elts = date.split("T");
-    if(type === "Date"){
-      date = elts[0];
-    }else{
-      const datePart = elts[0];
-      const timePart = elts[1].split("Z")[0];
-      date = datePart + " " + timePart;
-    }
-  }
-  return date;
-}
 
 const getValue = (row, fieldName) => {
   let value = {...row};

@@ -37,3 +37,22 @@ export const getDiffDays = (StartDate, EndDate) => {
         Date.UTC(StartDate.getFullYear(), StartDate.getMonth(), StartDate.getDate())) / 86400000;
     return nDays;
 }
+
+export const removeSpecialCharFromDate = (date, type) => {
+    date = "" + date;
+    if(date.includes(" ")){
+      if(type === "Date"){
+        date = date.split(" ")[0];
+      }
+    }else if(date.includes("T")){
+      const elts = date.split("T");
+      if(type === "Date"){
+        date = elts[0];
+      }else{
+        const datePart = elts[0];
+        const timePart = elts[1].split("Z")[0];
+        date = datePart + " " + timePart;
+      }
+    }
+    return date;
+}
