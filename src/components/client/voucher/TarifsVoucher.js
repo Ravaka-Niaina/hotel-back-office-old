@@ -34,7 +34,7 @@ function TarifsVoucher(props){
         console.log(temp);
         setAnnulChambre(temp);
     }
-   
+
     
     let tarifs = [];
     let hotelItineraire=null;
@@ -112,7 +112,7 @@ function TarifsVoucher(props){
                             <div>details </div>
                             
                         </div>
-                        <button  style={{marginTop:'0.8rem'}} class="voucher_link" datatest="Button"><span>annuler la réservation de la chambre</span></button>
+                        <button  style={{marginTop:'0.8rem'}} class="voucher_link" datatest="Button" ><span>annuler la réservation de la chambre</span></button>
                         <hr style={{marginTop:-2}}></hr>
                         <div style={{textAlign:'right',fontWeight:700,marginTop:'0.8rem'}}><span>Total de la réservation&nbsp;:</span> <span class="booking-summary-reservations_amount"><span>{tarif.toPay.afterProm}&nbsp;€</span></span></div>
                         

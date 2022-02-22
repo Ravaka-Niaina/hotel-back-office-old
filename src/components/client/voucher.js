@@ -138,7 +138,6 @@ function Voucher(props){
                     <p><strong><span>Modification des réservations</span></strong></p>
                     <button   class="button_pannel" >Modifier la réservation</button>
                     <p style={{marginTop:'1rem'}}><strong><span>Annulations</span></strong></p>
-                    <button   class="button_pannel" >Annuler l'itinéraire</button>
                     <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained" onClick={(e) => ShowModalAnnulation()}>Annuler réservation</button>
                             
                 </div>
