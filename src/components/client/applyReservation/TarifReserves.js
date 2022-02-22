@@ -49,7 +49,7 @@ function TarifReserves(props){
                 <div class="box_reservation">
                     
                     <div class="infos_chambre">
-                        <img  src={tarif.infoTypeChambre.photo[0]}/>
+                        <img  src={process.env.REACT_APP_BACK_URL+"/"+tarif.infoTypeChambre.photo[0]}/>
                         <div class="details_chambre">
                             <p class="title_hotel">Chambre {(i+1)}</p>
                             <p class="chambre"> {tarif.nomTypeChambre} </p>
