@@ -85,7 +85,7 @@ function Navbar(props) {
         setShowDroitAcces(session.getInstance().hasOneOfTheseAccessRights(["superAdmin", "getListDroitAcces", "insertDroitAcces", "getDroitAcces", "updateDroitAcces", "deleteDroitAcces"]));
         setShowReservation(session.getInstance().hasOneOfTheseAccessRights(["superAdmin", "getListReservation"]));
     }, []);
-    
+    console.log("reservation = " + showReservation);
     
     return (
         <nav className="navbar navbar-expand-lg navbar-dark" id="navbar">

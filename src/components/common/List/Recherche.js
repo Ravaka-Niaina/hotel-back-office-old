@@ -1,24 +1,16 @@
 import  React,{useEffect}  from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
-import Toolbar from '@mui/material/Toolbar';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
-import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
 import  Navbar  from "../../partenaire/Navbar/Navbar.js";
 import { Link } from 'react-router-dom';
@@ -26,10 +18,7 @@ import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
 
 import EditIcon from '@mui/icons-material/Edit';
-import SearchIcon from '@mui/icons-material/Search';
-import TextField from '@mui/material/TextField';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
 import { styled } from '@mui/material/styles';
 import Skeleton from '../../../SkeletonListe/skeleton';
 
@@ -40,10 +29,9 @@ import {session} from '../utilitySession.js';
 
 import Login from '../../common/Authentification/Login.js';
 import NotEnoughAccessRight from '../NotEnoughAccessRight.js';
+import InputRecherche from './Recherche/InputRecherche.js';
 
-const moment = require('moment');
-
-  const HtmlTooltip = styled(({ className, ...props }) => (
+const HtmlTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
   ))(({ theme }) => ({
     [`& .${tooltipClasses.tooltip}`]: {
@@ -167,7 +155,6 @@ export default function Recherche(props){
     const [indiceU, setId] = React.useState("");
     const [listResult, setListResult] = React.useState([]);
     const [headCells, setHeadCells] = React.useState([]);
-    const [toSearch, setToSearch] = React.useState("");
     const [currentNumPage, setCurrentNumPage] = React.useState(1);
     const [nbPage, setNbPage] = React.useState(1);
     const [nbContent, setNbContent] = React.useState(props.nbContent ? props.nbContent : 5);
@@ -176,6 +163,7 @@ export default function Recherche(props){
     const [nbResult, setNbResult] = React.useState(0);
     const [openModalDelete, setOpenModalDelete] = React.useState(false);
     const [toDelete, setToDelete] = React.useState({_id: null, nom: null});
+    
 
     const history = useHistory();
 
@@ -224,9 +212,18 @@ export default function Recherche(props){
         let valuesToSearch = [];
         let cleanValue = toSearch.trim();
         if(cleanValue !== ""){
-            valuesToSearch = [
+            if(props.fieldsToSearch){
+              valuesToSearch = [
                 { "value": cleanValue, "fields": props.fieldsToSearch },
-            ];
+              ];
+            }else{//rowsInputSearch no miasa
+              for(let i = 0; i < props.rowsInputSearch.length; i++){
+                for(let u = 0; u < props.rowsInputSearch[i].inputs.length; u++){
+
+                }
+              }
+            }
+            
         }
         let fieldsToPrint = [];
         props.fieldsToPrint.map(infoField => {
@@ -276,6 +273,7 @@ export default function Recherche(props){
     
     const [message, setMessage] = React.useState("");
     const [isLoading, setIsLoading] = React.useState(true);
+    const [toSearch, setToSearch] = React.useState("");
 
     const isConnected = session.getInstance().isConnected();
     if(!isConnected){
@@ -304,19 +302,9 @@ export default function Recherche(props){
                 style={{textDecoration:'none'}}>
                     <span style={{color:'white'}}>{props.btnInsert.label}</span>
                 </Button>
-            </Link> 
+            </Link>
             : null }
-            <div style={{float : 'right'}}>  
-                <TextField 
-                id="outlined-size-small"
-                size="small" label ="Search"
-                name="Search"
-                type="text"
-                value={toSearch}
-                onChange={(e) => setToSearch(e.target.value)}
-                />
-                <Button onClick={(e) => rechercher(1)}><SearchIcon style={{color:"blue"}} /></Button>
-            </div> <br/><br/>
+            <InputRecherche rechercher={rechercher} toSearch={toSearch} setToSearch={setToSearch} /> <br/><br/>
             { hasARViewList ? <>{
                 isLoading ? <Paper sx={{ width: '100%', mb: 2 }}><Skeleton /></Paper> :<>
             <Paper sx={{ width: '100%', mb: 2 }}>

@@ -311,7 +311,7 @@ export default function Recherche(props){
                                 </InputAdornment>
                                 }}
                             />
-                        </Box> 
+                        </Box>
                         </div><br/><br/>
 
             {

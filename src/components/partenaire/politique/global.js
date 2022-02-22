@@ -105,27 +105,27 @@ function Global(){
     };
     
  
-   const handleInputChange2 = (e , indice ,fieldname) => {
-    const current = JSON.parse(JSON.stringify(datePrice));
-    current[indice][fieldname] = e.target.value;
+    const handleInputChange2 = (e , indice ,fieldname) => {
+        const current = JSON.parse(JSON.stringify(datePrice));
+        current[indice][fieldname] = e.target.value;
 
-    let errorS = {...state};
-    errorS.type = null;
-    errorS.vide = null;
-    setState(errorS);
+        let errorS = {...state};
+        errorS.type = null;
+        errorS.vide = null;
+        setState(errorS);
 
-    setDatePrice(current);
-    let existeVide = false;
-    for (let i = 0; i < current.length ; i++){
-        if((current[i].pourcentage +"").trim() === "" || (current[i].date  +"").trim() === ""){
-            existeVide = true; 
+        setDatePrice(current);
+        let existeVide = false;
+        for (let i = 0; i < current.length ; i++){
+            if((current[i].pourcentage +"").trim() === "" || (current[i].date  +"").trim() === ""){
+                existeVide = true; 
+            }
         }
-    }
-    if(existeVide){
-        setGrise(true);
-    }else{
-        setGrise(false); 
-    }
+        if(existeVide){
+            setGrise(true);
+        }else{
+            setGrise(false); 
+        }
    }
    const handleRemoveClick = index => {
        let existeVide = false;
