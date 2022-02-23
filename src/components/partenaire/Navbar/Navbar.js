@@ -94,9 +94,9 @@ function Navbar(props) {
     function getNotification(){
         return new Promise((resolve, reject) => {
             setInterval(() => {
-                // callAPI('post', '/notifPartenaire', {}, (data) => {
-                //     setNbNotifs(data.nbNotifs);
-                // });
+                callAPI('post', '/notifPartenaire', {}, (data) => {
+                    setNbNotifs(data.nbNotifs);
+                });
             }, 10000);
         });
     }
