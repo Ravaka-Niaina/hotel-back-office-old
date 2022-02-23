@@ -7,19 +7,26 @@ function InputContact(props){
     const [errorEmpty, setErrorEmpty] = useState({prenom:false,nom: false, email: false, tel: false, messageParticulier: false});
     
     const [isClientPrincipal, setIsClientPrincipal] = useState(false);
+    const reservateurObject = {prenom:"",nom: "", email: "", tel: ""};
+    let keys = Object.keys(reservateurObject);
+
 
     function handleClientprincipal(value){
+        
         setIsClientPrincipal(!isClientPrincipal);
+        let reservation = {...props.reservation};
         
         if(!isClientPrincipal){
-           
+            keys.map(fieldObject =>{
+                reservation.itineraires[props.indiceItineraire].tarifReserves[props.indiceTarifReserver].reservateurWithEmail[fieldObject] = props.reservateur[fieldObject];
+            });
             setReservateur(props.reservateur);
             
         }else{
             setReservateur({prenom:"",nom: "", email: "", tel: "", messageParticulier: ""});
         }
     }
-    function handleChangeInfoReservateur(field, value, indice){
+    function handleChangeInfoReservateur(field, value){
     
         let current = JSON.parse(JSON.stringify(reservateur));
         let errorField = JSON.parse(JSON.stringify(errorEmpty));
