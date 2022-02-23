@@ -101,7 +101,7 @@ function Navbar(props) {
     getNotification();
 
     function seeNotifications(){
-        history.push('/back/reservation');
+        history.push('/back/reservation/notif');
     }
     
     return (
