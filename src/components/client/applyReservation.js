@@ -74,7 +74,7 @@ function ApplyReservation(props){
         setOpenLoad(false);
         if(res.status === 200){
             setAlertSuccess(res.message);
-         
+            
             window.location.href = "/reservation/" + _id + "/voucher";
         }else{
             try{setAlertError(res.errors[0].message)}catch(err){}
