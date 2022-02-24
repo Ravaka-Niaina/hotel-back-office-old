@@ -8,7 +8,7 @@ const DateRangeLine = (props) => {
     var months = [];
     var days = [];
     for(var i = 0; i < props.daterange.length ; i++){
-        console.log(monthsName[new Date(props.daterange[i]).getMonth()]);
+        //console.log(monthsName[new Date(props.daterange[i]).getMonth()]);
         months.push(
             <td style={{height: "30px"}}><div style={{ marginTop: "-10px"}}>{ monthsName[new Date(props.daterange[i]).getMonth()] }</div></td>
         );

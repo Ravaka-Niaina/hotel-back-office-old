@@ -13,7 +13,7 @@ import { useEffect } from 'react';
 function getMin2(arr){
     var min = arr[0];
     for(var i = 1; i < arr.length; i++) {
-        console.log(arr[i]);
+        //console.log(arr[i]);
         if(arr[i].nbPers === 2 && arr[i].prix !== "" && arr[i].prix > 0){
             return arr[i];
         }else if(min > arr[i]){
@@ -47,12 +47,13 @@ function RateCells(props){
                 <td>
                     <DayCell 
                         isprice={true} 
-                        highlight={props.selecteds.indexOf(i) >= 0} 
-                        key={i.toString()} 
+                        highlight={props.selecteds.indexOf(u) >= 0} 
+                        key={u.toString()}
+                        index={u}
                         deselectDay={props.rmSelection.bind(props.context)} 
                         selectDay={props.addSelection.bind(props.context)} 
                         selectOneDay={props.oneSelection.bind(props.context)} 
-                        day={minPrix.prix}
+                        data={minPrix.prix}
                         nbPers={minPrix.nbPers}
                         closed={props.typechambre.planTarifaire[i].prixTarif[u].closed} />
                 </td>
@@ -121,7 +122,6 @@ const DayLine = (props) => {
         }
         setSelecteds(tmp);
         setBornesEditDate([ props.typechambre.planTarifaire[0].prixTarif[min].date, props.typechambre.planTarifaire[0].prixTarif[max].date ]);
-        console.log(bornesEditDate);
     }
     const rmSelection = (i) => {
         // const tmp = [...selecteds];
@@ -144,6 +144,7 @@ const DayLine = (props) => {
         // }
     }
     const oneSelection = (i) => {
+        console.log('select',i);
         setSelecteds([i]);
         let anchorEl = document.getElementById('anchorEl' + props.indice);
         openPopper(anchorEl);
@@ -188,22 +189,24 @@ const DayLine = (props) => {
             <DayCell 
                 isprice={false} 
                 highlight={selecteds.indexOf(i) >= 0} 
-                key={i.toString()} 
+                key={i.toString()}
+                index={i}
                 deselectDay={rmSelection.bind(this)} 
                 selectDay={addSelection.bind(this)} 
-                selectOneDay={oneSelection.bind(this)} day={i}
-                day={props.typechambre.statusDays[i].toSell} />
+                selectOneDay={oneSelection.bind(this)}
+                data={props.typechambre.statusDays[i].toSell} />
         </td>);
         bookedcell.push(
         <td>
             <DayCell 
                 isprice={false} 
                 highlight={selecteds.indexOf(i) >= 0} 
-                key={i.toString()} 
+                key={i.toString()}
+                index={i}
                 deselectDay={rmSelection.bind(this)} 
                 selectDay={addSelection.bind(this)} 
                 selectOneDay={oneSelection.bind(this)} day={i}
-                day={props.typechambre.booked[i].value} />
+                data={props.typechambre.booked[i].value} />
         </td>);
     }
 
@@ -228,7 +231,8 @@ const DayLine = (props) => {
                 disableRestoreFocus
                 className={styles.popper}
             >
-                <PriceEditor typechambre={props.typechambre} fromto={bornesEditDate} closePopper={closePopper.bind(this)} />
+                dfdfadfd
+                {/* <PriceEditor typechambre={props.typechambre} fromto={bornesEditDate} closePopper={closePopper.bind(this)} /> */}
             </Popper>
             <div className={styles.dayline}>
                 <DateRangeLine daterange={props.daterange} />

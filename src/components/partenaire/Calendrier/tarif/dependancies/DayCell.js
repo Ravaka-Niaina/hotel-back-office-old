@@ -15,9 +15,9 @@ const DayCell = (props) => {
     })
     const select = (next) => {
         if(next){
-            props.selectDay(props.day);
+            props.selectDay(props.index);
         }else{
-            props.deselectDay(props.day);
+            props.deselectDay(props.index);
         }
     }
     useEffect( () => {
@@ -39,18 +39,15 @@ const DayCell = (props) => {
                 },
                 position: 'relative',
                 }}
-                onClick={() => {props.selectOneDay(props.day)}}
+                onClick={() => {props.selectOneDay(props.index)}}
                 onDragEnter={() => select(true)}
             >
-                {props.day != null && props.isprice ? 
+                {props.data != null && props.isprice ? 
                 <div>
                     <div style={{height: "10px", backgroundColor: (props.closed ? "#FF0000" : "#64E986"), marginTop: "-12px"}}></div>
-                    {props.day}
-                    <div style={{fontSize: "12px"}}>
-                    <span>{'x' + props.nbPers}</span><img src="/user.png" style={{width:'12px', marginTop: "-4px"}} />
-                    </div>
+                    <span>{props.data} €</span>
                 </div>
-                : (props.day != null ? props.day + ((props.isprice) ? ' Є' : '') : '')}
+                : (props.data != null ? props.data + ((props.isprice) ? ' Є' : '') : '')}
             </Box>
         </ThemeProvider>
         </>
