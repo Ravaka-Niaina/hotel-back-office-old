@@ -40,27 +40,29 @@ function getDate(date){
 }
 
 const CalendarComponent = () => {
+    let initialized = false;
     let today = new Date();
     let oneMonth = new Date(today);
     oneMonth.setDate(oneMonth.getDate() + 30);
-    const [dates, setDates] = useState([]);
     const [value, setValue] = useState([moment(today), moment(oneMonth)]);
-    const alldays = getDaysBetweenDates(value[0],value[1]);
     const [rateLine, setRateLine] = useState([]);
     const [openLoad, setOpenLoad] = useState(false);
     const [dateMin, setDateMin] = useState(null);
+    const [open, setOpen] = React.useState(false);
     const [isFirst, setIsFirst] = useState(true);
-
-    function getPrix(){
+    const [isAccept, setIsAccept] = React.useState(false);
+    const [isTextField, setIsTextField] = React.useState(false);
+    function getPrix(dates){
         setOpenLoad(true);
         try{
             axios({
                 method: 'post',
                 url: process.env.REACT_APP_BACK_URL + "/TCTarif/prix",
                 withCredentials: true,
-                data: {dateDebut: getDate(value[0].format()), dateFin: getDate(value[1].format())}
+                data: {dateDebut: getDate(dates[0].format()), dateFin: getDate(dates[1].format())}
             })
             .then(res => {
+                const alldays = getDaysBetweenDates(dates[0],dates[1]);
                 let tmp = [];
                 for(var i = 0; i < res.data.typeChambre.length; i++) {
                     tmp.push(
@@ -68,8 +70,9 @@ const CalendarComponent = () => {
                         <div className={styles.dividerline}></div>
                         <RateLine 
                             typechambre={res.data.typeChambre[i]} 
-                            indice={i} fromto={value} daterange={alldays} 
-                            dateRange={value}
+                            indice={i} 
+                            fromto={dates} 
+                            daterange={alldays}
                             getPrix={getPrix}
                             dateMin={dateMin}
                             openLoad={openLoad}
@@ -82,35 +85,75 @@ const CalendarComponent = () => {
             })
             .catch(err => {console.log(err); setOpenLoad(false);});
         }catch(err){
-            console.log(err);
+            console.error(err);
         }
     }
 
     useEffect(() => {
-        getPrix();
+        if(!initialized){
+            initialized = true;
+            getPrix(value);
+        }
     }, []);
 
     return(
         <>
             <Navbar currentPage={1}/>
-            <Container class="container" className={styles.container} style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
+            <Container className={styles.container} style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
                 <LocalizationProvider dateAdapter={AdapterMoment}>
                 <DateRangePicker
-                    startText="Check-in"
-                    endText="Check-out"
+                    open={open}
+                    onAccept={() => {
+                        setIsAccept(true);
+                    }}
+                    onClose={() => {
+                        setIsAccept(false);
+                        if (!isTextField) {
+                            setOpen(false);
+                            setIsTextField(false);
+                        }
+                    }}
+                    onOpen={() => {
+                        if (!isAccept) {
+                            setOpen(true);
+                        }
+                    }}
+                    startText="Depuis"
+                    endText="Jusqu'à"
                     value={value}
                     onChange={(newValue) => {
                         setValue(newValue);
                         if(newValue != undefined && newValue[0] != null && newValue[1] != null){
-                            const allday = getDaysBetweenDates(newValue[0],newValue[1]);
-                            getPrix();
+                            getPrix(newValue);
                         }
                     }}
                     renderInput={(startProps, endProps) => (
                     <React.Fragment>
-                        <TextField {...startProps} />
+                        <TextField
+                        {...startProps}
+                        onFocus={() => {
+                            setIsTextField(true);
+                        }}
+                        onBlur={() => {
+                            setIsTextField(false);
+                        }}
+                        onClick={() => {
+                            setOpen(true);
+                        }}
+                        />
                         <Box sx={{ mx: 2 }}> to </Box>
-                        <TextField {...endProps} />
+                        <TextField
+                        {...endProps}
+                        onFocus={() => {
+                            setIsTextField(true);
+                        }}
+                        onBlur={() => {
+                            setIsTextField(false);
+                        }}
+                        onClick={() => {
+                            setOpen(true);
+                        }}
+                        />
                     </React.Fragment>
                     )}
                 />
@@ -123,6 +166,7 @@ const CalendarComponent = () => {
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
+            <canvas></canvas>
         </>
     );
 }

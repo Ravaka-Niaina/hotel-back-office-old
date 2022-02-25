@@ -109,6 +109,7 @@ function ListTarif(props){
     }
 
     function addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre,tarif,toPay){
+        setShowButton(true);
         if(props.context.state.itineraires.length === 0){
             let temp = {...props.context.state};
             temp.err = "Veuillez d'abord choisir une date de sejour";
@@ -162,6 +163,7 @@ function ListTarif(props){
                             guests: props.context.state.guests,
                             idTypeChambre : idTypeChambre,
                             nbPers: nbPers,
+                            reservateurWithEmail: {nom: "", prenom: "", email: "", tel: ""},
                             numeroConfirmation : numeroConfirm,
                             nomTypeChambre:typeChambre.nomTypeChambre,
                             politiqueAnnulAtrb:tarif.politiqueAnnulAtrb,

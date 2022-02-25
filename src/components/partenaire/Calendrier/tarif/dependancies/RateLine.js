@@ -14,7 +14,7 @@ const RateLine = (props) => {
         >
             <SideList 
                 typechambre={props.typechambre} 
-                dateRange={props.dateRange} 
+                dateRange={props.fromto} 
                 getPrix={props.getPrix} 
                 openLoad={props.openLoad}
                 dateMin={props.dateMin}

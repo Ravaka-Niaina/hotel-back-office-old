@@ -42,7 +42,7 @@ export default function ListeReservation(props){
     const [rowsPerPageOptions, setRowsPerPageOptions] = useState([5, 10, 15]);
     const [currentNumPage, setCurrentNumPage] = useState(1);
     const [nbPage, setNbPage] = useState(1);
-    const [etat, setEtat] = useState(null);
+    const [etat, setEtat] = useState("");
     const [errorEtat, setErrorEtat] = useState(null);
     const [arrayEtat, setArrayEtat] = useState([
         {
@@ -58,7 +58,7 @@ export default function ListeReservation(props){
             label: "Validé"
         },
         {
-            value: "0",
+            value: "3",
             label: "Annulé"
         }
     ]);
@@ -69,6 +69,8 @@ export default function ListeReservation(props){
     const [selected, setSelected] = useState([]);
     const [page, setPage] = useState(0);
     const [searchDateOfWhich, setSearchDateOfWich] = useState({checkIn: false, checkOut: false, reservation: false});
+    const [isNotif, setIsNotif] = useState(false);
+    const [listIdNewReserv, setListIdNewReserv] = useState([]);
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
@@ -102,21 +104,34 @@ export default function ListeReservation(props){
         let toSend = {
             debut: debut,
             fin: fin,
-            choiceDateCateg: choiceDateCateg
+            choiceDateCateg: choiceDateCateg,
+            etat: etat !== "" ? Number.parseInt(etat) : undefined,
+            listIdNewReserv: isNotif ? listIdNewReserv: undefined
         };
-        if(etat !== ""){
-            toSend.etat = Number.parseInt(etat);
-        }
         callAPI('post', '/reservation/partenaire', toSend, setResult);
     }
 
     function setResult(data){
         setListResult(data.list);
-        
+    }
+    function setResultNewReserv(data){
+        setListResult(data.list);
+        let tmp = [];
+        for(let i = 0; i < data.list.length; i++){
+            tmp.push(data.list[i]._id);
+        }
+        setListIdNewReserv(tmp);
     }
 
     useEffect(() => {
-        callAPI('post', '/reservation/partenaire', {}, setResult);
+        const regExp = new RegExp("/notif","i");
+        if(regExp.test(window.location.href)){
+            setIsNotif(true);
+            callAPI('post', '/notifPartenaire/newReservations', {}, setResultNewReserv);
+        }else{
+            callAPI('post', '/reservation/partenaire', {}, setResult);
+        }
+        
     }, []);
 
     const emptyRows =
@@ -127,6 +142,7 @@ export default function ListeReservation(props){
         <>
             <Navbar currentPage={props.currentPage}/><br/>
             <Box sx={{ width: '100%', padding :"50px" }}>
+            <h1>{isNotif ? "Nouvelles réservations" : "Liste réservations"}</h1>
             <InputRecherche 
                 debut={debut} setDebut={setDebut} 
                 fin={fin} setFin={setFin}
@@ -194,7 +210,7 @@ export default function ListeReservation(props){
                                     component="td"
                                     align = "left"
                                 >
-                                    {row.reservateur.nom + " " + row.reservateur.prenom}
+                                    {row.reservateur ? row.reservateur.nom + " " + row.reservateur.prenom : ""}
                                 </TableCell>
                                 <TableCell
                                     component="td"
@@ -210,7 +226,7 @@ export default function ListeReservation(props){
                                     component="td"
                                     align = "left"
                                 >
-                                    {removeSpecialCharFromDate(row.dateValidation)}
+                                    {row.dateValidation === null ? "" : removeSpecialCharFromDate(row.dateValidation)}
                                 </TableCell>
                                 <TableCell
                                     component="td"
