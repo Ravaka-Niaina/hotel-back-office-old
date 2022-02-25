@@ -22,6 +22,8 @@ import { useEffect } from "react";
 
 import { useState } from 'react';
 
+import { useTranslation } from "react-i18next";
+
 function Navbar(props) {
   const [email, setEmail] = React.useState("");
   const [errorEmail, setErrorEmail] = React.useState(null);
@@ -29,6 +31,12 @@ function Navbar(props) {
   const [errorMdp, setErrorMdp] = React.useState(null);
   const [ambiguousError, setAmbiguousError] = React.useState(null);
   const history = useHistory();
+  const { t, i18n } = useTranslation();
+
+  const changeLanguageHandler = (e) => {
+    const languageValue = e.target.value
+    i18n.changeLanguage(languageValue);
+  }
   
   const interpretResponse = (res) => {
       console.log(res);
@@ -97,14 +105,14 @@ function Navbar(props) {
                     <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
                     <Button variant="outlined" startIcon={<SearchIcon/> } onClick={(e) => props.clickRetour()}>
                         <Link to='/front/researchReservation' style={{textDecoration : "none" ,color : "#887B62"}}>
-                            RECHERCHE UNE RESERVATION
+                        {t('search for a reservation')}
                         </Link>
                     </Button>
                     <PopupState variant="popper" popupId="demo-popup-popper">
       {(popupState) => (
         <div>
           <Button variant="outlined" startIcon={<Login />} onClick={(e) => login(e)} {...bindToggle(popupState)}>
-                Se connecter
+          {t('Log in')}
             </Button>
           <Popper {...bindPopper(popupState)} transition>
             {({ TransitionProps }) => (
@@ -116,7 +124,7 @@ function Navbar(props) {
                   children={
                       <>
                         <div className='title11'>
-                          <h4 id='title11'>Se connecter</h4>
+                          <h4 id='title11'>{t('Log in')}</h4>
                         </div>
                           {ambiguousError === null ? null : <Alert severity="error">{ambiguousError}</Alert>}
                           <Box
@@ -162,19 +170,19 @@ function Navbar(props) {
                           <div id='buttons'>
                            <div class="login">
                             <Button sx={{width: 200}} variant="contained" onClick={(e) => login(e)}>
-                                <span style={{color:'white'}}>Se connecter</span>
+                                <span style={{color:'white'}}>{t('log in')}</span>
                             </Button>
                             <div class="mdp">
                            <Link to={'/login/identify'} style={{textDecoration:'none'}}>
                             <Button  id="mdp">
-                            <span style={{color:'black'}}>Mot de passe oublié?</span>
+                            <span style={{color:'black'}}>{t('Forgot your password')}</span>
                             </Button>
                             </Link>
                             </div>
                            </div>
                            <div class="register">
                             <Button id="register" sx={{width: 200}} onClick={(e) => register(e)}>
-                                <span style={{color:'black'}}>S'inscrire</span>
+                                <span style={{color:'black'}}>{t('Register')}</span>
                             </Button>
                            </div>
                           </div>
@@ -198,6 +206,11 @@ function Navbar(props) {
                         >
                             <Language/>
                         </IconButton>
+                        <select className="custom-select" style={{width: 200}} onChange={changeLanguageHandler}>
+        <option value="en" >English</option>
+        <option value="fr" >Francais</option>
+      </select>
+
                     </Box>
                     </Toolbar>
                 </AppBar>

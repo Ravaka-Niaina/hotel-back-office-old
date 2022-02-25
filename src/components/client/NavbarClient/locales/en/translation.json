@@ -1,0 +1,22 @@
+{ 
+  "Check-in": "Check-in", 
+  "Check-out": "Check-out",
+  "matching rooms": "matching rooms" ,
+  "filter": "filter",
+  "Occupancy" :"Occupancy",
+  "Log in" :"LOG IN",
+  "search for a reservation" :"SEARCH FOR A RESERVATION",
+  "log in" :"Log in",
+  "Forgot your password" :"Forgot your password ?",
+  "Register" :"Register",
+  "Adults":"Adults",
+  "Children's":"Children's",
+  "Adult":"Adult",
+  "Children":"Children",
+  "Add itinerary":"Add itinerary",
+  "Validate reservation":"Validate reservation",
+  "Modify":"Modify",
+  "Cancel":"Cancel"
+
+   
+}

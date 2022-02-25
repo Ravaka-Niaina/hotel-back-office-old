@@ -25,6 +25,10 @@ import './filtre.css';
 import styles from '../Book.module.css';
 
 import {getDiffDays} from '../../../../utility/utilityDate.js';
+import { useTranslation } from "react-i18next";
+
+// const { t, i18n } = useTranslation();
+
 const name_cookies="reservation-real";
 function PrintDateSejour(props){
     // itineraire, borne, handleChange, label
@@ -58,6 +62,7 @@ function PrintDateSejour(props){
 }
 
 function Reservations(props){
+    const { t, i18n } = useTranslation();
     const HtmlTooltip = styled(({ className, ...props }) => (
         <Tooltip {...props} classes={{ popper: className }} />
     ))(({ theme }) => ({
@@ -107,9 +112,9 @@ function Reservations(props){
                         </CardContent>
                         <div><span>Prix : {tarif.toPay.afterProm.toFixed(2)} EUR</span></div>
                         <CardActions>
-                            <Button size="small">Modifier</Button>
+                            <Button size="small">{t('Modify')}</Button>
                             <Button size="small" onClick={(e) => props.annulerReservation(props.context, props.context.state.reservationEnCours._id, props.indexItineraire, u)}>
-                                Annuler
+                            {t('Cancel')}
                             </Button>
                         </CardActions>
                         </Card>
@@ -156,6 +161,7 @@ class Fact extends React.Component{
     constructor(props){
         super(props);
         const cookies= props;
+        
         this.style = {
             position: 'absolute',
             top: '50%',
@@ -170,6 +176,8 @@ class Fact extends React.Component{
         
 
     }
+
+    
     
     
     reservationValide(res){
@@ -256,6 +264,7 @@ class Fact extends React.Component{
     }
 
     printFacture(){
+        const { t } = useTranslation();
         let valider = null;
         
         let toPay = 0;
@@ -282,13 +291,13 @@ class Fact extends React.Component{
             toPay += toPayItineraire;
             
         }
-        
+
         return(
             <div className={styles.printFacture}>
                 <div style={{textAlign:'center'}}>
                     <Itineraires context={this.props.context} annulerReservation={this.annulerReservation} />
                     <p id='bigLabel'>TOTAL : {toPay}</p>
-                    <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()} endIcon={<CallMissedOutgoingIcon/>}>Ajouter itinéraire</Button></p>
+                    <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()} endIcon={<CallMissedOutgoingIcon/>}>{t('Add itinerary')}</Button></p>
                 </div>
                 <Modal
                     open={this.props.context.state.open}
@@ -335,7 +344,10 @@ class Fact extends React.Component{
                 {valider}
             </div>
         );
-    }
+                    }
+                
+
+
 
     render(){
         
