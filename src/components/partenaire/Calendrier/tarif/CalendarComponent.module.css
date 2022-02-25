@@ -69,6 +69,10 @@
 }
 .popper span:nth-of-type(2){
     font-size: 12px !important;
+    color: gray;
+}
+.popper span:nth-of-type(3){
+    font-size: 12px !important;
     color: grey;
 }
 legend{

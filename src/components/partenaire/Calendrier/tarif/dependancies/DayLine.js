@@ -256,7 +256,7 @@ const DayLine = (props) => {
                 disableRestoreFocus
                 className={styles.popper}
             >
-                <PriceEditor typechambre={props.typechambre} fromto={bornesEditDate} closePopper={closePopper.bind(this)} />
+                <PriceEditor isPrice={selectedY > 1} selected={selectedY - 2} typechambre={props.typechambre} fromto={bornesEditDate} closePopper={closePopper.bind(this)} />
             </Popper>
             <div className={styles.dayline}>
                 <DateRangeLine daterange={props.daterange} />
