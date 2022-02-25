@@ -74,12 +74,12 @@ function ApplyReservation(props){
         setOpenLoad(false);
         if(res.status === 200){
             setAlertSuccess(res.message);
-            
-            window.location.href = "/reservation/" + _id + "/voucher";
+            history.push("/reservation/" + _id + "/voucher");
+            // window.location.href = "/reservation/" + _id + "/voucher";
         }else{
-            try{setAlertError(res.errors[0].message)}catch(err){}
-            
-            window.location.href = '#error';
+            setAlertError(res.errors[0].message);
+            // window.location.href = '#error';
+            history.push('#error');
         }
     }
     
@@ -297,6 +297,7 @@ function ApplyReservation(props){
                                             </div>
                                         :null
                                         }
+                                        
                                         
                                     </div>
                                     : <div class="champs">
