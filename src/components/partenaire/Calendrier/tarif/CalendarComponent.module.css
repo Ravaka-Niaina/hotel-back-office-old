@@ -1,7 +1,10 @@
 .container{
-    margin-top: 30px;
+    margin-top: 100px;
     width: 100%;
     min-height: 100%;
+}
+.container > div:first-child{
+    justify-content: center;
 }
 .dayline{
     position: relative;
@@ -18,7 +21,6 @@
     border-radius: 10px !important;
     position: absolute !important;
     z-index: 1;
-    top: 20px;
     cursor:ew-resize !important;
     padding: 0 !important;
 }
@@ -66,6 +68,10 @@
     font-weight: 500 !important;
 }
 .popper span:nth-of-type(2){
+    font-size: 12px !important;
+    color: gray;
+}
+.popper span:nth-of-type(3){
     font-size: 12px !important;
     color: grey;
 }
