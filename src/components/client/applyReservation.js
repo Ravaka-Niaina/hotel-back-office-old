@@ -86,7 +86,6 @@ function ApplyReservation(props){
 
     function validerReservation(){
         if(isConditionAccepted){
-            console.log(reservation);
             setOpenLoad(true);
             setAlertSuccess(null);
             setAlertError(null);
