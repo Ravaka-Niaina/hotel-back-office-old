@@ -262,8 +262,6 @@ export default function Recherche(props){
         return(<Login urlRedirect={window.location.href} />);
     }
     const hasARViewList = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToViewList ? props.accessRightToViewList : []);
-    console.log(hasARViewList);
-    console.log(props.accessRightToViewList);
     if(!hasARViewList && !hasARToViewInsert && !hasARToViewDetails && !hasARToDelete){
       console.log("tsy mety");
       return(<NotEnoughAccessRight />);
