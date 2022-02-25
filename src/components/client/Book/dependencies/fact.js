@@ -90,11 +90,11 @@ function Reservations(props){
                         <CardContent>
                             <div>
                                 <span><BedIcon/>{tarif.nomTypeChambre}</span>
-                                <span><ModeNightIcon/>{nbNuit + " nuit(s)"}</span>
+                                <span><ModeNightIcon/>{nbNuit + t('night')}</span>
                                 <span><LocalOfferIcon/>{tarif.nomTarif}</span>
                             </div>
                             <div>
-                                <span><PersonOutlineIcon/>x {tarif.nbPers} personnes</span>
+                                <span><PersonOutlineIcon/>x {tarif.nbPers} {t('person')}</span>
                                 {tarif.politiqueAnnulAtrb && tarif.politiqueAnnulAtrb.length !== 0 ? 
                                     <HtmlTooltip
                                         title={
@@ -128,6 +128,7 @@ function Reservations(props){
 }
 
 function Itineraires(props){
+    const { t, i18n } = useTranslation();
     let itineraires = [];
     for(let i = 0; i < props.context.state.itineraires.length; i++){
         let itineraire=props.context.state.itineraires[i];
@@ -138,10 +139,10 @@ function Itineraires(props){
         itineraires.push(
             <Box className={styles.sidetitle}>
                 <Card><p>
-                    Check in : <span>{props.context.state.itineraires[i].dateSejour.debut}</span>
+                   {t('Check-in')} : <span>{props.context.state.itineraires[i].dateSejour.debut}</span>
                     </p>
                     <p>
-                    Check out : <span>{props.context.state.itineraires[i].dateSejour.fin}</span>
+                   {t('Check-out')} : <span>{props.context.state.itineraires[i].dateSejour.fin}</span>
                     </p>
                 </Card>
                 <Reservations context={props.context} indexItineraire={i} annulerReservation={props.annulerReservation} />
@@ -264,7 +265,7 @@ class Fact extends React.Component{
     }
 
     printFacture(){
-        const { t } = useTranslation();
+
         let valider = null;
         
         let toPay = 0;
@@ -297,7 +298,7 @@ class Fact extends React.Component{
                 <div style={{textAlign:'center'}}>
                     <Itineraires context={this.props.context} annulerReservation={this.annulerReservation} />
                     <p id='bigLabel'>TOTAL : {toPay}</p>
-                    <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()} endIcon={<CallMissedOutgoingIcon/>}>{t('Add itinerary')}</Button></p>
+                    <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()} endIcon={<CallMissedOutgoingIcon/>}>Ajouter itinéraire</Button></p>
                 </div>
                 <Modal
                     open={this.props.context.state.open}

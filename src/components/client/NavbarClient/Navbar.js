@@ -16,6 +16,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import axios from "axios";
+import LoadingButton from '@mui/lab/LoadingButton';
 
 import {session} from "../../common/utilitySession.js";
 import { useEffect } from "react";
@@ -23,6 +24,8 @@ import { useEffect } from "react";
 import { useState } from 'react';
 
 import { useTranslation } from "react-i18next";
+
+import ButtonLoading from "./buttonLoading.js";
 
 function Navbar(props) {
   const [email, setEmail] = React.useState("");
@@ -32,6 +35,8 @@ function Navbar(props) {
   const [ambiguousError, setAmbiguousError] = React.useState(null);
   const history = useHistory();
   const { t, i18n } = useTranslation();
+  const [btnLoad, setBtnLoad] = useState(false)
+
 
   const changeLanguageHandler = (e) => {
     const languageValue = e.target.value
@@ -40,6 +45,7 @@ function Navbar(props) {
   
   const interpretResponse = (res) => {
       console.log(res);
+      setBtnLoad(false);
       const data = res.data;
       if(data.status === 200){
           localStorage.setItem("user_session", res.headers.user_session);
@@ -70,6 +76,7 @@ function Navbar(props) {
   const login = (e) => {
       e.preventDefault();
       setAmbiguousError(null);
+      setBtnLoad(true)
       const data = {
           email: email.trim(),
           mdp: mdp.trim()
@@ -169,9 +176,15 @@ function Navbar(props) {
                           <Box>
                           <div id='buttons'>
                            <div class="login">
+                           { btnLoad ? 
+                                <LoadingButton loading sx={{width: 200}} variant="outlined">
+                                   Submit
+                               </LoadingButton>
+                           :
                             <Button sx={{width: 200}} variant="contained" onClick={(e) => login(e)}>
                                 <span style={{color:'white'}}>{t('log in')}</span>
                             </Button>
+                           }
                             <div class="mdp">
                            <Link to={'/login/identify'} style={{textDecoration:'none'}}>
                             <Button  id="mdp">
@@ -207,8 +220,8 @@ function Navbar(props) {
                             <Language/>
                         </IconButton>
                         <select className="custom-select" style={{width: 200}} onChange={changeLanguageHandler}>
+        <option value="fr" >Francais</option>                            
         <option value="en" >English</option>
-        <option value="fr" >Francais</option>
       </select>
 
                     </Box>

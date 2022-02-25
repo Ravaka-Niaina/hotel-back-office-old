@@ -16,7 +16,10 @@
   "Add itinerary":"Add itinerary",
   "Validate reservation":"Validate reservation",
   "Modify":"Modify",
-  "Cancel":"Cancel"
+  "Cancel":"Cancel",
+  "night":"night",
+  "person":"person",
+  "Book":"Book"
 
    
 }

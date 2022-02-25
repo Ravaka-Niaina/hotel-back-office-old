@@ -16,5 +16,8 @@
     "Add itinerary":"Ajouter itinéraire",
     "Validate reservation":"Valider réservation",
     "Modify":"Modifier",
-    "Cancel":"Annuler"
+    "Cancel":"Annuler",
+    "night":"nuit(s)",
+    "person":"personne(s)",
+    "Book":"Reserver"
   }

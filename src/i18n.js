@@ -24,7 +24,7 @@ i18n
   .use(initReactI18next)
   .init({
     resources,
-    lng:"en", //default language
+    lng:"fr", //default language
     keySeparator: false,
     interpolation: {
       escapeValue: false,
