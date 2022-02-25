@@ -6,6 +6,9 @@ import './voucher/voucher.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faCalendar, faCheckCircle ,faPrint, faShare, faShareAlt} from '@fortawesome/free-solid-svg-icons';
 import ItinerairesVoucher from './voucher/ItineraireVoucher';
+import ModalAnnulation from '../common/ModalAnnulation.js';
+import { useHistory } from 'react-router-dom';
+
 function Voucher(props){
     const [reservation, setReservation] = useState(null);
     const { _id } = useParams();
@@ -14,6 +17,26 @@ function Voucher(props){
     const [alertSuccess, setAlertSuccess] = useState(null);
     const [alertError, setAlertError] = useState(null);
     const [affilie, setAffilie] = useState([]);
+    const [load, setLoad] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const history = useHistory();
+    
+    function ShowModalAnnulation(){
+        setShowModal(!showModal);
+    }
+    function handleResponse1(res){
+        if(res.status == 200){
+            history.push('/');
+        }else{
+            setAlertError(res.errors[0].message);
+            window.location.href = '#error';
+        }
+    }
+
+    function annulerReservation(){
+        setLoad(true);
+        callAPI('post', '/reservation/annulerReservationWithEmail', {_id: reservation._id, reservateur: reservateur, reservation: reservation , email : reservateur.email}, handleResponse1 );
+     }
 
     function setDetailReservation(res){
         setOpenLoad(false);
@@ -95,7 +118,6 @@ function Voucher(props){
                              />
                 </div>
                 
-                
             </div>
             <div class="voucher_pannel">
                 <div class="voucher_link_container">
@@ -116,11 +138,13 @@ function Voucher(props){
                     <p><strong><span>Modification des réservations</span></strong></p>
                     <button   class="button_pannel" >Modifier la réservation</button>
                     <p style={{marginTop:'1rem'}}><strong><span>Annulations</span></strong></p>
-                    <button   class="button_pannel" >Annuler l'itinéraire</button>
+                    <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained" onClick={(e) => ShowModalAnnulation()}>Annuler réservation</button>
+                            
                 </div>
 
                 
             </div>
+            <ModalAnnulation ShowModalAnnulation={ShowModalAnnulation} showModal={showModal}  annulerReservation={annulerReservation} load ={load}  />  
         </div>
     );
 }

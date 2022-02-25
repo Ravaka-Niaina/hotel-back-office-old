@@ -3,7 +3,8 @@ import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import DChambre from './listChambre'
 import Fact from './fact.js';
-import { useCookies } from 'react-cookie';
+import { useCookies,Cookies,withCookies } from 'react-cookie';
+import { instanceOf } from 'prop-types';
 import callAPI from '../../../../utility';
 import './Css.css'
 import moment from 'moment';
@@ -38,12 +39,24 @@ function TestCookie(){
         null
     );
 }
-
+const name_cookies='reservation-real';
+const empty_reservation={_id:"62026a7908b6947750fba0ff",idUtilisateur: "SIl56KMCom4UdHRpGrpsbooTKW8Lw5IJ",dateValidation: null,etat: 1,itineraires:[]};
+const duree_cookie=2;
+// const empty_reservation=null;
 class Scroll extends React.Component{
-
+    static propTypes = {
+        cookies: instanceOf(Cookies).isRequired
+    };
+    
     constructor(props){
         super(props);
+        const { cookies } = props;
+        let datenow =Date.now();
+        
+        let expiration = new Date(datenow + duree_cookie*60000);
+    
         this.state = {
+            err: null,
             openChangeDateSejour: false,
             changeDateSejour: true, 
             resultApplyReservation: null,
@@ -52,11 +65,11 @@ class Scroll extends React.Component{
             dateSejour: {debut: "", fin: ""},
             listTypeChambre: [],
             reservation: [],
-            reservationEnCours: null,
+            reservationEnCours: cookies.get(name_cookies) || empty_reservation,
+            expirationCookie:expiration,
             itineraires: [],
             showFiltre : false,
             open: false,
-            err: null,
             email: "",
             reload: true,
             openCalendar: false,
@@ -72,9 +85,63 @@ class Scroll extends React.Component{
         };
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
         this.setResult = this.setResult.bind(this);
+        let that =this;
         this.handleChange = this.handleChange.bind(this);
+        const intervalId = setInterval(() => {
+            that.checkExpirationCookie();
+        }, 30000);
+      
+    
+    }
+  
+    clearCookies(){
+        console.log("Clear cookies");
+        let datenow =Date.now();
+        let currentState = JSON.parse(JSON.stringify(this.state));
+        let expiration =datenow + duree_cookie*60000;
+        currentState.expirationCookie =new Date(expiration);
+        currentState.reservationEnCours=empty_reservation;
+        currentState.itineraires = [];
+        currentState.changeDateSejour = true;
+        currentState.dateSejour.debut = "";
+        currentState.dateSejour.fin = "";
+        currentState.listTypeChambre = [];
+        const { cookies } = this.props;
+        cookies.set(name_cookies, empty_reservation, { path: '/' ,expires:new Date(expiration)});
+        this.setState(currentState);
+        
+    }
+    checkExpirationCookie(){
+        let datenow =Date.now();
+        let currentState = JSON.parse(JSON.stringify(this.state));
+        let dateexpiration =new Date(currentState.expirationCookie);
+        // 
+        if(datenow>dateexpiration.getTime()){
+            // console.log("check expiration:"+dateexpiration+" vs "+new Date(datenow) );
+            // console.log("expire cookie");
+            // currentState.expirationCookie =new Date(datenow + duree_cookie*60000);
+            // currentState.reservationEnCours=empty_reservation;
+            // currentState.err="Votre réservation a expirée";
+            // currentState.itineraires = [];
+            // currentState.changeDateSejour = true;
+            // currentState.dateSejour.debut = "";
+            // currentState.dateSejour.fin = "";
+            // currentState.listTypeChambre = [];
+            this.clearCookies();
+            
+          
+        }
     }
     
+    handleChangeCookies(reservation,expirationTime) {
+        console.log("set Cookies");
+        const { cookies } = this.props;
+        console.log("cookies:"+expirationTime);
+        cookies.set(name_cookies, reservation, { path: '/' ,expires:new Date(expirationTime)});
+        
+        console.log(cookies.get(name_cookies));
+        //  this.setState({ reservationEnCours:reservation });
+    }
     handleChange(fieldName, value){
         let current = JSON.parse(JSON.stringify(this.state));
         current[fieldName] = value;
@@ -183,18 +250,40 @@ class Scroll extends React.Component{
         }
       
     }
+    
     setReservationEnCours(reservation, isFactureReceived){
+        console.log("setReservationEncours");
         let currentState = JSON.parse(JSON.stringify(this.state));
         currentState.reservationEnCours = reservation;
+    
         currentState.reload = true;
+        let expiration=currentState.expirationCookie;
         if(isFactureReceived){
             currentState.isFactureReceived = true;
         }
         if(reservation === null){
-            currentState.itineraires = [];
+            const { cookies } = this.props;
+            let reservationCookies=cookies.get(name_cookies);
+            console.log("reservationCookies");
+            currentState.err="Votre réservation expirera dans "+duree_cookie+ " minutes";
+            console.log(reservationCookies);
+            if(reservationCookies==null || reservationCookies==undefined){
+               
+                reservationCookies =empty_reservation;
+                let datenow =Date.now();
+        
+                expiration = new Date(datenow + duree_cookie*60000);
+                currentState.expirationCookie = expiration;
+            }
+            currentState.reservationEnCours=reservationCookies;
+            currentState.itineraires = reservationCookies.itineraires;
+           
         }else{
+          
             currentState.itineraires = reservation.itineraires;
         }
+        
+        this.handleChangeCookies(currentState.reservationEnCours,expiration);
         this.setState(currentState);
     }
 
@@ -214,6 +303,7 @@ class Scroll extends React.Component{
     }
     
     render(){
+       
         return(
             <div>
                 <div style={{filter: "blur(" + (this.state.openLoad ? "2" : "0") + "px)"}}>
@@ -247,4 +337,4 @@ class Scroll extends React.Component{
         );
     }
 }
-export default Scroll
+export default withCookies(Scroll);

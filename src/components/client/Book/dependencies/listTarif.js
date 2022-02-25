@@ -13,6 +13,9 @@ import { styled } from '@mui/material/styles';
 import callAPI from '../../../../utility.js';
 import numeroConfirmation from './numeroConfirmation.js';
 import PolicyIcon from '@mui/icons-material/Policy';
+import Reservation from '../../reservation';
+import axios from "axios";
+import {session} from "../../../../components/common/utilitySession.js";
 import {getDiffDays} from '../../../../utility/utilityDate.js';
 import ButtonLoading from '../../../partenaire/buttonLoading.js';
 
@@ -66,11 +69,21 @@ function ListTarif(props){
     const [showButton, setShowButton] = React.useState(false);
     function setReservationEnCours(res){
         if(res.status === 200){
+            console.log("add reservation");
+            console.log(res.reservation);
             props.context.setReservationEnCours(res.reservation);
         }else{
             console.log(res);
         }
         setShowButton(false);
+    }
+    function typeChambre(res){
+        
+        if(res.status === 200){
+         
+        }else{
+            console.log(res);
+        }
     }
 
     function NumeroIntineraire (random , nameHotel ,TChambre){
@@ -95,7 +108,7 @@ function ListTarif(props){
         
     }
 
-    function addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre){
+    function addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre,tarif,toPay){
         setShowButton(true);
         if(props.context.state.itineraires.length === 0){
             let temp = {...props.context.state};
@@ -117,18 +130,58 @@ function ListTarif(props){
             const Random = NumeroIntineraire(props.context.state.random , props.context.state.nameHotel,TChambre);
             //numero confirmation
             const numeroConfirm = numeroConfirmation(0,props.context.state.nameHotel, TChambre);
-            console.log(numeroConfirm);
-            itineraires[lastItineraire].tarifReserves.push({
-                idTarif: id, 
-                dateSejour: dateSejour,
-                dateReservation: getDate(Date.now()),
-                guests: props.context.state.guests,
-                idTypeChambre : idTypeChambre,
-                nbPers: nbPers,
-                numeroConfirmation : numeroConfirm
-            });
-            const data = {itineraires: itineraires , numeroIntineraire : Random };
-            callAPI("post" , "/reservation/insert" , data , setReservationEnCours);
+            // console.log(numeroConfirm);
+          
+            // const data = {itineraires: itineraires , numeroIntineraire : Random };
+            //  callAPI("get" , "/TypeChambre/detailsChambre/"+idTypeChambre , {} , typeChambre);
+                
+                let headers = {
+                    idsession: session.getInstance().getId(),
+                    ispartner: session.getInstance().getIsPartner()
+                };
+                const session_temp = localStorage.getItem("session_temp");
+                if(session_temp !== null){
+                    headers.session_temp = session_temp;
+                }
+                axios({
+                    method: "get",      
+                    url: process.env.REACT_APP_BACK_URL + "/TypeChambre/detailsChambre/"+idTypeChambre,
+                    withCredentials: true,
+                    data: {},
+                    headers: headers
+                })
+                .then(res => {                                           
+                    let typeChambre = res.data.typeChambre;
+                    console.log("typeChambre");
+                    console.log(typeChambre);
+                    if(res.data.status==200){
+                        itineraires[lastItineraire].NumeroITineraire =Random;
+                        itineraires[lastItineraire].tarifReserves.push({
+                            idTarif: id, 
+                            dateSejour: dateSejour,
+                            dateReservation: getDate(Date.now()),
+                            guests: props.context.state.guests,
+                            idTypeChambre : idTypeChambre,
+                            nbPers: nbPers,
+                            reservateurWithEmail: {nom: "", prenom: "", email: "", tel: ""},
+                            numeroConfirmation : numeroConfirm,
+                            nomTypeChambre:typeChambre.nomTypeChambre,
+                            politiqueAnnulAtrb:tarif.politiqueAnnulAtrb,
+                            nomTarif:tarif.nom,
+                            toPay:{afterProm:toPay.prix,beforeProm:toPay.prixOriginal},
+                        }); 
+                          
+                        let reserv = props.context.state.reservationEnCours;
+                        reserv.itineraires=itineraires;
+                        console.log(reserv);
+                        props.context.setReservationEnCours(reserv);
+                    }
+                })
+                .catch(err =>{console.log(err); console.log("erreur");} );
+
+
+         
+
         }
     }
 
@@ -145,6 +198,9 @@ function ListTarif(props){
     }));
     
     let tarifs = props.tarifs.map(tarif => {
+            const nbPers = props.context.state.guests.nbAdulte + props.context.state.guests.nbEnfant;
+            // console.log("tarifs negga");
+            // console.log(tarif);
             const nbNuit =  getDiffDays(new Date(tarif.dateSejour.debut), new Date(tarif.dateSejour.fin));
             return (
                     <div className={styles.listTarif}>
@@ -180,14 +236,13 @@ function ListTarif(props){
                                                     <span className={styles.afterProm}>&nbsp;{(version.prix) + " EUR "}</span>
                                                 </div>
                                                 <div className={styles.bookNow}>
-                                                    {showButton ? <ButtonLoading />
-                                                    : <Button variant="contained"
-                                                        onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre, version.nbPers , props.nameTC)}
+                                                    <Button variant="contained"
+                                                        onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre, version.nbPers , props.nameTC,tarif,version)}
                                                         endIcon={<AddIcon/>}
                                                         className="bookNow"
                                                     >
                                                         Book
-                                                    </Button> }
+                                                    </Button> 
                                                 </div>
                                             </div>
                                         );

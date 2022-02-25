@@ -1,27 +1,26 @@
 import { useState } from 'react';
 import CustomError from '../../../CustomError';
-import React, {useEffect} from "react";
+import {useEffect} from "react";
 import Navbar from "../Navbar/Navbar";
 import { Checkbox } from "@mui/material";
 import './typeChambre.css';
-import styles from './typeChambre.module.css'; 
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {Link} from 'react-router-dom';
 
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom';
 
 import callAPI from '../../../utility';
-import {FileInput, Preview, Videos, Font} from './utilityTypeChambre.js';
 import {session} from '../../common/utilitySession.js';
 import NotEnoughAccessRight from '../../common/NotEnoughAccessRight';
 
 import ButtonLoading from "../buttonLoading.js"
 import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
-
-import * as MuiIcons from "@mui/icons-material"
+import PhotoChambre from './InsertTypeChambre/Photo/PhotoChambre.js';
+import VideoChambre from './InsertTypeChambre/Video/VideoChambre.js';
+import Equipement from './InsertTypeChambre/Equipement.js';
 
 function PlanTarifaire(props){
   let i = -1;
@@ -44,43 +43,8 @@ function PlanTarifaire(props){
   return list;
 }
 
-function Equipements(props){
-  let i = -1;
-    let equipements = props.equipements.map(equipement => {
-        i++;
-        let u = i;
-        return(
-          <tr>
-            <td style={{width: "25px"}}>
-              <FormControlLabel
-                checked={equipement.checked}
-                control={<Checkbox/>}
-                label=""
-                onChange={(e) => props.handleCheckBoxEquipement(e, u)}
-                style={{marginLeft:"20px"}}
-                key={u}
-              />
-            </td>
-            <td>
-              {React.createElement(MuiIcons[equipement.tag])}
-            </td>
-            <td>
-              {equipement.label}
-            </td>
-          </tr>
-          
-        );
-    })
-    const table = <table className={styles.equipement}>
-      <tbody>
-        {equipements}
-      </tbody>
-    </table>
-  return table;
-}
 function InsertTypeCHambre(){
   const noImage = '/no-image.jpg';
-  let [val, setVal] = useState(1);
   let [state, setState] = useState(
     {
       errors: [],
@@ -97,7 +61,6 @@ function InsertTypeCHambre(){
       nom: '',
       nbAdulte: '',
       nbEnfant: '',
-      photo: [],
       
       chambreTotal:'',
       etage:'',
@@ -105,18 +68,13 @@ function InsertTypeCHambre(){
       description:'',
       planTarifaire: [],
       equipements: [],
-      preview: [noImage],
       videos: []
     }
   );
-  const [open, setOpen] = React.useState(false);
-  const [errorFont, setErrorFont] = React.useState({
-    autre: null,
-    font: null,
-    nom: null
-  });
   const { _id } = useParams();
   const [skeletonAffiche , setSkeleton] = useState(true);
+  const [photo, setPhoto] = useState([]);
+  const [preview, setPreview] = useState([noImage]);
   
   const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
   const hasARInsert = session.getInstance().hasOneOfTheseAccessRights(["insertTypeChambre", "superAdmin"]);
@@ -125,35 +83,47 @@ function InsertTypeCHambre(){
   const fieldsToSet = ["_id", "nom", "nbAdulte", "nbEnfant", "photo",
       "chambreTotal", "etage", "superficie", "description",
       "planTarifaire", "equipements", "videos"];
-
+  
+  const [areImagesLoading, setAreImagesLoading] = useState(isInsert ? false : true);
   const [btnLoad, setBtnLoad] = useState(false);
   
   const setDetailsTypeChambre = (data) => {
     let currentState = {...state};
+
     if(data.status === 401){//Unauthorized
       history.push('/back/login');
     }else if(data.status === 403){
       history.push('/notEnoughAccessRight');
     }
+
     fieldsToSet.map(field => {
       currentState[field] = data.typeChambre[field];
     });
-    if(currentState.photo != '' || 
-        currentState.photo != undefined ||
-        currentState.photo != null){
-            currentState.preview = [];
-            for(let i = 0; i < currentState.photo.length; i++){
-                currentState.preview[i] = process.env.REACT_APP_BACK_URL + "/" + currentState.photo[i];
-            }
-        }
+
+    let tmpPhoto = JSON.parse(JSON.stringify(data.typeChambre.photo));
+    delete currentState.photo;
+    
+    if(photo != '' || 
+      photo != undefined ||
+      photo != null){
+      let tmpPreview = [];
+      for(let i = 0; i < tmpPhoto.length; i++){
+        tmpPreview[i] = process.env.REACT_APP_BACK_URL + "/" + tmpPhoto[i];
+      }
+      setPreview(tmpPreview);
+    }
+
+    setPhoto(tmpPhoto);
     setState(currentState);
     setSkeleton(false);
-}
+    setAreImagesLoading(false);
+  }
 
   useEffect(() => {
     if(isInsert && hasARInsert){
       callAPI('get', '/TCTarif/infoInsertTypeChambre', {}, setInfo);
     }else if(hasARGet || hasARUpdate){
+      setAreImagesLoading(true);
       callAPI("get", "/typeChambre/details/" + _id, {}, setDetailsTypeChambre);
     }
   }, [_id]);
@@ -187,12 +157,6 @@ function InsertTypeCHambre(){
   function handleCheckBoxPlanTarifaire(e, index){
     let current = JSON.parse(JSON.stringify(state));
     current.planTarifaire[index].checked = e.target.checked;
-    setState(current);
-  }
-
-  function handleCheckBoxEquipement(e, index){
-    let current = JSON.parse(JSON.stringify(state));
-    current.equipements[index].checked = e.target.checked;
     setState(current);
   }
 
@@ -240,6 +204,7 @@ function InsertTypeCHambre(){
       }
     }
     toSend.planTarifaire = selectedPlan;
+    toSend.photo = photo;
     callAPI('post', '/typeChambre/insert', toSend, tryRedirect);
   }
 
@@ -265,6 +230,7 @@ function InsertTypeCHambre(){
         }
     }
     toSend.planTarifaire = planTarifaire;
+    toSend.photo = photo;
     callAPI('post', '/typeChambre/update/', toSend, tryRedirect);
   }
 
@@ -273,42 +239,6 @@ function InsertTypeCHambre(){
       currentState[inputName] = event.target.value;
       currentState.error[inputName] = null;
       setState(currentState);
-  }
-
-  function handleVideoChange(e){
-    let currentState = JSON.parse(JSON.stringify(state));
-    currentState.videos = [];
-    for(let i = 0; i < e.target.files.length; i++){
-      currentState.videos.push({});
-    }
-    setState(currentState);
-  }
-
-  function handlePhotoChange(e){
-    let currentState = JSON.parse(JSON.stringify(state));
-    currentState.photo = [];
-    currentState.preview = [];
-    let finished = 0;
-    for(let i = 0; i < e.target.files.length; i++){
-      const u = i;
-      const img = e.target.files[i];
-      const r = /^image/;
-      if(r.test(img.type)){
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-          currentState.photo[u] = evt.target.result;
-          currentState.preview[u] = evt.target.result;
-          finished++;
-          if(finished === e.target.files.length){
-            setState(currentState);
-          }
-        }
-        reader.readAsDataURL(img);
-      }else{
-        currentState.preview = [noImage];
-        setState(currentState);
-      }
-    }
   }
 
   const style = {
@@ -343,13 +273,13 @@ function InsertTypeCHambre(){
                       Nom
                       </p>
                             } 
-                      style={{width:'370px'}}
+                      style={{width:'325px'}}
                       type="text" 
                       value={state.nom} onChange={(e) => handleInputChange(e, "nom")}
                       error={state.error.nom === null ? false : true}
                       helperText={state.error.nom === null ? null : state.error.nom}
                       />
-                    <TextField 
+                    <TextField
                       id="outlined-basic"
                       variant="outlined"
                       size='small'
@@ -359,71 +289,48 @@ function InsertTypeCHambre(){
                         </p>
                              } 
                       type="number"
-                      style={{width:'370px',marginLeft:'123px'}}
+                      style={{width:'325px',marginLeft:'123px'}}
                       value={state.chambreTotal} onChange={(e) => handleInputChange(e, "chambreTotal")}
                       error={state.error.chambreTotal === null ? false : true}
                       helperText={state.error.chambreTotal === null ? null : state.error.chambreTotal}
-                      />
+                    />
                      </div>
-                     <div style={{marginTop:'40px'}} id='input-group1'>
+                    <div style={{marginTop:'40px'}} id='input-group1'>
                       <TextField 
-                      id="outlined-basic"
-                      variant="outlined"
-                      size='small'
-                      label={
-                        <p id='libel'>
-                            Etage
-                        </p>
-                             } 
-                      type="number"
-                      style={{width:'370px'}}
-                      value={state.etage} onChange={(e) => handleInputChange(e, "etage")}
-                      error={state.error.etage === null ? false : true}
-                      helperText={state.error.etage === null ? null : state.error.etage}
+                        id="outlined-basic"
+                        variant="outlined"
+                        size='small'
+                        label={
+                          <p id='libel'>
+                              Etage
+                          </p>
+                              } 
+                        type="number"
+                        style={{width:'325px'}}
+                        value={state.etage} onChange={(e) => handleInputChange(e, "etage")}
+                        error={state.error.etage === null ? false : true}
+                        helperText={state.error.etage === null ? null : state.error.etage}
                       />
                       <TextField 
-                      id="outlined-basic"
-                      variant="outlined"
-                      size='small'
-                      label={
-                        <p id='libel'>
-                            Superficie
-                        </p>
-                             } 
-                      type="number" 
-                      style={{width:'370px',marginLeft:'123px'}}
-                      value={state.superficie} onChange={(e) => handleInputChange(e, "superficie")}
-                      error={state.error.superficie === null ? false : true}
-                      helperText={state.error.superficie === null ? null : state.error.superficie}
+                        id="outlined-basic"
+                        variant="outlined"
+                        size='small'
+                        label={
+                          <p id='libel'>
+                              Superficie
+                          </p>
+                              } 
+                        type="number" 
+                        style={{width:'325px',marginLeft:'123px'}}
+                        value={state.superficie} onChange={(e) => handleInputChange(e, "superficie")}
+                        error={state.error.superficie === null ? false : true}
+                        helperText={state.error.superficie === null ? null : state.error.superficie}
                       />
                     </div>
-                    
-                    
-                    <div style={{marginTop:'15px'}}>
-                        <label className="form-label mt-4" style={{textDecoration:'underline'}} id='bigLabel'>Photos  </label>
-                      </div>
-                      <div className="row">
-                          <Preview preview={state.preview} />
-                      </div>
-                      <div className="row">
-                          <FileInput 
-                            id='InputFile'
-                            style={{marginTop: '5px'}}
-                            value=""
-                            handlePhotoChange={handlePhotoChange} />
-                            {state.error.photo === null ? null : <div className="customError"><span>{state.error.photo}</span></div>}
-                      </div>
-
-                    <div style={{marginTop:'15px'}}>
-                      <div className="row">
-                      <div style={{marginTop:'10px'}}>
-                        <label className="form-label mt-4" style={{textDecoration:'underline'}} id='bigLabel'>Videos  </label>
-                      </div>
-                      </div>
-                      <div className="row">
-                        <Videos state={state} setState={setState} />
-                      </div>
-                    </div>
+                    <PhotoChambre state={state} setState={setState} noImage={noImage}
+                      photo={photo} setPhoto={setPhoto} preview={preview} setPreview={setPreview}
+                      areImagesLoading={areImagesLoading} setAreImagesLoading={setAreImagesLoading} />
+                    <VideoChambre state={state} setState={setState} />
 
                     <div style={{marginTop:'10px'}}>
                       <label className="form-label mt-4" 
@@ -445,7 +352,7 @@ function InsertTypeCHambre(){
                       type="number"
                       value={state.nbAdulte}
                       onChange={(e) => handleInputChange(e, "nbAdulte")}
-                      style={{width:'370px'}}
+                      style={{width:'325px'}}
                       error={state.error.nbAdulte === null ? false : true}
                       helperText={state.error.nbAdulte === null ? null : state.error.nbAdulte}
                       />
@@ -461,7 +368,7 @@ function InsertTypeCHambre(){
                       type="number" 
                       value={state.nbEnfant}
                       onChange={(e) => handleInputChange(e, "nbEnfant")}
-                      style={{width:'370px',marginLeft:'123px'}}
+                      style={{width:'325px',marginLeft:'123px'}}
                       error={state.error.nbEnfant === null ? false : true}
                       helperText={state.error.nbEnfant === null ? null : state.error.nbEnfant}
                       />
@@ -491,28 +398,14 @@ function InsertTypeCHambre(){
                       error={state.error.description === null ? false : true}
                       helperText={state.error.description === null ? null : state.error.description}
                     />
-                    <div style={{marginTop:'40px'}}>
-                        <div>
-                            <label className="form-label-mt4" 
-                            style={{textDecoration: 'underline'}} 
-                            id='bigLabel'>
-                              Equipements
-                            </label>
-                      </div>
-                      <FormGroup>
-                        <Equipements  
-                          equipements={state.equipements} 
-                          handleCheckBoxEquipement={handleCheckBoxEquipement}
-                        />
-                      </FormGroup>
-                    </div>
+                    <Equipement state={state} setState={setState} />
                     <div style={{marginTop:'15px'}}>
                       <div>
-                          <label className="form-label-mt4" 
-                          style={{textDecoration: 'underline'}} 
+                        <label className="form-label-mt4"
+                          style={{textDecoration: 'underline'}}
                           id='bigLabel'>
-                            Plan tarifaire attribué
-                          </label>
+                          Plan tarifaire attribué
+                        </label>
                       </div>
                       <FormGroup>
                         <PlanTarifaire planTarifaire={state.planTarifaire} handleCheckBoxPlanTarifaire={handleCheckBoxPlanTarifaire}/>

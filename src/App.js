@@ -112,6 +112,7 @@ function App(){
         <Route path="/back/politique/list" exact component={ListPolitique} />
         <Route path="/back/politique/testData" exact component={testData} />
         <Route path="/back/reservation" exact component={ListeReservation} />
+        <Route path="/back/reservation/notif" exact component={ListeReservation} />
 
 
         <Route path="/" exact component={AppClient} />

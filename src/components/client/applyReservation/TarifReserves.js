@@ -10,6 +10,7 @@ import {getDiffDays} from '../../client/utility.js';
 import './Itineraires.css';
 import Box from '@mui/material/Box';
 import InputContact from './InputContact.js';
+
 function TarifReserves(props){
     const [annulChambre, setAnnulChambre] = useState(
         {
@@ -49,7 +50,7 @@ function TarifReserves(props){
                 <div class="box_reservation">
                     
                     <div class="infos_chambre">
-                        <img  src={tarif.infoTypeChambre.photo[0]}/>
+                        <img  src={process.env.REACT_APP_BACK_URL+"/"+tarif.infoTypeChambre.photo[0]}/>
                         <div class="details_chambre">
                             <p class="title_hotel">Chambre {(i+1)}</p>
                             <p class="chambre"> {tarif.nomTypeChambre} </p>
@@ -62,7 +63,10 @@ function TarifReserves(props){
 
                     </div> 
                     <div class="input_utilisateur">
-                        <InputContact isEditEnabled={props.isEditEnabled} reservateur={props.reservateur} />
+                        <InputContact isEditEnabled={props.isEditEnabled} reservateur={props.reservateur} 
+                                reservation ={props.reservation} setReservation = {props.setReservation} 
+                                indiceItineraire = {props.indexItineraire} 
+                                indiceTarifReserver = {i}/>
 
                     </div>
                     
