@@ -1,0 +1,23 @@
+{ 
+    "Check-in": "Entrer", 
+    "Check-out": "Sortie",
+    "matching rooms": "chambres assorties" ,
+    "filter": "filtrer",
+    "Occupancy" :"Occupation",
+    "Log in" :"SE CONNECTER",
+    "search for a reservation" :"RECHERCHER UNE RESERVATION",
+    "log in" :"Se connecter",
+    "Forgot your password" :"Mot de passe oublié ?",
+    "Register" :"S'inscrire",
+    "Adults":"Adultes",
+    "Children's":"Enfants",
+    "Adult":"Adulte",
+    "Children":"Enfant",
+    "Add itinerary":"Ajouter itinéraire",
+    "Validate reservation":"Valider réservation",
+    "Modify":"Modifier",
+    "Cancel":"Annuler",
+    "night":"nuit(s)",
+    "person":"personne(s)",
+    "Book":"Reserver"
+  }

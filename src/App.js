@@ -142,6 +142,9 @@ function App(){
         <Route path="/404NotFound" exact component={NotFound} />
         <Route path="/NotEnoughAccessRight" exact component={NotEnoughAccessRight} />
         <Route path="/modal" exact component={Tooltip} />
+
+        <Route path="/navBarClient" exact component={Navbar} />
+
       </Router>
     </div>
     
