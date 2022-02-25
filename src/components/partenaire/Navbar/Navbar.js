@@ -93,10 +93,10 @@ function Navbar(props) {
     function getNotification(){
         return new Promise((resolve, reject) => {
             setInterval(() => {
-                // callAPI('post', '/notifPartenaire', {}, (data) => {
-                //     setNbNotifs(data.nbNotifs);
-                // });
-            }, 10000);
+                callAPI('post', '/notifPartenaire', {}, (data) => {
+                    setNbNotifs(data.nbNotifs);
+                });
+            }, 120000);
         });
     }
 

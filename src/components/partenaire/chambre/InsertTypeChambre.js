@@ -231,6 +231,7 @@ function InsertTypeCHambre(){
     }
     toSend.planTarifaire = planTarifaire;
     toSend.photo = photo;
+    console.log(toSend);
     callAPI('post', '/typeChambre/update/', toSend, tryRedirect);
   }
 
