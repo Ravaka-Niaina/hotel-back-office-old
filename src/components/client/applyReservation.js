@@ -97,6 +97,8 @@ function ApplyReservation(props){
     }
 
     function setDetailReservation(res){
+        console.log("details reservation");
+        //
         setOpenLoad(false);
         console.log(res);
         if(res.status === 200){
@@ -121,6 +123,7 @@ function ApplyReservation(props){
                             }catch(err){}
                             
                             const max = nbEnfant + nbAdulte;
+                            
                         }
                     }
                 }
@@ -132,6 +135,7 @@ function ApplyReservation(props){
             }catch(err){
                 console.log(err);
             }
+            console.log(res.reservation);
         }else{
             console.log(res.errors[0].message);
             setAlertError(res.errors[0].message);

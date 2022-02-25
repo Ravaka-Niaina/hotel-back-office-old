@@ -74,7 +74,7 @@ function TarifsVoucher(props){
                     <div class="voucher_info_tarifs">
                         <div style={{display:'flex',flexDirection:'row',marginTop:'0.8rem'}}>
                             <h3 class="voucher_title2"> Chambre {i+1} </h3>
-                            <span class="voucher_title2" style={{marginLeft:'1.5rem'}}>CONFIRMER #59973SC016091</span>
+                            <span class="voucher_title2" style={{marginLeft:'1.5rem'}}>CONFIRMER #{tarif.numeroConfirmation}</span>
                             
                         </div>
                         <div class="flex_voucher_tarif" style={{marginTop:'0.8rem'}}><strong class="voucher_bold">{tarif.nomTypeChambre}</strong><div class="booking-summary-reservations_roomTotal"><span class="sr-only"><span>Prix de la chambre</span> </span><span class="voucher_bold">{tarif.toPay.afterProm}&nbsp;€</span></div></div>
@@ -103,9 +103,9 @@ function TarifsVoucher(props){
                         </div>
                         <div style={{marginTop:'0.8rem'}}>
                             <strong class="voucher_bold">Informations du client</strong>
-                            <div>prenom nom </div>
-                            <div> email </div>
-                            <div> numero </div>
+                            <div>{tarif.reservateurWithEmail.prenom} {tarif.reservateurWithEmail.nom} </div>
+                            <div> {tarif.reservateurWithEmail.email} </div>
+                            <div> {tarif.reservateurWithEmail.numero} </div>
                         </div>
                         <div style={{marginTop:'0.8rem'}}>
                             <strong class="voucher_bold">Détails et préférences supplémentaires</strong>

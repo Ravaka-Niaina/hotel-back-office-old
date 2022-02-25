@@ -9,12 +9,12 @@ function ItinerairesVoucher(props){
             const u = i;
             let chambres_number = [];
             let length = props.reservation.itineraires[i].tarifReserves.length;
-            // console.log(props.reservation);
+            console.log(props.reservation);
             for (let j = 0; j < length; j++) {
                     const tarif = props.reservation.itineraires[i].tarifReserves[j]; 
                    chambres_number.push(
                        <div class="voucher_chambres"> 
-                            <h3 class="voucher_title2"><span>Chambre {j+1} Confirmation #&nbsp;: </span><span class="confirmation-message_confirmationNumber"> 59973SC016061</span></h3>
+                            <h3 class="voucher_title2"><span>Chambre {j+1} Confirmation #&nbsp;: </span><span class="confirmation-message_confirmationNumber"> {tarif.numeroConfirmation}</span></h3>
                             <span class="confirmation-message_Confirmed"><span>Confirmé</span></span>
                        </div>
                    )
@@ -27,7 +27,7 @@ function ItinerairesVoucher(props){
             itineraires.push(
                 <div >
                     <div class=" voucher_border voucher_numeros">
-                        <h2 class="voucher_title"><span>Merci.</span> <span>Votre numéro d'itinéraire {u+1} est 14463B2867239</span></h2>
+                        <h2 class="voucher_title"><span>Merci.</span> <span>Votre numéro d'itinéraire {u+1} est {props.reservation.itineraires[i].numeroITineraire}</span></h2>
                         {chambres_number}
                                 
                        
