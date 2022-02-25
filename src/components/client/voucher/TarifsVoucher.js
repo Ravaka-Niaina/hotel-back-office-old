@@ -69,7 +69,7 @@ function TarifsVoucher(props){
                 <div class="voucher_details_tarifs">
                     
                     <div class="image_tarifs">
-                        
+                         <img style={{width:'90%',marginTop:'0.8rem'}}  src={process.env.REACT_APP_BACK_URL+"/"+tarif.infoTypeChambre.photo[0]}/>
                     </div>
                     <div class="voucher_info_tarifs">
                         <div style={{display:'flex',flexDirection:'row',marginTop:'0.8rem'}}>
