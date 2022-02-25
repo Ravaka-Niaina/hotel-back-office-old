@@ -21,7 +21,6 @@
     border-radius: 10px !important;
     position: absolute !important;
     z-index: 1;
-    top: 20px;
     cursor:ew-resize !important;
     padding: 0 !important;
 }

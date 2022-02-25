@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button,Stack,TextField,Radio,RadioGroup,FormControl,FormControlLabel,InputAdornment} from '@mui/material';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import moment from 'moment';
 
 const PriceEditor = (props) => {
     const [value, setValue] = React.useState('open');
@@ -14,7 +15,7 @@ const PriceEditor = (props) => {
         <>
             <span>{props.typechambre.nom}</span>
             <br/>
-            <span>{props.fromto[0].format('ll') + ' - ' + props.fromto[1].format('ll')}</span>
+            <span>{moment(props.fromto[0]).format('ll') + ((props.fromto[1] != undefined) ?  ' - ' + moment(props.fromto[1]).format('ll') : "")}</span>
             <br/>
             <FormControl component="fieldset">
                 <RadioGroup

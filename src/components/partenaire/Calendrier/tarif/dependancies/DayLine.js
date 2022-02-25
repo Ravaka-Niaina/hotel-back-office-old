@@ -47,9 +47,10 @@ function RateCells(props){
                 <td>
                     <DayCell 
                         isprice={true} 
-                        highlight={props.selecteds.indexOf(u) >= 0} 
+                        highlight={props.selecteds.indexOf(u) >= 0 && props.selectedY == i+2} 
                         key={u.toString()}
-                        index={u}
+                        x={u}
+                        y={i+2}
                         deselectDay={props.rmSelection.bind(props.context)} 
                         selectDay={props.addSelection.bind(props.context)} 
                         selectOneDay={props.oneSelection.bind(props.context)} 
@@ -81,6 +82,7 @@ const DayLine = (props) => {
     let open = Boolean(anchorEl);
     let daycells = [];
     const [selecteds, setSelecteds] = useState([]);
+    const [selectedY,setSelectedY] = useState(-1);
     const [from, setFrom] = useState('none');
     const [bornesEditDate, setBornesEditDate] = useState([]);
     //typechambre.planTarifaire[0].prixTarif[i].date
@@ -105,7 +107,7 @@ const DayLine = (props) => {
         setMax(max);
         return max;
     }
-    const addSelection = (i) => {
+    const addSelection = (i, y) => {
         var min = getMin(selecteds);
         var max = getMax(selecteds);
        // console.log('from : ' + min + ' => ' + max);
@@ -121,9 +123,14 @@ const DayLine = (props) => {
             tmp.push(j);
         }
         setSelecteds(tmp);
-        setBornesEditDate([ props.typechambre.planTarifaire[0].prixTarif[min].date, props.typechambre.planTarifaire[0].prixTarif[max].date ]);
+        setSelectedY(y);
+        if(props.daterange[i] < bornesEditDate[0]){
+            setBornesEditDate([ props.daterange[i] , bornesEditDate[0] ]);
+        }else{
+            setBornesEditDate([ bornesEditDate[0] , props.daterange[i] ]);
+        }
     }
-    const rmSelection = (i) => {
+    const rmSelection = (i, y) => {
         // const tmp = [...selecteds];
         // const r = selecteds.indexOf(i);
         // tmp.splice(r, 1);
@@ -143,9 +150,10 @@ const DayLine = (props) => {
         //     setSelecteds(tmp);
         // }
     }
-    const oneSelection = (i) => {
-        console.log('select',i);
+    const oneSelection = (i, y) => {
         setSelecteds([i]);
+        setBornesEditDate([props.daterange[i]]);
+        setSelectedY(y);
         let anchorEl = document.getElementById('anchorEl' + props.indice);
         openPopper(anchorEl);
     }
@@ -174,6 +182,7 @@ const DayLine = (props) => {
     const closePopper = (ev) => {
         setAnchorEl(null);
         setSelecteds([]);
+        setSelectedY(-1);
     }
     
     const bookedcell = [];
@@ -188,9 +197,10 @@ const DayLine = (props) => {
         <td>
             <DayCell 
                 isprice={false} 
-                highlight={selecteds.indexOf(i) >= 0} 
+                highlight={selecteds.indexOf(i) >= 0 && selectedY == 0} 
                 key={i.toString()}
-                index={i}
+                x={i}
+                y={0}
                 deselectDay={rmSelection.bind(this)} 
                 selectDay={addSelection.bind(this)} 
                 selectOneDay={oneSelection.bind(this)}
@@ -200,9 +210,10 @@ const DayLine = (props) => {
         <td>
             <DayCell 
                 isprice={false} 
-                highlight={selecteds.indexOf(i) >= 0} 
+                highlight={selecteds.indexOf(i) >= 0 && selectedY == 1} 
                 key={i.toString()}
-                index={i}
+                x={i}
+                y={1}
                 deselectDay={rmSelection.bind(this)} 
                 selectDay={addSelection.bind(this)} 
                 selectOneDay={oneSelection.bind(this)} day={i}
@@ -222,6 +233,14 @@ const DayLine = (props) => {
             </td>
         )
     }
+
+    const calculateTop = (y) => {
+        let r = 38 + (y * 50);
+        if(y > 1){
+            r += 6;
+        }
+        return r;
+    }
     return(
         <>
             <Popper
@@ -232,14 +251,14 @@ const DayLine = (props) => {
                 className={styles.popper}
             >
                 dfdfadfd
-                {/* <PriceEditor typechambre={props.typechambre} fromto={bornesEditDate} closePopper={closePopper.bind(this)} /> */}
+                <PriceEditor typechambre={props.typechambre} fromto={bornesEditDate} closePopper={closePopper.bind(this)} />
             </Popper>
             <div className={styles.dayline}>
                 <DateRangeLine daterange={props.daterange} />
                 
                 <div className={styles.tablelinediv}>
                     <div id={"anchorEl" + props.indice} style={{ height: '10px', backgroundColor: 'transparent', position: 'absolute', top: '-11px', left: (min * 60) + 'px' ,width: ((max - min + 1) * 60) + 'px' }}></div>
-                    { (selecteds.length > 0) ? <Draggable pos={'left'} dragStart={dragStart.bind(this)} rightSelected={rightSelected.bind(this)} leftSelected={leftSelected.bind(this)} /> : null }
+                    { (selecteds.length > 0 && selectedY != -1) ? <Draggable top={calculateTop(selectedY)} pos={'left'} dragStart={dragStart.bind(this)} rightSelected={rightSelected.bind(this)} leftSelected={leftSelected.bind(this)} /> : null }
                     <table className={styles.table}>
                         <thead>
 
@@ -258,12 +277,13 @@ const DayLine = (props) => {
                                 typechambre={props.typechambre} 
                                 context={this}
                                 selecteds={selecteds}
+                                selectedY={selectedY}
                                 rmSelection={rmSelection}
                                 addSelection={addSelection}
                                 oneSelection={oneSelection} />
                         </tbody>
                     </table>
-                    { (selecteds.length > 0) ? <Draggable pos={'right'} dragStart={dragStart.bind(this)} rightSelected={rightSelected.bind(this)} leftSelected={leftSelected.bind(this)} /> : null }
+                    { (selecteds.length > 0 && selectedY != -1) ? <Draggable top={calculateTop(selectedY)} pos={'right'} dragStart={dragStart.bind(this)} rightSelected={rightSelected.bind(this)} leftSelected={leftSelected.bind(this)} /> : null }
                 </div>
             </div>
         </>

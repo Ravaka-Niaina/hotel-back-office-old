@@ -15,9 +15,9 @@ const DayCell = (props) => {
     })
     const select = (next) => {
         if(next){
-            props.selectDay(props.index);
+            props.selectDay(props.x, props.y);
         }else{
-            props.deselectDay(props.index);
+            props.deselectDay(props.x, props.y);
         }
     }
     useEffect( () => {
@@ -39,7 +39,7 @@ const DayCell = (props) => {
                 },
                 position: 'relative',
                 }}
-                onClick={() => {props.selectOneDay(props.index)}}
+                onClick={() => {props.selectOneDay(props.x, props.y)}}
                 onDragEnter={() => select(true)}
             >
                 {props.data != null && props.isprice ? 
