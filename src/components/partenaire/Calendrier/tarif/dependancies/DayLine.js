@@ -233,7 +233,13 @@ const DayLine = (props) => {
             </td>
         )
     }
-
+    const calculateTopAnchor = (y) => {
+        let r = (y * 50);
+        if(y > 1){
+            r += 6;
+        }
+        return r;
+    }
     const calculateTop = (y) => {
         let r = 38 + (y * 50);
         if(y > 1){
@@ -250,14 +256,13 @@ const DayLine = (props) => {
                 disableRestoreFocus
                 className={styles.popper}
             >
-                dfdfadfd
                 <PriceEditor typechambre={props.typechambre} fromto={bornesEditDate} closePopper={closePopper.bind(this)} />
             </Popper>
             <div className={styles.dayline}>
                 <DateRangeLine daterange={props.daterange} />
                 
                 <div className={styles.tablelinediv}>
-                    <div id={"anchorEl" + props.indice} style={{ height: '10px', backgroundColor: 'transparent', position: 'absolute', top: '-11px', left: (min * 60) + 'px' ,width: ((max - min + 1) * 60) + 'px' }}></div>
+                    <div id={"anchorEl" + props.indice} style={{ height: '10px', backgroundColor: 'transparent', position: 'absolute', top: (calculateTopAnchor(selectedY)) + 'px', left: (min * 60) + 'px' ,width: ((max - min + 1) * 60) + 'px' }}></div>
                     { (selecteds.length > 0 && selectedY != -1) ? <Draggable top={calculateTop(selectedY)} pos={'left'} dragStart={dragStart.bind(this)} rightSelected={rightSelected.bind(this)} leftSelected={leftSelected.bind(this)} /> : null }
                     <table className={styles.table}>
                         <thead>
