@@ -208,9 +208,19 @@ class Scroll extends React.Component{
                         dateSejour: JSON.parse(JSON.stringify(current.dateSejour)),
                         tarifReserves: []
                     });
+                    empty_reservation.itineraires[0] ={ 
+                        edit: false,
+                        dateSejour: JSON.parse(JSON.stringify(current.dateSejour)),
+                        tarifReserves: []
+                    }
                 }else{
                     current.itineraires[current.itineraires.length - 1].dateSejour.debut = dateDebut;
                     current.itineraires[current.itineraires.length - 1].dateSejour.fin = dateFin;
+                    empty_reservation.itineraires[0] ={ 
+                        edit: false,
+                        dateSejour: JSON.parse(JSON.stringify(current.dateSejour)),
+                        tarifReserves: []
+                    }
                 }
             }catch(err){
                 current.itineraires.push({ 
@@ -218,6 +228,11 @@ class Scroll extends React.Component{
                         dateSejour: JSON.parse(JSON.stringify(current.dateSejour)),
                         tarifReserves: []
                     });
+                    empty_reservation.itineraires[0] ={ 
+                        edit: false,
+                        dateSejour: JSON.parse(JSON.stringify(current.dateSejour)),
+                        tarifReserves: []
+                    }
             }
         }
         
