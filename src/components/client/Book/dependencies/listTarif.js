@@ -110,11 +110,11 @@ function ListTarif(props){
 
     function addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre,tarif,toPay){
         setShowButton(true);
-        if(props.context.state.itineraires.length === 0){
-            let temp = {...props.context.state};
-            temp.err = "Veuillez d'abord choisir une date de sejour";
-            props.context.setState(temp);
-        }
+        // if(props.context.state.itineraires.length === 0){
+        //     let temp = {...props.context.state};
+        //     temp.err = "Veuillez d'abord choisir une date de sejour";
+        //     props.context.setState(temp);
+        // }
         let isFirstTarif=false;
         if(props.context.state.itineraires.length > 0){
 

@@ -40,7 +40,9 @@ function TestCookie(){
     );
 }
 const name_cookies='reservation-real';
-const empty_reservation={_id:"62026a7908b6947750fba0ff",idUtilisateur: "SIl56KMCom4UdHRpGrpsbooTKW8Lw5IJ",dateValidation: null,etat: 1,itineraires:[]};
+const empty_reservation={_id:"62026a7908b6947750fba0ff",idUtilisateur: "SIl56KMCom4UdHRpGrpsbooTKW8Lw5IJ",dateValidation: null,etat: 1,itineraires:[{ edit: false,
+    dateSejour: {debut: "", fin: ""},
+    tarifReserves: []}]};
 const duree_cookie=2;
 // const empty_reservation=null;
 class Scroll extends React.Component{
@@ -101,11 +103,13 @@ class Scroll extends React.Component{
         let expiration =datenow + duree_cookie*60000;
         currentState.expirationCookie =new Date(expiration);
         currentState.reservationEnCours=empty_reservation;
-        currentState.itineraires = [];
-        currentState.changeDateSejour = true;
-        currentState.dateSejour.debut = "";
-        currentState.dateSejour.fin = "";
-        currentState.listTypeChambre = [];
+        currentState.itineraires = [ { edit: false,
+            dateSejour: JSON.parse(JSON.stringify(currentState.dateSejour)),
+            tarifReserves: []}];
+        // currentState.changeDateSejour = true;
+        // currentState.dateSejour.debut = "";
+        // currentState.dateSejour.fin = "";
+        // currentState.listTypeChambre = [];
         const { cookies } = this.props;
         cookies.set(name_cookies, empty_reservation, { path: '/' ,expires:new Date(expiration)});
         this.setState(currentState);
@@ -243,6 +247,7 @@ class Scroll extends React.Component{
     }
 
     haddleChangeDate(value){
+        
         if(value[0] != null && value[1] != null){
             this.getDateAndConvert(value[0] , value[1]);
         }else{
@@ -267,8 +272,13 @@ class Scroll extends React.Component{
             const { cookies } = this.props;
             let reservationCookies=cookies.get(name_cookies);
             console.log("reservationCookies");
-           
+            
             console.log(reservationCookies);
+            empty_reservation.itineraires[0] ={ 
+                edit: false,
+                dateSejour: JSON.parse(JSON.stringify(currentState.dateSejour)),
+                tarifReserves: []
+            } ;
             if(reservationCookies==null || reservationCookies==undefined){
                
                 reservationCookies =empty_reservation;
