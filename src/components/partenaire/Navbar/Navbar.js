@@ -89,7 +89,6 @@ function Navbar(props) {
         setShowDroitAcces(session.getInstance().hasOneOfTheseAccessRights(["superAdmin", "getListDroitAcces", "insertDroitAcces", "getDroitAcces", "updateDroitAcces", "deleteDroitAcces"]));
         setShowReservation(session.getInstance().hasOneOfTheseAccessRights(["superAdmin", "getListReservation"]));
     }, []);
-    console.log("reservation = " + showReservation);
 
     function getNotification(){
         return new Promise((resolve, reject) => {
@@ -97,7 +96,7 @@ function Navbar(props) {
                 callAPI('post', '/notifPartenaire', {}, (data) => {
                     setNbNotifs(data.nbNotifs);
                 });
-            }, 10000);
+            }, 120000);
         });
     }
 

@@ -94,110 +94,106 @@ function Navbar(props) {
                         Hotel Colbert
                     </Typography>
                     <Box sx={{ flexGrow: 1 }} />
-                    <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
-                    <Button variant="outlined" startIcon={<SearchIcon/> } onClick={(e) => props.clickRetour()}>
-                        <Link to='/front/researchReservation' style={{textDecoration : "none" ,color : "#887B62"}}>
-                            RECHERCHE UNE RESERVATION
-                        </Link>
-                    </Button>
-                    <PopupState variant="popper" popupId="demo-popup-popper">
-      {(popupState) => (
-        <div>
-          <Button variant="outlined" startIcon={<Login />} onClick={(e) => login(e)} {...bindToggle(popupState)}>
-                Se connecter
-            </Button>
-          <Popper {...bindPopper(popupState)} transition>
-            {({ TransitionProps }) => (
-              <Fade {...TransitionProps} timeout={350}>
-
-<Paper 
-                  elevation={1}
-                  
-                  children={
-                      <>
-                        <div className='title11'>
-                          <h4 id='title11'>Se connecter</h4>
-                        </div>
-                          {ambiguousError === null ? null : <Alert severity="error">{ambiguousError}</Alert>}
-                          <Box
-                              component="form"
-                              sx={{
-                                  '& .MuiTextField-root': { m: 1, width: '25ch' },
-                              }}
-                              noValidate
-                              autoComplete="off"
-                          >
-                          
-                              <TextField 
-                                  id="outlined-basic"
-                                  variant="outlined"
-                                  size='small'
-                                  label={<p>Email</p>}
-                                  type="email"
-                                  value={email} onChange={(e) => {setErrorEmail(null); setEmail(e.target.value)}}
-                                  error={errorEmail === null ? false : true}
-                                  helperText={errorEmail === null ? null : errorEmail}
-                              /> 
-                          </Box>
-                          <Box
-                              component="form"
-                              sx={{
-                                  '& .MuiTextField-root': { m: 1, width: '25ch' },
-                              }}
-                              noValidate
-                              autoComplete="off"
-                          >
-                              <TextField 
-                                  id="outlined-basic"
-                                  variant="outlined"
-                                  size='small'
-                                  label={<p>Mot de passe</p>}
-                                  type="password"
-                                  value={mdp} onChange={(e) => {setErrorMdp(null); setMdp(e.target.value)}}
-                                  error={errorMdp === null ? false : true}
-                                  helperText={errorMdp === null ? null : errorMdp}
-                              />
-                          </Box>
-                          <Box>
-                          <div id='buttons'>
-                           <div class="login">
-                            <Button sx={{width: 200}} variant="contained" onClick={(e) => login(e)}>
-                                <span style={{color:'white'}}>Se connecter</span>
-                            </Button>
-                            <div class="mdp">
-                           <Link to={'/login/identify'} style={{textDecoration:'none'}}>
-                            <Button  id="mdp">
-                            <span style={{color:'black'}}>Mot de passe oublié?</span>
-                            </Button>
+                        <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
+                        <Button variant="outlined" startIcon={<SearchIcon/> } onClick={(e) => props.clickRetour()}>
+                            <Link to='/front/researchReservation' style={{textDecoration : "none" ,color : "#887B62"}}>
+                                RECHERCHE UNE RESERVATION
                             </Link>
-                            </div>
-                           </div>
-                           <div class="register">
-                            <Button id="register" sx={{width: 200}} onClick={(e) => register(e)}>
-                                <span style={{color:'black'}}>S'inscrire</span>
-                            </Button>
-                           </div>
-                          </div>
-                          </Box>
-                            
-                      </>
-                  } 
-              />
-              </Fade>
-            )}
-          </Popper>
-        </div>
-      )}
-    </PopupState>
-                        <Button size="small">EUR</Button>
-                        <IconButton
-                            size="large"
-                            aria-label="show more"
-                            aria-haspopup="true"
-                            color="inherit"
-                        >
-                            <Language/>
-                        </IconButton>
+                        </Button>
+                        <PopupState variant="popper" popupId="demo-popup-popper">
+                                {(popupState) => (
+                                <>
+                                    <Button variant="outlined" startIcon={<Login />} onClick={(e) => login(e)} {...bindToggle(popupState)}>
+                                        Se connecter
+                                    </Button>
+                                    <Popper {...bindPopper(popupState)} transition>
+                                    {({ TransitionProps }) => (
+                                    <Fade {...TransitionProps} timeout={350}>
+                                        <Paper 
+                                        elevation={1}
+                                        
+                                        children={
+                                            <>
+                                                {ambiguousError === null ? null : <Alert severity="error">{ambiguousError}</Alert>}
+                                                <Box
+                                                    component="form"
+                                                    sx={{
+                                                        '& .MuiTextField-root': { m: 1, width: '25ch' },
+                                                    }}
+                                                    noValidate
+                                                    autoComplete="off"
+                                                >
+                                                
+                                                    <TextField 
+                                                        id="outlined-basic"
+                                                        variant="outlined"
+                                                        size='small'
+                                                        label={<p>Email</p>}
+                                                        type="email"
+                                                        value={email} onChange={(e) => {setErrorEmail(null); setEmail(e.target.value)}}
+                                                        error={errorEmail === null ? false : true}
+                                                        helperText={errorEmail === null ? null : errorEmail}
+                                                    /> 
+                                                </Box>
+                                                <Box
+                                                    component="form"
+                                                    sx={{
+                                                        '& .MuiTextField-root': { m: 1, width: '25ch' },
+                                                    }}
+                                                    noValidate
+                                                    autoComplete="off"
+                                                >
+                                                    <TextField 
+                                                        id="outlined-basic"
+                                                        variant="outlined"
+                                                        size='small'
+                                                        label={<p>Mot de passe</p>}
+                                                        type="password"
+                                                        value={mdp} onChange={(e) => {setErrorMdp(null); setMdp(e.target.value)}}
+                                                        error={errorMdp === null ? false : true}
+                                                        helperText={errorMdp === null ? null : errorMdp}
+                                                    />
+                                                </Box>
+                                                <Box>
+                                                <div id='buttons'>
+                                                <div class="login">
+                                                    <Button sx={{width: 200}} variant="contained" onClick={(e) => login(e)}>
+                                                        <span style={{color:'white'}}>Se connecter</span>
+                                                    </Button>
+                                                    <div class="mdp">
+                                                <Link to={'/login/identify'} style={{textDecoration:'none'}}>
+                                                    <Button  id="mdp">
+                                                    <span style={{color:'black'}}>Mot de passe oublié?</span>
+                                                    </Button>
+                                                    </Link>
+                                                    </div>
+                                                </div>
+                                                <div class="register">
+                                                    <Button id="register" sx={{width: 200}} onClick={(e) => register(e)}>
+                                                        <span style={{color:'black'}}>S'inscrire</span>
+                                                    </Button>
+                                                </div>
+                                                </div>
+                                                </Box>
+                                                    
+                                                </>
+                                            } 
+                                    />
+                                    </Fade>
+                                    )}
+                                </Popper>
+                                </>
+                            )}
+                            </PopupState>
+                            <Button size="small">EUR</Button>
+                            <IconButton
+                                size="large"
+                                aria-label="show more"
+                                aria-haspopup="true"
+                                color="inherit"
+                            >
+                                <Language/>
+                            </IconButton>
                     </Box>
                     </Toolbar>
                 </AppBar>

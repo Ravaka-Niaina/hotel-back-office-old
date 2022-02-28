@@ -74,17 +74,19 @@ function ApplyReservation(props){
         setOpenLoad(false);
         if(res.status === 200){
             setAlertSuccess(res.message);
-         
-            window.location.href = "/reservation/" + _id + "/voucher";
+            history.push("/reservation/" + _id + "/voucher");
+            // window.location.href = "/reservation/" + _id + "/voucher";
         }else{
             setAlertError(res.errors[0].message);
-            window.location.href = '#error';
+            // window.location.href = '#error';
+            history.push('#error');
         }
     }
     
 
     function validerReservation(){
         if(isConditionAccepted){
+            console.log(reservation);
             setOpenLoad(true);
             setAlertSuccess(null);
             setAlertError(null);
@@ -299,6 +301,7 @@ function ApplyReservation(props){
                                             </div>
                                         :null
                                         }
+                                        
                                         
                                     </div>
                                     : <div class="champs">

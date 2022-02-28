@@ -5,6 +5,7 @@ import FullPriceEditor from './FullPriceEditor.js';
 import styles from '../CalendarComponent.module.css';
 import sideList_safari from './SideList_safari.module.css';
 import sideList_chrome from './SideList_chrome.module.css';
+import {PersonOutline} from '@mui/icons-material';
 
 let sideList_css = {};
 if (navigator.userAgent.match(/AppleWebKit/) && ! navigator.userAgent.match(/Chrome/)) { // browser safari
@@ -18,7 +19,7 @@ function ListTarifs(props){
     for(let i = 0; i < props.planTarifaire.length; i++){
         list.push(
             <li className={sideList_css.sideElt}>
-                <span>{props.planTarifaire[i].nom}</span>
+                <span>{props.planTarifaire[i].nom} x2 <PersonOutline size={12} /></span>
             </li>
         );
     }

@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {  faCalendar, faCheckCircle ,faPrint, faShare, faShareAlt} from '@fortawesome/free-solid-svg-icons';
 import ItinerairesVoucher from './voucher/ItineraireVoucher';
 import ModalAnnulation from '../common/ModalAnnulation.js';
+import ModalAnnulationChambre from '../common/ModalAnnulationChambre.js';
 import { useHistory } from 'react-router-dom';
 
 function Voucher(props){
@@ -19,10 +20,26 @@ function Voucher(props){
     const [affilie, setAffilie] = useState([]);
     const [load, setLoad] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [showModalChambre, setShowModalChambre] = useState(false);
     const history = useHistory();
-    
-    function ShowModalAnnulation(){
-        setShowModal(!showModal);
+    const[ variableAnnuler , setVariableAnnuler] = useState({idReservation:'', indexItineraire :'',indexTarifsReserve : ''});
+    const [message , setMessage] = useState("");
+    const [isReservation , setIsReservation] = useState(true);
+
+    function ShowModalAnnulation(isTrue,ObjectChambreAnnuler){
+        if(isTrue){
+            setShowModal(!showModal);
+            setLoad(false);
+        }else{
+            setShowModalChambre(!showModalChambre)
+            let keys = Object.keys(ObjectChambreAnnuler);
+            let current = {...variableAnnuler};
+            keys.map(field => {
+                current[field] = ObjectChambreAnnuler[field];
+            })
+            setVariableAnnuler(current);
+        }
+
     }
     function handleResponse1(res){
         if(res.status == 200){
@@ -33,12 +50,64 @@ function Voucher(props){
         }
     }
 
+    function handleResponse2(res){
+        console.log(res);
+        if(res.status == 200){
+            history.push('/reservation/'+variableAnnuler.idReservation+'/voucher');
+        }else{
+            setAlertError(res.errors[0].message);
+            window.location.href = '#error';
+        }
+        setLoad(false);
+        setShowModalChambre(false); 
+    }
+
     function annulerReservation(){
         setLoad(true);
-        callAPI('post', '/reservation/annulerReservationWithEmail', {_id: reservation._id, reservateur: reservateur, reservation: reservation , email : reservateur.email}, handleResponse1 );
-     }
+        if(isReservation){
+            setLoad(true);
+            callAPI('post', '/reservation/annulerReservationWithEmail', {_id: reservation._id, reservateur: reservateur, reservation: reservation , email : reservateur.email}, handleResponse1 );
+        }else{
+            ShowModalAnnulation(true);
+            history.push('#redirect');
+        }
+    }
+
+    function AnnulationReservationChambre(){
+        setLoad(true);
+        const data = { _id: variableAnnuler.idReservation, indexItineraire: variableAnnuler.indexItineraire, indexTarifReserve: variableAnnuler.indexTarifsReserve };
+        callAPI('post', '/reservation/delete', data, setDetailReservation );
+  
+        // axios({
+        //     method: 'post',
+        //     url: process.env.REACT_APP_BACK_URL + '/reservation/delete',
+        //     withCredentials: true,
+        //     data: data
+        // })
+        // .then(res => { 
+        //     console.log(res);                                               
+        //     context.setReservationEnCours(res.data.reservation)})
+        // .catch(err => console.log(err));
+        // let reservation = context.state.reservationEnCours;
+        // try{
+        //     reservation.itineraires[indexItineraire].tarifReserves.splice(indexTarifReserve, 1); 
+        //     if(reservation.itineraires[indexItineraire].tarifReserves.length ==0){
+        //         reservation.itineraires.splice(indexItineraire,1);
+        //     }
+            
+        // }catch(e){
+
+        // }
+        // context.setReservationEnCours(reservation);
+    }
+
 
     function setDetailReservation(res){
+        if(res.reservation == null){
+            setIsReservation(false);
+        }
+
+        setMessage(res.message);
         setOpenLoad(false);
         console.log(res);
         if(res.status === 200){
@@ -77,11 +146,20 @@ function Voucher(props){
                 console.log(err);
             }
         }else{
-            console.log(res.errors[0].message);
             setAlertError(res.errors[0].message);
+            setMessage(res.errors[0].message);
+        }
+        setLoad(false);
+        setShowModalChambre(false);
+        if(res.message !== null){
+            history.push('#redirect')
         }
     }
 
+    function redirect(){
+        return history.push('/')
+    }
+    
     useEffect(() => {
         callAPI('get', '/reservation/details/' + _id, {}, setDetailReservation);
     }, [_id]);
@@ -95,27 +173,36 @@ function Voucher(props){
                     <div>
                     <FontAwesomeIcon icon={faCheckCircle} color="#587817" size="3x" />
                     </div>
-                    <div style={{marginLeft:10}}>
-                        <p style={{color:'#587817'}}>
-                            Bravo ! Vos chambres sont bien réservées.
-                        </p>
-                        <p>
-                            Rendez-vous sur votre messagerie {reservateur.email} pour voir l'e-mail de confirmation.
-                        </p>
+                    <div style={{marginLeft:10}} id = 'redirect' >
+                        <p style={{color:'#587817'}}>{message}</p>
+                        
+                           {
+                               isReservation ? <p> Rendez-vous sur votre messagerie {reservateur.email} pour voir l'e-mail de confirmation.</p> : ""
+                           } 
+                        
                     </div>
 
                 </div>
                 <div class="voucher_itineraires">
-                    <ItinerairesVoucher 
-                            reservation={reservation} 
-                            setReservation={setReservation}
-                            reservateur={reservateur}
-                            affilie={affilie}
-                            setAffilie={setAffilie}
-                            
-                            openLoad={openLoad}
-                            setOpenLoad={setOpenLoad}
-                             />
+                    {
+                        isReservation ?
+                            <ItinerairesVoucher 
+                                reservation={reservation} 
+                                setReservation={setReservation}
+                                reservateur={reservateur}
+                                affilie={affilie}
+                                setAffilie={setAffilie}
+                                
+                                openLoad={openLoad}
+                                setOpenLoad={setOpenLoad}
+
+                                showModalChambre={showModalChambre}
+                                setShowModalchambre={setShowModalChambre}
+                                ShowModalAnnulation={ShowModalAnnulation}
+                                load ={load}
+                            />  :  "" 
+                    }
+                    
                 </div>
                 
             </div>
@@ -138,12 +225,21 @@ function Voucher(props){
                     <p><strong><span>Modification des réservations</span></strong></p>
                     <button   class="button_pannel" >Modifier la réservation</button>
                     <p style={{marginTop:'1rem'}}><strong><span>Annulations</span></strong></p>
-                    <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained" onClick={(e) => ShowModalAnnulation()}>Annuler réservation</button>
-                            
+                    {
+                        isReservation ? 
+                            <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained"
+                                onClick={(e) => ShowModalAnnulation(true)}>Annuler réservation</button>
+                        : 
+                            <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained" 
+                                onClick={(e) => redirect()}>Redirect Client</button>
+                      
+                    }      
                 </div>
 
                 
             </div>
+            <ModalAnnulationChambre ShowModalAnnulation={ShowModalAnnulation} showModal={showModalChambre} AnnulationReservationChambre = {AnnulationReservationChambre}  load ={load}  />  
+        
             <ModalAnnulation ShowModalAnnulation={ShowModalAnnulation} showModal={showModal}  annulerReservation={annulerReservation} load ={load}  />  
         </div>
     );
