@@ -251,7 +251,7 @@ class Scroll extends React.Component{
       
     }
     
-    setReservationEnCours(reservation, isFactureReceived){
+    setReservationEnCours(reservation, isFactureReceived,isFirstTarif){
         console.log("setReservationEncours");
         let currentState = JSON.parse(JSON.stringify(this.state));
         currentState.reservationEnCours = reservation;
@@ -261,11 +261,13 @@ class Scroll extends React.Component{
         if(isFactureReceived){
             currentState.isFactureReceived = true;
         }
+        
+
         if(reservation === null){
             const { cookies } = this.props;
             let reservationCookies=cookies.get(name_cookies);
             console.log("reservationCookies");
-            currentState.err="Votre réservation expirera dans "+duree_cookie+ " minutes";
+           
             console.log(reservationCookies);
             if(reservationCookies==null || reservationCookies==undefined){
                
@@ -279,8 +281,15 @@ class Scroll extends React.Component{
             currentState.itineraires = reservationCookies.itineraires;
            
         }else{
-          
+            if(isFirstTarif){
+                
+                currentState.err="Votre réservation expirera dans "+duree_cookie+ " minutes";
+                let datenow =Date.now();
+        
+                expiration = new Date(datenow + duree_cookie*60000);
+            }
             currentState.itineraires = reservation.itineraires;
+            currentState.expirationCookie = expiration;
         }
         
         this.handleChangeCookies(currentState.reservationEnCours,expiration);

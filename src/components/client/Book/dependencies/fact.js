@@ -214,7 +214,7 @@ class Fact extends React.Component{
         console.log("check cookies");
         // // console.log(this.props.context.state.reservationEnCours);
         // console.log("fact did mount");
-        this.props.context.setReservationEnCours(null, true);
+        this.props.context.setReservationEnCours(null, true,false);
         // axios({
         //     method: 'get',
         //     url: process.env.REACT_APP_BACK_URL + '/reservation/',
