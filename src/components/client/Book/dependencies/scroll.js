@@ -90,8 +90,6 @@ class Scroll extends React.Component{
         const intervalId = setInterval(() => {
             that.checkExpirationCookie();
         }, 30000);
-      
-    
     }
   
     clearCookies(){
