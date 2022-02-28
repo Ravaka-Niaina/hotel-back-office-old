@@ -195,8 +195,6 @@ class Fact extends React.Component{
                 const data = {itineraires: itineraires};
 
                 callAPI("post" , "/reservation/insertReservationPanier" , data , (res)=>{
-                    console.log("reservation panier");
-                    console.log(res);
                     if(res.status==200){
                         this.props.context.clearCookies();
                         this.props.context.props.history.push("/reservation/" + res.reservation._id + "/apply")
@@ -264,7 +262,10 @@ class Fact extends React.Component{
             for(let u = 0; u < this.props.context.state.itineraires[i].tarifReserves.length; u++){
                 if(this.props.context.state.itineraires[i].tarifReserves[u].etat == undefined
                     || this.props.context.state.itineraires[i].tarifReserves[u].etat == 1){
-                    valider = (<p style={{textAlign:'center',paddingBottom:'12px'}}><Button size='medium' variant="contained"  onClick={(e) => this.validerReservation()} endIcon={<CallMissedOutgoingIcon/>}>Valider réservation</Button></p>);
+                    valider = (<p style={{textAlign:'center',paddingBottom:'12px'}}>
+                        <Button size='medium' variant="contained"  onClick={(e) => this.validerReservation()} endIcon={<CallMissedOutgoingIcon/>}>
+                            Valider réservation
+                        </Button></p>);
                     break;
                 }
             }
