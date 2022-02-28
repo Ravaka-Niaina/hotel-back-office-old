@@ -74,7 +74,7 @@ function InsertTypeCHambre(){
   const { _id } = useParams();
   const [skeletonAffiche , setSkeleton] = useState(true);
   const [photo, setPhoto] = useState([]);
-  const [preview, setPreview] = useState([noImage]);
+  const [preview, setPreview] = useState([]);
   
   const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
   const hasARInsert = session.getInstance().hasOneOfTheseAccessRights(["insertTypeChambre", "superAdmin"]);
@@ -231,6 +231,7 @@ function InsertTypeCHambre(){
     }
     toSend.planTarifaire = planTarifaire;
     toSend.photo = photo;
+    console.log(toSend);
     callAPI('post', '/typeChambre/update/', toSend, tryRedirect);
   }
 
@@ -311,7 +312,7 @@ function InsertTypeCHambre(){
                         error={state.error.etage === null ? false : true}
                         helperText={state.error.etage === null ? null : state.error.etage}
                       />
-                      <TextField 
+                      <TextField
                         id="outlined-basic"
                         variant="outlined"
                         size='small'
@@ -319,8 +320,8 @@ function InsertTypeCHambre(){
                           <p id='libel'>
                               Superficie
                           </p>
-                              } 
-                        type="number" 
+                              }
+                        type="number"
                         style={{width:'325px',marginLeft:'123px'}}
                         value={state.superficie} onChange={(e) => handleInputChange(e, "superficie")}
                         error={state.error.superficie === null ? false : true}

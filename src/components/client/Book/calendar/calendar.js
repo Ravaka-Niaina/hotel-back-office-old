@@ -15,6 +15,7 @@ import { presetDateTracker } from './utils/date-utils'
 
 import callAPI from '../../../../utility.js'
 import { getDate } from '../../../partenaire/Calendrier/tarif/utility.js'
+import moment from 'moment';
 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -63,15 +64,35 @@ const BaeCalendar = ({
   })
 
   let [prix, setPrix] = useState(null)
+  let [isFirstRender, setIsFirstRender] = useState(true);
 
   function closeOnce() {
     setOpen(false)
     setTimeout(() => setOpen(undefined), 1000)
   }
 
+  function setDefaultItineraire(dateDebut, dateFin){
+    console.log("WRYYYYYYYYYYYYYYYYYYY");
+    dateDebut = moment(dateDebut).format("YYYY/MM/DD");
+    dateFin = moment(dateFin).format("YYYY/MM/DD");
+    let current = JSON.parse(JSON.stringify(context.state));
+    current.dateSejour.debut = dateDebut; 
+    current.dateSejour.fin = dateFin;
+    current.itineraires.push({ 
+      edit: false,
+      dateSejour: JSON.parse(JSON.stringify(current.dateSejour)),
+      tarifReserves: []
+    });
+    context.setState(current);   
+  }
+
   function populatePrix(res) {
     if (res.status === 200) {
       if (res.checkIn && res.checkOut) {
+        if(isFirstRender){
+          setDefaultItineraire(res.checkIn, res.checkOut);
+          setIsFirstRender(false);
+        }
         let checkIn = new Date(res.checkIn)
         let checkOut = new Date(res.checkOut)
         setBornes({ debut: checkIn, fin: checkOut, isDebut: true })

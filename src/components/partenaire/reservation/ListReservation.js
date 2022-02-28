@@ -58,7 +58,7 @@ export default function ListeReservation(props){
             label: "Validé"
         },
         {
-            value: "0",
+            value: "3",
             label: "Annulé"
         }
     ]);
@@ -210,7 +210,7 @@ export default function ListeReservation(props){
                                     component="td"
                                     align = "left"
                                 >
-                                    {row.reservateur.nom + " " + row.reservateur.prenom}
+                                    {row.reservateur ? row.reservateur.nom + " " + row.reservateur.prenom : ""}
                                 </TableCell>
                                 <TableCell
                                     component="td"
@@ -226,7 +226,7 @@ export default function ListeReservation(props){
                                     component="td"
                                     align = "left"
                                 >
-                                    {removeSpecialCharFromDate(row.dateValidation)}
+                                    {row.dateValidation === null ? "" : removeSpecialCharFromDate(row.dateValidation)}
                                 </TableCell>
                                 <TableCell
                                     component="td"

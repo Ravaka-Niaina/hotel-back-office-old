@@ -18,6 +18,7 @@ import axios from "axios";
 import {session} from "../../../../components/common/utilitySession.js";
 import {getDiffDays} from '../../../../utility/utilityDate.js';
 import ButtonLoading from '../../../partenaire/buttonLoading.js';
+import { useTranslation } from "react-i18next";
 
 const style = {
     position: 'absolute',
@@ -67,6 +68,7 @@ function getDate(date){
 function ListTarif(props){
     const [error, setError] = React.useState(null);
     const [showButton, setShowButton] = React.useState(false);
+    const { t, i18n } = useTranslation();
     function setReservationEnCours(res){
         if(res.status === 200){
             console.log("add reservation");
@@ -241,7 +243,7 @@ function ListTarif(props){
                                                         endIcon={<AddIcon/>}
                                                         className="bookNow"
                                                     >
-                                                        Book
+                                                        {t('Book')}
                                                     </Button> 
                                                 </div>
                                             </div>

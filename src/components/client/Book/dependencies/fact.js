@@ -25,6 +25,10 @@ import './filtre.css';
 import styles from '../Book.module.css';
 
 import {getDiffDays} from '../../../../utility/utilityDate.js';
+import { useTranslation } from "react-i18next";
+
+// const { t, i18n } = useTranslation();
+
 const name_cookies="reservation-real";
 function PrintDateSejour(props){
     // itineraire, borne, handleChange, label
@@ -58,6 +62,7 @@ function PrintDateSejour(props){
 }
 
 function Reservations(props){
+    const { t, i18n } = useTranslation();
     const HtmlTooltip = styled(({ className, ...props }) => (
         <Tooltip {...props} classes={{ popper: className }} />
     ))(({ theme }) => ({
@@ -85,11 +90,11 @@ function Reservations(props){
                         <CardContent>
                             <div>
                                 <span><BedIcon/>{tarif.nomTypeChambre}</span>
-                                <span><ModeNightIcon/>{nbNuit + " nuit(s)"}</span>
+                                <span><ModeNightIcon/>{nbNuit + t('night')}</span>
                                 <span><LocalOfferIcon/>{tarif.nomTarif}</span>
                             </div>
                             <div>
-                                <span><PersonOutlineIcon/>x {tarif.nbPers} personnes</span>
+                                <span><PersonOutlineIcon/>x {tarif.nbPers} {t('person')}</span>
                                 {tarif.politiqueAnnulAtrb && tarif.politiqueAnnulAtrb.length !== 0 ? 
                                     <HtmlTooltip
                                         title={
@@ -107,9 +112,9 @@ function Reservations(props){
                         </CardContent>
                         <div><span>Prix : {tarif.toPay.afterProm.toFixed(2)} EUR</span></div>
                         <CardActions>
-                            <Button size="small">Modifier</Button>
+                            <Button size="small">{t('Modify')}</Button>
                             <Button size="small" onClick={(e) => props.annulerReservation(props.context, props.context.state.reservationEnCours._id, props.indexItineraire, u)}>
-                                Annuler
+                            {t('Cancel')}
                             </Button>
                         </CardActions>
                         </Card>
@@ -123,6 +128,7 @@ function Reservations(props){
 }
 
 function Itineraires(props){
+    const { t, i18n } = useTranslation();
     let itineraires = [];
     for(let i = 0; i < props.context.state.itineraires.length; i++){
         let itineraire=props.context.state.itineraires[i];
@@ -133,10 +139,10 @@ function Itineraires(props){
         itineraires.push(
             <Box className={styles.sidetitle}>
                 <Card><p>
-                    Check in : <span>{props.context.state.itineraires[i].dateSejour.debut}</span>
+                   {t('Check-in')} : <span>{props.context.state.itineraires[i].dateSejour.debut}</span>
                     </p>
                     <p>
-                    Check out : <span>{props.context.state.itineraires[i].dateSejour.fin}</span>
+                   {t('Check-out')} : <span>{props.context.state.itineraires[i].dateSejour.fin}</span>
                     </p>
                 </Card>
                 <Reservations context={props.context} indexItineraire={i} annulerReservation={props.annulerReservation} />
@@ -156,6 +162,7 @@ class Fact extends React.Component{
     constructor(props){
         super(props);
         const cookies= props;
+        
         this.style = {
             position: 'absolute',
             top: '50%',
@@ -170,6 +177,8 @@ class Fact extends React.Component{
         
 
     }
+
+    
     
     
     reservationValide(res){
@@ -254,6 +263,7 @@ class Fact extends React.Component{
     }
 
     printFacture(){
+
         let valider = null;
         
         let toPay = 0;
@@ -283,7 +293,7 @@ class Fact extends React.Component{
             toPay += toPayItineraire;
             
         }
-        
+
         return(
             <div className={styles.printFacture}>
                 <div style={{textAlign:'center'}}>
@@ -336,7 +346,10 @@ class Fact extends React.Component{
                 {valider}
             </div>
         );
-    }
+                    }
+                
+
+
 
     render(){
         
