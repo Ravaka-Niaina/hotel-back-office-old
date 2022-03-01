@@ -217,17 +217,14 @@ const FullPriceEditor = (props) => {
     }
 
     function refresh(res){
-        console.log(res);
         if(res.status === 200){
-            console.log("Redirection en cours...");
-            props.getPrix();
+            props.getPrix(props.value);
             removeErrorConfigPrix(error, setError)
         }else{
             console.log("prix non configuré");
             handleErrorConfigPrix(res.errors, error, setError);
             props.setOpenLoad(false);
         }
-        
     }
 
     function savePrix(forTypeChambre, forTarif){

@@ -179,10 +179,6 @@ class Scroll extends React.Component{
         setTimeout(()=>{this.setState(temp)}, 1500);
     }
 
-    componentDidMount(){
-        callAPI('get', '/TCTarif/all', {}, this.setResult);
-    }
-
     getConvert(number , value){
         value = value+"";
         let compteur = number - value.length;
@@ -323,7 +319,7 @@ class Scroll extends React.Component{
     }
 
     validerReservation(){
-        callAPI('post', '/reservation/apply', {_id: this.state.reservationEnCours._id}, this.setReservationEnCours);
+        //callAPI('post', '/reservation/apply', {_id: this.state.reservationEnCours._id}, this.setReservationEnCours);
     }
     incrementReservation(){
         let current = JSON.parse(JSON.stringify(this.state));

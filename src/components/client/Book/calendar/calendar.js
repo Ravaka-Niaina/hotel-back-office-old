@@ -108,6 +108,7 @@ const BaeCalendar = ({
       }
       setPrix(res.result);
       setReloadAllPrices(false);
+      applyFilter(undefined, true);
     }
   }
 
