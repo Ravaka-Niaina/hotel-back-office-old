@@ -346,11 +346,8 @@ class Fact extends React.Component{
                 {valider}
             </div>
         );
-                    }
-                
-
-
-
+    }
+        
     render(){
         
         return(
