@@ -112,12 +112,14 @@ function ListTarif(props){
 
     function addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre,tarif,toPay){
         setShowButton(true);
-        if(props.context.state.itineraires.length === 0){
-            let temp = {...props.context.state};
-            temp.err = "Veuillez d'abord choisir une date de sejour";
-            props.context.setState(temp);
-        }
+        // if(props.context.state.itineraires.length === 0){
+        //     let temp = {...props.context.state};
+        //     temp.err = "Veuillez d'abord choisir une date de sejour";
+        //     props.context.setState(temp);
+        // }
+        let isFirstTarif=false;
         if(props.context.state.itineraires.length > 0){
+
             let itineraires = JSON.parse(JSON.stringify(props.context.state.itineraires));
             let dateSejour = props.context.state.dateSejour;
             const lastItineraire = itineraires.length - 1;
@@ -127,6 +129,9 @@ function ListTarif(props){
                     debut: itineraires[itineraires.length - 1].tarifReserves[lastTarif].dateSejour.debut,
                     fin: itineraires[itineraires.length - 1].tarifReserves[lastTarif].dateSejour.fin
                 };
+            }
+            if(props.context.state.itineraires.length == 1 && itineraires[lastItineraire].tarifReserves.length==0){
+                    isFirstTarif=true;
             }
             //numero itineraire
             const Random = NumeroIntineraire(props.context.state.random , props.context.state.nameHotel,TChambre);
@@ -176,7 +181,7 @@ function ListTarif(props){
                         let reserv = props.context.state.reservationEnCours;
                         reserv.itineraires=itineraires;
                         console.log(reserv);
-                        props.context.setReservationEnCours(reserv);
+                        props.context.setReservationEnCours(reserv,true,isFirstTarif);
                     }
                 })
                 .catch(err =>{console.log(err); console.log("erreur");} );

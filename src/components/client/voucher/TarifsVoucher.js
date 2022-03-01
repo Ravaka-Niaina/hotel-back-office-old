@@ -68,7 +68,7 @@ function TarifsVoucher(props){
                 <div class="voucher_details_tarifs">
                     
                     <div class="image_tarifs">
-                        
+                         <img style={{width:'90%',marginTop:'0.8rem'}}  src={process.env.REACT_APP_BACK_URL+"/"+tarif.infoTypeChambre.photo[0]}/>
                     </div>
                     <div class="voucher_info_tarifs">
                         <div style={{display:'flex',flexDirection:'row',marginTop:'0.8rem'}}>
@@ -102,9 +102,9 @@ function TarifsVoucher(props){
                         </div>
                         <div style={{marginTop:'0.8rem'}}>
                             <strong class="voucher_bold">Informations du client</strong>
-                            <div>prenom nom </div>
-                            <div> email </div>
-                            <div> numero </div>
+                            <div>{tarif.reservateurWithEmail.prenom} {tarif.reservateurWithEmail.nom} </div>
+                            <div> {tarif.reservateurWithEmail.email} </div>
+                            <div> {tarif.reservateurWithEmail.numero} </div>
                         </div>
                         <div style={{marginTop:'0.8rem'}}>
                             <strong class="voucher_bold">Détails et préférences supplémentaires</strong>
