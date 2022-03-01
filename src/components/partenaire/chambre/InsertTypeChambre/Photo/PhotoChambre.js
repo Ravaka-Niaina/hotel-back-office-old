@@ -4,6 +4,8 @@ import SkeletonPhotoChambre from './SkeletonPhotoChambre.js';
 import PreviewPhotoChambre from './PreviewPhotoChambre.js';
 import {FileInput} from '../../utilityTypeChambre.js';
 
+import callAPI from '../../../../../utility';
+
 const concat = (firstArray, secondArray) => {
     let tmpFirst = JSON.parse(JSON.stringify(firstArray));
     for(let i = 0; i < secondArray.length; i++){
@@ -17,6 +19,18 @@ export default function Photo({state, setState, noImage,
     areImagesLoading, setAreImagesLoading}){
 
     const [nbImage, setNbImage] = useState(1);
+
+    function savePhotoToBack(photo){
+        let done = 0;
+        for(let i = 0; i < photo.length; i++){
+            callAPI('post', '/typeChambre/photo/add', {photo: photo[i], idTypeChambre: state._id}, (data) => {
+                done++;
+                if(done === photo.length){
+                    setAreImagesLoading(false);
+                }
+            });
+        }
+    }
 
     function handlePhotoChange(e){
         if(e.target.files.length > 0){
@@ -34,14 +48,13 @@ export default function Photo({state, setState, noImage,
                     const reader = new FileReader();
                     
                     reader.onload = (evt) => {
-                        console.log("ON LOAD");
                         tmpPhoto[u] = evt.target.result;
                         tmpPreview[u] = evt.target.result;
                         finished++;
                         if(finished === e.target.files.length){
+                            savePhotoToBack(tmpPhoto);
                             setPhoto(concat(photo, tmpPhoto));
                             setPreview(concat(preview, tmpPreview));
-                            setAreImagesLoading(false);
                         }
                     }
                     reader.readAsDataURL(img);
@@ -61,7 +74,8 @@ export default function Photo({state, setState, noImage,
             {areImagesLoading 
             ? <SkeletonPhotoChambre nbImage={nbImage} setNbImage={setNbImage} />
             : <div className="row">
-                <PreviewPhotoChambre preview={preview} setPreview={setPreview} noImage={noImage} photo={photo} setPhoto={setPhoto} />
+                <PreviewPhotoChambre preview={preview} setPreview={setPreview} noImage={noImage} photo={photo} setPhoto={setPhoto}
+                    state={state} />
             </div>}
             <div className="row">
                 <FileInput
