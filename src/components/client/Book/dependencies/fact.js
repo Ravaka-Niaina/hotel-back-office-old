@@ -95,7 +95,7 @@ function Reservations(props){
                                         title={
                                             <InfoPolitiqueAnnul 
                                                 checkIn={tarif.dateSejour.debut} 
-                                                politique={tarif.politiqueAnnulAtrb} 
+                                                politique={tarif.politiqueAnnulAtrb[0]} 
                                         />}
                                         placement="left-start"
                                     >
