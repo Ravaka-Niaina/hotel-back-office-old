@@ -12,7 +12,8 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
-import  Navbar  from "../../partenaire/Navbar/Navbar.js";
+// import  Navbar  from "../../partenaire/Navbar/Navbar.js";
+import  ResponsiveDrawer  from "../../partenaire/Navbar/responsive-drawer.js";
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -30,7 +31,7 @@ import EnhancedTableHead from './EnhancedTableHead.js';
 import {headCells, HtmlTooltip, descendingComparator, getComparator, stableSort} from './Dependencies.js';
 import { removeSpecialCharFromDate } from '../../../utility/utilityDate.js';
 
-export default function ListeReservation(props){
+function ListeReservation(props){
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('calories');
     const [dense, setDense] = useState(true);
@@ -140,7 +141,7 @@ export default function ListeReservation(props){
 
     return(
         <>
-            <Navbar currentPage={props.currentPage}/><br/>
+            {/* <Navbar currentPage={props.currentPage}/><br/> */}
             <Box sx={{ width: '100%', padding :"50px" }}>
             <h1>{isNotif ? "Nouvelles réservations" : "Liste réservations"}</h1>
             <InputRecherche 
@@ -329,3 +330,13 @@ export default function ListeReservation(props){
       </>
     );
 }
+
+export default function ListeReservation_(props){
+    return(
+        <ResponsiveDrawer 
+            // title = {props.title}
+            getContent = {() => ListeReservation(props)} 
+        />
+        
+    );
+};

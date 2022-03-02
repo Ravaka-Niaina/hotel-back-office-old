@@ -47,6 +47,7 @@ const ListeDroitAcces = () => {
             accessRightToViewInsert={accessRightToViewInsert}
             accessRightToDelete={accessRightToDelete}
             accessRightToViewDetails={accessRightToViewDetails}
+            title="Liste des droits d'acces"
         />
     );
 }

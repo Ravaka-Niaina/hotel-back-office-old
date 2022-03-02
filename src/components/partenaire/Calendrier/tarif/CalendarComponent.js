@@ -3,13 +3,14 @@ import {Container,Button,TextField,Box} from '@mui/material';
 import DateRangePicker from '@mui/lab/DateRangePicker';
 import AdapterMoment from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import styles from './CalendarComponent.module.css';
+import styles from '../tarif/CalendarComponent.module.css';
 import moment from 'moment';
 import RateLine from './dependancies/RateLine.js';
 import axios from "axios";
 import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
 import  Navbar  from "../../Navbar/Navbar";
+import  ResponsiveDrawer  from "../../Navbar/responsive-drawer.js";
 
 const getDaysBetweenDates = function(startDate, endDate) {
     var now = startDate.clone(), dates = [];
@@ -100,7 +101,7 @@ const CalendarComponent = () => {
 
     return(
         <>
-            <Navbar currentPage={1}/>
+            {/* <Navbar currentPage={1}/> */}
             <Container className={styles.container} style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
                 <LocalizationProvider dateAdapter={AdapterMoment}>
                 <DateRangePicker
@@ -173,4 +174,11 @@ const CalendarComponent = () => {
     );
 }
 
-export default CalendarComponent;
+export default function Calendrier_(){
+    return(
+        <ResponsiveDrawer 
+            title = "Calendrier"
+            getContent = {CalendarComponent}
+        />
+    );
+};
