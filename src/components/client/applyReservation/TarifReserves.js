@@ -10,6 +10,7 @@ import {getDiffDays} from '../../client/utility.js';
 import './Itineraires.css';
 import Box from '@mui/material/Box';
 import InputContact from './InputContact.js';
+import InfoPolitiqueAnnul from '../Book/dependencies/infoPolitiqueAnnul.js';
 
 function TarifReserves(props){
     const [annulChambre, setAnnulChambre] = useState(
@@ -73,7 +74,11 @@ function TarifReserves(props){
                     <div class="politique_annulation">
                         <hr style={{marginLeft:'0.8em'}}></hr>    
                         <h2 class="infos_heading">Politiques d'annulation et paiement:</h2>
-                        <Politiques politiques={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTarif.infoPolitique} tarif={tarif} />
+                        <InfoPolitiqueAnnul
+                            checkIn={tarif.dateSejour.debut}
+                            politique={tarif.politiqueAnnulAtrb}
+                        />
+                        {/* <Politiques politique={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTarif.infoPolitique} tarif={tarif} /> */}
                         <div class="prix_tarif">
                             <p class="prix">Prix:</p>
                             <p class="prix">{tarif.toPay.afterProm} € </p>

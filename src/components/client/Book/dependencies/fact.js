@@ -95,17 +95,20 @@ function Reservations(props){
                             </div>
                             <div>
                                 <span><PersonOutlineIcon/>x {tarif.nbPers} {t('person')}</span>
-                                {tarif.politiqueAnnulAtrb && tarif.politiqueAnnulAtrb.length !== 0 ? 
-                                    <HtmlTooltip
-                                        title={
-                                            <InfoPolitiqueAnnul 
-                                                checkIn={tarif.dateSejour.debut} 
-                                                politique={tarif.politiqueAnnulAtrb} 
-                                        />}
-                                        placement="left-start"
-                                    >
-                                        <span><PolicyIcon/>{tarif.politiqueAnnulAtrb.nom}</span>
-                                    </HtmlTooltip>
+                                {tarif.politiqueAnnulAtrb && tarif.politiqueAnnulAtrb.length !== 0 ?
+                                    <>
+                                        <HtmlTooltip
+                                            title={
+                                                <InfoPolitiqueAnnul 
+                                                    checkIn={tarif.dateSejour.debut} 
+                                                    politique={tarif.politiqueAnnulAtrb[0]} 
+                                            />}
+                                            placement="left-start"
+                                        >
+                                            <span><PolicyIcon/>{tarif.politiqueAnnulAtrb.nom}</span>
+                                        </HtmlTooltip>
+                                        <span>{tarif.politiqueAnnulAtrb[0].nom}</span>
+                                    </> 
                                 : null }
                                 <span></span>
                             </div>
