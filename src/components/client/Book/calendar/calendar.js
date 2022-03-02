@@ -72,7 +72,6 @@ const BaeCalendar = ({
   }
 
   function setDefaultItineraire(dateDebut, dateFin){
-    console.log("WRYYYYYYYYYYYYYYYYYYY");
     dateDebut = moment(dateDebut).format("YYYY/MM/DD");
     dateFin = moment(dateFin).format("YYYY/MM/DD");
     let current = JSON.parse(JSON.stringify(context.state));

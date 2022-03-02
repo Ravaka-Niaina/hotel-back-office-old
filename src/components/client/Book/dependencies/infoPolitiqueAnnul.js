@@ -20,7 +20,7 @@ const InfoPolitiqueAnnul = (props) => {
     <>
         <h2 class="infos_heading"><span>Politique: {props.politique.nom}</span></h2>
         <div class="details_politique">
-            <p>Votre carte sera débité du montant total de la réservation le jour de votre arrivée le {getDate(props.checkIn)}</p>            {conditions} 
+            <p>Votre carte sera débité du montant total de la réservation le jour de votre arrivée le {getDate(props.checkIn)}</p>
             {conditions}
         </div>
         <div class="prix_reservation">
