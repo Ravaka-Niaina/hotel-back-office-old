@@ -78,11 +78,14 @@ const BaeCalendar = ({
     let current = JSON.parse(JSON.stringify(context.state));
     current.dateSejour.debut = dateDebut; 
     current.dateSejour.fin = dateFin;
-    current.itineraires.push({ 
-      edit: false,
-      dateSejour: JSON.parse(JSON.stringify(current.dateSejour)),
-      tarifReserves: []
-    });
+    if(current.itineraires.length ==0){
+      current.itineraires.push({ 
+        edit: false,
+        dateSejour: JSON.parse(JSON.stringify(current.dateSejour)),
+        tarifReserves: []
+      });
+    }
+  
     context.setState(current);   
   }
 
