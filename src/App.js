@@ -146,6 +146,8 @@ function App(){
         <Route path="/NotEnoughAccessRight" exact component={NotEnoughAccessRight} />
         <Route path="/modal" exact component={Tooltip} />
 
+        <Route path="/navBarClient" exact component={Navbar} />
+
         <Route path="/menu" exact component={Menu} />
         <Route path="/responsive" exact component={ResponsiveDrawer} />
       </Router>
