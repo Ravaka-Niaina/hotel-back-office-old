@@ -44,6 +44,7 @@ export default function ListPromotion(){
             accessRightToViewDetails={accessRightToViewDetails}
             accessRightToDelete={accessRightToDelete}
             accessRightToViewList={accessRightToViewList}
+            title="Liste des promotions"
         />
     );
 }

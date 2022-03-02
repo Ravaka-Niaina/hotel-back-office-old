@@ -43,6 +43,7 @@ export default function ListTypeChambre(){
             accessRightToViewInsert={accessRightToViewInsert}
             accessRightToViewDetails={accessRightToViewDetails}
             accessRightToDelete={accessRightToDelete}
+            title="Liste des chambres"
         />
     );
 }

@@ -12,7 +12,8 @@ import Box from '@mui/material/Box';
 
 import Button from '@mui/material/Button';
 import callAPI from '../../../../utility';
-import  Navbar  from "../../Navbar/Navbar";
+// import  Navbar  from "../../Navbar/Navbar";
+import  ResponsiveDrawer  from "../../Navbar/responsive-drawer.js";
 import ButtonLoading from "../../buttonLoading.js"
 
 import {session} from '../../../common/utilitySession.js';
@@ -170,7 +171,7 @@ function InsertTarif(){
 
     return(
         <div className="">
-            <Navbar currentPage={1}/>
+            {/* <Navbar currentPage={1}/> */}
             <div className="">
                     <div className="">
                         <div className="jumbotron">
@@ -312,4 +313,11 @@ function InsertTarif(){
             </div>
     );
 }
-export default InsertTarif;
+export default function insertion_tarif(){
+    return (
+        <ResponsiveDrawer
+            title = "Ajout plan tarifaire"
+            getContent = {InsertTarif}
+        />
+    );
+}

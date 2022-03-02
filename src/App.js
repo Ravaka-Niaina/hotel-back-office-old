@@ -65,6 +65,9 @@ import NotFound from "./components/common/404NotFound.js";
 import NotEnoughAccessRight from "./components/common/NotEnoughAccessRight.js";
 import RechercheReservation from "./components/client/RechercheReseravation.js";
 
+import Menu from "./components/menu/sidebar.js";
+import ResponsiveDrawer from "./components/menu/responsive-drawer.js";
+
 function App(){
   return(
     <div className="App"> 
@@ -142,6 +145,9 @@ function App(){
         <Route path="/404NotFound" exact component={NotFound} />
         <Route path="/NotEnoughAccessRight" exact component={NotEnoughAccessRight} />
         <Route path="/modal" exact component={Tooltip} />
+
+        <Route path="/menu" exact component={Menu} />
+        <Route path="/responsive" exact component={ResponsiveDrawer} />
       </Router>
     </div>
     

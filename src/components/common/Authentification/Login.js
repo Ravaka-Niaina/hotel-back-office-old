@@ -9,6 +9,8 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import axios from "axios";
 
+import ResponsiveDrawer from "../../menu/responsive-drawer.js";
+
 import {session} from "../utilitySession.js";
 import styles from './Register.module.css';
 import stylesLogin from './Login.module.css';
@@ -81,6 +83,7 @@ const Login = (props) => {
         history.push(isPartner ? "/back/register" : "/front/register");
     }
 
+    
     return(
         <div className={styles.auth + " " + stylesLogin.auth}>
               <Paper 
@@ -141,6 +144,8 @@ const Login = (props) => {
                   } 
               />
         </div>
-    );
+        );
+    
+    
 }
 export default Login;
