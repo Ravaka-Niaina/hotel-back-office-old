@@ -45,7 +45,8 @@ function RateCells(props){
             // console.log(minPrix);
             row.push(
                 <td>
-                    <DayCell 
+                    <DayCell
+                        customize="toSell"
                         isprice={true} 
                         highlight={props.selecteds.indexOf(u) >= 0 && props.selectedY == i+2} 
                         key={u.toString()}
@@ -85,6 +86,7 @@ const DayLine = (props) => {
     const [selectedY,setSelectedY] = useState(-1);
     const [from, setFrom] = useState('none');
     const [bornesEditDate, setBornesEditDate] = useState([]);
+    const [typeSelected, setTypeSelected] = useState("");
     //typechambre.planTarifaire[0].prixTarif[i].date
 
     const getMin = (arr) => {
@@ -107,7 +109,8 @@ const DayLine = (props) => {
         setMax(max);
         return max;
     }
-    const addSelection = (i, y) => {
+    const addSelection = (i, y, type) => {
+        setTypeSelected(type);
         var min = getMin(selecteds);
         var max = getMax(selecteds);
        // console.log('from : ' + min + ' => ' + max);
@@ -122,6 +125,7 @@ const DayLine = (props) => {
         for(var j = min; j <= max; j++) {
             tmp.push(j);
         }
+        console.log(tmp);
         setSelecteds(tmp);
         setSelectedY(y);
         if(props.daterange[i] < bornesEditDate[0]){
@@ -256,7 +260,14 @@ const DayLine = (props) => {
                 disableRestoreFocus
                 className={styles.popper}
             >
-                <PriceEditor isPrice={selectedY > 1} selected={selectedY - 2} typechambre={props.typechambre} fromto={bornesEditDate} closePopper={closePopper.bind(this)} />
+                <PriceEditor 
+                    isPrice={selectedY > 1} 
+                    selected={selectedY - 2} 
+                    typechambre={props.typechambre} 
+                    fromto={bornesEditDate} 
+                    closePopper={closePopper.bind(this)}
+                    alldays={props.alldays}
+                    selecteds={selecteds} />
             </Popper>
             <div className={styles.dayline}>
                 <DateRangeLine daterange={props.daterange} />

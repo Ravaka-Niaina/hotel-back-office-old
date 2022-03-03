@@ -228,7 +228,7 @@ const FullPriceEditor = (props) => {
     }
 
     function savePrix(forTypeChambre, forTarif){
-        props.setOpenLoad(true);
+        //props.setOpenLoad(true);
         let versions = [];
         console.log(prix);
 
@@ -280,7 +280,7 @@ const FullPriceEditor = (props) => {
                 forTarif: forTarif
             };
             console.log(data);
-            callAPI('post', '/TCTarif/configPrix', data, refresh);
+            //callAPI('post', '/TCTarif/configPrix', data, refresh);
         }
     }
     

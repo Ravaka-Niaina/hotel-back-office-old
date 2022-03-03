@@ -79,7 +79,8 @@ const CalendarComponent = () => {
                             openLoad={openLoad}
                             setOpenLoad={setOpenLoad}
                             value={value}
-                            setValue={setValue} />
+                            setValue={setValue}
+                            alldays={alldays} />
                         </>
                     );
                 }
