@@ -1,5 +1,44 @@
 import {useState} from 'react';
 import {Button,Stack,TextField,Radio,RadioGroup,FormControl,FormControlLabel} from '@mui/material';
+import callAPI from '../../../../../../utility';
+
+const days = [
+    {
+        "value": 1,
+        "checked": true,
+        "label": "Mon"
+    },
+    {
+        "value": 2,
+        "checked": true,
+        "label": "Tue"
+    },
+    {
+        "value": 3,
+        "checked": true,
+        "label": "Wed"
+    },
+    {
+        "value": 4,
+        "checked": true,
+        "label": "Thu"
+    },
+    {
+        "value": 5,
+        "checked": true,
+        "label": "Fri"
+    },
+    {
+        "value": 6,
+        "checked": true,
+        "label": "Sat"
+    },
+    {
+        "value": 7,
+        "checked": true,
+        "label": "Sun"
+    }
+];
 
 const getDateYYYYMMDD = (dateString) => {
     let tmp = dateString.split("/");
@@ -9,6 +48,10 @@ const getDateYYYYMMDD = (dateString) => {
 const RoomEditor = ({value, setValue, alldays, selecteds, idTypeChambre, closePopper}) => {
     const [roomsToSell, setRoomsToSell] = useState('0');
     const [changeStatusRoom, setChangeStatusRoom] = useState(false);
+
+    const refresh = (data) => {
+        console.log(data);
+    };
 
     const saveChambresDispo = (e) => {
         e.preventDefault();
@@ -22,10 +65,11 @@ const RoomEditor = ({value, setValue, alldays, selecteds, idTypeChambre, closePo
             isTypeChambreOpen: value === "open" ? true : false,
             forTypeChambre: true,
             forTarif: false,
-            modifierOuvertureChambre: changeStatusRoom
+            modifierOuvertureChambre: changeStatusRoom,
+            days: days
         };
         console.log(data);
-        // callAPI('post', '/TCTarif/configPrix', data, refresh);
+        callAPI('post', '/TCTarif/configPrix', data, refresh);
     };
 
     const switchChangeStatusRoom = () => {
