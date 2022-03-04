@@ -223,7 +223,7 @@ function ListTarif(props){
                                                     checkIn={tarif.dateSejour.debut} 
                                                     politique={tarif.politiqueAnnulAtrb[0]} 
                                             />}
-                                            placement="left-start"
+                                            placement="top"
                                         >
                                             <span><PolicyIcon/>{tarif.politiqueAnnulAtrb[0].nom}</span>
                                         </HtmlTooltip> : ""
