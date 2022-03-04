@@ -50,6 +50,8 @@ import { Bluetooth } from '@mui/icons-material';
 
 const drawerWidth = 240;
 
+const url = process.env.REACT_APP_BACK_URL;
+
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     flexGrow: 1,
@@ -151,7 +153,7 @@ console.log("TRLALALA"+ JSON.stringify(props));
     if(init){
       optionlist.map((option, i) =>{
         option.lien.map((opt, u) => {
-          if(window.location.href.split("http://localhost:3001")[1] === option.lien[u].link){
+          if(window.location.href.split(url)[1] === option.lien[u].link){
             console.log("curIndex "+i)
             setCurrentIndex(i);
             setOuvrir(true)
@@ -260,12 +262,12 @@ console.log("TRLALALA"+ JSON.stringify(props));
           {
             optionlist.map((option, index) => 
             {
-              console.log(window.location.href.split("http://localhost:3001")[1])
+              console.log(window.location.href.split(url)[1])
               return(
               option.dropdown === false ?
               // <Link to={option.lien[0]["link"]} className="nav-link">
                 <ListItem button key={option.text} 
-                 style={{ backgroundColor: window.location.href.split("http://localhost:3001")[1] === option.lien[0].link ? "dodgerBlue" : null }}   
+                 style={{ backgroundColor: window.location.href.split(url)[1] === option.lien[0].link ? "dodgerBlue" : null }}   
                 >
                   <ListItemIcon >
                     <option.icon />
@@ -306,7 +308,7 @@ console.log("TRLALALA"+ JSON.stringify(props));
                           return(
                           <ListItemButton 
                             sx={{ pl: 4 }} 
-                            style={{ backgroundColor: window.location.href.split("http://localhost:3001")[1] === optionlist[currentIndex].lien[ind].link ? "dodgerBlue" : null }}
+                            style={{ backgroundColor: window.location.href.split(url)[1] === optionlist[currentIndex].lien[ind].link ? "dodgerBlue" : null }}
                           >
                             <ListItemIcon>
                               <StarBorder />
