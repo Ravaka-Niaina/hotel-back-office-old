@@ -9,7 +9,7 @@ import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
 
-import  Navbar  from "../Navbar/Navbar";
+import  ResponsiveDrawer  from "../Navbar/responsive-drawer.js";
 import {Champs} from '../../common/commonAssets';
 import {session} from '../../common/utilitySession.js';
 import NotEnoughAccessRight from '../../common/NotEnoughAccessRight';
@@ -120,7 +120,7 @@ const DetailsUser = () => {
 
     return(
         <>
-            <Navbar currentPage={8}/><br/>
+            {/* <Navbar currentPage={8}/><br/> */}
             <Box sx={{ width: '100%', padding :"50px" }}>
                 <Paper 
                     sx={{ overflow: "auto" }}
@@ -193,4 +193,11 @@ const DetailsUser = () => {
         </>
     );
 };
-export default DetailsUser;
+export default function detail_users(){
+    return(
+        <ResponsiveDrawer 
+            title = "Modifier Partenaire"
+            getContent = {DetailsUser}
+        />
+    )
+}
