@@ -1,6 +1,6 @@
 import  React,{useEffect}  from 'react';
 import { useHistory } from 'react-router-dom';
-import  Navbar  from "../Navbar/Navbar";
+import  ResponsiveDrawer  from "../Navbar/responsive-drawer.js";
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -88,7 +88,7 @@ const InsertDroitAcces = () => {
 
     return(
         <>
-            <Navbar currentPage={8}/><br/>
+            {/* <Navbar currentPage={8}/><br/> */}
             <Box sx={{ width: '100%', padding :"50px" }}>
                 <Paper 
                     sx={{ overflow: "auto" }}
@@ -138,4 +138,15 @@ const InsertDroitAcces = () => {
     );
 };
 
-export default InsertDroitAcces;
+export default function droit_acces(){
+    const isUpdate = new RegExp("/update", "i").exec(window.location.href) === null ? false : true;
+    // const [titre, setTitre] = useState(false);
+    let titre = "";
+    isUpdate ? titre = "Modifier un droit d'accès" : titre = "Créer un droit d'accès"
+    return(
+        <ResponsiveDrawer 
+            title = {titre}
+            getContent = {InsertDroitAcces}
+        />
+    )
+};

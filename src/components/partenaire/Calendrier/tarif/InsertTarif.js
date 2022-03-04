@@ -67,6 +67,7 @@ function InsertTarif(){
     const [reservAToutMoment, setReservAToutMoment] = useState(true);
     const [areDateReservDisabled, setAreDateReservDisabled] = useState(true);
     const [aucunFinDateSejour, setAucunFinDateSejour] = useState(false);
+    
     const { _id } = useParams();
 
     const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
@@ -314,9 +315,13 @@ function InsertTarif(){
     );
 }
 export default function insertion_tarif(){
+    const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
+    // const [titre, setTitre] = useState(false);
+    let titre = "";
+    isInsert ? titre = "Ajout plan tarifaire" : titre = "Modifier plan tarifaire"
     return (
         <ResponsiveDrawer
-            title = "Ajout plan tarifaire"
+            title = {titre}
             getContent = {InsertTarif}
         />
     );

@@ -15,7 +15,7 @@ import RadioGroup from '@mui/material/RadioGroup';
 import callAPI from '../../../utility.js';
 import ButtonLoading from "../buttonLoading.js";
 import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
-import  Navbar  from "../Navbar/Navbar";
+import  ResponsiveDrawer  from "../Navbar/responsive-drawer.js";
 import JoursPromotion from "./JoursPromotion.js";
 
 import "./promotion.css";
@@ -503,7 +503,7 @@ function InsertPromotion() {
 
   return (
     <>
-      <Navbar currentPage={3}/>
+      {/* <Navbar currentPage={3}/> */}
       <div className="block">
         {
           skeletonAffiche ? <SkelettonForm  heigth = {300} />  : <>
@@ -994,4 +994,17 @@ function InsertPromotion() {
   );
 }
 
-export default InsertPromotion
+export default function recherche_() {
+  const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
+  // const [titre, setTitre] = useState(false);
+  let titre = "";
+  isInsert ? titre = "Ajout nouvelle promotion" : titre = "Modifier promotion"
+  // console.log("TRLALALA"+ JSON.stringify(props));
+  return(
+      <ResponsiveDrawer 
+          title = {titre}
+          getContent = {InsertPromotion} 
+      />
+      
+  );
+}

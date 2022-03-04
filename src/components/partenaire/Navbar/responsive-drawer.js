@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -14,8 +15,13 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import Collapse from '@mui/material/Collapse';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import StarBorder from '@mui/icons-material/StarBorder';
 
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
@@ -40,6 +46,7 @@ import { useHistory } from 'react-router-dom';
 import callAPI from '../../../utility.js';
 
 import Grid from '@mui/material/Grid';
+import { Bluetooth } from '@mui/icons-material';
 
 const drawerWidth = 240;
 
@@ -91,8 +98,10 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function PersistentDrawerLeft(props) {
 console.log("TRLALALA"+ JSON.stringify(props));
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const [nbNotifs, setNbNotifs] = React.useState(0);
+
+  var init = true;
 
   // list of options
   const optionlist = [
@@ -101,9 +110,9 @@ console.log("TRLALALA"+ JSON.stringify(props));
     { text: "Type de chambre", icon: BedroomChildOutlinedIcon, lien: [ {link:"/back/typeChambre", nom: ""}], dropdown: false },
     { text: "Promotion", icon: PushPinOutlinedIcon, lien: [ {link:"/back/promotion", nom: ""}], dropdown: false },
     { text: "Politique", icon: GavelOutlinedIcon, lien: [ {link:"/back/politique/list", nom: ""}], dropdown: false },
-    { text: "Historique", icon: DocumentScannerOutlinedIcon, lien: [{link:"/historique/TC", nom: "Type de chambre"}, {link:"/historique/MPL", nom: "Modification plan tarifaire"}, {link:"/back", nom: "Promotion"}], dropdown: true },
+    { text: "Historique", icon: DocumentScannerOutlinedIcon, lien: [{link:"/historique/TC", nom: "Type de chambre"}, {link:"/historique/MPL", nom: "Modification plan tarifaire"}, {link:"/#", nom: "Promotion"}], dropdown: true },
     { text: "Clients", icon: FormatListBulletedOutlinedIcon, lien: [ {link:"/front", nom: ""}], dropdown: false },
-    { text: "Mon compte", icon: PersonPinIcon, lien: [ {link:"/back", nom: ""}], dropdown: false },
+    { text: "Mon compte", icon: PersonPinIcon, lien: [ {link:"/#", nom: ""}], dropdown: false },
     { text: "Partenaires", icon: GroupIcon, lien: [ {link:"/back/user", nom: ""}], dropdown: false },
     { text: "Droits d'accès", icon: AddCardIcon, lien: [ {link:"/back/accessRight", nom: ""}], dropdown: false },
     { text: "Réservation", icon: ShoppingBagIcon, lien: [ {link:"/back/reservation", nom: ""}], dropdown: false },
@@ -116,26 +125,42 @@ console.log("TRLALALA"+ JSON.stringify(props));
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  
+  // const [anchorEl, setAnchorEl] = React.useState(null);
+  const [ouvrir, setOuvrir] = React.useState(false);
   const [currentIndex, setCurrentIndex] = React.useState(0);
-  const ouvrir = Boolean(anchorEl);
+
   const handleClick = (event, index) => {
-    console.log(index)
-    console.log(anchorEl)
-    setAnchorEl(event.currentTarget);
-    console.log(event.currentTarget)
+    console.log("curIndex "+index)
+    // setAnchorEl(event.currentTarget);
     setCurrentIndex(index);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
+    setOuvrir(!ouvrir)
   };
 
   const history = useHistory();
 
+  // const redirection = (link, index) =>{
+  //   history.push(link+"?curIndex="+index);
+  // };
   const redirection = (link) =>{
     history.push(link);
   };
+
+  React.useEffect(()=>{
+
+    if(init){
+      optionlist.map((option, i) =>{
+        option.lien.map((opt, u) => {
+          if(window.location.href.split("http://localhost:3001")[1] === option.lien[u].link){
+            console.log("curIndex "+i)
+            setCurrentIndex(i);
+            setOuvrir(true)
+          }
+        })
+      })
+      init = false
+    }
+  }, [])
 
   // deconnexion
   function logout(e){
@@ -150,8 +175,7 @@ console.log("TRLALALA"+ JSON.stringify(props));
   function seeNotifications(){
     history.push('/back/reservation/notif');
   }
-
-  let content = props.getContent(props.props)
+  
 
   return (
     
@@ -236,10 +260,13 @@ console.log("TRLALALA"+ JSON.stringify(props));
           {
             optionlist.map((option, index) => 
             {
+              console.log(window.location.href.split("http://localhost:3001")[1])
               return(
               option.dropdown === false ?
               // <Link to={option.lien[0]["link"]} className="nav-link">
-                <ListItem button key={option.text} >
+                <ListItem button key={option.text} 
+                 style={{ backgroundColor: window.location.href.split("http://localhost:3001")[1] === option.lien[0].link ? "dodgerBlue" : null }}   
+                >
                   <ListItemIcon >
                     <option.icon />
                   </ListItemIcon>
@@ -250,43 +277,53 @@ console.log("TRLALALA"+ JSON.stringify(props));
                 </ListItem>
               // </Link>
               : 
-              
-                <ListItem button key={option.text} >
+              <>
+                <ListItem 
+                  button key={option.text} 
+                  onClick={(e) => handleClick(e, index)}
+                >
                   <ListItemIcon >
                     <option.icon />
                   </ListItemIcon>
-                  <ListItemText primary={option.text} 
-                    id="demo-positioned-button"
-                    aria-controls={ouvrir ? 'demo-positioned-menu' : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={ouvrir ? 'true' : undefined}
-                    onClick={(e) => handleClick(e, index)}
-                  />
-                  <Menu
-                    id="demo-positioned-menu"
-                    aria-labelledby="demo-positioned-button"
-                    anchorEl={anchorEl}
-                    open={ouvrir}
-                    onClose={handleClose}
-                    anchorOrigin={{
-                      vertical: 'top',
-                      horizontal: 'left',
-                    }}
-                    transformOrigin={{
-                      vertical: 'top',
-                      horizontal: 'left',
-                    }}
-                  >
-                    {console.log("ok"+currentIndex)}
-                    {
-                      
-                      optionlist[currentIndex].lien.map((opt, ind) => {
-                      return(
-                    <MenuItem onClick={() => redirection(optionlist[currentIndex].lien[ind].link)}>{optionlist[currentIndex].lien[ind].nom}</MenuItem>
-                      );
-                    })}
-                  </Menu>
+                  <ListItemText 
+                    primary={option.text} 
+                    />
+                  {ouvrir && currentIndex === index ? <ExpandLess /> : <ExpandMore />}
+
                 </ListItem>
+                {
+                  currentIndex === index ?
+                    
+                      <Collapse 
+                        in={ouvrir} 
+                        timeout="auto" 
+                        unmountOnExit
+                      >
+                        <List component="div" disablePadding>
+                        {
+                          optionlist[currentIndex].lien.map((opt, ind) => {
+                            // window.location.href.split("http://localhost:3001")[1] === optionlist[currentIndex].lien[ind].link ? setOuvrir(true) : null
+                          return(
+                          <ListItemButton 
+                            sx={{ pl: 4 }} 
+                            style={{ backgroundColor: window.location.href.split("http://localhost:3001")[1] === optionlist[currentIndex].lien[ind].link ? "dodgerBlue" : null }}
+                          >
+                            <ListItemIcon>
+                              <StarBorder />
+                            </ListItemIcon>
+                            <ListItemText 
+                              onClick={() => redirection(optionlist[currentIndex].lien[ind].link)}
+                              primary={optionlist[currentIndex].lien[ind].nom} 
+                            />
+                          </ListItemButton>
+                          );
+                        })}
+                        </List>
+                      </Collapse>
+                    : null
+                }
+                  
+              </>
               );
             })
           }

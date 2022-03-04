@@ -10,7 +10,7 @@ import FormControl from '@mui/material/FormControl'
 import Alert from '@mui/material/Alert';
 import {useEffect} from 'react';
 import callAPI from '../../../utility.js';
-import Navbar from '../Navbar/Navbar.js'
+import ResponsiveDrawer from '../Navbar/responsive-drawer.js'
 import { useParams, useHistory, Link } from 'react-router-dom'
 import "./global.css";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
@@ -297,7 +297,7 @@ function Global(){
 
         return (
             <>
-                <Navbar currentPage={4}/>
+                {/* <Navbar currentPage={4}/> */}
                     
                         <div className ="politiqueContent">
                             {
@@ -462,4 +462,17 @@ function Global(){
     
 }
 
-export default Global;
+export default function global_() {
+    const isInsert = new RegExp("/detail", "i").exec(window.location.href) === null ? true : false;
+    // const [titre, setTitre] = useState(false);
+    let titre = "";
+    isInsert ? titre = "Ajout politique d'annulation " : titre = "Modifier politique d'annulation"
+    // console.log("TRLALALA"+ JSON.stringify(props));
+    return(
+        <ResponsiveDrawer 
+            title = {titre}
+            getContent = {Global} 
+        />
+        
+    );
+  }

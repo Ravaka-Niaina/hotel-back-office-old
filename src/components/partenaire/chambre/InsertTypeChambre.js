@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import CustomError from '../../../CustomError';
 import {useEffect} from "react";
-import Navbar from "../Navbar/Navbar";
+// import Navbar from "../Navbar/Navbar";
+import ResponsiveDrawer from "../Navbar/responsive-drawer.js";
 import { Checkbox } from "@mui/material";
 import './typeChambre.css';
 import TextField from '@mui/material/TextField';
@@ -256,7 +257,7 @@ function InsertTypeCHambre(){
 
   return (
     <div> 
-        <Navbar  currentPage={2}/>
+        {/* <Navbar  currentPage={2}/> */}
               <div className="jumbotron">
               {
                   skeletonAffiche ? <SkelettonForm /> : <>
@@ -464,4 +465,14 @@ function InsertTypeCHambre(){
   );
 }
 
-export default InsertTypeCHambre;
+export default function InsertTypeCHambre_(){
+  const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
+  let titre = "";
+  isInsert ? titre = "Ajout type chambre" : titre = "Modifier type chambre"
+  return (
+    <ResponsiveDrawer
+      title= {titre}
+      getContent = {InsertTypeCHambre}
+    />
+  );
+};

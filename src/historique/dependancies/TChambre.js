@@ -32,7 +32,7 @@ import { styled } from '@mui/material/styles';
 import callAPI from '../../utility.js';
 import ValidationSuppression from "../../components/common/List/ValidationSuppression.js";
 import Skeleton from '../../SkeletonListe/skeleton';
-import  Navbar  from "../../components/partenaire/Navbar/Navbar";
+import  ResponsiveDrawer  from "../../components/partenaire/Navbar/responsive-drawer.js";
 import FooterList from '../FooterList.js';
 const moment = require('moment');
 
@@ -232,7 +232,7 @@ const getValue = (row, fieldName) => {
   return value;
 }
 
-export default function Recherche(props){
+function Recherche(props){
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
     const [selected, setSelected] = React.useState([]);
@@ -306,7 +306,7 @@ export default function Recherche(props){
     let rows = [];
     return(
         <>
-            <Navbar currentPage={5}/><br/><br/><br/>
+            {/* <Navbar currentPage={5}/><br/><br/><br/> */}
               <Box sx={{ display: { xs: 'none', md: 'flex'  }, gap : 1 ,float : "left",paddingLeft :"50px" }} >
                 <TextField 
                   size = "small"
@@ -396,4 +396,14 @@ export default function Recherche(props){
           
       </>
     );
+}
+export default function recherche_(props) {
+  // console.log("TRLALALA"+ JSON.stringify(props));
+  return(
+      <ResponsiveDrawer 
+          title = "Type de chambre"
+          getContent = {() => Recherche(props)} 
+      />
+      
+  );
 }
