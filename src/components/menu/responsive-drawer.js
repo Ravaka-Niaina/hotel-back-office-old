@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useEffect } from 'react';
 import { Link } from "react-router-dom";
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -14,8 +15,13 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import Collapse from '@mui/material/Collapse';
+import ExpandLess from '@mui/icons-material/ExpandLess';
+import ExpandMore from '@mui/icons-material/ExpandMore';
+import StarBorder from '@mui/icons-material/StarBorder';
 
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
@@ -33,13 +39,19 @@ import GroupIcon from '@mui/icons-material/Group';
 import AddCardIcon from '@mui/icons-material/AddCard';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { components } from 'react-select';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 
 import { useHistory } from 'react-router-dom';
 import callAPI from '../../utility.js';
 
 import Grid from '@mui/material/Grid';
+import { Bluetooth } from '@mui/icons-material';
 
 const drawerWidth = 240;
+
+const url = process.env.REACT_APP_FRONT_URL;
+console.log("url = " + JSON.stringify(process.env));
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
@@ -86,29 +98,27 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
+var init = true;
+
 export default function PersistentDrawerLeft(props) {
+console.log("TRLALALA"+ JSON.stringify(props));
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
   const [nbNotifs, setNbNotifs] = React.useState(0);
 
   // list of options
   const optionlist = [
-    { text: "Accueil", icon: HomeOutlinedIcon, lien: "/back", hover: false },
-    { text: "Plan tarifaire", icon: DocumentScannerOutlinedIcon, lien: "/back", hover: false },
-    { text: "Type de chambre", icon: BedroomChildOutlinedIcon, lien: "/back/typeChambre", hover: false },
-    { text: "Promotion", icon: PushPinOutlinedIcon, lien: "/back/promotion", hover: false },
-    { text: "Politique", icon: GavelOutlinedIcon, lien: "/back/politique/list", hover: false },
-    { text: "Historique", icon: DocumentScannerOutlinedIcon, lien: "/back", hover: false },
-    { text: "Clients", icon: FormatListBulletedOutlinedIcon, lien: "/front", hover: false },
-    { text: "Mon compte", icon: PersonPinIcon, lien: "/back", hover: false },
-    { text: "Partenaires", icon: GroupIcon, lien: "/back/user", hover: false },
-    { text: "Droits d'accès", icon: AddCardIcon, lien: "/back/accessRight", hover: false },
-    { text: "Réservation", icon: ShoppingBagIcon, lien: "/back/reservation", hover: false },
-  ];
-
-  const buttomlist =[
-    { icon: NotificationsActiveOutlinedIcon },
-    { icon: LogoutOutlinedIcon }
+    { text: "Accueil", icon: HomeOutlinedIcon, lien: [ {link:"/back", nom: ""}], dropdown: false },
+    { text: "Plan tarifaire", icon: DocumentScannerOutlinedIcon, lien: [{link:"/back/tarif", nom: "Tarif"}, {link:"/back/tarif/calendar", nom: "Calendrier"}], dropdown: true },
+    { text: "Type de chambre", icon: BedroomChildOutlinedIcon, lien: [ {link:"/back/typeChambre", nom: ""}], dropdown: false },
+    { text: "Promotion", icon: PushPinOutlinedIcon, lien: [ {link:"/back/promotion", nom: ""}], dropdown: false },
+    { text: "Politique", icon: GavelOutlinedIcon, lien: [ {link:"/back/politique/list", nom: ""}], dropdown: false },
+    { text: "Historique", icon: DocumentScannerOutlinedIcon, lien: [{link:"/historique/TC", nom: "Type de chambre"}, {link:"/historique/MPL", nom: "Modification plan tarifaire"}, {link:"/#", nom: "Promotion"}], dropdown: true },
+    { text: "Clients", icon: FormatListBulletedOutlinedIcon, lien: [ {link:"/front", nom: ""}], dropdown: false },
+    { text: "Mon compte", icon: PersonPinIcon, lien: [ {link:"/#", nom: ""}], dropdown: false },
+    { text: "Partenaires", icon: GroupIcon, lien: [ {link:"/back/user", nom: ""}], dropdown: false },
+    { text: "Droits d'accès", icon: AddCardIcon, lien: [ {link:"/back/accessRight", nom: ""}], dropdown: false },
+    { text: "Réservation", icon: ShoppingBagIcon, lien: [ {link:"/back/reservation", nom: ""}], dropdown: false },
   ];
 
   const handleDrawerOpen = () => {
@@ -118,8 +128,44 @@ export default function PersistentDrawerLeft(props) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+  
+  // const [anchorEl, setAnchorEl] = React.useState(null);
+  const [ouvrir, setOuvrir] = React.useState(false);
+  const [currentIndex, setCurrentIndex] = React.useState(0);
+
+  const handleClick = (event, index) => {
+    console.log("curIndex "+index)
+    // setAnchorEl(event.currentTarget);
+    setCurrentIndex(index);
+    setOuvrir(!ouvrir)
+  };
 
   const history = useHistory();
+
+  // const redirection = (link, index) =>{
+  //   history.push(link+"?curIndex="+index);
+  // };
+  const redirection = (link) =>{
+    history.push(link);
+  };
+
+  React.useEffect(()=>{
+
+    if(init){
+      console.log("initialisation aaaaaaaaaaaaaaaaaaaaaaaa");
+      optionlist.map((option, i) =>{
+        option.lien.map((opt, u) => {
+          console.log(window.location.href.split(url)[1] + " , " + option.lien[u].link);
+          if(window.location.href.split(url)[1] === option.lien[u].link){
+            console.log("curIndex "+i)
+            setCurrentIndex(i);
+            setOuvrir(true)
+          }
+        })
+      })
+      init = false
+    }
+  }, [])
 
   // deconnexion
   function logout(e){
@@ -134,6 +180,7 @@ export default function PersistentDrawerLeft(props) {
   function seeNotifications(){
     history.push('/back/reservation/notif');
   }
+  
 
   return (
     
@@ -216,23 +263,82 @@ export default function PersistentDrawerLeft(props) {
         <Divider />
         <List>
           {
-            optionlist.map((option, index, block) => (
-              <Link to={option.lien} className="nav-link">
-                <ListItem button key={option.text} >
+            optionlist.map((option, index) => 
+            {
+              console.log(window.location.href.split(url)[1])
+              return(
+              option.dropdown === false ?
+              // <Link to={option.lien[0]["link"]} className="nav-link">
+                <ListItem button key={option.text} 
+                 style={{ backgroundColor: window.location.href.split(url)[1] === option.lien[0].link ? "dodgerBlue" : null }}   
+                >
                   <ListItemIcon >
                     <option.icon />
                   </ListItemIcon>
-                  <ListItemText primary={option.text} />
+                  <ListItemText 
+                  primary={option.text} 
+                  onClick={() => redirection(option.lien[0].link)}
+                  />
                 </ListItem>
-              </Link>
-            ))
+              // </Link>
+              : 
+              <>
+                <ListItem 
+                  button key={option.text} 
+                  onClick={(e) => handleClick(e, index)}
+                >
+                  <ListItemIcon >
+                    <option.icon />
+                  </ListItemIcon>
+                  <ListItemText 
+                    primary={option.text} 
+                    />
+                  {ouvrir && currentIndex === index ? <ExpandLess /> : <ExpandMore />}
+
+                </ListItem>
+                {
+                  currentIndex === index ?
+                    
+                      <Collapse 
+                        in={ouvrir} 
+                        timeout="auto" 
+                        unmountOnExit
+                      >
+                        <List component="div" disablePadding>
+                        {
+                          optionlist[currentIndex].lien.map((opt, ind) => {
+                            // window.location.href.split("http://localhost:3001")[1] === optionlist[currentIndex].lien[ind].link ? setOuvrir(true) : null
+                          return(
+                          <ListItemButton 
+                            sx={{ pl: 4 }} 
+                            style={{ backgroundColor: window.location.href.split(url)[1] === optionlist[currentIndex].lien[ind].link ? "dodgerBlue" : null }}
+                          >
+                            <ListItemIcon>
+                              <StarBorder />
+                            </ListItemIcon>
+                            <ListItemText 
+                              onClick={() => redirection(optionlist[currentIndex].lien[ind].link)}
+                              primary={optionlist[currentIndex].lien[ind].nom} 
+                            />
+                          </ListItemButton>
+                          );
+                        })}
+                        </List>
+                      </Collapse>
+                    : null
+                }
+                  
+              </>
+              );
+            })
           }
         </List>
       </Drawer>
       <Main open={open}>
         {/* <DrawerHeader /> */}
         {/* <Typography paragraph> */}
-          <props.getContent/>
+          {/* <content/> */}
+          <props.getContent />
         {/* </Typography> */}
       </Main>
     </Box>

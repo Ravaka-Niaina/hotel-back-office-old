@@ -50,7 +50,7 @@ import { Bluetooth } from '@mui/icons-material';
 
 const drawerWidth = 240;
 
-const url = process.env.REACT_APP_BACK_URL;
+const url = process.env.REACT_APP_FRONT_URL;
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
