@@ -100,8 +100,8 @@ function Reservations(props){
                                         <HtmlTooltip
                                             title={
                                                 <InfoPolitiqueAnnul 
-                                                    checkIn={tarif.dateSejour.debut} 
-                                                    politique={tarif.politiqueAnnulAtrb[0]} 
+                                                    checkIn={tarif.dateSejour.debut}
+                                                    politique={tarif.politiqueAnnulAtrb[0]}
                                             />}
                                             placement="left-start"
                                         >

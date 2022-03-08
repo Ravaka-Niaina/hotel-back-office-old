@@ -12,6 +12,22 @@ const RateEditor = ({nomPlanTarifaire, fromto, value, setValue, handleChange, cl
     }
 
     const savePrixTarif = (e) => {
+        // e.preventDefault();
+        // setLoading(true);
+        // const dateDebut = getDateYYYYMMDD(alldays[selecteds[0]]);
+        // const dateFin = getDateYYYYMMDD(alldays[selecteds[selecteds.length - 1]]);
+        // const data = {
+        //     idTypeChambre: idTypeChambre,
+        //     dateDebut: dateDebut,
+        //     dateFin: dateFin,
+        //     toSell: Number.parseInt(roomsToSell),
+        //     isTypeChambreOpen: value === "open" ? true : false,
+        //     forTypeChambre: true,
+        //     forTarif: false,
+        //     modifierOuvertureChambre: changeStatusRoom,
+        //     days: days
+        // };
+        // callAPI('post', '/TCTarif/configPrix', data, refresh);
     };
 
     return(

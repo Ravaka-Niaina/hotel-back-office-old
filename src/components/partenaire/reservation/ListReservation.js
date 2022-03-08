@@ -30,6 +30,10 @@ import InputRecherche from './InputRecherche.js';
 import EnhancedTableHead from './EnhancedTableHead.js';
 import {headCells, HtmlTooltip, descendingComparator, getComparator, stableSort} from './Dependencies.js';
 import { removeSpecialCharFromDate } from '../../../utility/utilityDate.js';
+import {session} from '../../common/utilitySession.js';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Stack from '@mui/material/Stack';
 
 function ListeReservation(props){
     const [order, setOrder] = useState('asc');
@@ -72,6 +76,8 @@ function ListeReservation(props){
     const [searchDateOfWhich, setSearchDateOfWich] = useState({checkIn: false, checkOut: false, reservation: false});
     const [isNotif, setIsNotif] = useState(false);
     const [listIdNewReserv, setListIdNewReserv] = useState([]);
+
+    const hasARReservation = session.getInstance().hasOneOfTheseAccessRights(["listeReservation", "superAdmin"]);
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
@@ -123,16 +129,19 @@ function ListeReservation(props){
         }
         setListIdNewReserv(tmp);
     }
-
+    let history = useHistory();
     useEffect(() => {
-        const regExp = new RegExp("/notif","i");
-        if(regExp.test(window.location.href)){
-            setIsNotif(true);
-            callAPI('post', '/notifPartenaire/newReservations', {}, setResultNewReserv);
+        if(!hasARReservation){
+            history.push("/NotEnoughAccessRight");
         }else{
-            callAPI('post', '/reservation/partenaire', {}, setResult);
+            const regExp = new RegExp("/notif","i");
+            if(regExp.test(window.location.href)){
+                setIsNotif(true);
+                callAPI('post', '/notifPartenaire/newReservations', {}, setResultNewReserv);
+            }else{
+                callAPI('post', '/reservation/partenaire', {}, setResult);
+            }
         }
-        
     }, []);
 
     const emptyRows =
@@ -140,8 +149,10 @@ function ListeReservation(props){
     let rows = [];
 
     return(
+        
         <>
             {/* <Navbar currentPage={props.currentPage}/><br/> */}
+            
             <Box sx={{ width: '100%', padding :"50px" }}>
             <h1>{isNotif ? "Nouvelles réservations" : "Liste réservations"}</h1>
             <InputRecherche 
@@ -328,6 +339,8 @@ function ListeReservation(props){
             
           </Box>
       </>
+      
+    
     );
 }
 

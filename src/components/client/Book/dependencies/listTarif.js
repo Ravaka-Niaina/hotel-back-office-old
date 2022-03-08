@@ -220,7 +220,7 @@ function ListTarif(props){
                                     {tarif.politiqueAnnulAtrb !== undefined &&  tarif.politiqueAnnulAtrb[0] !== undefined? <HtmlTooltip
                                             title={
                                                 <InfoPolitiqueAnnul 
-                                                    checkIn={tarif.dateSejour.debut} 
+                                                    checkIn={props.context.state.dateSejour.debut} 
                                                     politique={tarif.politiqueAnnulAtrb[0]} 
                                             />}
                                             placement="top"

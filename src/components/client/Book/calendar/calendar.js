@@ -57,11 +57,6 @@ const BaeCalendar = ({
   let oneMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0)
   const [monthLater, setMonthLater] = useState(oneMonth)
   const [reloadAllPrices, setReloadAllPrices] = useState(false);
-  const [bornes, setBornes] = useState({
-    debut: null,
-    fin: null,
-    isDebut: true,
-  })
 
   let [prix, setPrix] = useState(null)
   let [isFirstRender, setIsFirstRender] = useState(true);
@@ -97,7 +92,8 @@ const BaeCalendar = ({
         }
         let checkIn = new Date(res.checkIn)
         let checkOut = new Date(res.checkOut)
-        setBornes({ debut: checkIn, fin: checkOut, isDebut: true })
+        let tmp = {...context.state, bornes: { debut: checkIn, fin: checkOut, isDebut: true }}
+        context.setState(tmp);
         let firstMonth = new Date(res.result[0].month)
         let secondMonth = new Date(res.result[1].month)
         setSelectDate(firstMonth)
@@ -158,7 +154,7 @@ const BaeCalendar = ({
       }
     }
   }
-  console.log(selectDate);
+  
   return (
     <HtmlTooltip
       title={
@@ -178,8 +174,6 @@ const BaeCalendar = ({
                 activeDates={presetActiveDates.current}
                 selectDate={selectDate}
                 setSelectDate={setSelectDate}
-                bornes={bornes}
-                setBornes={setBornes}
                 prix={prixFinal}
                 context={context}
                 closeOnce={closeOnce}
@@ -195,8 +189,6 @@ const BaeCalendar = ({
                 activeDates={presetActiveDates.current}
                 selectDate={monthLater}
                 setSelectDate={setMonthLater}
-                bornes={bornes}
-                setBornes={setBornes}
                 prix={prixFinal}
                 context={context}
                 closeOnce={closeOnce}

@@ -83,7 +83,8 @@ class Scroll extends React.Component{
             random : 0,
             user_session : {
                 id:""
-            }
+            },
+            isDebut: true
         };
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
         this.setResult = this.setResult.bind(this);

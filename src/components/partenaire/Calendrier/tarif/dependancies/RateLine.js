@@ -20,7 +20,8 @@ const RateLine = (props) => {
                 dateMin={props.dateMin}
                 setOpenLoad={props.setOpenLoad}
                 value={props.value}
-                setValue={props.setValue} />
+                setValue={props.setValue}
+                customize={props.customize} />
             <DayLine 
                 typechambre={props.typechambre} 
                 indice={props.indice} 

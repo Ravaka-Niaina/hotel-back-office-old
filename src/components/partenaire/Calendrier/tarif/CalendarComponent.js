@@ -11,6 +11,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
 import  Navbar  from "../../Navbar/Navbar";
 import  ResponsiveDrawer  from "../../Navbar/responsive-drawer.js";
+import {session} from '../../../common/utilitySession.js';
 
 const getDaysBetweenDates = function(startDate, endDate) {
     var now = startDate.clone(), dates = [];
@@ -41,6 +42,9 @@ function getDate(date){
 }
 
 const CalendarComponent = () => {
+
+    const hasARCalendar = session.getInstance().hasOneOfTheseAccessRights(["voirCalendrier", "superAdmin"]);
+
     let initialized = false;
     let today = new Date();
     let oneMonth = new Date(today);
@@ -83,7 +87,8 @@ const CalendarComponent = () => {
                             setOpenLoad={setOpenLoad}
                             value={value}
                             setValue={setValue}
-                            alldays={alldays} />
+                            alldays={alldays}
+                            customize={hasARCalendar} />
                         </>
                     );
                 }
