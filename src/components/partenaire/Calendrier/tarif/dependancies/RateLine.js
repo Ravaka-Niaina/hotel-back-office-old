@@ -26,9 +26,9 @@ const RateLine = (props) => {
                 indice={props.indice} 
                 fromto={props.fromto} 
                 daterange={props.daterange}
-                setOpenLoad={props.setOpenLoad}
                 getPrix={props.getPrix}
-                alldays={props.alldays} />
+                alldays={props.alldays}
+                value={props.value} />
         </Box>
     )
 }

@@ -230,7 +230,6 @@ const FullPriceEditor = (props) => {
     function savePrix(forTypeChambre, forTarif){
         //props.setOpenLoad(true);
         let versions = [];
-        console.log(prix);
 
         if(prix.length > 0){
             console.log(prix);
@@ -254,8 +253,6 @@ const FullPriceEditor = (props) => {
             }
         }
         const dateOublie = "Vous avez oublié de choisir une date";
-        console.log(interval[0]);
-        console.log(interval[1]);
         let tempError = {...error};
         if(interval[0] === null){
             tempError.dateDebut = dateOublie;
@@ -279,7 +276,6 @@ const FullPriceEditor = (props) => {
                 forTypeChambre: forTypeChambre,
                 forTarif: forTarif
             };
-            console.log(data);
             callAPI('post', '/TCTarif/configPrix', data, refresh);
         }
     }

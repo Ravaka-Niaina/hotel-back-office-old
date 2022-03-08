@@ -267,7 +267,9 @@ const DayLine = (props) => {
                     fromto={bornesEditDate} 
                     closePopper={closePopper.bind(this)}
                     alldays={props.alldays}
-                    selecteds={selecteds} />
+                    selecteds={selecteds}
+                    getPrix={props.getPrix}
+                    value={props.value} />
             </Popper>
             <div className={styles.dayline}>
                 <DateRangeLine daterange={props.daterange} />
