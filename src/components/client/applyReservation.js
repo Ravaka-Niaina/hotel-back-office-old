@@ -416,7 +416,9 @@ function ApplyReservation(props){
                         </div>
                         <br />
                         <div style={{display:'flex',flexDirection:'row',flexWrap:'no-wrap',justifyContent:'space-between'}}>
-                            <button  style={{minWidth:250,heigth:80}}  class="btn button_btn button_pink button_sm" variant="contained" onClick={(e) => {validerReservation();register(e)}}>Valider réservation</button>
+                            
+                                <button  style={{minWidth:250,heigth:80}}  class="btn button_btn button_pink button_sm" variant="contained" onClick={(e) => {validerReservation();register(e);}}>Valider réservation</button>
+                                
                          </div>
                     </Box>
                 </div>
