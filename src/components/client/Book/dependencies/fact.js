@@ -26,6 +26,7 @@ import styles from '../Book.module.css';
 
 import {getDiffDays} from '../../../../utility/utilityDate.js';
 import { useTranslation } from "react-i18next";
+import ButtonLoad from '../../../partenaire/buttonLoading.js';
 
 // const { t, i18n } = useTranslation();
 
@@ -162,6 +163,7 @@ function Itineraires(props){
 
 class Fact extends React.Component{
    
+
     constructor(props){
         super(props);
         const cookies= props;
@@ -177,11 +179,9 @@ class Fact extends React.Component{
             boxShadow: 24,
             p: 4,
           };
-        
+        this.state = {load:true}
 
     }
-
-    
     
     
     reservationValide(res){
@@ -195,6 +195,7 @@ class Fact extends React.Component{
       
     }
     validerReservation(){
+        this.setState({load:false});
         this.props.context.handleChange("err", null);
         this.props.context.handleChange("resultApplyReservation", null);
         try{
@@ -276,9 +277,15 @@ class Fact extends React.Component{
                 if(this.props.context.state.itineraires[i].tarifReserves[u].etat == undefined
                     || this.props.context.state.itineraires[i].tarifReserves[u].etat == 1){
                     valider = (<p style={{textAlign:'center',paddingBottom:'12px'}}>
+                        {
+                            this.state.load ?
                         <Button size='medium' variant="contained"  onClick={(e) => this.validerReservation()} endIcon={<CallMissedOutgoingIcon/>}>
                             Valider réservation
-                        </Button></p>);
+                        </Button>
+                        :
+                        <ButtonLoad/>
+                        }
+                        </p>);
                     break;
                 }
             }
