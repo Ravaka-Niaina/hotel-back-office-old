@@ -276,6 +276,7 @@ const FullPriceEditor = (props) => {
                 forTypeChambre: forTypeChambre,
                 forTarif: forTarif
             };
+            console.log(data);
             callAPI('post', '/TCTarif/configPrix', data, refresh);
         }
     }

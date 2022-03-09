@@ -1,34 +1,84 @@
+import * as React from 'react';
 import {useState} from 'react';
 import {Button,Stack,TextField,Radio,RadioGroup,FormControl,FormControlLabel,InputAdornment} from '@mui/material';
 import moment from 'moment';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import LoadingButton from '@mui/lab/LoadingButton';
+import SaveIcon from '@mui/icons-material/Save';
 
-const RateEditor = ({nomPlanTarifaire, fromto, value, setValue, handleChange, closePopper}) => {
-    const [changeStatusRate, setChangeStatusRate] = useState(false); 
+import callAPI from '../../../../../../utility';
+import {days, getDateYYYYMMDD} from './utilEditor.js';
+
+const versions = [];
+const RateEditor = ({nomPlanTarifaire, fromto, value, setValue, 
+    handleChange, closePopper, idTypeChambre, alldays, getPrix, nbPers}) => {
+    const [changeStatusRate, setChangeStatusRate] = useState(false);
+    const [loading, setLoading] = React.useState(false);
 
     const switchChangeStatusRate = () => {
         setChangeStatusRate(!changeStatusRate);
         setValue("");
     }
 
-    const savePrixTarif = (e) => {
-        // e.preventDefault();
-        // setLoading(true);
-        // const dateDebut = getDateYYYYMMDD(alldays[selecteds[0]]);
-        // const dateFin = getDateYYYYMMDD(alldays[selecteds[selecteds.length - 1]]);
-        // const data = {
-        //     idTypeChambre: idTypeChambre,
-        //     dateDebut: dateDebut,
-        //     dateFin: dateFin,
-        //     toSell: Number.parseInt(roomsToSell),
-        //     isTypeChambreOpen: value === "open" ? true : false,
-        //     forTypeChambre: true,
-        //     forTarif: false,
-        //     modifierOuvertureChambre: changeStatusRoom,
-        //     days: days
-        // };
-        // callAPI('post', '/TCTarif/configPrix', data, refresh);
+    const refresh = (data) => {
+        console.log(data);
+        const startLoad = () => setLoading(true);
+        const endLoad = () => setLoading(false);
+        if(data.status === 200){
+            getPrix([moment(alldays[0], "MM-DD-YYYY"), moment(alldays[alldays.length - 1], "MM-DD-YYYY")], startLoad, endLoad);
+        }else{
+            console.log("prix non configuré");
+            setLoading(false);
+        }
     };
+
+    const setPrix = (i, value) => {
+        versions[i].prix = value;
+    };
+
+    const savePrixTarif = (e) => {
+        e.preventDefault();
+        console.log(getDateYYYYMMDD(fromto[0]));
+        setLoading(true);
+        const data = {
+            idTypeChambre: idTypeChambre,
+            dateDebut: getDateYYYYMMDD(fromto[0]),
+            dateFin: getDateYYYYMMDD(fromto[1]),
+            forTypeChambre: false,
+            forTarif: false,
+            modifierOuvertureChambre: changeStatusRate,
+            days: days
+        };
+        callAPI('post', '/TCTarif/configPrix', data, refresh);
+    };
+
+    let inputPrix = [];
+    for(let i = 0; i < nbPers; i++){
+        versions.push({
+            nbPers: i + 1,
+            prix: ""
+        });
+        inputPrix.push(
+            <>
+                <TextField
+                    size="small"
+                    id="outlined-number"
+                    label={"x " + (i + 1)} 
+                    type="number"
+                    InputProps={{
+                        startAdornment: <InputAdornment position="start"><PersonOutlineIcon/></InputAdornment>,
+                        endAdornment:<InputAdornment position="end">€</InputAdornment>
+                    }}
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    value={versions[i].prix}
+                    onChange={(e) => setPrix(i, e.target.value)}
+                />
+                <br/>
+            </>
+        );
+    }
 
     return(
         <FormControl component="fieldset">
@@ -50,24 +100,18 @@ const RateEditor = ({nomPlanTarifaire, fromto, value, setValue, handleChange, cl
                 <FormControlLabel value="close" control={<Radio />} label="Close" disabled={!changeStatusRate} />
             </RadioGroup>
             <br/>
-            <TextField
-                size="small"
-                id="outlined-number"
-                label="x 2"
-                type="number"
-                InputProps={{
-                    startAdornment: <InputAdornment position="start"><PersonOutlineIcon/></InputAdornment>,
-                    endAdornment:<InputAdornment position="end">€</InputAdornment>
-                }}
-                InputLabelProps={{
-                    shrink: true,
-                }}
-            />
-            <br/>
+            {inputPrix}
             <Stack direction="row" spacing={2}>
-                <Button variant="contained" disabled onClick={(e) => savePrixTarif(e)}>
+                <LoadingButton
+                    color="secondary"
+                    onClick={(e) => savePrixTarif(e)}
+                    loading={loading}
+                    loadingPosition="start"
+                    startIcon={<SaveIcon />}
+                    variant="contained"
+                >
                     Save
-                </Button>
+                </LoadingButton>
                 <Button onClick={() => closePopper()} variant="contained">
                     Close
                 </Button>

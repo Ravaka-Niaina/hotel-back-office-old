@@ -4,51 +4,9 @@ import {Button,Stack,TextField,Radio,RadioGroup,FormControl,FormControlLabel} fr
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
 import moment from 'moment';
+import {days, getDateYYYYMMDD} from './utilEditor.js';
 
 import callAPI from '../../../../../../utility';
-
-const days = [
-    {
-        "value": 1,
-        "checked": true,
-        "label": "Mon"
-    },
-    {
-        "value": 2,
-        "checked": true,
-        "label": "Tue"
-    },
-    {
-        "value": 3,
-        "checked": true,
-        "label": "Wed"
-    },
-    {
-        "value": 4,
-        "checked": true,
-        "label": "Thu"
-    },
-    {
-        "value": 5,
-        "checked": true,
-        "label": "Fri"
-    },
-    {
-        "value": 6,
-        "checked": true,
-        "label": "Sat"
-    },
-    {
-        "value": 7,
-        "checked": true,
-        "label": "Sun"
-    }
-];
-
-const getDateYYYYMMDD = (dateString) => {
-    let tmp = dateString.split("/");
-    return tmp[2] + "-" + tmp[0] + "-" + tmp[1];
-};
 
 const RoomEditor = ({fromto, value, setValue, alldays, selecteds, idTypeChambre, closePopper, getPrix, typechambre}) => {
     const [roomsToSell, setRoomsToSell] = useState('0');

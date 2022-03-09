@@ -9,6 +9,8 @@ const PriceEditor = (props) => {
     const closePopper = () => {
         props.closePopper(null);
     }
+    const nbPers = props.typechambre.nbAdulte + props.typechambre.nbEnfant;
+
     return(
         <>
             <br/>
@@ -18,7 +20,11 @@ const PriceEditor = (props) => {
                     fromto={props.fromto}
                     value={value}
                     setValue={setValue}
-                    closePopper={closePopper} />
+                    closePopper={closePopper}
+                    idTypeChambre={props.typechambre._id}
+                    alldays={props.alldays}
+                    getPrix={props.getPrix}
+                    nbPers={nbPers}  />
             : ""}
             {!props.isPrice && props.selected == -2  ?
                 <RoomEditor
