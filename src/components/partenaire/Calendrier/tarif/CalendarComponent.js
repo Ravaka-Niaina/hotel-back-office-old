@@ -58,10 +58,7 @@ const CalendarComponent = () => {
     const [isAccept, setIsAccept] = React.useState(false);
     const [isTextField, setIsTextField] = React.useState(false);
     function getPrix(dates, startLoad, endLoad){
-        console.log("HAHA Version");
         startLoad ? startLoad() : setOpenLoad(true);
-        console.log("checkpoint 01");
-        console.log(dates);
         try{
             axios({
                 method: 'post',
@@ -102,7 +99,6 @@ const CalendarComponent = () => {
         }catch(err){
             console.error(err);
         }
-        console.log("checkpoint 02");
     }
 
     useEffect(() => {
