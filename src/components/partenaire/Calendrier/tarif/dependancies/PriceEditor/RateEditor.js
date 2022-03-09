@@ -9,11 +9,11 @@ import SaveIcon from '@mui/icons-material/Save';
 import callAPI from '../../../../../../utility';
 import {days, getDateYYYYMMDD} from './utilEditor.js';
 
-const versions = [];
 const RateEditor = ({nomPlanTarifaire, fromto, value, setValue, 
     handleChange, closePopper, idTypeChambre, alldays, getPrix, nbPers}) => {
     const [changeStatusRate, setChangeStatusRate] = useState(false);
     const [loading, setLoading] = React.useState(false);
+    const [versions, setVersions] = React.useState([]);
 
     const switchChangeStatusRate = () => {
         setChangeStatusRate(!changeStatusRate);
@@ -33,7 +33,9 @@ const RateEditor = ({nomPlanTarifaire, fromto, value, setValue,
     };
 
     const setPrix = (i, value) => {
-        versions[i].prix = value;
+        let tmp = {...versions};
+        tmp[i].prix = value;
+        setVersions(tmp);
     };
 
     const savePrixTarif = (e) => {
