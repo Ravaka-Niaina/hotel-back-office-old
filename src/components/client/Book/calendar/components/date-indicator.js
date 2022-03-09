@@ -46,6 +46,7 @@ const DateIndicator = ({
 
     setSelectDate(new Date(day))
     let temp = {...context.state};
+    console.log(temp);
     let dateSejour = temp.dateSejour;
     if (isDebut) {
       dateSejour.debut = day
@@ -74,6 +75,21 @@ const DateIndicator = ({
       isDebut = false;
     }
     console.log(temp.isDebut);
+
+    if(temp.itineraires.length === 1 &&
+      temp.itineraires[0].dateSejour.debut === '' &&
+      temp.itineraires[0].dateSejour.fin === '' ||
+      temp.itineraires[0].tarifReserves.length === 0){
+        temp.itineraires[0].dateSejour.debut = dateSejour.debut;
+        temp.itineraires[0].dateSejour.debut = dateSejour.fin;
+    }
+    if(temp.reservationEnCours.itineraires.length === 1 && 
+      temp.reservationEnCours.itineraires[0].dateSejour.debut === '' &&
+      temp.reservationEnCours.itineraires[0].dateSejour.fin === ''){
+        temp.reservationEnCours.itineraires[0].dateSejour.debut = dateSejour.debut;
+        temp.reservationEnCours.itineraires[0].dateSejour.fin = dateSejour.fin;
+    }
+
     context.setState(temp, () => {
       applyFilter(undefined, true);
     })
