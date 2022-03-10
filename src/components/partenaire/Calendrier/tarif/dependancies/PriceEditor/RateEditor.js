@@ -9,11 +9,20 @@ import SaveIcon from '@mui/icons-material/Save';
 import callAPI from '../../../../../../utility';
 import {days, getDateYYYYMMDD} from './utilEditor.js';
 
-const RateEditor = ({nomPlanTarifaire, fromto, value, setValue, 
+const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue, 
     handleChange, closePopper, idTypeChambre, alldays, getPrix, nbPers}) => {
     const [changeStatusRate, setChangeStatusRate] = useState(false);
     const [loading, setLoading] = React.useState(false);
-    const [versions, setVersions] = React.useState([]);
+    const [versions, setVersions] = React.useState(() => {
+        let tmp = [];
+        for(let i = 0; i < nbPers; i++){
+            tmp.push({
+                nbPers: i + 1,
+                prix: ""
+            });
+        }
+        return tmp;
+    });
 
     const switchChangeStatusRate = () => {
         setChangeStatusRate(!changeStatusRate);
@@ -33,33 +42,37 @@ const RateEditor = ({nomPlanTarifaire, fromto, value, setValue,
     };
 
     const setPrix = (i, value) => {
-        let tmp = {...versions};
+        let tmp = JSON.parse(JSON.stringify(versions));
         tmp[i].prix = value;
         setVersions(tmp);
     };
 
     const savePrixTarif = (e) => {
         e.preventDefault();
-        console.log(getDateYYYYMMDD(fromto[0]));
         setLoading(true);
+        let tmpVersions = JSON.parse(JSON.stringify(versions));
+        for(let i = 0; i < tmpVersions.length; i++){
+            tmpVersions[i].prix = Number.parseFloat(tmpVersions[i].prix);
+        }
+
         const data = {
-            idTypeChambre: idTypeChambre,
             dateDebut: getDateYYYYMMDD(fromto[0]),
             dateFin: getDateYYYYMMDD(fromto[1]),
+            days: days,
             forTypeChambre: false,
-            forTarif: false,
-            modifierOuvertureChambre: changeStatusRate,
-            days: days
+            forTarif: true,
+            isTarifOpen: value === "open" ? true : false,
+            idTypeChambre: idTypeChambre,
+            tabIdTarif: [idPlanTarifaire],
+            modifierOuvertureTarif: changeStatusRate,
+            versions: tmpVersions,
+            minSejour: 1
         };
         callAPI('post', '/TCTarif/configPrix', data, refresh);
     };
 
     let inputPrix = [];
     for(let i = 0; i < nbPers; i++){
-        versions.push({
-            nbPers: i + 1,
-            prix: ""
-        });
         inputPrix.push(
             <>
                 <TextField
@@ -95,7 +108,7 @@ const RateEditor = ({nomPlanTarifaire, fromto, value, setValue,
                 aria-label="gender"
                 name="controlled-radio-buttons-group"
                 value={value}
-                onChange={handleChange}
+                onChange={(e) => setValue(e.target.value)}
                 row
             >
                 <FormControlLabel value="open" control={<Radio />} label="Open" disabled={!changeStatusRate} />

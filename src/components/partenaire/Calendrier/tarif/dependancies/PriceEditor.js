@@ -17,6 +17,7 @@ const PriceEditor = (props) => {
             {props.isPrice ?
                 <RateEditor
                     nomPlanTarifaire={props.typechambre.planTarifaire[props.selected].nom}
+                    idPlanTarifaire={props.typechambre.planTarifaire[props.selected]._id}
                     fromto={props.fromto}
                     value={value}
                     setValue={setValue}
