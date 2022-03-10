@@ -74,20 +74,22 @@ const DateIndicator = ({
       dateSejour.fin = utility.getDate(dateSejour.fin)
       isDebut = false;
     }
-    console.log(temp.isDebut);
 
-    if(temp.itineraires.length === 1 &&
-      temp.itineraires[0].dateSejour.debut === '' &&
-      temp.itineraires[0].dateSejour.fin === '' ||
-      temp.itineraires[0].tarifReserves.length === 0){
-        temp.itineraires[0].dateSejour.debut = dateSejour.debut;
-        temp.itineraires[0].dateSejour.debut = dateSejour.fin;
+    console.log(temp);
+    if(temp.itineraires.length === 1){
+      if(temp.itineraires[0].dateSejour.debut === '' &&
+        temp.itineraires[0].dateSejour.fin === '' ||
+        temp.itineraires[0].tarifReserves.length === 0){
+          temp.itineraires[0].dateSejour.debut = dateSejour.debut;
+          temp.itineraires[0].dateSejour.debut = dateSejour.fin;
+      }
     }
-    if(temp.reservationEnCours.itineraires.length === 1 && 
-      temp.reservationEnCours.itineraires[0].dateSejour.debut === '' &&
-      temp.reservationEnCours.itineraires[0].dateSejour.fin === ''){
-        temp.reservationEnCours.itineraires[0].dateSejour.debut = dateSejour.debut;
-        temp.reservationEnCours.itineraires[0].dateSejour.fin = dateSejour.fin;
+    if(temp.reservationEnCours.itineraires.length === 1){
+      if(temp.reservationEnCours.itineraires[0].dateSejour.debut === '' &&
+        temp.reservationEnCours.itineraires[0].dateSejour.fin === ''){
+          temp.reservationEnCours.itineraires[0].dateSejour.debut = dateSejour.debut;
+          temp.reservationEnCours.itineraires[0].dateSejour.fin = dateSejour.fin;
+      }
     }
 
     context.setState(temp, () => {
@@ -154,7 +156,6 @@ const DateIndicator = ({
 
   const debut = new Date(context.state.dateSejour.debut)
   let fin = new Date(context.state.dateSejour.fin)
-  console.log("fin = " + fin)
   let today = new Date();
   today = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const monthDates = datesInMonth.map((i, key) => {

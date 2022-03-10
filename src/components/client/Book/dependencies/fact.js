@@ -84,7 +84,6 @@ function Reservations(props){
             // 
             // console.log(tarif);
             if(tarif.etat == 1 || tarif.etat == undefined){
-                console.log("Tarif");
                 return (
                         <Card className={styles.stay}>
                         <CardContent>
@@ -188,7 +187,6 @@ class Fact extends React.Component{
         if(res.status === 200){
             console.log("validation reservation");
             console.log(res.reservation);
-            // props.context.setReservationEnCours(res.reservation);
         }else{
             console.log(res);
         }
@@ -202,10 +200,9 @@ class Fact extends React.Component{
             let emailVide = true;
             if(this.props.context.state.reservationEnCours._id != ""){
                 idVide = false;
-                // this.props.context.props.history.push("/reservation/" + this.props.context.state.reservationEnCours._id + "/apply");
                 const itineraires =  this.props.context.state.itineraires;
-                const data = {itineraires: itineraires};
-
+                const data = {itineraires: itineraires, dateCreationPanier: this.props.context.state.reservationEnCours.dateCreationPanier};
+                console.log(data);
                 callAPI("post" , "/reservation/insertReservationPanier" , data , (res)=>{
                     if(res.status==200){
                         this.props.context.clearCookies();
@@ -221,37 +218,10 @@ class Fact extends React.Component{
     }
 
     componentDidMount(){
-        console.log("check cookies");
-        // // console.log(this.props.context.state.reservationEnCours);
-        // console.log("fact did mount");
         this.props.context.setReservationEnCours(null, true,false);
-        // axios({
-        //     method: 'get',
-        //     url: process.env.REACT_APP_BACK_URL + '/reservation/',
-        //     withCredentials: true,
-        //     data: {}
-        // })
-        // .then(res => {
-        //     let reserv = res.data.reservation === null ? null : res.data.reservation[0];
-        //     console.log(reserv);
-        //     
-        // }).catch(err => console.log(err));
     }
 
     annulerReservation(context, idReservation, indexItineraire, indexTarifReserve){
-        // const data = { _id: idReservation, indexItineraire: indexItineraire, indexTarifReserve: indexTarifReserve };
-        // console.log(data);
-        // console.log(context.state.itineraires);
-        // axios({
-        //     method: 'post',
-        //     url: process.env.REACT_APP_BACK_URL + '/reservation/delete',
-        //     withCredentials: true,
-        //     data: data
-        // })
-        // .then(res => { 
-        //     console.log(res);                                               
-        //     context.setReservationEnCours(res.data.reservation)})
-        // .catch(err => console.log(err));
         let reservation = context.state.reservationEnCours;
         try{
             reservation.itineraires[indexItineraire].tarifReserves.splice(indexTarifReserve, 1); 

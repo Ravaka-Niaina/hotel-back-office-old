@@ -15,9 +15,7 @@ const tmpHeadCells = [
     [ "status", "Statut" ]
 ];
 export let headCells = [];
-console.log("tmp = " + tmpHeadCells[3][0]);
 for(let i = 0; i < tmpHeadCells.length; i++){
-    console.log(i);
     headCells.push({
         id: tmpHeadCells[i][0],
         numeric: false,
