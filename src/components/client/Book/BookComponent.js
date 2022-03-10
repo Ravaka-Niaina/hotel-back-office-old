@@ -38,6 +38,10 @@ const BookComponent = (props) => {
         let currentState = {...props.context.state};
         currentState.listTypeChambre = res.list;
         currentState.isListTarifDispoReceived = true;
+        if(!res.prixNuiteeCalendrier){
+            currentState.dateSejour.debut = '';
+            currentState.dateSejour.fin = '';
+        }
         props.context.setState(currentState);
         setLoadingFilter(false);
         props.context.changeOpenFiltre(false);
