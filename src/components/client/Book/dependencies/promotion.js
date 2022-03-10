@@ -33,7 +33,6 @@ function Promotion (props){
     const [promotion , setPromotion] = useState([]);
 
     function functionAppelList(data){
-        console.log(data);
         setPromotion(data.promotions);
     }
 
