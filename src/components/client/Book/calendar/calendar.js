@@ -100,8 +100,17 @@ const BaeCalendar = ({
         setMonthLater(secondMonth)
 
         let temp = { ...context.state }
-        temp.dateSejour.debut = getDate(checkIn)
-        temp.dateSejour.fin = getDate(checkOut)
+        const debut = getDate(checkIn);
+        const fin = getDate(checkOut);
+        temp.dateSejour.debut = debut;
+        temp.dateSejour.fin = fin;
+        if(temp.itineraires.length == 1 && 
+          temp.itineraires[0].dateSejour.debut == "" &&
+          temp.itineraires[0].dateSejour.fin == ""){
+            temp.itineraires[0].dateSejour.debut = debut;
+            temp.itineraires[0].dateSejour.fin = fin;
+        }
+
         context.setState(temp)
       }
       setPrix(res.result);
@@ -136,7 +145,7 @@ const BaeCalendar = ({
   
   let prixFinal = JSON.parse(JSON.stringify(prix));
 
-  if(prixFinal !== null && priceCheapestRate !== null){
+  if(prixFinal !== null && priceCheapestRate !== null && priceCheapestRate !== undefined){
     for(let i = 0; i < prixFinal.length; i++){
       let tmp = new Date(prixFinal[i].month);
       tmp.setTime( tmp.getTime() + tmp.getTimezoneOffset() * 60 * 1000 );

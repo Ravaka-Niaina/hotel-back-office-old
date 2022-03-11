@@ -200,4 +200,3 @@ export function getDate(date){
     date = year + '-' + month + '-' + day;
     return date;
 }
-
