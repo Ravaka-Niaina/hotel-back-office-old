@@ -37,6 +37,8 @@ function TarifReserves(props){
     
     let tarifs = [];
     for(let i = 0; i < props.reservation.itineraires[props.indexItineraire].tarifReserves.length; i++){
+        let object = {idReservation : props.reservation._id , indexItineraire : props.indexItineraire ,indexTarifsReserve : i}
+
         if(props.reservation.itineraires[props.indexItineraire].tarifReserves[i].dateAnnulation === undefined){
             const u = i;
            // console.log("u = " + u);
@@ -78,7 +80,7 @@ function TarifReserves(props){
                             <p class="prix">Prix:</p>
                             <p class="prix">{tarif.toPay.afterProm} € </p>
                         </div>
-                        <button style={{marginLeft:'0.8em'}} class="btn button_btn button_secondary button_sm" datatest="Button"><span>Annuler</span></button>
+                        <button style={{marginLeft:'0.8em'}} class="btn button_btn button_secondary button_sm" datatest="Button" onClick={(e) => props.ShowModalAnnulation(false , object)}><span>Annuler</span></button>
                         
                         <hr style={{marginLeft:'0.6em'}}></hr> 
                         

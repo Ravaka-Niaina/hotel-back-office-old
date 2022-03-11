@@ -29,7 +29,7 @@ function InfoItineraires(props){
                         setAffilie={props.setAffilie}
                         openLoad={props.openLoad}
                         setOpenLoad={props.setOpenLoad}
-                        isEditEnabled={props.isEditEnabled} />
+                        ShowModalAnnulation={props.ShowModalAnnulation} />
                 </div>
             );
         }

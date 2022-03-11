@@ -192,6 +192,7 @@ class Fact extends React.Component{
       
     }
     validerReservation(){
+        localStorage.setItem('access', 2);
         this.props.context.handleChange("err", null);
         this.props.context.handleChange("resultApplyReservation", null);
         try{

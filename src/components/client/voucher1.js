@@ -14,7 +14,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 
 function Voucher(props){
     const [reservation, setReservation] = useState(null);
-    const { _id } = useParams();
+    const { _id , numeroItineraire } = useParams();
     const [reservateur, setReservateur] = useState({prenom:"",nom: "", email: "", tel: "", messageParticulier: "",numeroCarte:"",expirationCarte:"",ccvCarte:"",nomCarte:""});
     const [openLoad, setOpenLoad] = useState(true);
     const [alertSuccess, setAlertSuccess] = useState(null);
@@ -54,6 +54,7 @@ function Voucher(props){
         }
     }
 
+
     function annulerReservation(){
         setLoad(true);
         if(isReservation){
@@ -71,12 +72,20 @@ function Voucher(props){
         callAPI('post', '/reservation/delete', data, setDetailReservation );
     }
 
+    function ControllerAcces(){
+        if(localStorage.access == "1"){
+            setIsConnected(true);
+        }else{
+            setIsConnected(false);
+        }
+    }
+
 
     function setDetailReservation(res){
+        console.log(res);
         if(res.reservation == null){
             setIsReservation(false);
         }
-
         setMessage(res.message);
         setOpenLoad(false);
         if(res.status === 200){
@@ -109,23 +118,25 @@ function Voucher(props){
                 if(res.reservation.reservateur != undefined){
                     setReservateur(res.reservation.reservateur);
                 }
+                setRun(false);
             }catch(err){
                 console.log(err);
             }
         }else{
             setAlertError(res.errors[0].message);
             setMessage(res.errors[0].message);
+            setRun(false);
         }
         setLoad(false);
         setShowModalChambre(false);
         if(res.message !== null){
             history.push('#redirect')
         }
-        setRun(false);
+        
     }
 
     function redirect(){
-        localStorage.setItem('access', 0);
+        localStorage.setItem('access',0);
         return history.push('/')
     }
 
@@ -133,23 +144,17 @@ function Voucher(props){
         localStorage.setItem('access',0);
         return history.push('/front/researchReservation');
     }
-    
-    function ControllerAcces(){
-        if(localStorage.access == "1"){
-            setIsConnected(true);
-        }else{
-            setIsConnected(false);
-        }
-    }
-    function ModificationReservation(id){
+
+    function ModificationReservation(id , num){
         localStorage.setItem('access',2);
-        // return history.push('/reservation/'+id+'/apply');
-        return history.push("/reservation/"+id+"/apply/"+1);
+        return history.push("/reservation/"+id+"/apply/"+num);
     }
+    
     
     useEffect(() => {
         ControllerAcces();
-        callAPI('get', '/reservation/details/' + _id, {}, setDetailReservation);
+        let data = {numeroItineraire , _id};
+        callAPI('post', '/reservation/details', data , setDetailReservation);
     }, [_id]);
 
 
@@ -163,11 +168,6 @@ function Voucher(props){
                     </div>
                     <div style={{marginLeft:10}} id = 'redirect' >
                         <p style={{color:'#587817'}}>{message}</p>
-                        
-                           {
-                               isReservation ? <p> Rendez-vous sur votre messagerie {reservateur.email} pour voir l'e-mail de confirmation.</p> : ""
-                           } 
-                        
                     </div>
 
                 </div>
@@ -211,12 +211,11 @@ function Voucher(props){
 
                 <div>
                     <p><strong><span>{message == "Cette réservation n'existe pas ou est déjà annulée" ? "précédent" : "Modification des réservations"}</span></strong></p>
-
                         {
                                 message == "Cette réservation n'existe pas ou est déjà annulée" ? <button   class="button_pannel"  onClick={() => precedent()}>précédent</button>  
                                 : 
                                 <> {
-                                    isConnected ?  <button   class="button_pannel"  onClick={() => ModificationReservation(_id)}>Modifier la réservation</button> : 
+                                    isConnected ?  <button   class="button_pannel"  onClick={() => ModificationReservation(_id,numeroItineraire)}>Modifier la réservation</button> : 
                                     <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained" disabled>Modifier la réservation</button>
                                 } </>
                                   
@@ -236,6 +235,7 @@ function Voucher(props){
                             </> : <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained" 
                                         disabled>Annuler réservation</button>
                     }
+                    
                     <br/> <br/>
                     <p><strong><span>nouvelle réservation</span></strong></p>
                     <button  class="button_pannel" onClick={(e) => redirect()}>nouvelle réservation</button>   
@@ -245,13 +245,13 @@ function Voucher(props){
             </div>
             <ModalAnnulationChambre ShowModalAnnulation={ShowModalAnnulation} showModal={showModalChambre} AnnulationReservationChambre = {AnnulationReservationChambre}  load ={load}  />  
         
-            <ModalAnnulation ShowModalAnnulation={ShowModalAnnulation} showModal={showModal}  annulerReservation={annulerReservation} load ={load}  />  
+            <ModalAnnulation ShowModalAnnulation={ShowModalAnnulation} showModal={showModal}  annulerReservation={annulerReservation} load ={load}  />
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={run}
             >
                 <CircularProgress color="inherit" />
-            </Backdrop> 
+            </Backdrop>  
         </div>
     );
 }

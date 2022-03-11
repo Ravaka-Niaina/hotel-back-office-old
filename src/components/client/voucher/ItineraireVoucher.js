@@ -8,10 +8,12 @@ function ItinerairesVoucher(props){
         for(let i = 0; i < props.reservation.itineraires.length; i++){
             const u = i;
             let chambres_number = [];
+            let nbr = 0;
             let length = props.reservation.itineraires[i].tarifReserves.length;
             for (let j = 0; j < length; j++) {
                     const tarif = props.reservation.itineraires[i].tarifReserves[j]; 
                     if(props.reservation.itineraires[i].tarifReserves[j].etat !== 0){
+                        nbr = nbr + 1
                         chambres_number.push(
                             <div class="voucher_chambres"> 
                                  <h3 class="voucher_title2"><span>Chambre {j+1} Confirmation #&nbsp;: </span><span class="confirmation-message_confirmationNumber">
@@ -32,7 +34,7 @@ function ItinerairesVoucher(props){
                         chambres_number.length !== 0 ? 
                         <>
                             <div class=" voucher_border voucher_numeros">
-                                <h2 class="voucher_title"><span>Merci.</span> <span>Votre numéro d'itinéraire {u+1} est {props.reservation.itineraires[i].NumeroITineraire}</span></h2>
+                                <h2 class="voucher_title"><span>Merci.</span> <span>Votre numéro d'itinéraire {nbr} est {props.reservation.itineraires[i].NumeroITineraire}</span></h2>
                                 {chambres_number}
                                     
                             </div>
@@ -48,7 +50,6 @@ function ItinerairesVoucher(props){
                                     setAffilie={props.setAffilie}
                                     openLoad={props.openLoad}
                                     setOpenLoad={props.setOpenLoad}
-                                    isEditEnabled={props.isEditEnabled} 
 
                                     showModalChambre={props.showModalChambre}
                                     setShowModalchambre={props.setShowModalChambre}

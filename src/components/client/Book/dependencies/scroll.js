@@ -173,6 +173,7 @@ class Scroll extends React.Component{
     }
 
     componentDidMount(){
+         localStorage.setItem('access', 0);
         callAPI('get', '/TCTarif/all', {}, this.setResult);
     }
 

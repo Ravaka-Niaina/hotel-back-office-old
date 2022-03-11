@@ -18,10 +18,11 @@ import Total from './applyReservation/Total.js';
 import InfoItineraires from './applyReservation/InfoItineraires.js';
 import {Champs} from '../common/commonAssets.js';
 import FormControlLabel from '@mui/material/FormControlLabel';
-    import {setValue} from '../../../src/utility2.js';
+import {setValue} from '../../../src/utility2.js';
 import './confirmation_reservation.css';
 import PaiementField from './applyReservation/PaiementField';
 import { is } from 'date-fns/locale';
+import ModalAnnulationChambre from '../common/ModalAnnulationChambre.js';
 
 
 function TabPanel(props) {
@@ -69,17 +70,41 @@ function ApplyReservation(props){
     const [conditionError, setConditionError] = useState(false);
     const [inputGrise, setInputGrise] = useState({prenom:false,nom: false, email: false, tel: false});
 
+    const [load, setLoad] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [showModalChambre, setShowModalChambre] = useState(false);
+    const[ variableAnnuler , setVariableAnnuler] = useState({idReservation:'', indexItineraire :'',indexTarifsReserve : ''});
+
+    function AnnulationReservationChambre(){
+        setLoad(true);
+        const data = { _id: variableAnnuler.idReservation, indexItineraire: variableAnnuler.indexItineraire, indexTarifReserve: variableAnnuler.indexTarifsReserve };
+        callAPI('post', '/reservation/delete', data, setDetailReservation );
+    }
+
+    function ShowModalAnnulation(isTrue,ObjectChambreAnnuler){
+        if(isTrue){
+            setShowModal(!showModal);
+            setLoad(false);
+        }else{
+            setShowModalChambre(!showModalChambre)
+            let keys = Object.keys(ObjectChambreAnnuler);
+            let current = {...variableAnnuler};
+            keys.map(field => {
+                current[field] = ObjectChambreAnnuler[field];
+            })
+            setVariableAnnuler(current);
+        }
+
+    }
     
     function handleResponse(res){
-        console.log(res);
         setOpenLoad(false);
         if(res.status === 200){
+            localStorage.setItem('access', 1);
             setAlertSuccess(res.message);
             history.push("/reservation/" + _id + "/voucher");
-            // window.location.href = "/reservation/" + _id + "/voucher";
         }else{
             setAlertError(res.errors[0].message);
-            // window.location.href = '#error';
             history.push('#error');
         }
     }
@@ -155,8 +180,14 @@ function ApplyReservation(props){
             setAlertError(res.errors[0].message);
         }
     }
+    function ControllerAcces(){
+        if(localStorage.access !== "2"){
+            history.push("/");
+        }
+    }
 
     useEffect(() => {
+        ControllerAcces();
         callAPI('get', '/reservation/details/' + _id, {}, setDetailReservation);
     }, [_id]);
 
@@ -359,11 +390,11 @@ function ApplyReservation(props){
                             setAffilie={setAffilie}
                             isEditEnabled={isEditEnabled}
                             openLoad={openLoad}
-                            setOpenLoad={setOpenLoad}
-                            isEditEnabled={isEditEnabled} />
+                            setOpenLoad={setOpenLoad} 
+                            ShowModalAnnulation={ShowModalAnnulation} />
                         <div class="infos_contact">
                             <h2 class="infos_heading">Paiement</h2>
-                            <PaiementField reservation={reservation}/>
+                            <PaiementField reservation={reservation} reservateur={reservateur} setReservateur ={setReservateur} />
                             <Total toPay={reservation.toPay} />
                             
                         </div>
@@ -403,6 +434,8 @@ function ApplyReservation(props){
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
+            <ModalAnnulationChambre ShowModalAnnulation={ShowModalAnnulation} showModal={showModalChambre} AnnulationReservationChambre = {AnnulationReservationChambre}  load ={load}  />  
+        
                   
         </>
     );

@@ -110,11 +110,11 @@ function Navbar(props) {
                     </Typography>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
-                    <Button variant="outlined" startIcon={<SearchIcon/> } onClick={(e) => props.clickRetour()}>
                         <Link to='/front/researchReservation' style={{textDecoration : "none" ,color : "#887B62"}}>
-                        {t('search for a reservation')}
+                            <Button variant="outlined" startIcon={<SearchIcon/> }>
+                                {t('search for a reservation')}
+                            </Button>
                         </Link>
-                    </Button>
                     <PopupState variant="popper" popupId="demo-popup-popper">
       {(popupState) => (
         <div>
