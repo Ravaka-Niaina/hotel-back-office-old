@@ -184,6 +184,11 @@ class Scroll extends React.Component{
         setTimeout(()=>{this.setState(temp)}, 1500);
     }
 
+    componentDidMount(){
+         localStorage.setItem('access', 0);
+        //callAPI('get', '/TCTarif/all', {}, this.setResult);
+    }
+
     getConvert(number , value){
         value = value+"";
         let compteur = number - value.length;
