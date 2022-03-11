@@ -102,13 +102,13 @@ function TarifsVoucher(props){
                         </div>
                         <div style={{marginTop:'0.8rem'}}>
                             <strong class="voucher_bold">Informations du client</strong>
-                            <div>{tarif.reservateurWithEmail.prenom} {tarif.reservateurWithEmail.nom} </div>
-                            <div> {tarif.reservateurWithEmail.email} </div>
-                            <div> {tarif.reservateurWithEmail.numero} </div>
+                            <div>{props.reservation.itineraires[props.indexItineraire].tarifReserves[i].reservateurWithEmail.prenom}  {props.reservation.itineraires[props.indexItineraire].tarifReserves[i].reservateurWithEmail.nom} </div>
+                            <div> {props.reservation.itineraires[props.indexItineraire].tarifReserves[i].reservateurWithEmail.email} </div>
+                            <div> {props.reservation.itineraires[props.indexItineraire].tarifReserves[i].reservateurWithEmail.tel} </div>
                         </div>
                         <div style={{marginTop:'0.8rem'}}>
                             <strong class="voucher_bold">Détails et préférences supplémentaires</strong>
-                            <div>details </div>
+                            <div>{props.reservation.itineraires[props.indexItineraire].tarifReserves[i].reservateurWithEmail.messageParticulier} </div>
                             
                         </div>
                         <button  style={{marginTop:'0.8rem'}} class="voucher_link" datatest="Button"  

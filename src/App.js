@@ -42,7 +42,9 @@ import  Front_client  from "./front_client/front_client";
 
 import  Reservation  from "./components/client/reservation.js";
 import  ApplyReservation  from "./components/client/applyReservation.js";
+import  ApplyReservationModif  from "./components/client/applyReservationModif.js";
 import Voucher from "./components/client/voucher.js";
+import Voucher1 from "./components/client/voucher1.js";
 
 import  BasicDateRangePicker  from "./components/client/dateSejourClient";
 import Calendrier from "./components/partenaire/Calendrier/Calendrier";
@@ -132,7 +134,9 @@ function App(){
 
         <Route path="/reservation/:_id" exact component={Reservation} />
         <Route path="/reservation/:_id/apply" exact component={ApplyReservation} />
+        <Route path="/reservation/:_id/apply/:numeroItineraire" exact component={ApplyReservationModif} />
         <Route path="/reservation/:_id/voucher" exact component={Voucher} />
+        <Route path="/reservation/:_id/voucher/:numeroItineraire" exact component={Voucher1} />
         <Route path="/drop" exact component={DropDown} />
 
         <Route path="/CalendarClient" exact component={BasicDateRangePicker} />

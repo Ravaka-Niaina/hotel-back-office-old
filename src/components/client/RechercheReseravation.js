@@ -16,11 +16,55 @@ import TextField from '@mui/material/TextField';
 import BtnLoad from '../partenaire/buttonLoading.js';
 import SkeletonForm from '../../SkeletonListe/SkeletonFormulaire.js';
 import './researchReservationCSS.css';
+import {useHistory} from 'react-router-dom';
+
+
 
 const div = {width : "520px" , border : "1px solid #887B62",padding : "10px"}
-const photo = { maxWidth: "100%",height: "auto"}
-function ReponseList(props){
+const photo = { maxWidth: "100%",height: "auto"};
+
+
+
+function linkUrl(event , isTrue , history , idReservation ,idItineraire ){
+    if(isTrue){
+        localStorage.setItem('access', 1);
+        history.push("/reservation/"+idReservation+"/voucher");
+    }else{
+        localStorage.setItem('access', 1);
+        history.push("/reservation/"+idReservation+"/voucher/"+idItineraire);
+    }
+}
+
+function ReponseListTrue(props){
     let list = props.list.reservation.map(liste => {
+        return (
+            <div style={div}>
+                {
+                    props.skeleton ? <SkeletonForm /> : <>
+                    <img src="/hotel.jpg" style={photo}/> 
+                    <span
+                        component="div"
+                        sx={{ display: {xs : "none" ,  sm: 'block' }, padding : "10px" }}
+                    >
+                        Heritage Le Telfaire Golf and Wellness Resort 
+                    </span><br/>
+                    <span style={{textDecoration :"underline"}}> reservateur :</span>
+                    <span>{props.list.client.nom} , {props.list.client.prenom}</span><br/>
+                    <span>{props.list.client.email} </span><br/><br/>
+                    <Itineraire itineraire = {liste.itineraires}/>
+                    <div style={{float : 'right'}}>
+                        <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" 
+                            variant="contained"  onClick={(e) => linkUrl(e , true , props.history , liste._id )}>AFFICHER LES INFORMATIONS</button>
+                        
+                    </div>
+                </>
+                }
+            </div>
+        )
+    })
+    return list;
+}
+function ReponseListFalse(props){
         return (
             <div style={div}>
                 {
@@ -34,27 +78,41 @@ function ReponseList(props){
                     </span><br/>
                     <span>{props.list.client.nom} , {props.list.client.prenom}</span><br/>
                     <span>{props.list.client.email} </span><br/><br/>
-                    {/*
-                    <strong style={{textDecoration : "underline"}}>N° Confirmation : </strong><span>{liste.numeroConfirmation} </span><hr/> */}
-                    <Itineraire itineraire = {liste.itineraires}/>
+                    <strong>N° itineraire : </strong><span>{props.list.reservation.NumeroITineraire}</span><br/><br/>
+                    <ItineraireLogFalse tarifReserves = {props.list.reservation.tarifReserves}/>
                     <div style={{float : 'right'}}>
                         <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" 
-                            variant="contained" >AFFICHER LES INFORMATIONS</button>
+                            variant="contained" onClick={(e) => linkUrl(e , false ,props.history , props.idReservation , props.list.reservation.NumeroITineraire )} >AFFICHER LES INFORMATIONS</button>
                         
                     </div>
                 </>
                 }
             </div>
         )
+    }
+function ItineraireLogFalse(props){
+    let tarifReserves = props.tarifReserves.map(tarif => {
+        return (
+            <>
+                <span>N° Confirme : {tarif.numeroConfirmation} </span><br/>
+                <strong style={{textDecoration :"underline"}}> client :</strong><br/>
+                <span>{tarif.reservateurWithEmail.nom} , {tarif.reservateurWithEmail.prenom}</span><br/>
+                <span>{tarif.reservateurWithEmail.email} </span><br/>
+                <strong style={{textDecoration : "underline"}}>Date sejour : </strong><br/>
+                <span>Debut : {tarif.dateSejour.debut} - fin : {tarif.dateSejour.fin} </span><hr/>
+            </>
+        )
     })
-    return list;
+    return tarifReserves;
 }
+
 function Itineraire(props){
     let itineraire = props.itineraire.map(liste => {
         return (
             <>
                 <strong>N° itineraire : </strong><span>{liste.NumeroITineraire}</span><br/>
-                <span style={{textDecoration : "underline"}}>Date sejour : </span>
+                <TarifReserves tarifReserves = {liste.tarifReserves}/>
+                <strong style={{textDecoration : "underline"}}>Date sejour : </strong><br/>
                 <span>Debut : {liste.dateSejour.debut} - fin : {liste.dateSejour.fin} </span><hr/>
             </>
         );
@@ -62,7 +120,18 @@ function Itineraire(props){
 return itineraire
 }
 
-
+function TarifReserves(props){
+    let tarifReserves = props.tarifReserves.map(tarif => {
+        return(
+            <>
+                <strong style={{textDecoration :"underline"}}> client :</strong><br/>
+                <span>{tarif.reservateurWithEmail.nom} , {tarif.reservateurWithEmail.prenom}</span><br/>
+                <span>{tarif.reservateurWithEmail.email} </span><br/>
+            </>
+        )
+    });
+    return tarifReserves;
+}
 
 function Compte(props){
     return (
@@ -117,18 +186,23 @@ function Numero(props){
 }
 
 function RechercheReservation (){
+    const history = useHistory();
     const [response , setResponse] = useState(false);
+    const [responseLogTrue , setResponseLogTrue] = useState(false);
     const [isGriseConx , setIsGriseConx] = useState(true);
     const [isGriseSerf , setIsGriseSerf] = useState(true);
     const [messageCompte , setMessageC] = useState("");
     const [messageNumero , setMessageN] = useState("");
     const [list , setList] = useState({reservation : [] , client :{}});
-    const [compte , setCompte] = useState({nom : "" , mdp :""});
+    const [compte , setCompte] = useState({email1 : "" , mdp :""});
     const [numero , setNumero] = useState({num : "" , email :""});
     const [pageCurrent , setPageCurrent] = useState(1);
     const [btnLoad , setBtnLoad] = useState(false);
     const [skeleton , setSkeleton] = useState(true);
-    const [errorEmpty, setErrorEmpty] = useState({nom:false,mdp: false, num: false, email: false});
+    const [errorEmpty, setErrorEmpty] = useState({email1:false,mdp: false, num: false, email: false});
+    const [log , setLog] = useState(null);
+    const [idReservation , setReservation] = useState(null);
+    const [count , setCount] = useState(null);
 
 
     const Item = styled(Paper)(({ theme }) => ({
@@ -139,11 +213,6 @@ function RechercheReservation (){
 
     
       const style = {
-        // fontFamily: 'Arial, Helvetica , sans-serif',
-        // color: '#887B62',
-        // textAlign: 'center',
-        // textDecoration: "underline",
-        // display: { xs: 'none', sm: 'block' },
         margin: "0",
         padding:" 0",
         border:" 0",
@@ -165,9 +234,9 @@ function RechercheReservation (){
         let current = {...compte};
         current[field] = event.target.value;
         setCompte(current);
-        current.nom = current.nom + ""
+        current.email1 = current.email1 + ""
         current.mdp = current.mdp + ""
-            if(current.nom.trim() !== "" && current.mdp !==""){
+            if(current.email1.trim() !== "" && current.mdp !==""){
                 setIsGriseConx(false);
             }else{
                 setIsGriseConx(true);
@@ -188,40 +257,91 @@ function RechercheReservation (){
         
       }
       const callBack = (data) => {
-        if(data.status === 200){
-            let current = {...list};
-            current.reservation = data.reservation;
-            current.client = data.client;  
-            setList(current);
-            setResponse(true)
-            setMessageC("");
-            setMessageN("");
-            // vider(compte , 'nom' , 'mdp', setCompte);
-            // vider(numero , 'num' ,'email', setNumero);
-            setBtnLoad(false);
-            setSkeleton(false);
-        }else if(data.status == 204){
-            if(compte.nom !== "" && compte.mdp !== ""){
-                setMessageC(data.message);
-                setResponse(false)
-            }else{
+        setCount(data.count);
+        let curr = {...list};
+        curr.reservation = [];
+        curr.client = {};
+        setList(curr)
+        setLog(data.log);
+          if(data.log == true){
+            if(data.status === 200){
+                let current = {...list};
+                current.reservation = data.reservation;
+                current.client = data.client;  
+                setList(current);
+                setResponseLogTrue(false)
+                setResponse(true)
+                setMessageC("");
+                setMessageN("");
+                setBtnLoad(false);
+                setSkeleton(false);
+            }else if(data.status == 204){
+                if(compte.email1 !== "" && compte.mdp !== ""){
+                    setMessageC(data.message);
+                    setResponse(false)
+                    setResponseLogTrue(false)
+                }else{
+                    setMessageN(data.message);
+                    setResponse(false)
+                    setResponseLogTrue(false)
+                }
+            }else if(data.status == 400){
                 setMessageN(data.message);
                 setResponse(false)
+                setResponseLogTrue(false)
             }
-        }else if(data.status == 400){
-            setMessageN(data.message);
-            setResponse(false)
+        }else{
+            if(data.status === 200){
+                let current = {...list};
+                current.reservation = data.reservation;
+                current.client = data.client;
+                setList(current);
+                setResponse(false)
+                setResponseLogTrue(true)
+                setMessageC("");
+                setMessageN("");
+                setBtnLoad(false);
+                setSkeleton(false);
+                setReservation(data.idReservation);
+            }else if(data.status == 204){
+                if(compte.email1 !== "" && compte.mdp !== ""){
+                    setMessageC(data.message);
+                    setResponse(false)
+                    setResponseLogTrue(false)
+                }else{
+                    setMessageN(data.message);
+                    setResponse(false)
+                    setResponseLogTrue(false)
+                }
+            }else if(data.status == 400){
+                setMessageN(data.message);
+                setResponse(false)
+                setResponseLogTrue(false)
+            }  
         }
         setBtnLoad(false);
+        history.push("#pageTitle");
+      }
+
+      const init = (variable , field1 , field2 , setVariable , setbtnGrise) => {
+        let current = {...variable};
+        current[field1] = "";
+        current[field2] = "";
+        setVariable(current);
+        setbtnGrise(true);
       }
 
       const connexionC = () => {
+        init(numero,"num","email",setNumero,setIsGriseSerf);
+
         setBtnLoad(true);
         setSkeleton(true)
-        CallAPI("post" , "/reservation/researchC" , {mdp : compte.mdp , nom : compte.nom, pageCurrent : pageCurrent} , callBack);
+        CallAPI("post" , "/reservation/researchC" , {mdp : compte.mdp , email : compte.email1, pageCurrent : pageCurrent} , callBack);
       }
 
       const connexionN = () => {
+        init(compte,"mdp","email1",setCompte,setIsGriseConx);
+
         setBtnLoad(true);
         setSkeleton(true);
         CallAPI("post" , "/reservation/researchN" , {numero : numero.num , email : numero.email} , callBack);
@@ -230,7 +350,7 @@ function RechercheReservation (){
       const suivant = (e, pageCurrent) => {
             setPageCurrent(pageCurrent+1)
             setSkeleton(true);
-            CallAPI("post" , "/reservation/researchC" , {mdp : compte.mdp , nom : compte.nom, pageCurrent : pageCurrent+1} , callBack);
+            CallAPI("post" , "/reservation/researchC" , {mdp : compte.mdp , email : compte.email1, pageCurrent : pageCurrent+1} , callBack);
             
       }
       const vider = (params , field1 , field2 , set) =>{
@@ -245,7 +365,7 @@ function RechercheReservation (){
           let pageC = pageCurrent-1;
           setPageCurrent(pageC)
           setSkeleton(true);
-          CallAPI("post" , "/reservation/researchC" , {mdp : compte.mdp , nom : compte.nom, pageCurrent : pageC} , callBack);
+          CallAPI("post" , "/reservation/researchC" , {mdp : compte.mdp , email : compte.email1, pageCurrent : pageC} , callBack);
           
      }
      const clickRetour = () => {
@@ -295,21 +415,21 @@ function RechercheReservation (){
                                         <span>  Avec votre compte </span>
                                     </h2>
                                     <div class="input-fieldR">
-                                        <input type="text" value={compte.nom} onChange={e => haddleChangeInputCompte(e, 'nom')}
-                                            onBlur={(e) => handleEmptyCompte("nom")} required />
-                                            <label>Nom d'utilisateur <span class="red_required">*</span></label>
+                                        <input type="text" value={compte.email} onChange={e => haddleChangeInputCompte(e, 'email1')}
+                                            onBlur={(e) => handleEmptyCompte("email1")} required />
+                                            <label>email<span class="red_required">*</span></label>
                                                 {
-                                                    errorEmpty.nom ?
+                                                    errorEmpty.email1 ?
                                                     <>
                                                         <div class="error_text">
-                                                            nom vide
+                                                            email vide
                                                         </div>
                                                     </>
                                                     : null
                                                 }
                                     </div>
                                      <div class="input-fieldR">
-                                        <input type="text" value={compte.mdp} onChange={e => haddleChangeInputCompte(e, 'mdp')}
+                                        <input type="password" value={compte.mdp} onChange={e => haddleChangeInputCompte(e, 'mdp')}
                                             onBlur={(e) => handleEmptyCompte("mdp")} required />
                                             <label>Mot de passe <span class="red_required">*</span></label>
                                             {
@@ -342,7 +462,7 @@ function RechercheReservation (){
                                         <span>  Avec  numéro d'itinéraire </span>
                                     </h2>
                                     <div class="input-fieldR">
-                                        <input type="text" value={compte.num} onChange={e => haddleChangeInputNumero(e, 'num')}
+                                        <input type="text" value={numero.num} onChange={e => haddleChangeInputNumero(e, 'num')}
                                             onBlur={(e) => handleEmptyNumero("num")} required />
                                             <label>Numéro d'itinéraire<span class="red_required">*</span></label>
                                             {
@@ -354,7 +474,7 @@ function RechercheReservation (){
                                             }
                                     </div>
                                      <div class="input-fieldR">
-                                        <input type="text" value={compte.email} onChange={e => haddleChangeInputNumero(e, 'email')}
+                                        <input type="text" value={numero.email} onChange={e => haddleChangeInputNumero(e, 'email')}
                                             onBlur={(e) => handleEmptyNumero("email")} required />
                                             <label>Adresse e-mail <span class="red_required">*</span></label>
                                             {
@@ -394,15 +514,30 @@ function RechercheReservation (){
                                         pageCurrent == 1 ? " " : <ChevronLeftIcon   onClick={(e) => precedent(e ,pageCurrent)}/>
                                     }
                                 </div>  
-                                <div style={{float : 'right' , fontSize :"500px",  width :"30px" , cursor:"pointer"}}> 
+                                <div style={{float : 'right' , fontSize :"450px",  width :"30px" , cursor:"pointer"}}> 
                                     {
-                                        list.reservation.length < 3 ? " " : <ChevronRightIcon onClick={(e) => suivant(e , pageCurrent)}/>
+                                        count > 3 ? <ChevronRightIcon onClick={(e) => suivant(e , pageCurrent)}/> : "" 
                                     }   
                                 </div><br/>
-                                <Box sx={{ display: { xs: 'none', md: 'flex'  }, gap : 1 , padding : "30px"}}>
-                                    <ReponseList  list ={list} skeleton={skeleton}/>
+                                <Box sx={{ display: { xs: 'none', md: 'flex'  }, gap : 1 , padding : "30px"}} >
+                                    {
+                                        log ? <ReponseListTrue history = {history} list ={list} skeleton={skeleton}/> : <ReponseListFalse history = {history}  list ={list} skeleton={skeleton}/>
+                                    }
+                                    
                                 </Box> 
                             </div> 
+                            </> : ""
+                        }
+                        {
+                            responseLogTrue ? <>
+                            <h1 id="pageTitle">
+                                <span> Liste des reservations </span>
+                            </h1> 
+                            <Box sx={{ display: { xs: 'none', md: 'flex'  }, gap : 1 , padding : "30px"}}>
+                                {
+                                    log ? <ReponseListTrue history = {history} list ={list} skeleton={skeleton}/> : <ReponseListFalse history = {history} idReservation = {idReservation}  list ={list} skeleton={skeleton}/>
+                                }
+                            </Box>
                             </> : ""
                         }
                 </div>
