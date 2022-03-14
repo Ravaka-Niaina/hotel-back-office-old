@@ -22,7 +22,7 @@ import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
 import PhotoChambre from './InsertTypeChambre/Photo/PhotoChambre.js';
 import VideoChambre from './InsertTypeChambre/Video/VideoChambre.js';
 import Equipement from './InsertTypeChambre/Equipement.js';
-import Galerie from './InsertTypeChambre/Photo/Galerie.js';
+import Galerie from '../Galerie/Galerie.js';
 
 function PlanTarifaire(props){
   let i = -1;
@@ -120,7 +120,7 @@ function InsertTypeCHambre(){
       }
       setPreview(tmpPreview);
     }
-
+    
     setPhoto(tmpPhoto);
     setState(currentState);
     setSkeleton(false);

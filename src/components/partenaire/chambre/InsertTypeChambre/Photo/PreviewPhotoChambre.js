@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import styles from '../Photo/PreviewPhotoChambre.module.css';
+import styles from '../../InsertTypeChambre/Photo/PreviewPhotoChambre.module.css';
 import callAPI from '../../../../../utility';
 
 const removePhotoLocal = (preview, setPreview, photo, setPhoto, indicePhoto) => {
