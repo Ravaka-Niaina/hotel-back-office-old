@@ -29,17 +29,45 @@ const DetailsTypeChambre = (props) => {
                     <React.Fragment>
                         <div className="row">
                             <div class="col">
-                                <h3>{props.typeChambre.nom}</h3>
+
+                                {props.context.state.traduction ?
+                                    <div className="">
+                                        <span>{props.typeChambre.name}</span>
+                                    </div>
+                                    :
+                                    <div className="">
+                                        <span>{props.typeChambre.nom}</span>
+                                    </div>
+                                }
+
                                 <div>
-                                    <span><PersonOutline/> max : 
-                                        {props.typeChambre.nbAdulte} Adultes +
-                                        {props.typeChambre.nbEnfant} enfants
-                                    </span>
+
+                                    {props.context.state.traduction ?
+                                            <span><PersonOutline/> max : 
+                                            {props.typeChambre.nbAdulte} Adult +
+                                            {props.typeChambre.nbEnfant} Children
+                                            </span>
+                                            :
+                                            <span><PersonOutline/> max : 
+                                            {props.typeChambre.nbAdulte} Adultes +
+                                            {props.typeChambre.nbEnfant} enfants
+                                            </span>
+                                    }
                                 </div>
                                 <div>
-                                    <span>{props.typeChambre.chambreTotal} chambres | {props.typeChambre.etage}è étage | {props.typeChambre.superficie} m<sup>2</sup></span>
+<span>{props.typeChambre.chambreTotal} {props.context.state.traduction ? "rooms" : "chambres" } | {props.typeChambre.etage} {props.context.state.traduction ? "è task"  : "è étage"} | {props.typeChambre.superficie} m<sup>2</sup></span>
                                 </div>
-                                <p>{props.typeChambre.description}</p>
+
+                                {props.context.state.traduction ?
+                                    <div className="">
+                                        <span>{props.typeChambre.desc}</span>
+                                    </div>
+                                    :
+                                    <div className="">
+                                        <span>{props.typeChambre.description}</span>
+                                    </div>
+                                }
+
                             </div>
                             <div class="col">
                                 <h4>Equipements:</h4>

@@ -35,7 +35,9 @@ function Global(){
             description : null ,
             type : null,
             pourcentage : null,
-            vide : null
+            vide : null,
+            name: '',
+            desc: ''
         }
     );  
     const [btnLoad, setBtnLoad] = useState(false); 
@@ -67,6 +69,7 @@ function Global(){
        }
            
     }
+
     /* handle input change*/
     const handleInputChange = (e, index) => {
         let existeVide = false;
@@ -179,6 +182,12 @@ function Global(){
         }
     }
 
+    function handleInputChange3( e, name1, name2){
+        let current = JSON.parse(JSON.stringify(state));
+        current[name1][name2] = e.target.value;
+        setState(current);
+        }
+
     const setListPolitiqueAnnulation = (data) => {
         
             if(data.politique.nom != null){
@@ -238,9 +247,9 @@ function Global(){
             datePrice[i].pourcentage = Number.parseInt(datePrice[i].pourcentage); 
         }
         if(show){
-            callAPI('post' , "/politique/insertionPolitique" ,{nom : nom ,description : description, type : dateTime , datePrice : datePrice , remboursable : true}, functionAppel)
+            callAPI('post' , "/politique/insertionPolitique" ,{nom : nom ,description : description, type : dateTime , datePrice : datePrice , remboursable : true,name:state.name,desc:state.desc}, functionAppel)
         }else{
-            callAPI('post' , "/politique/insertionPolitique" ,{nom : nom ,description : description,  remboursable : false}, functionAppel)
+            callAPI('post' , "/politique/insertionPolitique" ,{nom : nom ,description : description,  remboursable : false,name:state.name,desc:state.desc}, functionAppel)
         }
       }
 
@@ -256,6 +265,12 @@ function Global(){
         }else{
             callAPI('post' , "/politique/updateP/"+_id ,{ id : id1 , nom : nom ,description : description,  remboursable : false}, functionAppel)
         }
+      }
+
+      function handleInputChange3(event, inputName) {
+        const currentState = JSON.parse(JSON.stringify(state))
+        currentState[inputName] = event.target.value
+        setState(currentState)
       }
 
     const date = datePrice.map( (x, i) => {   
@@ -390,7 +405,21 @@ function Global(){
                                                 value = {nom}
                                                 onChange={e => handleInputChangeInputNom(e)}
                                             />
+
+                                        <TextField
+                                                id="outlined-size-small"
+                                                size="small" label ="Name"
+                                                // error = {message ? true : false}
+                                                // helperText={message}
+                                                name="name"
+                                                type="text"
+                                                style={{marginTop:'15px',marginLeft:'25px'}}
+                                                value = {state.name}
+                                                onChange={e => handleInputChange3(e,'name')}
+                                            />
+
                                 </div>
+
                                 <div style = {{marginTop :"15px"}}> 
                                     <label id='bigLabel' style={{textDecoration:'underline'}}>Description : </label>
                                         <TextField
@@ -406,9 +435,26 @@ function Global(){
                                                 value = {description}
                                                 onChange={e => handleInputChangeInputDesc(e)}
                                             />
-                                </div> <br/>
+
+                                        <TextField
+                                                id="outlined-size-small"
+                                                size="small" 
+                                                label ="description en Anglais"
+                                                multiline 
+                                                // helperText = {(state.description)}
+                                                // error = {(state.description !== null ? true : false)}
+                                                rows={2} 
+                                                rowsMax={4}
+                                                style={{width:'100%',height:'50px',marginTop:'25px'}}
+                                                name="desc"
+                                                type="text"
+                                                value = {state.desc}
+                                                onChange={e => handleInputChange3(e,'desc')}
+                                            />
+
+                                </div>
                                 
-                                   <div style = {{width : "fit-content" , margin : " 0 auto" }}>
+                                   <div style = {{width : "fit-content" , margin : " 0 auto",marginTop:'25px'}}>
                                         <div class="bouton-aligne">
                                        { 
                                         _id == null && hasARInsertPolitique ? 

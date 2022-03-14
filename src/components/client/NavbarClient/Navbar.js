@@ -37,6 +37,11 @@ function Navbar(props) {
   const { t, i18n } = useTranslation();
   const [btnLoad, setBtnLoad] = useState(false)
 
+  function translation(){
+    let temp = {...props.context.state};
+    temp.traduction= !temp.traduction;
+    props.context.setState(temp);
+}
 
   const changeLanguageHandler = (e) => {
     const languageValue = e.target.value
@@ -219,10 +224,11 @@ function Navbar(props) {
                         >
                             <Language/>
                         </IconButton>
-                        <select className="custom-select" style={{width: 200}} onChange={changeLanguageHandler}>
-        <option value="fr" >Francais</option>                            
-        <option value="en" >English</option>
-      </select>
+
+                <select className="custom-select" style={{width: 200}} onChange={(e) =>{changeLanguageHandler(e);translation(e)}}>
+                    <option value="fr" >Francais</option>                            
+                    <option value="en" >English</option>
+                </select>
 
                     </Box>
                     </Toolbar>

@@ -172,9 +172,11 @@ function ListTarif(props){
                             nbPers: nbPers,
                             reservateurWithEmail: {nom: "", prenom: "", email: "", tel: ""},
                             numeroConfirmation : numeroConfirm,
-                            nomTypeChambre:typeChambre.nomTypeChambre,
+                            nomTypeChambre:typeChambre.nom,
+                            TypeChambreName:typeChambre.name,
                             politiqueAnnulAtrb:tarif.politiqueAnnulAtrb,
                             nomTarif:tarif.nom,
+                            TarifName:tarif.name,
                             toPay:{afterProm:toPay.prix,beforeProm:toPay.prixOriginal},
                         }); 
                           
@@ -214,7 +216,17 @@ function ListTarif(props){
                         <ul>
                             <li>
                                 <div className="row">
-                                    <span>{tarif.nom}</span>
+                                    
+                                {props.context.state.traduction ?
+                                    <div className="row">
+                                        <span>{tarif.name}</span>
+                                    </div>
+                                :
+                                    <div className="row">
+                                        <span>{tarif.nom}</span>
+                                    </div>
+                                }
+
                                 </div>
                                 <div class="row">
                                     {tarif.politiqueAnnulAtrb !== undefined &&  tarif.politiqueAnnulAtrb[0] !== undefined? <HtmlTooltip
@@ -222,10 +234,11 @@ function ListTarif(props){
                                                 <InfoPolitiqueAnnul 
                                                     checkIn={props.context.state.dateSejour.debut} 
                                                     politique={tarif.politiqueAnnulAtrb[0]} 
+                                                    context={props.context}
                                             />}
                                             placement="top"
                                         >
-                                            <span><PolicyIcon/>{tarif.politiqueAnnulAtrb[0].nom}</span>
+                                            <span><PolicyIcon/> {props.context.state.traduction ? tarif.politiqueAnnulAtrb[0].name : tarif.politiqueAnnulAtrb[0].nom }</span>
                                         </HtmlTooltip> : ""
                                     }
                                 </div>
