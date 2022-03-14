@@ -14,7 +14,7 @@ const concat = (firstArray, secondArray) => {
     return tmpFirst;
 };
 
-export default function Photo({state, setState, noImage,
+export default function PhotoChambre({state, setState, noImage,
     photo, setPhoto, preview, setPreview,
     areImagesLoading, setAreImagesLoading}){
 

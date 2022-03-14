@@ -14,7 +14,6 @@ const removePhotoLocal = (preview, setPreview, photo, setPhoto, indicePhoto) => 
 
 const removePhoto = (event, preview, setPreview, photo, setPhoto, indicePhoto, state) => {
   event.preventDefault();
-  console.log(photo);
   if(photo[indicePhoto].startsWith("typeChambre")){
     callAPI('post', '/typeChambre/photo/delete', {path: photo[indicePhoto], idTypeChambre: state._id}, (data) => {
       if(data.status === 200){
