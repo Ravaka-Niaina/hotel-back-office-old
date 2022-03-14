@@ -12,7 +12,8 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
-import  Navbar  from "../../partenaire/Navbar/Navbar.js";
+// import  Navbar  from "../../partenaire/Navbar/Navbar.js";
+import  ResponsiveDrawer  from "../../partenaire/Navbar/responsive-drawer.js";
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -29,8 +30,12 @@ import InputRecherche from './InputRecherche.js';
 import EnhancedTableHead from './EnhancedTableHead.js';
 import {headCells, HtmlTooltip, descendingComparator, getComparator, stableSort} from './Dependencies.js';
 import { removeSpecialCharFromDate } from '../../../utility/utilityDate.js';
+import {session} from '../../common/utilitySession.js';
+import Alert from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
+import Stack from '@mui/material/Stack';
 
-export default function ListeReservation(props){
+function ListeReservation(props){
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('calories');
     const [dense, setDense] = useState(true);
@@ -71,6 +76,8 @@ export default function ListeReservation(props){
     const [searchDateOfWhich, setSearchDateOfWich] = useState({checkIn: false, checkOut: false, reservation: false});
     const [isNotif, setIsNotif] = useState(false);
     const [listIdNewReserv, setListIdNewReserv] = useState([]);
+
+    const hasARReservation = session.getInstance().hasOneOfTheseAccessRights(["listeReservation", "superAdmin"]);
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
@@ -122,16 +129,19 @@ export default function ListeReservation(props){
         }
         setListIdNewReserv(tmp);
     }
-
+    let history = useHistory();
     useEffect(() => {
-        const regExp = new RegExp("/notif","i");
-        if(regExp.test(window.location.href)){
-            setIsNotif(true);
-            callAPI('post', '/notifPartenaire/newReservations', {}, setResultNewReserv);
+        if(!hasARReservation){
+            history.push("/NotEnoughAccessRight");
         }else{
-            callAPI('post', '/reservation/partenaire', {}, setResult);
+            const regExp = new RegExp("/notif","i");
+            if(regExp.test(window.location.href)){
+                setIsNotif(true);
+                callAPI('post', '/notifPartenaire/newReservations', {}, setResultNewReserv);
+            }else{
+                callAPI('post', '/reservation/partenaire', {}, setResult);
+            }
         }
-        
     }, []);
 
     const emptyRows =
@@ -139,8 +149,10 @@ export default function ListeReservation(props){
     let rows = [];
 
     return(
+        
         <>
-            <Navbar currentPage={props.currentPage}/><br/>
+            {/* <Navbar currentPage={props.currentPage}/><br/> */}
+            
             <Box sx={{ width: '100%', padding :"50px" }}>
             <h1>{isNotif ? "Nouvelles réservations" : "Liste réservations"}</h1>
             <InputRecherche 
@@ -327,5 +339,17 @@ export default function ListeReservation(props){
             
           </Box>
       </>
+      
+    
     );
 }
+
+export default function ListeReservation_(props){
+    return(
+        <ResponsiveDrawer 
+            // title = {props.title}
+            getContent = {() => ListeReservation(props)} 
+        />
+        
+    );
+};

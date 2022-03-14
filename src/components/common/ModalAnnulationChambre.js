@@ -43,7 +43,7 @@ const annulerReservation = (props) => {
                         {   
                             props.load ? <ButtonLoad/> :
                              <div class="bouton-aligne">
-                                 <Button variant ="contained" sx={{marginRight: 5}} color="warning" onClick = {(e) => props.AnnulationReservationChambre()}>Oui</Button>
+                                 <Button variant ="contained" sx={{marginRight: 5}} color="warning" onClick = {(e) => props.AnnulationReservationChambre(e)}>Oui</Button>
                                  <Button variant ="contained" color="success" onClick = {(e) => props.ShowModalAnnulation(false)}>Non</Button>
                             </div>
                         }

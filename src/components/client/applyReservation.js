@@ -13,7 +13,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Icon from '@mui/material/Icon';
 import { useHistory } from 'react-router-dom';
-import Checkbox from '@mui/material/Checkbox';
 import Total from './applyReservation/Total.js';
 import InfoItineraires from './applyReservation/InfoItineraires.js';
 import {Champs} from '../common/commonAssets.js';
@@ -69,7 +68,26 @@ function ApplyReservation(props){
     const [isConditionAccepted, setIsConditionAccepted] = useState(false);
     const [conditionError, setConditionError] = useState(false);
     const [inputGrise, setInputGrise] = useState({prenom:false,nom: false, email: false, tel: false});
+    const [showResults, setShowResults] = useState(false);
 
+    const interpretResponse = (data) => {
+        if(data.status === 200){
+            history.push('/front/login');
+        }
+    };
+
+    const register = (e) => {
+        e.preventDefault();
+        const data = {
+            nom: reservateur.nom.trim(),
+            prenom: reservateur.prenom.trim(),
+            email: reservateur.email.trim(),
+            mdp: user.mdp.trim(),
+            confirmMdp: user.confirmMdp.trim()
+        };
+        console.log(data);
+        callAPI('post', '/user/register', data, interpretResponse);
+    };
     const [load, setLoad] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [showModalChambre, setShowModalChambre] = useState(false);
@@ -116,7 +134,8 @@ function ApplyReservation(props){
             setOpenLoad(true);
             setAlertSuccess(null);
             setAlertError(null);
-            callAPI('post', '/reservation/applyWithEmail', {_id: reservation._id, reservateur: reservateur, reservation: reservation}, handleResponse );
+            const data = {_id: reservation._id, reservateur: reservateur, reservation: reservation};
+            callAPI('post', '/reservation/applyWithEmail', data, handleResponse );
         }else{
             setConditionError(true);
             window.location.href = '#conditions';
@@ -153,6 +172,8 @@ function ApplyReservation(props){
     }
 
     function setDetailReservation(res){
+        console.log("details reservation");
+        //
         setOpenLoad(false);
         console.log(res);
         if(res.status === 200){
@@ -177,6 +198,7 @@ function ApplyReservation(props){
                             }catch(err){}
                             
                             const max = nbEnfant + nbAdulte;
+                            
                         }
                     }
                 }
@@ -204,6 +226,7 @@ function ApplyReservation(props){
             }catch(err){
                 console.log(err);
             }
+            console.log(res.reservation);
         }else{
             console.log(res.errors[0].message);
             setAlertError(res.errors[0].message);
@@ -255,6 +278,12 @@ function ApplyReservation(props){
             setConditionError(false);
         }
         setIsConditionAccepted(!isConditionAccepted);
+    }
+
+    function handleChangeInfoUser(field, value){
+        let current = JSON.parse(JSON.stringify(user));
+        current[field] = value;
+        setUser(current);
     }
 
     function handleChangeInfoUser(field, value){
@@ -387,12 +416,16 @@ function ApplyReservation(props){
                                         {isConnectionShowing ?
                                             <div class="password_quick">
                                                     <div class="input-field">
-                                                        <input type="password" required />
+                                                        <input type="password" required 
+                                                        value={reservateur.mdp}
+                                                        onChange={(e) => handleChangeInfoUser("mdp", e.target.value)} />
                                                             <label>Mot de passe <span class="red_required">*</span></label>
                                                     </div>
                                                     
                                                     <div class="input-field">
-                                                        <input type="password" required />
+                                                        <input type="password" required
+                                                        value={reservateur.confirmMdp}
+                                                        onChange={(e) => handleChangeInfoUser("confirmMdp", e.target.value)} />
                                                         <label>Confirmer le mot de passe <span class="red_required">*</span></label>
                                                     </div>
                                             </div>
@@ -443,13 +476,10 @@ function ApplyReservation(props){
                         </div>
                         <br />
                         <div style={{display:'flex',flexDirection:'row',flexWrap:'no-wrap',justifyContent:'space-between'}}>
-                            <button  style={{minWidth:250,heigth:80}}  class="btn button_btn button_pink button_sm" variant="contained" onClick={(e) => validerReservation()}>Valider réservation</button>
-                       
+                            
+                                <button  style={{minWidth:250,heigth:80}}  class="btn button_btn button_pink button_sm" variant="contained" onClick={(e) => {validerReservation();register(e);}}>Valider réservation</button>
+                                
                          </div>
-                        
-                       
-                         
-                        
                     </Box>
                 </div>
                 : <Stack sx={{ width: '100%' }} spacing={2}>

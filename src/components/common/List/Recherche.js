@@ -12,7 +12,8 @@ import TableSortLabel from '@mui/material/TableSortLabel';
 import Paper from '@mui/material/Paper';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
-import  Navbar  from "../../partenaire/Navbar/Navbar.js";
+// import  Navbar  from "../../partenaire/Navbar/Navbar.js";
+import  ResponsiveDrawer  from "../../partenaire/Navbar/responsive-drawer.js";
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -126,7 +127,7 @@ const getValue = (row, fieldName) => {
   return value;
 }
 
-export default function Recherche(props){
+function Recherche(props){
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
     const [selected, setSelected] = React.useState([]);
@@ -272,7 +273,7 @@ export default function Recherche(props){
     let rows = [];
     return(
         <>
-            <Navbar currentPage={props.currentPage}/><br/>
+            {/* <Navbar currentPage={props.currentPage}/><br/> */}
             <Box sx={{ width: '100%', padding :"50px" }}>
             {hasARToViewInsert
              ? <Link to={props.btnInsert.urlRedirect}  style={{float : 'left'}}>
@@ -398,4 +399,15 @@ export default function Recherche(props){
           />
       </>
     );
+}
+
+export default function recherche_(props) {
+  // console.log("TRLALALA"+ JSON.stringify(props));
+  return(
+      <ResponsiveDrawer 
+          title = {props.title}
+          getContent = {() => Recherche(props)} 
+      />
+      
+  );
 }

@@ -55,6 +55,7 @@ const ListeUser = () => {
             accessRightToViewInsert={accessRightToViewInsert}
             accessRightToDelete={accessRightToDelete}
             accessRightToViewDetails={accessRightToViewDetails}
+            title="Liste des partenaires"
         />
     );
 }

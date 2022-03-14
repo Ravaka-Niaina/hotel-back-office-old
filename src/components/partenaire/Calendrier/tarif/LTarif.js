@@ -46,6 +46,7 @@ export default function ListTarif(){
             accessRightToViewDetails={accessRightToViewDetails}
             accessRightToDelete={accessRightToDelete}
             accessRightToViewList={accessRightToViewList}
+            title = "Liste des tarifs"
         />
     );
 }

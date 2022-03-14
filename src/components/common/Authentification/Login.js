@@ -9,9 +9,29 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import axios from "axios";
 
+import ResponsiveDrawer from "../../menu/responsive-drawer.js";
+
 import {session} from "../utilitySession.js";
 import styles from './Register.module.css';
 import stylesLogin from './Login.module.css';
+import LoadingButton from '@mui/lab/LoadingButton';
+import LoginIcon from '@mui/icons-material/Login';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
+
+const CustomBox = ({content}) => {
+    return(
+        <Box
+            component="form"
+            sx={{
+                '& .MuiTextField-root': { m: 1, width: '250px' },
+            }}
+            noValidate
+            autoComplete="off"
+        >
+            {content}
+        </Box>
+    );
+};
 
 const Login = (props) => {
     const [isPartner, setIsPartner] = React.useState(false);
@@ -20,6 +40,8 @@ const Login = (props) => {
     const [mdp, setMdp] = React.useState("");
     const [errorMdp, setErrorMdp] = React.useState(null);
     const [ambiguousError, setAmbiguousError] = React.useState(null);
+    const [loading, setLoading] = React.useState(false);
+
 
     const history = useHistory();
 
@@ -56,10 +78,12 @@ const Login = (props) => {
                 }
             });
         }
+        setLoading(false);
     };
 
     const login = (e) => {
         e.preventDefault();
+        setLoading(true);
         setAmbiguousError(null);
         const data = {
             isPartner: isPartner,
@@ -81,59 +105,59 @@ const Login = (props) => {
         history.push(isPartner ? "/back/register" : "/front/register");
     }
 
+    const keyPress = (e) => {
+        if(e.keyCode == 13){
+           login(e);
+        }
+    }
+
     return(
         <div className={styles.auth + " " + stylesLogin.auth}>
+            <h1>{isPartner ? "Se connecter en tant que partenaire" : "Se connecter"}</h1>
+            {ambiguousError === null ? null : <Alert severity="error">{ambiguousError}</Alert>}
               <Paper 
                   elevation={1}
                   className={styles.auth}
                   children={
                       <>
-                          <h1>{isPartner ? "Se connecter en tant que partenaire" : "Se connecter"}</h1>
-                          {ambiguousError === null ? null : <Alert severity="error">{ambiguousError}</Alert>}
-                          <Box
-                              component="form"
-                              sx={{
-                                  '& .MuiTextField-root': { m: 1, width: '25ch' },
-                              }}
-                              noValidate
-                              autoComplete="off"
-                          >
-                              <TextField 
-                                  id="outlined-basic"
-                                  variant="outlined"
-                                  size='small'
-                                  label={<p>Email</p>}
-                                  type="email"
-                                  value={email} onChange={(e) => {setErrorEmail(null); setEmail(e.target.value)}}
-                                  error={errorEmail === null ? false : true}
-                                  helperText={errorEmail === null ? null : errorEmail}
-                              /> 
-                          </Box>
-                          <Box
-                              component="form"
-                              sx={{
-                                  '& .MuiTextField-root': { m: 1, width: '25ch' },
-                              }}
-                              noValidate
-                              autoComplete="off"
-                          >
-                              <TextField 
-                                  id="outlined-basic"
-                                  variant="outlined"
-                                  size='small'
-                                  label={<p>Mot de passe</p>}
-                                  type="password"
-                                  value={mdp} onChange={(e) => {setErrorMdp(null); setMdp(e.target.value)}}
-                                  error={errorMdp === null ? false : true}
-                                  helperText={errorMdp === null ? null : errorMdp}
-                              />
-                          </Box>
+                          <CustomBox 
+                            content={<TextField 
+                                id="outlined-basic"
+                                variant="outlined"
+                                size='small'
+                                label={<p>Email</p>}
+                                type="email"
+                                value={email} onChange={(e) => {setErrorEmail(null); setEmail(e.target.value)}}
+                                error={errorEmail === null ? false : true}
+                                helperText={errorEmail === null ? null : errorEmail}
+                                onKeyDown={keyPress}
+                                width="full"
+                            />} />
+                          <CustomBox
+                            content={<TextField 
+                                id="outlined-basic"
+                                variant="outlined"
+                                size='small'
+                                label={<p>Mot de passe</p>}
+                                type="password"
+                                value={mdp} onChange={(e) => {setErrorMdp(null); setMdp(e.target.value)}}
+                                error={errorMdp === null ? false : true}
+                                helperText={errorMdp === null ? null : errorMdp}
+                                onKeyDown={keyPress}
+                            />} />
                           <Stack spacing={1}>
-                            <Button sx={{width: 200}} variant="contained" onClick={(e) => login(e)}>
+                            <LoadingButton
+                                sx={{width: "250px", marginLeft: "8px", marginRight: "8px"}}
+                                onClick={(e) => login(e)}
+                                loading={loading}
+                                loadingPosition="start"
+                                startIcon={<HowToRegIcon />}
+                                variant="contained"
+                            >
                                 <span style={{color:'white'}}>Se connecter</span>
-                            </Button>
-                            <Button sx={{width: 200}} variant="contained" onClick={(e) => register(e)}>
-                                <span style={{color:'white'}}>S'inscrire</span>
+                            </LoadingButton>
+                            <Button sx={{marginLeft: "8px", marginRight: "8px"}} onClick={(e) => register(e)}>
+                                S'inscrire
                             </Button>
                           </Stack>
                             
@@ -141,6 +165,8 @@ const Login = (props) => {
                   } 
               />
         </div>
-    );
+        );
+    
+    
 }
 export default Login;

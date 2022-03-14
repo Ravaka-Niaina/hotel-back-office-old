@@ -5,9 +5,26 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MenuItem from '@mui/material/MenuItem';
 import Button from '@mui/material/Button';
+import LoadingButton from '@mui/lab/LoadingButton';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
 import styles from './Register.module.css';
 
 import callAPI from '../../../utility.js';
+
+const CustomBox = ({content}) => {
+    return(
+        <Box
+            component="form"
+            sx={{
+                '& .MuiTextField-root': { m: 1, width: '250px' },
+            }}
+            noValidate
+            autoComplete="off"
+        >
+            {content}
+        </Box>
+    );
+};
 
 const Register = () => {
     const [isPartner, setIsPartner] = React.useState(false);
@@ -45,6 +62,8 @@ const Register = () => {
     ]);
     const [companie, setCompanie] = React.useState(null);
     const [errorCompanie, setErrorCompanie] = React.useState(null);
+    const [loading, setLoading] = React.useState(false);
+
 
     const history = useHistory();
 
@@ -76,10 +95,12 @@ const Register = () => {
                 }
             });
         }
+        setLoading(false);
     };
 
     const register = (e) => {
         e.preventDefault();
+        setLoading(true);
         const data = {
             isPartner: isPartner,
             nom: nom.trim(),
@@ -93,23 +114,23 @@ const Register = () => {
         }
         callAPI('post', '/user/register', data, interpretResponse);
     };
+
+    const keyPress = (e) => {
+        if(e.keyCode == 13){
+            register(e);
+        }
+    }
+
     return(
       <div className={styles.auth}>
+            <h1>S'inscrire {isPartner ? "en tant que partenaire" : null}</h1>
             <Paper 
                 elevation={1}
                 className={styles.auth}
                 children={
                     <>
-                        <h1>S'inscrire {isPartner ? "en tant que partenaire" : null}</h1>
-                        <Box
-                            component="form"
-                            sx={{
-                                '& .MuiTextField-root': { m: 1, width: '25ch' },
-                            }}
-                            noValidate
-                            autoComplete="off"
-                        >
-                            <TextField 
+                        <CustomBox 
+                            content={<TextField 
                                 id="outlined-basic"
                                 variant="outlined"
                                 size='small'
@@ -118,8 +139,10 @@ const Register = () => {
                                 value={nom} onChange={(e) => {setErrorNom(null); setNom(e.target.value)}}
                                 error={errorNom === null ? false : true}
                                 helperText={errorNom === null ? null : errorNom}
-                            /> 
-                            <TextField 
+                                onKeyDown={keyPress}
+                            /> } />
+                        <CustomBox 
+                            content={<TextField 
                                 id="outlined-basic"
                                 variant="outlined"
                                 size='small'
@@ -128,18 +151,10 @@ const Register = () => {
                                 value={prenom} onChange={(e) => {setErrorPrenom(null); setPrenom(e.target.value)}}
                                 error={errorPrenom === null ? false : true}
                                 helperText={errorPrenom === null ? null : errorPrenom}
-                            /> 
-                            
-                        </Box>
-                        <Box
-                            component="form"
-                            sx={{
-                                '& .MuiTextField-root': { m: 1, width: '25ch' },
-                            }}
-                            noValidate
-                            autoComplete="off"
-                        >
-                            <TextField 
+                                onKeyDown={keyPress}
+                            />} />
+                        <CustomBox 
+                            content={<TextField 
                                 id="outlined-basic"
                                 variant="outlined"
                                 size='small'
@@ -148,17 +163,10 @@ const Register = () => {
                                 value={email} onChange={(e) => {setErrorEmail(null); setEmail(e.target.value)}}
                                 error={errorEmail === null ? false : true}
                                 helperText={errorEmail === null ? null : errorEmail}
-                            /> 
-                        </Box>
-                        <Box
-                            component="form"
-                            sx={{
-                                '& .MuiTextField-root': { m: 1, width: '25ch' },
-                            }}
-                            noValidate
-                            autoComplete="off"
-                        >
-                            <TextField 
+                                onKeyDown={keyPress}
+                            /> } />
+                        <CustomBox 
+                            content={<TextField 
                                 id="outlined-basic"
                                 variant="outlined"
                                 size='small'
@@ -167,8 +175,10 @@ const Register = () => {
                                 value={mdp} onChange={(e) => {setErrorMdp(null); setMdp(e.target.value)}}
                                 error={errorMdp === null ? false : true}
                                 helperText={errorMdp === null ? null : errorMdp}
-                            /> 
-                            <TextField 
+                                onKeyDown={keyPress}
+                            /> } />
+                        <CustomBox 
+                            content={<TextField 
                                 id="outlined-basic"
                                 variant="outlined"
                                 size='small'
@@ -177,8 +187,8 @@ const Register = () => {
                                 value={confirmMdp} onChange={(e) => {setErrorConfirmMdp(null); setConfirmMdp(e.target.value)}}
                                 error={errorConfirmMdp === null ? false : true}
                                 helperText={errorConfirmMdp === null ? null : errorConfirmMdp}
-                            />
-                        </Box>
+                                onKeyDown={keyPress}
+                            />} />
                         <Box
                             component="form"
                             sx={{
@@ -194,6 +204,7 @@ const Register = () => {
                                 select
                                 label="Companie"
                                 value={companie}
+                                style={{width: '250px' }}
                                 onChange={(e) => setCompanie(e.target.value)}
                                 SelectProps={{
                                     native: true,
@@ -211,9 +222,16 @@ const Register = () => {
                         }
                         </Box>
                         <div className={styles.btn}>
-                        <Button variant="contained" onClick={(e) => register(e)}>
-                            <span style={{color:'white'}}>S'inscrire</span>
-                        </Button>
+                            <LoadingButton
+                                sx={{width: 250}}
+                                onClick={(e) => register(e)}
+                                loading={loading}
+                                loadingPosition="start"
+                                startIcon={<HowToRegIcon />}
+                                variant="contained"
+                            >
+                                    <span style={{color:'white'}}>S'inscrire</span>
+                            </LoadingButton>
                         </div>
                     </>
                 } 

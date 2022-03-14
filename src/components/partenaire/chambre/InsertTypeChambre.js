@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import CustomError from '../../../CustomError';
 import {useEffect} from "react";
-import Navbar from "../Navbar/Navbar";
+// import Navbar from "../Navbar/Navbar";
+import ResponsiveDrawer from "../Navbar/responsive-drawer.js";
 import { Checkbox } from "@mui/material";
 import './typeChambre.css';
 import TextField from '@mui/material/TextField';
@@ -21,6 +22,7 @@ import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
 import PhotoChambre from './InsertTypeChambre/Photo/PhotoChambre.js';
 import VideoChambre from './InsertTypeChambre/Video/VideoChambre.js';
 import Equipement from './InsertTypeChambre/Equipement.js';
+import Galerie from './InsertTypeChambre/Photo/Galerie.js';
 
 function PlanTarifaire(props){
   let i = -1;
@@ -28,7 +30,7 @@ function PlanTarifaire(props){
       i++;
       let u = i;
       return(
-        <FormControlLabel 
+        <FormControlLabel  
           checked={tarif.checked}
           control={<Checkbox/>}
           onChange={(e) => props.handleCheckBoxPlanTarifaire(e, u)}
@@ -86,6 +88,12 @@ function InsertTypeCHambre(){
   
   const [areImagesLoading, setAreImagesLoading] = useState(isInsert ? false : true);
   const [btnLoad, setBtnLoad] = useState(false);
+  const [showGalerie, setShowGalerie] = useState(false);
+
+  const switchShowGalerie = (e) => {
+    e.preventDefault();
+    setShowGalerie(!showGalerie);
+  };
   
   const setDetailsTypeChambre = (data) => {
     let currentState = {...state};
@@ -256,7 +264,7 @@ function InsertTypeCHambre(){
 
   return (
     <div> 
-        <Navbar  currentPage={2}/>
+        {/* <Navbar  currentPage={2}/> */}
               <div className="jumbotron">
               {
                   skeletonAffiche ? <SkelettonForm /> : <>
@@ -328,9 +336,11 @@ function InsertTypeCHambre(){
                         helperText={state.error.superficie === null ? null : state.error.superficie}
                       />
                     </div>
-                    <PhotoChambre state={state} setState={setState} noImage={noImage}
+                    {/* <PhotoChambre state={state} setState={setState} noImage={noImage}
                       photo={photo} setPhoto={setPhoto} preview={preview} setPreview={setPreview}
-                      areImagesLoading={areImagesLoading} setAreImagesLoading={setAreImagesLoading} />
+                      areImagesLoading={areImagesLoading} setAreImagesLoading={setAreImagesLoading} /> */}
+                    <button onClick={switchShowGalerie}>Galerie photos</button>
+                    <Galerie showGalerie={showGalerie} setShowGalerie={setShowGalerie} />
                     <VideoChambre state={state} setState={setState} />
 
                     <div style={{marginTop:'10px'}}>
@@ -464,4 +474,14 @@ function InsertTypeCHambre(){
   );
 }
 
-export default InsertTypeCHambre;
+export default function InsertTypeCHambre_(){
+  const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
+  let titre = "";
+  isInsert ? titre = "Ajout type chambre" : titre = "Modifier type chambre"
+  return (
+    <ResponsiveDrawer
+      title= {titre}
+      getContent = {InsertTypeCHambre}
+    />
+  );
+};

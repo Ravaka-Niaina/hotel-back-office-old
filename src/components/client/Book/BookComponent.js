@@ -38,6 +38,10 @@ const BookComponent = (props) => {
         let currentState = {...props.context.state};
         currentState.listTypeChambre = res.list;
         currentState.isListTarifDispoReceived = true;
+        if(!res.prixNuiteeCalendrier){
+            currentState.dateSejour.debut = '';
+            currentState.dateSejour.fin = '';
+        }
         props.context.setState(currentState);
         setLoadingFilter(false);
         props.context.changeOpenFiltre(false);
@@ -65,7 +69,7 @@ const BookComponent = (props) => {
     const [loadingFilter, setLoadingFilter] = React.useState(false);
   return(
     <div className={styles.Book}>
-        <Navbar currentPage={0} changeLanguageHandler={changeLanguageHandler}/>
+        <Navbar currentPage={0} changeLanguageHandler={changeLanguageHandler} bornes={props.bornes} setBornes={props.setBornes} />
         <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection:'column' }} className={styles.filter}>
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
             <BaeCalendar context = {props.context} applyFilter={applyFilter} dateSejour={props.context.state.dateSejour}

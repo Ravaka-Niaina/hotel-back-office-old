@@ -39,11 +39,14 @@ const SideList = (props) => {
             className={sideList_css.sidelist}>
             <span className={styles.sidetitle}>{props.typechambre.nom}</span>
             <ul>
+                { props.customize ?
                 <li>
+                    
                     <Button size="small" variant="outlined" onClick={() => setOpenModal(true)} startIcon={<ModeEditOutlinedIcon />}>
                         Customize
                     </Button>
                 </li>
+                : null}
                 <li>
                     <span>Room status</span>
                 </li>
@@ -56,7 +59,7 @@ const SideList = (props) => {
                 <ListTarifs planTarifaire={props.typechambre.planTarifaire} />
             </ul>
         </Box>
-        <FullPriceEditor 
+        <FullPriceEditor
             typechambre={props.typechambre}  
             closeModal={() => setOpenModal(false)} 
             showme={openModal} 
@@ -64,7 +67,9 @@ const SideList = (props) => {
             getPrix={props.getPrix}
             openLoad={props.openLoad}
             dateMin={props.dateMin}
-            setOpenLoad={props.setOpenLoad} />
+            setOpenLoad={props.setOpenLoad}
+            value={props.value}
+            setValue={props.setValue} />
         </>
     )
 }

@@ -3,13 +3,15 @@ import {Container,Button,TextField,Box} from '@mui/material';
 import DateRangePicker from '@mui/lab/DateRangePicker';
 import AdapterMoment from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import styles from './CalendarComponent.module.css';
+import styles from '../tarif/CalendarComponent.module.css';
 import moment from 'moment';
 import RateLine from './dependancies/RateLine.js';
 import axios from "axios";
 import CircularProgress from '@mui/material/CircularProgress';
 import Backdrop from '@mui/material/Backdrop';
 import  Navbar  from "../../Navbar/Navbar";
+import  ResponsiveDrawer  from "../../Navbar/responsive-drawer.js";
+import {session} from '../../../common/utilitySession.js';
 
 const getDaysBetweenDates = function(startDate, endDate) {
     var now = startDate.clone(), dates = [];
@@ -40,6 +42,9 @@ function getDate(date){
 }
 
 const CalendarComponent = () => {
+
+    const hasARCalendar = session.getInstance().hasOneOfTheseAccessRights(["voirCalendrier", "superAdmin"]);
+
     let initialized = false;
     let today = new Date();
     let oneMonth = new Date(today);
@@ -52,8 +57,8 @@ const CalendarComponent = () => {
     const [isFirst, setIsFirst] = useState(true);
     const [isAccept, setIsAccept] = React.useState(false);
     const [isTextField, setIsTextField] = React.useState(false);
-    function getPrix(dates){
-        setOpenLoad(true);
+    function getPrix(dates, startLoad, endLoad){
+        startLoad ? startLoad() : setOpenLoad(true);
         try{
             axios({
                 method: 'post',
@@ -76,14 +81,21 @@ const CalendarComponent = () => {
                             getPrix={getPrix}
                             dateMin={dateMin}
                             openLoad={openLoad}
-                            setOpenLoad={setOpenLoad} />
+                            setOpenLoad={setOpenLoad}
+                            value={value}
+                            setValue={setValue}
+                            alldays={alldays}
+                            customize={hasARCalendar} />
                         </>
                     );
                 }
                 setRateLine(tmp);
-                setOpenLoad(false);
+                endLoad ? endLoad() : setOpenLoad(false);
             })
-            .catch(err => {console.log(err); setOpenLoad(false);});
+            .catch(err => {
+                console.log(err);
+                endLoad ? endLoad() : setOpenLoad(false);
+            });
         }catch(err){
             console.error(err);
         }
@@ -98,7 +110,7 @@ const CalendarComponent = () => {
 
     return(
         <>
-            <Navbar currentPage={1}/>
+            {/* <Navbar currentPage={1}/> */}
             <Container className={styles.container} style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
                 <LocalizationProvider dateAdapter={AdapterMoment}>
                 <DateRangePicker
@@ -171,4 +183,11 @@ const CalendarComponent = () => {
     );
 }
 
-export default CalendarComponent;
+export default function Calendrier_(){
+    return(
+        <ResponsiveDrawer 
+            title = "Calendrier"
+            getContent = {CalendarComponent}
+        />
+    );
+};
