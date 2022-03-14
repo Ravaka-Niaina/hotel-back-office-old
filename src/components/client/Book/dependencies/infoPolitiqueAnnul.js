@@ -11,11 +11,14 @@ const getDateAnnulation = (checkIn, nbJour) => {
 const InfoPolitiqueAnnul = (props) => {
     let conditions = [];
     let totalPourcentage = 0;
-    props.politique.datePrice.map(condition => {
-        totalPourcentage += condition.pourcentage;
-        conditions.push(<p>En cas d’annulation après le {getDateAnnulation(props.checkIn, condition.date)} à Midi, 
-        les frais d’annulation s’élèveront à {totalPourcentage}%</p>);
-    });
+    if(!props.politique.datePrice){
+        props.politique.datePrice.map(condition => {
+            totalPourcentage += condition.pourcentage;
+            conditions.push(<p>En cas d’annulation après le {getDateAnnulation(props.checkIn, condition.date)} à Midi, 
+            les frais d’annulation s’élèveront à {totalPourcentage}%</p>);
+        });
+    }
+    
     return(
     <>
         <h3>{props.politique.nom}</h3>

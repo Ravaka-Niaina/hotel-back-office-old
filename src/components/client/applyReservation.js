@@ -75,10 +75,11 @@ function ApplyReservation(props){
     const [showModalChambre, setShowModalChambre] = useState(false);
     const[ variableAnnuler , setVariableAnnuler] = useState({idReservation:'', indexItineraire :'',indexTarifsReserve : ''});
 
-    function AnnulationReservationChambre(){
+    function AnnulationReservationChambre(e){
+        e.preventDefault();
         setLoad(true);
         const data = { _id: variableAnnuler.idReservation, indexItineraire: variableAnnuler.indexItineraire, indexTarifReserve: variableAnnuler.indexTarifsReserve };
-        callAPI('post', '/reservation/delete', data, setDetailReservation );
+        callAPI('post', '/reservation/delete', data, setDetailReservation1 );
     }
 
     function ShowModalAnnulation(isTrue,ObjectChambreAnnuler){
@@ -121,6 +122,34 @@ function ApplyReservation(props){
             window.location.href = '#conditions';
         }
      
+    }
+
+    function setDetailReservation1(res){
+            if(res.reservation == null){
+                setShowModalChambre(!showModalChambre);
+                setAlertError(res.message);
+                setReservation(res.reservation);
+                localStorage.setItem("access" , 0);
+                history.push("/");
+                setLoad(false);
+            }else{
+                setOpenLoad(false);
+                setLoad(false);
+                if(res.status == 200){
+                    setReservation(res.reservation); 
+                    setShowModalChambre(!showModalChambre);
+                    if(res.errors.length != 0){
+                        setAlertError(res.errors[0].message);
+                    }
+                   
+                }else{
+                    console.log(res.errors[0].message);
+                    setAlertError(res.errors[0].message);
+                    setShowModalChambre(!showModalChambre)
+                }
+                setShowModalChambre(!showModalChambre);
+            }
+            history.push('#redirect');
     }
 
     function setDetailReservation(res){
