@@ -64,6 +64,9 @@ class Scroll extends React.Component{
             resultApplyReservation: null,
             errFiltre: null,
             guests: {nbEnfant: 0, nbAdulte: 1},
+
+            traduction:false,
+
             dateSejour: {debut: "", fin: ""},
             listTypeChambre: [],
             reservation: [],
@@ -333,9 +336,11 @@ class Scroll extends React.Component{
         temp.showFiltre = open;
         this.setState(temp);
     }
+ 
     
     render(){
        
+        
         return(
             <div>
                 <div style={{filter: "blur(" + (this.state.openLoad ? "2" : "0") + "px)"}}>
@@ -348,7 +353,7 @@ class Scroll extends React.Component{
                                 </Item>
                             </Grid>
                             <Grid className={styles.tarifChambre} item xs={6}>
-                                <DChambre context = {this} />
+                                <DChambre context={this} />
                             </Grid>
                             <Grid item xs={3}>
                                 <Item>
