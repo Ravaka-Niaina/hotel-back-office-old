@@ -6,8 +6,23 @@ import Modal from '@mui/material/Modal';
 import { useState } from 'react';
 
 import callAPI from '../../../utility';
-import styles from '../chambre/InsertTypeChambre/Photo/PreviewPhotoChambre.module.css';
+import styles from './Galerie.module.css';
 import {FileInput} from '../chambre/utilityTypeChambre.js';
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '800px',
+    height: '100%',
+    overflow: 'scroll',
+    overflowX: 'hidden',
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 
 const concat = (firstArray, secondArray) => {
     let tmpFirst = JSON.parse(JSON.stringify(firstArray));
@@ -40,34 +55,27 @@ const removePhoto = (event, preview, setPreview, photo, setPhoto, indicePhoto) =
     }
 };
 
-const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-  };
-
-const Galerie = ({showGalerie, setShowGalerie}) => {
+const Galerie = ({showGalerie, setShowGalerie, photoSortie, setPhotoSortie, nbPhotoBeforeSortie, previewSortie, setPreviewSortie}) => {
     const [photo, setPhoto] = useState([]);
     const [preview, setPreview] = useState([]);
     const [areImagesLoading, setAreImagesLoading] = useState(false);
     const [nbImage, setNbImage] = useState(0);
+    const [selectImage, setSelectImage] = useState(false);
+    const [imageSelected, setImageSelected] = useState([]);
 
     function displayResult(data){
         if(data.status === 200){
             let tmpPreview = [];
             let tmpPhoto = [];
+            let tmpImageSelected = [];
             for(let i = 0; i < data.photos.length; i++){
                 tmpPreview[i] =  process.env.REACT_APP_BACK_URL + "/" + data.photos[i]._id;
                 tmpPhoto[i] = data.photos[i]._id;
+                imageSelected[i] = false;
             }
             setPreview(tmpPreview);
             setPhoto(tmpPhoto);
+            setImageSelected(tmpImageSelected);
         }
     }
 
@@ -117,36 +125,85 @@ const Galerie = ({showGalerie, setShowGalerie}) => {
         }
     }
 
-    let list = [];
-    for(let i = 0; i < preview.length; i++){
-      list.push(
-        <div className={styles.conteneurPhoto}>
-          <div className={styles.close}><button onClick={(e) => removePhoto(e, preview, setPreview, photo, setPhoto, i)}><span>X</span></button></div>
-          <img className={styles.photo} src={preview[i]} />
-        </div>
-      );
+    function closeGalerie(){
+        setShowGalerie(false);
+        setImageSelected(new Array(imageSelected.length).fill(false));
     }
-    if(list.length === 0){
-      list.push(
-        <div>Aucune photo</div>
-      );
+
+    function choosePhotos(e){
+        e.preventDefault();
+        nbPhotoBeforeSortie.value = photoSortie.length;
+        let photosToTake = [];
+        let previewToTake = [];
+        for(let i = 0; i < imageSelected.length; i++){
+            if(imageSelected[i]){
+                photosToTake.push(photo[i]);
+                previewToTake.push(process.env.REACT_APP_BACK_URL + "/" + photo[i]);
+            }
+        }
+        setPhotoSortie(photoSortie.concat(photosToTake));
+        setPreviewSortie(previewSortie.concat(previewToTake));
+        closeGalerie();
     }
+
+    function switchSelectImage(e){
+        e.preventDefault();
+        if(selectImage){
+            setImageSelected(new Array(imageSelected.length).fill(false))
+        }
+        setSelectImage(!selectImage);
+    }
+    
+    function changeImageSelected(i){
+        let tmp = JSON.parse(JSON.stringify(imageSelected));
+        if(selectImage){
+            tmp[i] = !tmp[i];
+        }
+        setImageSelected(tmp);
+    }
+    
 
     return(
         <Modal
             open={showGalerie}
-            onClose={(e) => setShowGalerie(false)}
+            onClose={closeGalerie}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
             <Box sx={style}>
-                {list}
+                {preview.map((imgSrc, i) => {
+                    return(
+                        <div 
+                            className={selectImage 
+                                ? imageSelected[i] 
+                                    ? styles.conteneurPhoto + " " + styles.conteneurPhoto1 + " " + styles.photoSelected
+                                    : styles.conteneurPhoto + " " + styles.conteneurPhoto1 
+                                : styles.conteneurPhoto + " " + styles.conteneurPhoto1}
+                            onClick={() => changeImageSelected(i)}>
+                                <div className={styles.close}><button onClick={(e) => removePhoto(e, preview, setPreview, photo, setPhoto, i)}><span>X</span></button></div>
+                                <img className={styles.photo} src={imgSrc} />
+                        </div>
+                    )
+                })}
+                {preview.length === 0 ? <div>Aucune photo</div> : null}
                 <div>
                     <FileInput
                         id='InputFile'
                         style={{marginTop: '5px'}}
                         value=""
                         handlePhotoChange={handlePhotoChange} />
+                    <Button  
+                          variant="contained" 
+                          type='submit' 
+                          id='btn1'
+                          onClick={choosePhotos}
+                          style={{backgroundColor:'#2ac4ea' }}>Selectionner image</Button>
+                    <Button  
+                          variant="contained" 
+                          type='submit' 
+                          id='btn1'
+                          onClick={switchSelectImage}
+                          style={{backgroundColor:'#2ac4ea' }}>Choisir images</Button>
                 </div>
             </Box>
         </Modal>

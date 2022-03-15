@@ -975,7 +975,6 @@ export default function recherche_() {
   // const [titre, setTitre] = useState(false);
   let titre = "";
   isInsert ? titre = "Ajout nouvelle promotion" : titre = "Modifier promotion"
-  // console.log("TRLALALA"+ JSON.stringify(props));
   return(
       <ResponsiveDrawer 
           title = {titre}

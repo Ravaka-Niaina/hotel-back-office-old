@@ -479,7 +479,6 @@ export default function global_() {
     // const [titre, setTitre] = useState(false);
     let titre = "";
     isInsert ? titre = "Ajout politique d'annulation " : titre = "Modifier politique d'annulation"
-    // console.log("TRLALALA"+ JSON.stringify(props));
     return(
         <ResponsiveDrawer 
             title = {titre}
