@@ -4,7 +4,8 @@ import {session} from "./components/common/utilitySession.js";
 export default function callAPI(method, url, data, callback){
     let headers = {
         idsession: session.getInstance().getId(),
-        ispartner: session.getInstance().getIsPartner()
+        ispartner: session.getInstance().getIsPartner(),
+        //"Content-Type": "multipart/form-data"
     };
     const session_temp = localStorage.getItem("session_temp");
     if(session_temp !== null){

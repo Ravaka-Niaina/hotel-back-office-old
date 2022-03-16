@@ -6,6 +6,7 @@ import Modal from '@mui/material/Modal';
 import { useState } from 'react';
 
 import callAPI from '../../../utility';
+import {uploadImage} from '../../common/requestImage.js';
 import styles from './Galerie.module.css';
 import {FileInput} from '../chambre/utilityTypeChambre.js';
 
@@ -86,7 +87,7 @@ const Galerie = ({showGalerie, setShowGalerie, photoSortie, setPhotoSortie, nbPh
     function savePhotoToBack(photo){
         let done = 0;
         for(let i = 0; i < photo.length; i++){
-            callAPI('post', '/galerie/add', {photo: photo[i]}, (data) => {
+            uploadImage('post', '/galerie/add', {file: photo[i]}, (data) => {
                 done++;
                 if(done === photo.length){
                     setAreImagesLoading(false);
