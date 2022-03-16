@@ -267,7 +267,7 @@ console.log("TRLALALA"+ JSON.stringify(props));
               option.dropdown === false ?
               // <Link to={option.lien[0]["link"]} className="nav-link">
                 <ListItem button key={option.text} 
-                 style={{ backgroundColor: window.location.href.split(url)[1] === option.lien[0].link ? "dodgerBlue" : null }}   
+                 style={{ backgroundColor: window.location.href.split(url)[1] === option.lien[0].link ? "lightGreen" : null }}   
                 >
                   <ListItemIcon >
                     <option.icon />
@@ -308,7 +308,7 @@ console.log("TRLALALA"+ JSON.stringify(props));
                           return(
                           <ListItemButton 
                             sx={{ pl: 4 }} 
-                            style={{ backgroundColor: window.location.href.split(url)[1] === optionlist[currentIndex].lien[ind].link ? "dodgerBlue" : null }}
+                            style={{ backgroundColor: window.location.href.split(url)[1] === optionlist[currentIndex].lien[ind].link ? "lightGreen" : null }}
                           >
                             <ListItemIcon>
                               <StarBorder />
