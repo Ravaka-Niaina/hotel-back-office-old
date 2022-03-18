@@ -3,13 +3,10 @@ import { base64ToBlob } from 'base64-blob';
 
 import {session} from "./utilitySession.js";
 
-export function uploadImage(method, url, data, callback){
+export function uploadImage({method, url, data, callback, setProgress, errorCallback}){
     let formData = new FormData();
     base64ToBlob(data.file).then((blob) => {
         formData.append("image", blob);
-        // for (var pair of formData.entries()) {
-        //     console.log(pair[0]+ ', ' + pair[1]); 
-        // }
         
         let headers = {
             idsession: session.getInstance().getId(),
@@ -30,12 +27,13 @@ export function uploadImage(method, url, data, callback){
             headers: headers,
             onUploadProgress: progressEvent => {
                 let percentCompleted = Math.floor((progressEvent.loaded * 100) / progressEvent.total);
-                console.log("completed = " + percentCompleted + "%")
+                if(setProgress){
+                    setProgress(percentCompleted);
+                }
             }
         })
-        .then(res => {                                           
-            callback(res.data, res.headers)})
-        .catch(err =>{console.log(err); console.log("erreur");} );
+        .then(res => {callback()})
+        .catch(err =>{ console.log(err); errorCallback(err) });
     });
     
 }

@@ -3,7 +3,6 @@ import {useEffect} from "react";
 
 import SkeletonPhotoChambre from './SkeletonPhotoChambre.js';
 import PreviewPhotoChambre from './PreviewPhotoChambre.js';
-import {FileInput} from '../../utilityTypeChambre.js';
 
 import callAPI from '../../../../../utility';
 import { Button } from '@mui/material';

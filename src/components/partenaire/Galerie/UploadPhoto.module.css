@@ -1,0 +1,66 @@
+.close{
+    position: relative;
+    top: -25px;
+    right: -25px;
+    z-index: 3;
+    height: fit-content;
+}
+
+.close > button{
+    width: 40px;
+    height: 40px;
+    border-color: white;
+    float: right;
+    opacity: 0.4;
+}
+
+.upload > div{
+    height: fit-content;
+    padding: 10px 10px;
+}
+.upload > div > div > div{
+    overflow: auto;
+}
+.upload > div > div > p{
+    margin-top: 10px;
+}
+.upload > div > div > div > h3{
+    display: inline;
+    position: relative;
+    top: 3px;
+}
+.upload > div > div > div > div{
+    display: inline;
+    float: right;
+}
+
+.upload > div:nth-child(2){
+    margin-top: 20px;
+}
+
+.listPhoto{
+    margin-bottom: 10px;
+}
+.listPhoto > div:first-child{
+    width: 150px;
+    height: 150px;
+    background: no-repeat center center fixed;
+    background-size: cover;
+    float: left;
+}
+.listPhoto > div:nth-child(2){
+    position: relative;
+    top: 38px;
+    left: -225px;
+    width: 300px;
+}
+.listPhoto > div:nth-child(2) > div{
+    color: red;
+    height: 26px;
+}
+.listPhoto > div:last-child{
+    display: inline;
+    position: relative;
+    top: 58px;
+    left: 280px;
+}
