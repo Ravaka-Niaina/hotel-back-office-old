@@ -350,7 +350,7 @@ function InsertTypeCHambre(){
                       photo={photo} setPhoto={setPhoto} preview={preview} setPreview={setPreview}
                       areImagesLoading={areImagesLoading} setAreImagesLoading={setAreImagesLoading}
                       showGalerie={showGalerie} setShowGalerie={setShowGalerie} switchShowGalerie={switchShowGalerie}
-                      nbPhotoBefore={nbPhotoBefore} />
+                      nbPhotoBefore={nbPhotoBefore} isInsert={isInsert} />
 
                     <Galerie showGalerie={showGalerie} setShowGalerie={setShowGalerie} 
                       photoSortie={photo} setPhotoSortie={setPhoto} nbPhotoBeforeSortie={nbPhotoBefore}

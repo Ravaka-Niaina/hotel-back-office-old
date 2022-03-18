@@ -19,7 +19,7 @@ export default function PhotoChambre({state, setState, noImage,
     photo, setPhoto, preview, setPreview,
     areImagesLoading, setAreImagesLoading,
     showGalerie, setShowGalerie, switchShowGalerie,
-    nbPhotoBefore}){
+    nbPhotoBefore, isInsert}){
 
     const [nbImage, setNbImage] = useState(1);
 
@@ -84,7 +84,7 @@ export default function PhotoChambre({state, setState, noImage,
             ? <SkeletonPhotoChambre nbImage={nbImage} setNbImage={setNbImage} />
             : <div className="row">
                 <PreviewPhotoChambre preview={preview} setPreview={setPreview} noImage={noImage} photo={photo} setPhoto={setPhoto}
-                    state={state} />
+                    state={state} isInsert={isInsert} />
             </div>}
             <div className="row">
                 <Button  
