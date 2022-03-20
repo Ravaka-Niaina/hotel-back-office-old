@@ -95,7 +95,8 @@ function InsertPromotion() {
       debutReserv: null,
       finReserv: null,
       planTarifaire: null,
-      typeChambre: null
+      typeChambre: null,
+      name: null
     },
     nom: '',
     planTarifaire: [],
@@ -116,6 +117,7 @@ function InsertPromotion() {
     dernierJour: '',
     isLeadHour: true,
     lead: { min: '', max: '' },
+    name: '',
     isRemiseEuro: true,
     remise: '',
   })
@@ -507,6 +509,12 @@ function InsertPromotion() {
     }
     setState(current);
   }
+
+    function handleInputChange2( e, name1, name2){
+    let current = JSON.parse(JSON.stringify(state));
+    current[name1][name2] = e.target.value;
+    setState(current);
+    }
 
   return (
     <>
@@ -918,16 +926,33 @@ function InsertPromotion() {
         label="Nom"
         variant="outlined"
         className="form-control" 
-        style={{width:"400px"}}
+        style={{width:"400px",marginTop:"15px"}}
         size="small"
         type="text" 
         name="nom" 
         onChange={(e) => handleInputChange(e, "nom")} 
         value={state.nom}
-        style={{marginTop:"15px"}}
         error={state.error.nom === null ? false : true}
         helperText={state.error.nom === null ? null : state.error.nom}
-      /> 
+      />
+
+      <TextField 
+        id="outlined-basic" 
+        label="Name"
+        variant="outlined"
+        className="form-control" 
+        style={{width:"400px",marginTop:"15px"}}
+        size="small"
+        type="text" 
+        name="name" 
+        onChange={(e) => handleInputChange(e, "name")} 
+        value={state.name}
+        error={state.error.name === null ? false : true}
+        helperText={state.error.name === null ? null : state.error.name}
+      />
+
+
+
    </div><br/>
    <div>
     <div class="bouton-aligne">
