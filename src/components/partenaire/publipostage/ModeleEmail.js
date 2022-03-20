@@ -2,17 +2,39 @@
 import { visuallyHidden } from '@mui/utils';
 // import  Navbar  from "../../partenaire/Navbar/Navbar.js";
 import  ResponsiveDrawer  from "../Navbar/responsive-drawer.js";
+import React, { useState } from 'react';
+import { Editor } from "react-draft-wysiwyg";
+import { EditorState ,convertFromHTML} from 'draft-js';
 
-
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { ContentState, convertToRaw } from 'draft-js';
+import './ModeleEmail.css';
+import draftToHtml from 'draftjs-to-html';
 function ModeleEmail(props){
-   
+    var overview = "<b>I'm bg</b>";
 
+    const contentDataState = ContentState.createFromBlockArray(convertFromHTML(overview));
+    const editorDataState = EditorState.createWithContent(contentDataState);
+    const [editorState, setEditorState] = useState(editorDataState);
+
+    const onEditorStateChange = (editorState) => {
+      setEditorState(editorState)
+    }
     
     return(
         
         <>
           
+
           <div class="container" style={{fontFamily:'Roboto,RobotoDraft,Helvetica,Arial,sans-serif',width:800,margin:'0 auto',padding:'0 auto',marginTop:80}}>
+                
+                    <Editor
+                                editorState={editorState}
+                                wrapperClassName="wrapper-class"
+                                editorClassName="editor-class"
+                                toolbarClassName="toolbar-class"
+                                onEditorStateChange={onEditorStateChange}
+                    />
                 <div class='itineraire' >  
                         
                         <div class='header'  style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}} >
@@ -77,6 +99,7 @@ function ModeleEmail(props){
                         <p><span style={{fontSize:10}}>Pour toute question concernant votre réservation, veuillez appeler le département de réservation de "+ hotel.nom+" sur le [telephone de l'hotel] ou envoyer un email au <a href='"+hotel.email+"' target='_blank'>[email]</a><br/><br/></span>Salutations,<br/>[nom de l'hotel]<br/><br/></p>
                       </div>
                 </div>
+         
           </div>
         </>
       
