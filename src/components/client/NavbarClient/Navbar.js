@@ -19,13 +19,8 @@ import axios from "axios";
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import {session} from "../../common/utilitySession.js";
-import { useEffect } from "react";
-
 import { useState } from 'react';
-
 import { useTranslation } from "react-i18next";
-
-import ButtonLoading from "./buttonLoading.js";
 
 function Navbar(props) {
   const [email, setEmail] = React.useState("");

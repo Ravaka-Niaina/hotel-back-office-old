@@ -186,7 +186,6 @@ class Scroll extends React.Component{
 
     componentDidMount(){
          localStorage.setItem('access', 0);
-        //callAPI('get', '/TCTarif/all', {}, this.setResult);
     }
 
     getConvert(number , value){
@@ -201,6 +200,9 @@ class Scroll extends React.Component{
     getDateAndConvert(dateDebut , dateFin){
         dateDebut = moment(dateDebut).format("YYYY/MM/DD");
         dateFin = moment(dateFin).format("YYYY/MM/DD");
+        if(dateFin == "Invalid date"){
+            dateFin = "";
+        }
         let current = JSON.parse(JSON.stringify(this.state));
         current.dateSejour.debut = dateDebut; 
         current.dateSejour.fin = dateFin;
