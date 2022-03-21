@@ -164,8 +164,10 @@ const DateIndicator = ({
     } else {
       price = '€ ' + i.price
       notValid = notValid + ' date-icon'
-      if (getDate(fin) === getDate(i.date) || getDate(debut) === getDate(i.date)) {
+      if (getDate(fin) === getDate(i.date)) {
         price = '';
+      }
+      if (getDate(fin) === getDate(i.date) || getDate(debut) === getDate(i.date)) {
         notValid = notValid + ' active';
       }
     }
