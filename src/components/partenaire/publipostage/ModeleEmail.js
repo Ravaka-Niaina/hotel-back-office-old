@@ -11,23 +11,65 @@ import { ContentState, convertToRaw } from 'draft-js';
 import './ModeleEmail.css';
 import draftToHtml from 'draftjs-to-html';
 function ModeleEmail(props){
-    var overview = "<b>I'm bg</b>";
-    var html="";
-    var header="";
-   header += "				<div  style='margin-left: 40%;'>";
-    header += "					<h3>Confirmation de l'itineraire <\/h3>";
-    header += "					<p>Confirmation No. 12934802137<\/p>";
-    header += "				<\/div>";
-   
-    html+=header;    
-    const contentDataState = ContentState.createFromBlockArray(convertFromHTML(html));
-    const editorDataState = EditorState.createWithContent(contentDataState);
-    const [editorState, setEditorState] = useState(editorDataState);
-
-    const onEditorStateChange = (editorState) => {
-      setEditorState(editorState)
-    }
     
+    let confiramtionHeader=getHtmlConfirmation();
+    let hotelsInfos=getHtmlHotelInfos();
+    let htmlFooter=getHtmlFooter();
+
+    const contentDataStateConfirmation = ContentState.createFromBlockArray(convertFromHTML(confiramtionHeader));
+    const editorDataStateConfirmation = EditorState.createWithContent(contentDataStateConfirmation);
+    const [editorStateConfirmation, setEditorStateConfirmation] = useState(editorDataStateConfirmation);
+
+    const contentDataStatehotelsInfos = ContentState.createFromBlockArray(convertFromHTML(hotelsInfos));
+    const editorDataStatehotelsInfos = EditorState.createWithContent(contentDataStatehotelsInfos);
+    const [editorStatehotelsInfos, setEditorStatehotelsInfos] = useState(editorDataStatehotelsInfos);
+
+
+    const contentDataStateFooter = ContentState.createFromBlockArray(convertFromHTML(htmlFooter));
+    const editorDataStateFooter = EditorState.createWithContent(contentDataStateFooter);
+    const [editorStateFooter, setEditorStateFooter] = useState(editorDataStateFooter);
+
+    const onEditorStateConfirmationChange = (editorState) => {
+      setEditorStateConfirmation(editorState)
+    }
+    const onEditorStateInfosChange = (editorState) => {
+        setEditorStatehotelsInfos(editorState)
+      }
+      const onEditorStateFooterChange = (editorState) => {
+        setEditorStateFooter(editorState)
+      }
+    function getHtmlConfirmation() {
+        let  html="";
+        var header="";
+        header += "				<div  style='margin-left: 40%;'>";
+        header += "					<h3>Confirmation de l'itineraire <\/h3>";
+        header += "					<p>Confirmation No. 12934802137<\/p>";
+        header += "				<\/div>";
+    
+        html+=header;  
+        return html  
+    }
+    function getHtmlHotelInfos() {
+        let  html="";
+        var hotelInfos="";
+        hotelInfos += "<div class=\"hotels_infos\">";
+        hotelInfos += "<p>";
+        hotelInfos += "<strong>Cher(e)<\/strong> [nom] [prenom],";
+        hotelInfos += "<\/p>";
+        hotelInfos += "<p>Nous vous remercions d'avoir choisi [nom_hotel] pour votre réservation. Nous vous confirmons que nous avons bien reçu votre réservation.<\/p>		";
+        hotelInfos += "<\/div>";
+        html+=hotelInfos; 
+        return html  
+    }
+    function getHtmlFooter() {
+        let  html="";
+        var salutaions="";
+        salutaions += "<div style='font-family:arial,helvetica,sans-serif;margin-top: 1rem;margin-left:1rem;font-size:12px;color:#333333;width:588.008px'>";
+        salutaions += "				<p><span style='font-size:10pt'>Pour toute question concernant votre réservation, veuillez appeler le département de réservation de [nom_hotel] sur le [numero_hotel] ou envoyer un email au <a href='[email_hotel]' target='_blank'>[email_hotel]<\/a><br><br><\/span>Salutations,<br>[nom_hotel]<br><br><\/p>";
+        salutaions += "<\/div>";
+        html+=salutaions;
+        return html  
+    }
     return(
         
         <>
@@ -53,11 +95,11 @@ function ModeleEmail(props){
                            
                             <div style={{marginTop:'-28%',marginLeft:'15%'}}>
                                 <Editor
-                                    editorState={editorState}
+                                    editorState={editorStateConfirmation}
                                     wrapperClassName="wrapper-class-confirmation"
                                     editorClassName="editor-class-confirmation"
                                     toolbarClassName="toolbar-class-confirmation"
-                                    onEditorStateChange={onEditorStateChange}
+                                    onEditorStateChange={onEditorStateConfirmationChange}
                                 />
                                 
                             </div>
@@ -65,10 +107,17 @@ function ModeleEmail(props){
                         </div>
                        
                       <div class="hotels_infos" style={{marginTop:20}}>
-                        <p>
+                        {/* <p>
                          <strong>Cher(e)</strong> nom prenom 
                          </p>
-                        <p>Nous vous remercions d'avoir choisi [Nom de l'hotel] pour votre réservation. Nous vous confirmons que nous avons bien reçu votre réservation.</p>
+                        <p>Nous vous remercions d'avoir choisi [Nom de l'hotel] pour votre réservation. Nous vous confirmons que nous avons bien reçu votre réservation.</p> */}
+                        <Editor
+                                    editorState={editorStatehotelsInfos}
+                                    wrapperClassName="wrapper-class"
+                                    editorClassName="editor-class"
+                                    toolbarClassName="toolbar-class"
+                                    onEditorStateChange={onEditorStateInfosChange}
+                                />
                       </div>
                       <hr style={{margin:'0.5rem'}}></hr>
                       <div class='infos_contact' style={{fontFamily:'arial,helvetica,sans-serif',fontSize:11,color:'#666666',backgroundColor: '#f3f0e9',paddingTop: '1rem',paddingBottom: '1rem'}}>
@@ -113,8 +162,17 @@ function ModeleEmail(props){
                             </table>
                         </div>
                       </div>
+                      
                       <div style={{fontFamily:'arial,helvetica,sans-serif',marginTop: '1rem',marginLeft:'1rem',fontSize:12,color:'#333333',width:588.008}}>
-                        <p><span style={{fontSize:10}}>Pour toute question concernant votre réservation, veuillez appeler le département de réservation de "+ hotel.nom+" sur le [telephone de l'hotel] ou envoyer un email au <a href='"+hotel.email+"' target='_blank'>[email]</a><br/><br/></span>Salutations,<br/>[nom de l'hotel]<br/><br/></p>
+                        {/* <p><span style={{fontSize:10}}>Pour toute question concernant votre réservation, veuillez appeler le département de réservation de "+ hotel.nom+" sur le [telephone de l'hotel] ou envoyer un email au <a href='"+hotel.email+"' target='_blank'>[email]</a><br/><br/></span>Salutations,<br/>[nom de l'hotel]<br/><br/></p> */}
+
+                        <Editor
+                                    editorState={editorStateFooter}
+                                    wrapperClassName="wrapper-class"
+                                    editorClassName="editor-class"
+                                    toolbarClassName="toolbar-class"
+                                    onEditorStateChange={onEditorStateFooterChange}
+                                />
                       </div>
                 </div>
          
