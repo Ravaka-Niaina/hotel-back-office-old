@@ -23,7 +23,8 @@ import './confirmation_reservation.css';
 import PaiementField from './applyReservation/PaiementFieldModif';
 import { is } from 'date-fns/locale';
 import ModalAnnulationChambre from '../common/ModalAnnulationChambre.js';
-
+import ConfirmationModif from '../common/ConfirmationModif.js'; 
+import NavBarStepper from "./NavbarClient/NavBar&Stepper.js";
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -78,8 +79,24 @@ function ApplyReservationModif(props){
     const[ variableAnnuler , setVariableAnnuler] = useState({idReservation:'', indexItineraire :'',indexTarifsReserve : ''});
     const [indiceI , setIndice] = useState(null);
 
+    const [showConfirmationModif , setConfModif] = useState(false);
+    const[isVariableModif , setisVariableModif] = useState(false);
+    const[ReservationNotUpdate , setReservationNotUpdate] = useState(null);
+
+    function showConfModif(istrue){
+        if(istrue){
+            localStorage.setItem('access', 1); 
+            history.push("/reservation/" + _id + "/voucher/"+numeroItineraire);
+        }else{
+            return setConfModif(!showConfirmationModif);
+        }
+    }
+
+    function setisVariableUpdate(isTrue){
+        setisVariableModif(isTrue);
+    }
+
     function AnnulationReservationChambre(){
-        console.log(variableAnnuler);
         setLoad(true);
         const data = { _id: variableAnnuler.idReservation, indexItineraire: variableAnnuler.indexItineraire, indexTarifReserve: variableAnnuler.indexTarifsReserve };
         callAPI('post', '/reservation/delete', data, setDetailReservation1 );
@@ -112,7 +129,6 @@ function ApplyReservationModif(props){
             })
             setVariableAnnuler(current);
         }
-
     }
 
     function ModifierReservation(){
@@ -164,11 +180,10 @@ function ApplyReservationModif(props){
         if(res.indiceI != null){
             setIndice(res.indiceI);
         }
-        console.log(indiceI);
-        console.log(res);
         setOpenLoad(false);
         if(res.status == 200){
             setReservation(res.reservation); 
+            setReservationNotUpdate(res.reservation);
         }else{
             console.log(res.errors[0].message);
             setAlertError(res.errors[0].message);
@@ -235,8 +250,14 @@ function ApplyReservationModif(props){
 
     return (
         <>
-            {(reservation !== null) ? 
+            {
+                (reservation !== null) ? 
+            <>
+                <NavBarStepper access = {localStorage.access} id = {_id} indice = {1} numeroItineraire = {numeroItineraire} isConnected={true}
+                    setConfModif={setConfModif} showConfModif={showConfModif} isVariableModif={isVariableModif}/><br/>
                 <div id="content" style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
+                     
+                    {/* <NavBar /> */}
                     {/* <div style={{display:'flex',flexDirection:'row',flexWrap:'no-wrap',justifyContent:'space-between'}}>
                             <button  style={{minWidth:250,heigth:80}}  class="btn button_btn button_pink button_sm" variant="contained" onClick={(e) => ignoreReservation()}>IGNORER LES MODIFICATIONS</button>
                         </div> */}
@@ -309,10 +330,11 @@ function ApplyReservationModif(props){
                             setOpenLoad={setOpenLoad} 
                             ShowModalAnnulation={ShowModalAnnulation} 
                             indiceI ={indiceI} variableAnnuler={variableAnnuler}
+                            setisVariableUpdate={setisVariableUpdate}
                             />
                         <div class="infos_contact">
                             <h2 class="infos_heading">Paiement</h2>
-                            <PaiementField reservation={reservation} setReservation = {setReservation}/>
+                            <PaiementField reservation={reservation} setReservation = {setReservation} setisVariableUpdate={setisVariableUpdate}/>
                             <Total toPay={reservation.toPay} />
                             
                         </div>
@@ -339,24 +361,29 @@ function ApplyReservationModif(props){
                         
                     </Box>
                 </div>
+                </>
                 : <Stack sx={{ width: '100%' }} spacing={2}>
-                    <Icon><img src="warning.svg" style={{width:'50%'}} ></img></Icon>
-                    <Alert severity="error"><li>{alertError} </li> {alertError ?
-                        <>
-                            { 
-                                alertError !== "Cette réservation n'existe pas ou est déjà annulée" ? 
-                                 <><br/><li><span> Cette réservation n'existe pas ou est déjà annulée</span> </li> </>
-                                : ""
-                            }
-                        </> : "" }
-                    </Alert>
-                    {alertError ?
-                         <div style={{display:'flex',flexDirection:'row',flexWrap:'no-wrap',justifyContent:'space-between'}}>
+                { alertError ? 
+                    <>
+                        <Alert severity="error"><li>{alertError} </li>
+                        {
+                        alertError ?
+                            <>
+                                { 
+                                    alertError !== "Cette réservation n'existe pas ou est déjà annulée" ? 
+                                    <><br/><li><span> Cette réservation n'existe pas ou est déjà annulée</span> </li> </>
+                                    : ""
+                                }
+                            </> : "" }
+                        </Alert>
+                        <div style={{display:'flex',flexDirection:'row',flexWrap:'no-wrap',justifyContent:'space-between'}}>
                             <button  style={{minWidth:250,heigth:80}}  class="btn button_btn button_pink button_sm" variant="contained"
                                 onClick={(e) => redirect()}>Nouvelle Réservation</button>
-                        </div> : null }
-                    
+                        </div>
+                    </>
+                : null }
                 </Stack>
+           
             }
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
@@ -364,8 +391,9 @@ function ApplyReservationModif(props){
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-                  
             <ModalAnnulationChambre ShowModalAnnulation={ShowModalAnnulation} showModal={showModalChambre} AnnulationReservationChambre = {AnnulationReservationChambre}  load ={load}  />  
+                  
+            <ConfirmationModif showConfirmationModif={showConfirmationModif}  showConfModif={showConfModif} load ={load}  ModifierReservation={ModifierReservation}/>  
         
         </>
     );

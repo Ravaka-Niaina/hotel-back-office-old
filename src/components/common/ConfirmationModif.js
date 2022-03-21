@@ -22,8 +22,8 @@ const style = {
 const annulerReservation = (props) => {
     return (
         <Modal
-            open={props.showModal}
-            onClose={(e) => props.ShowModalAnnulation(false, "")}
+            open={props.showConfirmationModif}
+            onClose={(e) => props.showConfModif(false)}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
@@ -32,9 +32,9 @@ const annulerReservation = (props) => {
                 <div>
                     <div><WarningIcon style={{color : "yellow"}} /></div>
                     {   
-                            props.load ? <strong>Annulation en cours ...</strong> :
+                            props.load ? <strong>en cours ...</strong> :
                             <>
-                                <strong>Voulez-vous vraiment annuler réservation  ?</strong>
+                                <strong>enregistrer votre modification ?</strong>
                                
                             </>
                     }
@@ -43,8 +43,8 @@ const annulerReservation = (props) => {
                         {   
                             props.load ? <ButtonLoad/> :
                              <div class="bouton-aligne">
-                                 <Button variant ="contained" sx={{marginRight: 5}} color="warning" onClick = {(e) => props.AnnulationReservationChambre(e)}>Oui</Button>
-                                 <Button variant ="contained" color="success" onClick = {(e) => props.ShowModalAnnulation(false,'')}>Non</Button>
+                                 <Button variant ="contained" sx={{marginRight: 5}} color="warning" onClick = {(e) =>props.ModifierReservation() }>Oui</Button>
+                                 <Button variant ="contained" color="success" onClick = {(e) => props.showConfModif(true)}>Non</Button>
                             </div>
                         }
                     </div>

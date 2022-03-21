@@ -25,7 +25,7 @@ function InfoItineraires(props){
                                 openLoad={props.openLoad}
                                 setOpenLoad={props.setOpenLoad}
                                 ShowModalAnnulation={props.ShowModalAnnulation}
-                                indiceI = {props.indiceI}/>
+                                indiceI = {props.indiceI} setisVariableUpdate={props.setisVariableUpdate}/>
                         </div>
                     );
                 }
