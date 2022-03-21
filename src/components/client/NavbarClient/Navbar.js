@@ -19,13 +19,8 @@ import axios from "axios";
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import {session} from "../../common/utilitySession.js";
-import { useEffect } from "react";
-
 import { useState } from 'react';
-
 import { useTranslation } from "react-i18next";
-
-import ButtonLoading from "./buttonLoading.js";
 
 function Navbar(props) {
   const [email, setEmail] = React.useState("");
@@ -49,33 +44,39 @@ function Navbar(props) {
   }
   
   const interpretResponse = (res) => {
-      console.log(res);
       setBtnLoad(false);
-      const data = res.data;
-      if(data.status === 200){
-          localStorage.setItem("user_session", res.headers.user_session);
-          session.getInstance().update(res.headers.user_session);
-          console.log(res.headers.user_session);
-          if(props.urlRedirect){
-              window.location.href = props.urlRedirect;
-          }else{
-              history.push('/front');
+      if(props.access){
+          if(props.access == "2"){
+                history.push("/reservation/"+props.id+"/apply");
           }
-      }else{
-          const setErrors = [
-              {field: "ambiguous", setter: setAmbiguousError},
-              {field: "email", setter: setErrorEmail},
-              {field: "mdp", setter: setErrorMdp}
-          ];
-          let keys = Object.keys(data.errors);
-          keys.map(field => {
-              for(let i = 0; i < setErrors.length; i++){
-                  if(setErrors[i].field === field){
-                      setErrors[i].setter(data.errors[field]);
-                  }
-              }
-          });
-      }
+        }else{
+            const data = res.data;
+            if(data.status === 200){
+                localStorage.setItem("user_session", res.headers.user_session);
+                session.getInstance().update(res.headers.user_session);
+                console.log(res.headers.user_session);
+                if(props.urlRedirect){
+                    window.location.href = props.urlRedirect;
+                }else{
+                    history.push('/front');
+                }
+            }else{
+                const setErrors = [
+                    {field: "ambiguous", setter: setAmbiguousError},
+                    {field: "email", setter: setErrorEmail},
+                    {field: "mdp", setter: setErrorMdp}
+                ];
+                let keys = Object.keys(data.errors);
+                keys.map(field => {
+                    for(let i = 0; i < setErrors.length; i++){
+                        if(setErrors[i].field === field){
+                            setErrors[i].setter(data.errors[field]);
+                        }
+                    }
+                });
+            }
+        }
+      
   };
 
   const login = (e) => {
@@ -130,9 +131,8 @@ function Navbar(props) {
             {({ TransitionProps }) => (
               <Fade {...TransitionProps} timeout={350}>
 
-<Paper 
+                <Paper 
                   elevation={1}
-                  
                   children={
                       <>
                         <div className='title11'>
@@ -178,7 +178,7 @@ function Navbar(props) {
                                   helperText={errorMdp === null ? null : errorMdp}
                               />
                           </Box>
-                          <Box>
+                        <Box>
                           <div id='buttons'>
                            <div class="login">
                            { btnLoad ? 
@@ -191,22 +191,21 @@ function Navbar(props) {
                             </Button>
                            }
                             <div class="mdp">
-                           <Link to={'/login/identify'} style={{textDecoration:'none'}}>
-                            <Button  id="mdp">
-                            <span style={{color:'black'}}>{t('Forgot your password')}</span>
-                            </Button>
-                            </Link>
+                                <Link to={'/login/identify'} style={{textDecoration:'none'}}>
+                                    <Button  id="mdp">
+                                    <span style={{color:'black'}}>{t('Forgot your password')}</span>
+                                    </Button>
+                                </Link>
                             </div>
-                           </div>
-                           <div class="register">
+                        </div>
+                        <div class="register">
                             <Button id="register" sx={{width: 200}} onClick={(e) => register(e)}>
                                 <span style={{color:'black'}}>{t('Register')}</span>
                             </Button>
-                           </div>
-                          </div>
-                          </Box>
-                            
-                      </>
+                        </div>
+                    </div>
+                </Box>
+             </>
                   } 
               />
               </Fade>
@@ -215,25 +214,23 @@ function Navbar(props) {
         </div>
       )}
     </PopupState>
-                        <Button size="small">EUR</Button>
-                        <IconButton
-                            size="large"
-                            aria-label="show more"
-                            aria-haspopup="true"
-                            color="inherit"
-                        >
-                            <Language/>
-                        </IconButton>
-
-                <select className="custom-select" style={{width: 200}} onChange={(e) =>{changeLanguageHandler(e);translation(e)}}>
-                    <option value="fr" >Francais</option>                            
-                    <option value="en" >English</option>
-                </select>
-
-                    </Box>
-                    </Toolbar>
-                </AppBar>
-            </Box>
+        <Button size="small">EUR</Button>
+            <IconButton
+                size="large"
+                aria-label="show more"
+                aria-haspopup="true"
+                color="inherit"
+            >
+                <Language/>
+            </IconButton>
+        <select className="custom-select" style={{width: 200}} onChange={changeLanguageHandler}>
+            <option value="fr" >Francais</option>                            
+            <option value="en" >English</option>
+        </select>
+        </Box>
+        </Toolbar>
+    </AppBar>
+</Box>
     );
   }
   

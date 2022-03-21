@@ -22,7 +22,7 @@ import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
 import PhotoChambre from './InsertTypeChambre/Photo/PhotoChambre.js';
 import VideoChambre from './InsertTypeChambre/Video/VideoChambre.js';
 import Equipement from './InsertTypeChambre/Equipement.js';
-import Galerie from './InsertTypeChambre/Photo/Galerie.js';
+import Galerie from '../Galerie/Galerie.js';
 
 function PlanTarifaire(props){
   let i = -1;
@@ -45,6 +45,8 @@ function PlanTarifaire(props){
   return list;
 }
 
+let isFirstRender = true;
+let nbPhotoBefore = {value: 0};
 function InsertTypeCHambre(){
   const noImage = '/no-image.jpg';
   let [state, setState] = useState(
@@ -101,7 +103,6 @@ function InsertTypeCHambre(){
   
   const setDetailsTypeChambre = (data) => {
     let currentState = {...state};
-
     if(data.status === 401){//Unauthorized
       history.push('/back/login');
     }else if(data.status === 403){
@@ -124,7 +125,7 @@ function InsertTypeCHambre(){
       }
       setPreview(tmpPreview);
     }
-
+    
     setPhoto(tmpPhoto);
     setState(currentState);
     setSkeleton(false);
@@ -132,13 +133,23 @@ function InsertTypeCHambre(){
   }
 
   useEffect(() => {
-    if(isInsert && hasARInsert){
-      callAPI('get', '/TCTarif/infoInsertTypeChambre', {}, setInfo);
-    }else if(hasARGet || hasARUpdate){
-      setAreImagesLoading(true);
-      callAPI("get", "/typeChambre/details/" + _id, {}, setDetailsTypeChambre);
+    if(isFirstRender){
+      isFirstRender = false;
+      if(isInsert && hasARInsert){
+        callAPI('get', '/TCTarif/infoInsertTypeChambre', {}, setInfo);
+      }else if(hasARGet || hasARUpdate){
+        setAreImagesLoading(true);
+        callAPI("get", "/typeChambre/details/" + _id, {}, setDetailsTypeChambre);
+      }
     }
-  }, [_id]);
+
+  });
+
+  useEffect(() => {
+    return () => {
+      isFirstRender = true;
+    }
+  }, []);
   
   const history = useHistory();
   if(isInsert && !hasARInsert){
@@ -243,7 +254,6 @@ function InsertTypeCHambre(){
     }
     toSend.planTarifaire = planTarifaire;
     toSend.photo = photo;
-    console.log(toSend);
     callAPI('post', '/typeChambre/update/', toSend, tryRedirect);
   }
 
@@ -375,9 +385,14 @@ function InsertTypeCHambre(){
                     </div>
                     <PhotoChambre state={state} setState={setState} noImage={noImage}
                       photo={photo} setPhoto={setPhoto} preview={preview} setPreview={setPreview}
-                      areImagesLoading={areImagesLoading} setAreImagesLoading={setAreImagesLoading} />
-                    <button onClick={switchShowGalerie}>Galerie photos</button>
-                    <Galerie showGalerie={showGalerie} setShowGalerie={setShowGalerie} />
+                      areImagesLoading={areImagesLoading} setAreImagesLoading={setAreImagesLoading}
+                      showGalerie={showGalerie} setShowGalerie={setShowGalerie} switchShowGalerie={switchShowGalerie}
+                      nbPhotoBefore={nbPhotoBefore} isInsert={isInsert} />
+
+                    <Galerie showGalerie={showGalerie} setShowGalerie={setShowGalerie} 
+                      photoSortie={photo} setPhotoSortie={setPhoto} nbPhotoBeforeSortie={nbPhotoBefore}
+                      previewSortie={preview} setPreviewSortie={setPreview} />
+                      
                     <VideoChambre state={state} setState={setState} />
 
                     <div style={{marginTop:'10px'}}>

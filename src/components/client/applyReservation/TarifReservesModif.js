@@ -74,7 +74,7 @@ function TarifReserves(props){
                         <InputContact isEditEnabled={props.isEditEnabled} reservateur={props.reservateur} 
                                 reservation ={props.reservation} setReservation = {props.setReservation} 
                                 indiceItineraire = {props.indexItineraire} 
-                                indiceTarifReserver = {i}/>
+                                indiceTarifReserver = {i} setisVariableUpdate={props.setisVariableUpdate}/>
 
                     </div>
                     

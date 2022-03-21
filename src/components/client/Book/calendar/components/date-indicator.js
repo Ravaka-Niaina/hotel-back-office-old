@@ -46,11 +46,10 @@ const DateIndicator = ({
 
     setSelectDate(new Date(day))
     let temp = {...context.state};
-    console.log(temp);
     let dateSejour = temp.dateSejour;
     if (isDebut) {
       dateSejour.debut = day
-      dateSejour.fin = day
+      dateSejour.fin = ""
       isDebut = false
       context.handleChange('listTypeChambre', [])
     } else {
@@ -64,18 +63,12 @@ const DateIndicator = ({
       )
       dateSejour.fin.setDate(dateSejour.fin.getDate() + 1)
       dateSejour.fin = utility.getDate(dateSejour.fin)
-    } else if (new Date(dateSejour.debut) > new Date(dateSejour.fin)) {
+    } else if (dateSejour.fin !== "" && new Date(dateSejour.debut) > new Date(dateSejour.fin)) {
       dateSejour.debut = dateSejour.fin
-      dateSejour.fin = new Date(dateSejour.fin)
-      dateSejour.fin.setTime(
-        dateSejour.fin.getTime() + dateSejour.fin.getTimezoneOffset() * 60 * 1000,
-      )
-      dateSejour.fin.setDate(dateSejour.fin.getDate() + 1)
-      dateSejour.fin = utility.getDate(dateSejour.fin)
+      dateSejour.fin = "";
       isDebut = false;
     }
 
-    console.log(temp);
     if(temp.itineraires.length === 1){
       if(temp.itineraires[0].dateSejour.debut === '' &&
         temp.itineraires[0].dateSejour.fin === '' ||
@@ -93,7 +86,9 @@ const DateIndicator = ({
     }
 
     context.setState(temp, () => {
-      applyFilter(undefined, true);
+      if(dateSejour.fin !== ""){
+        applyFilter(undefined, true);
+      }
     })
     context.haddleChangeDate([dateSejour.debut, dateSejour.fin]);
   }
@@ -171,6 +166,8 @@ const DateIndicator = ({
       notValid = notValid + ' date-icon'
       if (getDate(fin) === getDate(i.date)) {
         price = '';
+      }
+      if (getDate(fin) === getDate(i.date) || getDate(debut) === getDate(i.date)) {
         notValid = notValid + ' active';
       }
     }
