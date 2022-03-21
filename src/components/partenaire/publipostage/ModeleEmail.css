@@ -1,12 +1,16 @@
-.wrapper-class {
+.wrapper-class-confirmation {
    
     border: 1px solid #ccc;
+    height: 140px;
   }
-  .editor-class {
+  .editor-class-confirmation {
     background-color:lightgray;
     padding: 1rem;
     border: 1px solid #ccc;
+  
   }
-  .toolbar-class {
+  .toolbar-class-confirmation {
     border: 1px solid #ccc;
+    height: 150px;
+    
   }

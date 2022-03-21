@@ -12,8 +12,15 @@ import './ModeleEmail.css';
 import draftToHtml from 'draftjs-to-html';
 function ModeleEmail(props){
     var overview = "<b>I'm bg</b>";
-
-    const contentDataState = ContentState.createFromBlockArray(convertFromHTML(overview));
+    var html="";
+    var header="";
+   header += "				<div  style='margin-left: 40%;'>";
+    header += "					<h3>Confirmation de l'itineraire <\/h3>";
+    header += "					<p>Confirmation No. 12934802137<\/p>";
+    header += "				<\/div>";
+   
+    html+=header;    
+    const contentDataState = ContentState.createFromBlockArray(convertFromHTML(html));
     const editorDataState = EditorState.createWithContent(contentDataState);
     const [editorState, setEditorState] = useState(editorDataState);
 
@@ -26,26 +33,37 @@ function ModeleEmail(props){
         <>
           
 
-          <div class="container" style={{fontFamily:'Roboto,RobotoDraft,Helvetica,Arial,sans-serif',width:800,margin:'0 auto',padding:'0 auto',marginTop:80}}>
+          <div class="container" style={{fontFamily:'Roboto,RobotoDraft,Helvetica,Arial,sans-serif',width:800,margin:'0 auto',padding:'0 auto',marginTop:'20%'}}>
                 
-                    <Editor
-                                editorState={editorState}
-                                wrapperClassName="wrapper-class"
-                                editorClassName="editor-class"
-                                toolbarClassName="toolbar-class"
-                                onEditorStateChange={onEditorStateChange}
-                    />
+                    
                 <div class='itineraire' >  
                         
-                        <div class='header'  style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}} >
-                            <img style={{width:'35%'}} src='https://www.hotel-restaurant-colbert.com/wp-content/uploads/2012/06/Logo-Colbert1-Copier.jpg' alt='logo'/>
+                        {/* <div class='header'  style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}} >
+                            <img style={{width:'35%' }} src='https://www.hotel-restaurant-colbert.com/wp-content/uploads/2012/06/Logo-Colbert1-Copier.jpg' alt='logo'/>
+                           
                             <div  style={{marginLeft:'40%'}}>
                                 <h3>Confirmation de l'itineraire X</h3>
                                     <p>Confirmation No. 12934802137</p>
                                 
                             </div>
                                             
+                        </div> */}
+                        <div class='header'  style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}} >
+                            <img style={{width:'35%',height:'115%' }} src='https://www.hotel-restaurant-colbert.com/wp-content/uploads/2012/06/Logo-Colbert1-Copier.jpg' alt='logo'/>
+                           
+                            <div style={{marginTop:'-28%',marginLeft:'15%'}}>
+                                <Editor
+                                    editorState={editorState}
+                                    wrapperClassName="wrapper-class-confirmation"
+                                    editorClassName="editor-class-confirmation"
+                                    toolbarClassName="toolbar-class-confirmation"
+                                    onEditorStateChange={onEditorStateChange}
+                                />
+                                
+                            </div>
+                                            
                         </div>
+                       
                       <div class="hotels_infos" style={{marginTop:20}}>
                         <p>
                          <strong>Cher(e)</strong> nom prenom 
