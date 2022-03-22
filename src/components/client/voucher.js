@@ -157,7 +157,7 @@ function Voucher(props){
 
     return(
         <>
-        <NavBarStepper access = {localStorage.access} id = {_id} indice = {2}  numeroItineraire={"1"}/>
+        <NavBarStepper access = {localStorage.access} id = {_id} indice = {2}  numeroItineraire={"1"} isConnected={isConnected} />
         <div class="voucher_container">
             <div class="voucher_infos">
                 <div class="voucher_border voucher_bravo">

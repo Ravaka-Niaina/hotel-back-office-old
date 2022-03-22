@@ -307,12 +307,9 @@ function ApplyReservation(props){
         <>
             {(reservation !== null) ? 
                 <div id="content" style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
-                    {/* <NavBar access = {localStorage.access} id = {_id}/> */}
-                    <NavBarStepper access = {localStorage.access} id = {_id} indice = {1}/><br/>
+                    <NavBarStepper access = {localStorage.access} id = {_id} indice = {1} /><br/>
                     <Box sx={{ bgcolor: 'background.paper', maxWidth: 800, margin: "0 auto"
                     , padding: "15px 15px"}}>
-                        {/* <h1>Détails réservation</h1> */}
-                        {/* <button class="btn button_btn button_secondary button_sm" datatest="Button"><span>CONNECTER-VOUS POUR RÉSERVER RAPIDEMENT</span></button> */}
                         {alertSuccess != null ? 
                             <div id="success">
                                 <Stack sx={{ width: '100%' }} spacing={2}>

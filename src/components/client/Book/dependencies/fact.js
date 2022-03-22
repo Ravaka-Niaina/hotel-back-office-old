@@ -83,7 +83,7 @@ function Reservations(props){
             const u = i;
             const nbNuit = getDiffDays(new Date(tarif.dateSejour.debut), new Date(tarif.dateSejour.fin));
             // 
-            // console.log(tarif);
+            console.log(tarif);
             if(tarif.etat == 1 || tarif.etat == undefined){
                 return (
                         <Card className={styles.stay}>
@@ -105,9 +105,9 @@ function Reservations(props){
                                             />}
                                             placement="left-start"
                                         >
-                                            <span><PolicyIcon/>{tarif.politiqueAnnulAtrb.nom}</span>
+                                            {/* <span><PolicyIcon/>{tarif.politiqueAnnulAtrb.nom}</span> */}
+                                            <span><PolicyIcon/>{tarif.politiqueAnnulAtrb[0].nom}</span>
                                         </HtmlTooltip>
-                                        <span>{tarif.politiqueAnnulAtrb[0].nom}</span>
                                     </> 
                                 : null }
                                 <span></span>
