@@ -4,10 +4,11 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Menu, MenuItem, IconButton, ListItemIcon, ListItemText } from '@mui/material';
 // component
 import Iconify from '../../../comp/Iconify';
+import ValidationSuppression from '../../../components/common/List/ValidationSuppression';
 
 // ----------------------------------------------------------------------
 
-export default function UserMoreMenu() {
+export default function UserMoreMenu(props) {
   const ref = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -41,6 +42,15 @@ export default function UserMoreMenu() {
           <ListItemText primary="Edit" primaryTypographyProps={{ variant: 'body2' }} />
         </MenuItem>
       </Menu>
+      {/* <ValidationSuppression 
+            openModalDelete={props.openModalDelete}
+            setOpenModalDelete={props.setOpenModalDelete}
+            toDelete={props.toDelete}
+            tableName={props.tableName}
+            rechercher={props.rechercher}
+            setCurrentNumPage={props.setCurrentNumPage}
+            accessRightToDelte={props.accessRightToDelete}
+          /> */}
     </>
   );
 }

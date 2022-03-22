@@ -167,7 +167,7 @@ const Login = (props) => {
     return(
         <>
         <Grid container spacing={2}>
-            <Grid item xs={4}>
+            {/* <Grid item xs={4}> */}
                 {/* <AuthLayout>
                     Don’t have an account? &nbsp;
                     <Link underline="none" variant="subtitle2" component={RouterLink} to="/register">
@@ -175,11 +175,11 @@ const Login = (props) => {
                     </Link>
                 </AuthLayout> */}
 
-                <SectionStyle sx={{ display: { xs: 'none', md: 'flex' } }}>
+                {/* <SectionStyle sx={{ display: { xs: 'none', md: 'flex' } }}>
                     <img src="/static/illustrations/illustration_login.png" alt="login" />
-                </SectionStyle>
-            </Grid>
-            <Grid item xs={8}>
+                </SectionStyle> */}
+            {/* </Grid> */}
+            <Grid item xs={12}>
                 <Container maxWidth="sm">
                     <ContentStyle>
                     <Stack sx={{ mb: 5 }}>

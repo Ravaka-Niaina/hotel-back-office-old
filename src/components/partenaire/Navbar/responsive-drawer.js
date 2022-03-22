@@ -198,7 +198,7 @@ console.log("TRLALALA"+ JSON.stringify(props));
 
       <Grid container spacing={2}>
         <Grid item xs={10}>
-              <Typography variant="h6" noWrap component="div" >
+              <Typography variant="h6" noWrap component="div" style={{ fontSize:'25px', fontWeight:'1000' }} >
                 {props.title}
               </Typography>
         </Grid>  
@@ -266,14 +266,24 @@ console.log("TRLALALA"+ JSON.stringify(props));
               return(
               option.dropdown === false ?
               // <Link to={option.lien[0]["link"]} className="nav-link">
-                <ListItem button key={option.text} 
+                <ListItem button key=  
+                {
+                  <Typography style={{ fontFamily: "Optima" }}>
+                    {option.text}
+                  </Typography>
+                }
                  style={{ backgroundColor: window.location.href.split(url)[1] === option.lien[0].link ? "lightGreen" : null }}   
                 >
                   <ListItemIcon >
                     <option.icon />
                   </ListItemIcon>
                   <ListItemText 
-                  primary={option.text} 
+                  primary=
+                  {
+                    <Typography style={{ fontFamily: "Optima" }}>
+                      {option.text}
+                    </Typography>
+                  }
                   onClick={() => redirection(option.lien[0].link)}
                   />
                 </ListItem>
@@ -288,7 +298,12 @@ console.log("TRLALALA"+ JSON.stringify(props));
                     <option.icon />
                   </ListItemIcon>
                   <ListItemText 
-                    primary={option.text} 
+                    primary=
+                    {
+                      <Typography style={{ fontFamily: "Optima" }}>
+                        {option.text}
+                      </Typography>
+                    }
                     />
                   {ouvrir && currentIndex === index ? <ExpandLess /> : <ExpandMore />}
 
@@ -315,7 +330,12 @@ console.log("TRLALALA"+ JSON.stringify(props));
                             </ListItemIcon>
                             <ListItemText 
                               onClick={() => redirection(optionlist[currentIndex].lien[ind].link)}
-                              primary={optionlist[currentIndex].lien[ind].nom} 
+                              primary=
+                              {
+                                <Typography style={{ fontFamily: "Optima" }}>
+                                  {optionlist[currentIndex].lien[ind].nom}
+                                </Typography>
+                              }
                             />
                           </ListItemButton>
                           );

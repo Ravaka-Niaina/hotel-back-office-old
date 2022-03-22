@@ -1,8 +1,14 @@
 import  React,{useEffect}  from 'react';
 import { useHistory } from 'react-router-dom';
+import { useRef, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+// material
+import { Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
+
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
-import { Card } from '@mui/material';
+import Grid from '@mui/material/Grid';
+import { Card, Toolbar, IconButton } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -16,7 +22,7 @@ import { visuallyHidden } from '@mui/utils';
 // import  Navbar  from "../../partenaire/Navbar/Navbar.js";
 import  ResponsiveDrawer  from "../../partenaire/Navbar/responsive-drawer.js";
 import { Link } from 'react-router-dom';
-import Button from '@mui/material/Button';
+import {Button, Container} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
 import EditIcon from '@mui/icons-material/Edit';
@@ -34,45 +40,10 @@ import Login from '../../common/Authentification/Login.js';
 import NotEnoughAccessRight from '../NotEnoughAccessRight.js';
 import InputRecherche from './Recherche/InputRecherche.js';
 
-// ----------------------template--------------------------
+// import UserMoreMenu from '../../../sections/@dashboard/user/UserMoreMenu';
+import UserListToolbar from '../../../sections/@dashboard/user/UserListToolbar';
 
-// import { filter } from 'lodash';
-// import { sentenceCase } from 'change-case';
-// import { useState } from 'react';
-// import { Link as RouterLink } from 'react-router-dom';
-// // material
-// import {
-//   Card,
-//   Stack,
-//   Avatar,
-//   // Button,
-//   Checkbox,
-//   // TableRow,
-//   // TableBody,
-//   // TableCell,
-//   Container,
-//   Typography,
-//   // TableContainer,
-//   TablePagination
-// } from '@mui/material';
-// // components
-// import Page from '../../../comp/Page';
-// import Label from '../../../comp/Label';
-// import Scrollbar from '../../../comp/Scrollbar';
-// import Iconify from '../../../comp/Iconify';
-// import SearchNotFound from '../../../comp/SearchNotFound';
-// import { UserListHead, UserListToolbar, UserMoreMenu } from '../../../sections/@dashboard/user';
-// //
-// import USERLIST from '../../../_mocks_/user.js';
-
-// const TABLE_HEAD = [
-//   { id: 'name', label: 'Name', alignRight: false },
-//   { id: 'company', label: 'Company', alignRight: false },
-//   { id: 'role', label: 'Role', alignRight: false },
-//   { id: 'isVerified', label: 'Verified', alignRight: false },
-//   { id: 'status', label: 'Status', alignRight: false },
-//   { id: '' }
-// ];
+import Iconify from '../../../comp/Iconify';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -90,21 +61,6 @@ function getComparator(order, orderBy) {
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
 
-// function applySortFilter(array, comparator, query) {
-//   const stabilizedThis = array.map((el, index) => [el, index]);
-//   stabilizedThis.sort((a, b) => {
-//     const order = comparator(a[0], b[0]);
-//     if (order !== 0) return order;
-//     return a[1] - b[1];
-//   });
-//   if (query) {
-//     return filter(array, (_user) => (_user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1 || _user.company.toLowerCase().indexOf(query.toLowerCase()) !== -1 || _user.role.toLowerCase().indexOf(query.toLowerCase()) !== -1 ));
-//   }
-//   return stabilizedThis.map((el) => el[0]);
-// }
-
-// ----------------------*template*--------------------------
-
 
 const HtmlTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
@@ -116,6 +72,13 @@ const HtmlTooltip = styled(({ className, ...props }) => (
       fontSize: theme.typography.pxToRem(12),
       border: '1px solid #dadde9',
     },
+  }));
+
+  const RootStyle = styled(Toolbar)(({ theme }) => ({
+    height: 96,
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: theme.spacing(0, 1, 0, 3)
   }));
 
   function stableSort(array, comparator) {
@@ -130,6 +93,61 @@ const HtmlTooltip = styled(({ className, ...props }) => (
     return stabilizedThis.map((el) => el[0]);
   }
 
+  function UserMoreMenu(props) {
+    const ref = useRef(null);
+    const [isOpen, setIsOpen] = useState(false);
+  
+    return (
+      <>
+          <IconButton ref={ref} onClick={() => setIsOpen(true)}>
+            <Iconify icon="eva:more-vertical-fill" width={20} height={20} />
+          </IconButton>
+
+            <Menu
+              open={isOpen}
+              anchorEl={ref.current}
+              onClose={() => setIsOpen(false)}
+              PaperProps={{
+                sx: { width: 200, maxWidth: '100%' }
+              }}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            >
+            { 
+              props.hasARToDelete
+              ?
+              <MenuItem 
+              sx={{ color: 'text.secondary' }}
+              onClick={(e) => {props.setToDelete(props.row); props.setOpenModalDelete(true)}}
+              >
+                <ListItemIcon>
+                  <Iconify icon="eva:trash-2-outline" width={24} height={24} />
+                </ListItemIcon> 
+                <ListItemText primary="Supprimer" primaryTypographyProps={{ variant: 'body2' }} />
+              </MenuItem>
+              : null
+            }
+
+            { 
+              props.hasARToViewDetails
+              ?
+              <MenuItem 
+              component={RouterLink} to={props.urlEdit + props.row._id} sx={{ color: 'text.secondary' }}>
+                <ListItemIcon>
+                  <Iconify icon="eva:edit-fill" width={24} height={24} />
+                </ListItemIcon>
+                <ListItemText primary="Modifier" primaryTypographyProps={{ variant: 'body2' }} />
+              </MenuItem>
+              : null
+            } 
+
+            </Menu>
+            
+      </> 
+
+    );
+  }  
+
 function EnhancedTableHead(props) {
     const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
       props;
@@ -139,14 +157,16 @@ function EnhancedTableHead(props) {
   
     return (
       
-      <TableHead>
-        <TableRow style={{backgroundColor :"#F6F8FC",color:'white'}}>
+      <TableHead >
+        <TableRow style={{backgroundColor :"#FFFFFF",color:'white'}}>
           {props.headCells.map((headCell) => (
             <TableCell
               key={headCell.id}
-              align={headCell.numeric ? 'left' : 'center'}
+              // align={headCell.numeric ? 'left' : 'center'}
+              align="left"
               padding={headCell.disablePadding ? 'none' : 'normal'}
               sortDirection={orderBy === headCell.id ? order : false}
+              sx={{ fontFamily:'Raleway', fontSize:17 }}
             >
               <TableSortLabel
                 active={orderBy === headCell.id}
@@ -206,6 +226,7 @@ function Recherche(props){
     const [openModalDelete, setOpenModalDelete] = React.useState(false);
     const [toDelete, setToDelete] = React.useState({_id: null, nom: null});
     
+    
 
     const history = useHistory();
 
@@ -226,6 +247,10 @@ function Recherche(props){
         setId(field);
         setOpen(bol);
         
+      };
+
+      const redirection = (link) =>{
+        history.push(link);
       };
 
     const handleRequestSort = (event, property) => {
@@ -331,206 +356,50 @@ function Recherche(props){
     page > 0 ? Math.max(0, (1 + page) * nbContent - rows.length) : 0;
     let rows = [];
 
-    //-----------------------------template-------------------------------
-
-    // const [page, setPage] = useState(0);
-    // const [order, setOrder] = useState('asc');
-    // const [selected, setSelected] = useState([]);
-    // const [orderBy, setOrderBy] = useState('name');
-    // const [filterName, setFilterName] = useState('');
-    // const [rowsPerPage, setRowsPerPage] = useState(5);
-  
-    // const handleRequestSort = (event, property) => {
-    //   const isAsc = orderBy === property && order === 'asc';
-    //   setOrder(isAsc ? 'desc' : 'asc');
-    //   setOrderBy(property);
-    // };
-  
-    // const handleSelectAllClick = (event) => {
-    //   if (event.target.checked) {
-    //     const newSelecteds = USERLIST.map((n) => n.name);
-    //     setSelected(newSelecteds);
-    //     return;
-    //   }
-    //   setSelected([]);
-    // };
-  
-    // const handleClick = (event, name) => {
-    //   const selectedIndex = selected.indexOf(name);
-    //   let newSelected = [];
-    //   if (selectedIndex === -1) {
-    //     newSelected = newSelected.concat(selected, name);
-    //   } else if (selectedIndex === 0) {
-    //     newSelected = newSelected.concat(selected.slice(1));
-    //   } else if (selectedIndex === selected.length - 1) {
-    //     newSelected = newSelected.concat(selected.slice(0, -1));
-    //   } else if (selectedIndex > 0) {
-    //     newSelected = newSelected.concat(
-    //       selected.slice(0, selectedIndex),
-    //       selected.slice(selectedIndex + 1)
-    //     );
-    //   }
-    //   setSelected(newSelected);
-    // };
-  
-    // const handleChangePage = (event, newPage) => {
-    //   setPage(newPage);
-    // };
-  
-    // const handleChangeRowsPerPage = (event) => {
-    //   setRowsPerPage(parseInt(event.target.value, 10));
-    //   setPage(0);
-    // };
-  
-    // const handleFilterByName = (event) => {
-    //   setFilterName(event.target.value);
-    // };
-  
-    // const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
-  
-    // const filteredUsers = applySortFilter(listResult, getComparator(order, orderBy), filterName);
-  
-    // const isUserNotFound = filteredUsers.length === 0;
-
-    //----------------------------*template*--------------------------------
-
     return(
-
-
-      // <Page title="User | Minimal-UI">
-      // <Container>
-      //   <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-      //     <Typography variant="h4" gutterBottom>
-      //       User
-      //     </Typography>
-      //     <Button
-      //       variant="contained"
-      //       component={RouterLink}
-      //       to="#"
-      //       startIcon={<Iconify icon="eva:plus-fill" />}
-      //     >
-      //       New User
-      //     </Button>
-      //   </Stack>
-
-      //   <Card>
-      //     <UserListToolbar
-      //       numSelected={selected.length}
-      //       filterName={filterName}
-      //       onFilterName={handleFilterByName}
-      //     />
-
-      //     <Scrollbar>
-      //       <TableContainer sx={{ minWidth: 800 }}>
-      //         <Table>
-      //           <UserListHead
-      //             order={order}
-      //             orderBy={orderBy}
-      //             headLabel={TABLE_HEAD}
-      //             rowCount={USERLIST.length}
-      //             numSelected={selected.length}
-      //             onRequestSort={handleRequestSort}
-      //             onSelectAllClick={handleSelectAllClick}
-      //           />
-      //           <TableBody>
-      //             {filteredUsers
-      //               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-      //               .map((row) => {
-      //                 const { id, name, role, status, company, avatarUrl, isVerified } = row;
-      //                 const isItemSelected = selected.indexOf(name) !== -1;
-
-      //                 return (
-      //                   <TableRow
-      //                     hover
-      //                     key={id}
-      //                     tabIndex={-1}
-      //                     role="checkbox"
-      //                     selected={isItemSelected}
-      //                     aria-checked={isItemSelected}
-      //                   >
-      //                     <TableCell padding="checkbox">
-      //                       <Checkbox
-      //                         checked={isItemSelected}
-      //                         onChange={(event) => handleClick(event, name)}
-      //                       />
-      //                     </TableCell>
-      //                     <TableCell component="th" scope="row" padding="none">
-      //                       <Stack direction="row" alignItems="center" spacing={2}>
-      //                         <Avatar alt={name} src={avatarUrl} />
-      //                         <Typography variant="subtitle2" noWrap>
-      //                           {name}
-      //                         </Typography>
-      //                       </Stack>
-      //                     </TableCell>
-      //                     <TableCell align="left">{company}</TableCell>
-      //                     <TableCell align="left">{role}</TableCell>
-      //                     <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
-      //                     <TableCell align="left">
-      //                       <Label
-      //                         variant="ghost"
-      //                         color={(status === 'banned' && 'error') || 'success'}
-      //                       >
-      //                         {sentenceCase(status)}
-      //                       </Label>
-      //                     </TableCell>
-
-      //                     <TableCell align="right">
-      //                       <UserMoreMenu />
-      //                     </TableCell>
-      //                   </TableRow>
-      //                 );
-      //               })}
-      //             {emptyRows > 0 && (
-      //               <TableRow style={{ height: 53 * emptyRows }}>
-      //                 <TableCell colSpan={6} />
-      //               </TableRow>
-      //             )}
-      //           </TableBody>
-      //           {isUserNotFound && (
-      //             <TableBody>
-      //               <TableRow>
-      //                 <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-      //                   <SearchNotFound searchQuery={filterName} />
-      //                 </TableCell>
-      //               </TableRow>
-      //             </TableBody>
-      //           )}
-      //         </Table>
-      //       </TableContainer>
-      //     </Scrollbar>
-
-      //     <TablePagination
-      //       rowsPerPageOptions={[5, 10, 25]}
-      //       component="div"
-      //       count={USERLIST.length}
-      //       rowsPerPage={rowsPerPage}
-      //       page={page}
-      //       onPageChange={handleChangePage}
-      //       onRowsPerPageChange={handleChangeRowsPerPage}
-      //     />
-      //   </Card>
-      // </Container>
-    // </Page>
 
         <>
             {/* <Navbar currentPage={props.currentPage}/><br/> */}
-            
-            <Box sx={{ width: '100%', padding :"50px" }}>
+            {/* <Container> */}
+            <Box sx={{ width: '100%', pt:"60px", pl:"50px", pr:"50px" }}>
             {hasARToViewInsert
-             ? <Link to={props.btnInsert.urlRedirect}  style={{float : 'left'}}>
-                <Button 
-                variant="contained" 
-                endIcon={<AddIcon style={{color:'white'}}/>}
-                style={{textDecoration:'none'}}>
-                    <span style={{color:'white'}}>{props.btnInsert.label}</span>
-                </Button>
-            </Link>
+            //  ? <Link to={props.btnInsert.urlRedirect}  style={{float : 'left'}}>
+              ? 
+              <Grid container spacing={2}>
+                <Grid item xs={10}>
+                </Grid>
+                <Grid item xs={2}>
+                  <Button 
+                  variant="contained" 
+                  color="success"
+                  onClick={ ()=> redirection(props.btnInsert.urlRedirect) }
+                  endIcon={<AddIcon style={{color:'white'}}/>}
+                  style={{textDecoration:'none'}}
+                  sx={{ borderRadius:3 }}
+                  >
+                      <span style={{color:'white', fontSize:'14px', fontWeight:'bold' }}>{props.btnInsert.label}</span>
+                  </Button>
+                </Grid>
+              </Grid>
+            // </Link>
             : null }
-            <InputRecherche rechercher={rechercher} toSearch={toSearch} setToSearch={setToSearch} /> <br/><br/>
-            { hasARViewList ? <>{
-                isLoading ? <Paper sx={{ width: '100%', mb: 2 }}><Skeleton /></Paper> :<>
-            <Paper sx={{ width: '100%', mb: 2 }}>
             
+            <Paper sx={{ width: '100%', mb: 2, borderRadius: 5, mt:3 }}>
+              <Card sx={{ borderRadius: 5 }}>
+
+                <RootStyle>
+                  <InputRecherche rechercher={rechercher} toSearch={toSearch} setToSearch={setToSearch} /> <br/><br/>
+                  { hasARViewList ? <>{
+                      isLoading ? <Skeleton /> :<>
+                    </>
+                  } </>:null}
+                  <Tooltip title="Filter list">
+                    <IconButton>
+                      <Iconify icon="ic:round-filter-list" />
+                    </IconButton>
+                  </Tooltip>
+                </RootStyle>
+
                 <TableContainer>
                 <Table
                     sx={{ minWidth: 750 }}
@@ -545,6 +414,7 @@ function Recherche(props){
                         onRequestSort={handleRequestSort}
                         rowCount={rows.length}
                         headCells={headCells}
+                        
                     />
                     <TableBody>
                     {
@@ -560,6 +430,7 @@ function Recherche(props){
                             role="checkbox"
                             tabIndex={-1}
                             key={row._id}
+                            style={{height:60}}
                             >
                                 {
                                     Object.keys(row).map(k => {
@@ -584,22 +455,32 @@ function Recherche(props){
                                         );
                                     })
                                 }
-                                <TableCell align="rigth">
-                                    { 
-                                      hasARToViewDetails
-                                      ? <Link to={props.urlEdit + row._id}>
-                                        <HtmlTooltip title="Editer"> 
-                                            <EditIcon style={{color : "green"}} />
+                                <TableCell align="left">
+
+                                  <UserMoreMenu 
+                                  row={row}
+                                  urlEdit={props.urlEdit}
+                                  hasARToDelete={hasARToDelete}
+                                  setToDelete={setToDelete}
+                                  setOpenModalDelete={setOpenModalDelete}
+                                  hasARToViewDetails={hasARToViewDetails}
+                                  />
+                                      {/* { 
+                                        hasARToViewDetails
+                                        ? <Link to={props.urlEdit + row._id}>
+                                          <HtmlTooltip title="Editer"> 
+                                              <EditIcon style={{color : "gray"}} />
+                                          </HtmlTooltip> 
+                                        </Link > 
+                                        : null
+                                      }
+                                    
+                                      { hasARToDelete
+                                      ? <HtmlTooltip title="Supprimer" > 
+                                            <DeleteIcon style={{color : "gray" , cursor :'pointer'}} 
+                                            onClick={(e) => {setToDelete(row); setOpenModalDelete(true)}} />
                                         </HtmlTooltip> 
-                                      </Link > 
-                                      : null
-                                    }
-                                    { hasARToDelete
-                                    ? <HtmlTooltip title="Supprimer" > 
-                                          <DeleteIcon style={{color : "red" , cursor :'pointer'}} 
-                                          onClick={(e) => {setToDelete(row); setOpenModalDelete(true)}} />
-                                      </HtmlTooltip> 
-                                    : null }
+                                      : null } */}
                                 </TableCell>
                             </TableRow>
                         );
@@ -617,18 +498,21 @@ function Recherche(props){
                     </TableBody>
                 </Table>
                 </TableContainer>
+                <FooterList 
+                  nbResult={nbResult} 
+                  rowsPerPageOptions={rowsPerPageOptions}
+                  nbContent={nbContent}
+                  setNbContent={setNbContent}
+                  currentNumPage={currentNumPage} setCurrentNumPage={setCurrentNumPage}
+                  nbPage={nbPage} rechercher={rechercher}
+                />
+              </Card>
             </Paper>
-            <FooterList 
-              nbResult={nbResult} 
-              rowsPerPageOptions={rowsPerPageOptions}
-              nbContent={nbContent}
-              setNbContent={setNbContent}
-              currentNumPage={currentNumPage} setCurrentNumPage={setCurrentNumPage}
-              nbPage={nbPage} rechercher={rechercher}
-            /></>
-            }</> : null }
+            {/* </>
+            }</> : null } */}
             
           </Box>
+          {/* </Container> */}
           <ValidationSuppression 
             openModalDelete={openModalDelete}
             setOpenModalDelete={setOpenModalDelete}
