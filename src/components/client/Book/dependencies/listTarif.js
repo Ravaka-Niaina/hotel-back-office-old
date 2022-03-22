@@ -161,6 +161,7 @@ function ListTarif(props){
                     let typeChambre = res.data.typeChambre;
                     console.log("typeChambre");
                     console.log(typeChambre);
+                    console.log(TChambre);
                     if(res.data.status==200){
                         itineraires[lastItineraire].NumeroITineraire =Random;
                         itineraires[lastItineraire].tarifReserves.push({
@@ -172,7 +173,7 @@ function ListTarif(props){
                             nbPers: nbPers,
                             reservateurWithEmail: {nom: "", prenom: "", email: "", tel: ""},
                             numeroConfirmation : numeroConfirm,
-                            nomTypeChambre:typeChambre.nomTypeChambre,
+                            nomTypeChambre:typeChambre.nom,
                             politiqueAnnulAtrb:tarif.politiqueAnnulAtrb,
                             nomTarif:tarif.nom,
                             toPay:{afterProm:toPay.prix,beforeProm:toPay.prixOriginal},
