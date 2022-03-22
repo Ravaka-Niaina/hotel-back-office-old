@@ -22,7 +22,7 @@ import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
 import PhotoChambre from './InsertTypeChambre/Photo/PhotoChambre.js';
 import VideoChambre from './InsertTypeChambre/Video/VideoChambre.js';
 import Equipement from './InsertTypeChambre/Equipement.js';
-import Galerie from './InsertTypeChambre/Photo/Galerie.js';
+import Galerie from '../Galerie/Galerie.js';
 
 function PlanTarifaire(props){
   let i = -1;
@@ -45,6 +45,8 @@ function PlanTarifaire(props){
   return list;
 }
 
+let isFirstRender = true;
+let nbPhotoBefore = {value: 0};
 function InsertTypeCHambre(){
   const noImage = '/no-image.jpg';
   let [state, setState] = useState(
@@ -58,7 +60,9 @@ function InsertTypeCHambre(){
         etage:null,
         superficie:null,
         description:null,
-        photo: null
+        photo: null,
+        name: null,
+        desc: null
       },
       nom: '',
       nbAdulte: '',
@@ -70,7 +74,9 @@ function InsertTypeCHambre(){
       description:'',
       planTarifaire: [],
       equipements: [],
-      videos: []
+      videos: [],
+      name: '',
+      desc: ''
     }
   );
   const { _id } = useParams();
@@ -97,7 +103,6 @@ function InsertTypeCHambre(){
   
   const setDetailsTypeChambre = (data) => {
     let currentState = {...state};
-
     if(data.status === 401){//Unauthorized
       history.push('/back/login');
     }else if(data.status === 403){
@@ -120,7 +125,7 @@ function InsertTypeCHambre(){
       }
       setPreview(tmpPreview);
     }
-
+    
     setPhoto(tmpPhoto);
     setState(currentState);
     setSkeleton(false);
@@ -128,13 +133,23 @@ function InsertTypeCHambre(){
   }
 
   useEffect(() => {
-    if(isInsert && hasARInsert){
-      callAPI('get', '/TCTarif/infoInsertTypeChambre', {}, setInfo);
-    }else if(hasARGet || hasARUpdate){
-      setAreImagesLoading(true);
-      callAPI("get", "/typeChambre/details/" + _id, {}, setDetailsTypeChambre);
+    if(isFirstRender){
+      isFirstRender = false;
+      if(isInsert && hasARInsert){
+        callAPI('get', '/TCTarif/infoInsertTypeChambre', {}, setInfo);
+      }else if(hasARGet || hasARUpdate){
+        setAreImagesLoading(true);
+        callAPI("get", "/typeChambre/details/" + _id, {}, setDetailsTypeChambre);
+      }
     }
-  }, [_id]);
+
+  });
+
+  useEffect(() => {
+    return () => {
+      isFirstRender = true;
+    }
+  }, []);
   
   const history = useHistory();
   if(isInsert && !hasARInsert){
@@ -239,7 +254,6 @@ function InsertTypeCHambre(){
     }
     toSend.planTarifaire = planTarifaire;
     toSend.photo = photo;
-    console.log(toSend);
     callAPI('post', '/typeChambre/update/', toSend, tryRedirect);
   }
 
@@ -249,6 +263,12 @@ function InsertTypeCHambre(){
       currentState.error[inputName] = null;
       setState(currentState);
   }
+
+  function handleInputChange2( e, name1, name2){
+    let current = JSON.parse(JSON.stringify(state));
+    current[name1][name2] = e.target.value;
+    setState(current);
+    }
 
   const style = {
     position: 'absolute',
@@ -271,9 +291,11 @@ function InsertTypeCHambre(){
 
                 <h4 className="" id='title1'>{isInsert ? "Ajouter type chambre" : "Modifier type chambre"}</h4>
                 <CustomError errors={state.errors} />
-                <form className="needs-validation" className='forms' style={{marginTop:'15px'}}>
-                    <div style={{marginTop:'40px'}} id='input-group1'>
-                      <TextField 
+                <form className="needs-validation" style={{marginTop:'15px'}}>
+
+                  <div className="row">
+                    <div className="col">
+                    <TextField 
                       id="outlined-basic"
                       variant="outlined"
                       size='small'
@@ -282,44 +304,69 @@ function InsertTypeCHambre(){
                       Nom
                       </p>
                             } 
-                      style={{width:'325px'}}
+                      style={{width:'315px'}}
                       type="text" 
                       value={state.nom} onChange={(e) => handleInputChange(e, "nom")}
                       error={state.error.nom === null ? false : true}
                       helperText={state.error.nom === null ? null : state.error.nom}
-                      />
-                    <TextField
+                      />                    
+                    </div>
+                    <div className="col">
+                    <TextField 
                       id="outlined-basic"
                       variant="outlined"
                       size='small'
                       label={
-                        <p id='libel'>
-                        Chambre total
-                        </p>
-                             } 
-                      type="number"
-                      style={{width:'325px',marginLeft:'123px'}}
-                      value={state.chambreTotal} onChange={(e) => handleInputChange(e, "chambreTotal")}
-                      error={state.error.chambreTotal === null ? false : true}
-                      helperText={state.error.chambreTotal === null ? null : state.error.chambreTotal}
-                    />
-                     </div>
-                    <div style={{marginTop:'40px'}} id='input-group1'>
-                      <TextField 
+                      <p id='libel'>
+                      Name
+                      </p>
+                            } 
+                      style={{width:'315px'}}
+                      type="text" 
+                      value={state.name} onChange={(e) => handleInputChange(e, "name")}
+                      error={state.error.name === null ? false : true}
+                      helperText={state.error.name === null ? null : state.error.name}
+                      />                    
+                    </div>  
+                  </div>
+
+                    <div style={{marginTop:'40px'}} className='row'>
+                      <div className="col">
+                      <TextField
                         id="outlined-basic"
                         variant="outlined"
                         size='small'
                         label={
                           <p id='libel'>
-                              Etage
+                          Chambre total
                           </p>
                               } 
                         type="number"
-                        style={{width:'325px'}}
-                        value={state.etage} onChange={(e) => handleInputChange(e, "etage")}
-                        error={state.error.etage === null ? false : true}
-                        helperText={state.error.etage === null ? null : state.error.etage}
+                        style={{width:'315px'}}
+                        value={state.chambreTotal} onChange={(e) => handleInputChange(e, "chambreTotal")}
+                        error={state.error.chambreTotal === null ? false : true}
+                        helperText={state.error.chambreTotal === null ? null : state.error.chambreTotal}
                       />
+                      </div>
+                      <div className="col">
+                      <TextField 
+                          id="outlined-basic"
+                          variant="outlined"
+                          size='small'
+                          label={
+                            <p id='libel'>
+                                Etage
+                            </p>
+                                } 
+                          type="number"
+                          style={{width:'315px'}}
+                          value={state.etage} onChange={(e) => handleInputChange(e, "etage")}
+                          error={state.error.etage === null ? false : true}
+                          helperText={state.error.etage === null ? null : state.error.etage}
+                      />   
+                      </div> 
+                     </div>
+                    <div style={{marginTop:'40px'}} id='input-group1'>
                       <TextField
                         id="outlined-basic"
                         variant="outlined"
@@ -330,17 +377,22 @@ function InsertTypeCHambre(){
                           </p>
                               }
                         type="number"
-                        style={{width:'325px',marginLeft:'123px'}}
+                        style={{width:'315px'}}
                         value={state.superficie} onChange={(e) => handleInputChange(e, "superficie")}
                         error={state.error.superficie === null ? false : true}
                         helperText={state.error.superficie === null ? null : state.error.superficie}
                       />
                     </div>
-                    {/* <PhotoChambre state={state} setState={setState} noImage={noImage}
+                    <PhotoChambre state={state} setState={setState} noImage={noImage}
                       photo={photo} setPhoto={setPhoto} preview={preview} setPreview={setPreview}
-                      areImagesLoading={areImagesLoading} setAreImagesLoading={setAreImagesLoading} /> */}
-                    <button onClick={switchShowGalerie}>Galerie photos</button>
-                    <Galerie showGalerie={showGalerie} setShowGalerie={setShowGalerie} />
+                      areImagesLoading={areImagesLoading} setAreImagesLoading={setAreImagesLoading}
+                      showGalerie={showGalerie} setShowGalerie={setShowGalerie} switchShowGalerie={switchShowGalerie}
+                      nbPhotoBefore={nbPhotoBefore} isInsert={isInsert} />
+
+                    <Galerie showGalerie={showGalerie} setShowGalerie={setShowGalerie} 
+                      photoSortie={photo} setPhotoSortie={setPhoto} nbPhotoBeforeSortie={nbPhotoBefore}
+                      previewSortie={preview} setPreviewSortie={setPreview} />
+                      
                     <VideoChambre state={state} setState={setState} />
 
                     <div style={{marginTop:'10px'}}>
@@ -350,39 +402,45 @@ function InsertTypeCHambre(){
                         Occupation 
                       </label>
                     </div>
-                    <div style={{marginTop:'5px'}}>
+                    <div style={{marginTop:'5px'}} className='row'>
+
+                      <div className="col">
                       <TextField 
-                      id="outlined-basic"
-                      variant="outlined"
-                      size='small' 
-                      label={
-                        <p id='libel'>
-                            Adulte
-                        </p>
-                             }
-                      type="number"
-                      value={state.nbAdulte}
-                      onChange={(e) => handleInputChange(e, "nbAdulte")}
-                      style={{width:'325px'}}
-                      error={state.error.nbAdulte === null ? false : true}
-                      helperText={state.error.nbAdulte === null ? null : state.error.nbAdulte}
+                          id="outlined-basic"
+                          variant="outlined"
+                          size='small' 
+                          label={
+                            <p id='libel'>
+                                Adulte
+                            </p>
+                                }
+                          type="number"
+                          value={state.nbAdulte}
+                          onChange={(e) => handleInputChange(e, "nbAdulte")}
+                          style={{width:'315px'}}
+                          error={state.error.nbAdulte === null ? false : true}
+                          helperText={state.error.nbAdulte === null ? null : state.error.nbAdulte}
                       />
-                      <TextField 
-                      id="outlined-basic"
-                      variant="outlined"
-                      size='small'
-                      label={
-                        <p id='libel'>
-                            Enfant
-                        </p>
-                             }  
-                      type="number" 
-                      value={state.nbEnfant}
-                      onChange={(e) => handleInputChange(e, "nbEnfant")}
-                      style={{width:'325px',marginLeft:'123px'}}
-                      error={state.error.nbEnfant === null ? false : true}
-                      helperText={state.error.nbEnfant === null ? null : state.error.nbEnfant}
-                      />
+                      </div>
+
+                      <div className="col">
+                        <TextField 
+                        id="outlined-basic"
+                        variant="outlined"
+                        size='small'
+                        label={
+                          <p id='libel'>
+                              Enfant
+                          </p>
+                              }  
+                        type="number" 
+                        value={state.nbEnfant}
+                        onChange={(e) => handleInputChange(e, "nbEnfant")}
+                        style={{width:'315px'}}
+                        error={state.error.nbEnfant === null ? false : true}
+                        helperText={state.error.nbEnfant === null ? null : state.error.nbEnfant}
+                        />
+                      </div>
                     </div>
 
                     <div style={{marginTop:'15px'}}>
@@ -409,6 +467,25 @@ function InsertTypeCHambre(){
                       error={state.error.description === null ? false : true}
                       helperText={state.error.description === null ? null : state.error.description}
                     />
+
+                    <TextField id="outlined-basic" variant="outlined" type='text'
+                      placeholder=""
+                      multiline
+                      rows={2}
+                      rowsmax={4}
+                      label={
+                        <p id='libel'>
+                            Description en Anglais
+                        </p>
+                             }
+                      style={{width:'100%',height:'50px',marginTop:'55px'}}
+                      value={state.desc}
+                      onChange={(e) => handleInputChange(e, "desc")} 
+                      error={state.error.desc === null ? false : true}
+                      helperText={state.error.desc === null ? null : state.error.desc}
+                    />
+
+                    
                     <Equipement state={state} setState={setState} />
                     <div style={{marginTop:'15px'}}>
                       <div>

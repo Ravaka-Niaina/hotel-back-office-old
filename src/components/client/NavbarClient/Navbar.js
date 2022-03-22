@@ -19,13 +19,8 @@ import axios from "axios";
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import {session} from "../../common/utilitySession.js";
-import { useEffect } from "react";
-
 import { useState } from 'react';
-
 import { useTranslation } from "react-i18next";
-
-import ButtonLoading from "./buttonLoading.js";
 
 function Navbar(props) {
   const [email, setEmail] = React.useState("");
@@ -37,6 +32,11 @@ function Navbar(props) {
   const { t, i18n } = useTranslation();
   const [btnLoad, setBtnLoad] = useState(false)
 
+  function translation(){
+    let temp = {...props.context.state};
+    temp.traduction= !temp.traduction;
+    props.context.setState(temp);
+}
 
   const changeLanguageHandler = (e) => {
     const languageValue = e.target.value

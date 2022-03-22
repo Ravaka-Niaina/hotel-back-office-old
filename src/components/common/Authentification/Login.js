@@ -85,6 +85,9 @@ const Login = (props) => {
         e.preventDefault();
         setLoading(true);
         setAmbiguousError(null);
+        let test = "ye";
+        test = "aaa";
+        test = "inona?";
         const data = {
             isPartner: isPartner,
             email: email.trim(),

@@ -89,9 +89,9 @@ function Reservations(props){
                         <Card className={styles.stay}>
                         <CardContent>
                             <div>
-                                <span><BedIcon/>{tarif.nomTypeChambre}</span>
+                                <span><BedIcon/>{props.context.state.traduction ? tarif.TypeChambreName : tarif.nomTypeChambre }</span>
                                 <span><ModeNightIcon/>{nbNuit + t('night')}</span>
-                                <span><LocalOfferIcon/>{tarif.nomTarif}</span>
+                                <span><LocalOfferIcon/>{props.context.state.traduction ? tarif.TarifName : tarif.nomTarif}</span>
                             </div>
                             <div>
                                 <span><PersonOutlineIcon/>x {tarif.nbPers} {t('person')}</span>
@@ -251,7 +251,7 @@ class Fact extends React.Component{
                         {
                             this.state.load ?
                         <Button size='medium' variant="contained"  onClick={(e) => this.validerReservation()} endIcon={<CallMissedOutgoingIcon/>}>
-                            Valider réservation
+                            {this.props.context.state.traduction ? "Validate" : "Valider réservation" }
                         </Button>
                         :
                         <ButtonLoad/>
@@ -280,7 +280,7 @@ class Fact extends React.Component{
                 <div style={{textAlign:'center'}}>
                     <Itineraires context={this.props.context} annulerReservation={this.annulerReservation} />
                     <p id='bigLabel'>TOTAL : {toPay}</p>
-                    <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()} endIcon={<CallMissedOutgoingIcon/>}>Ajouter itinéraire</Button></p>
+                    <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()} endIcon={<CallMissedOutgoingIcon/>}>{this.props.context.state.traduction ? "Add itinerary" : "Ajouter itinéraire" }</Button></p>
                 </div>
                 <Modal
                     open={this.props.context.state.open}

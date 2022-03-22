@@ -1,0 +1,35 @@
+.conteneurPhoto{
+    width: fit-content;
+    padding: 0 0;
+    margin: 2px;
+}
+
+.photo{
+    max-width: 300px;
+    max-height: 200px;
+    width: auto;
+    height: auto;
+    margin-top: -40px;
+}
+
+.close{
+    position: relative;
+    z-index: 3;
+}
+
+.close > button{
+    width: 40px;
+    height: 40px;
+    border-color: white;
+    float: right;
+    opacity: 0.4;
+}
+
+.conteneurPhoto1{
+    display:inline-block;
+    border: 2px solid blue;
+}
+
+.photoSelected{
+    border: 2px solid red;
+}
