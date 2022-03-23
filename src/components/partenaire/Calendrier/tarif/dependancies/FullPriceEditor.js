@@ -157,7 +157,6 @@ const FullPriceEditor = (props) => {
     const history = useHistory();
 
     useEffect( () => {
-        console.log(props.typechambre.planTarifaire);
         let taf = JSON.parse(JSON.stringify(props.typechambre.planTarifaire));
         for(let i = 0; i < taf.length; i++){
             taf.checked = false;

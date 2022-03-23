@@ -29,7 +29,8 @@ const RateLine = (props) => {
                 daterange={props.daterange}
                 getPrix={props.getPrix}
                 alldays={props.alldays}
-                value={props.value} />
+                value={props.value}
+                setOpenLoad={props.setOpenLoad} />
         </Box>
     )
 }

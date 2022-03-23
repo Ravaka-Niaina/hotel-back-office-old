@@ -135,13 +135,6 @@ const BaeCalendar = ({
     setReloadAllPrices(true);
     setOpen(true);
   }, [])
-
-  function reload() {
-    let temp = JSON.parse(JSON.stringify(context.state))
-    temp.reload = true
-    context.setState(temp)
-    getPrix(selectDate, monthLater)
-  }
   
   let prixFinal = JSON.parse(JSON.stringify(prix));
 

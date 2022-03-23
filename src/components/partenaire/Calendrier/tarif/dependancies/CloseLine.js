@@ -15,18 +15,22 @@ const CloseLine = (props) => {
             },
         },
     })
-    useEffect( () => {
-        setOpened(!props.closed);
-    })
+
+    function callbackCloseTypeChambre(res){
+        if(res.status === 200){
+            props.setOpenLoad(false);
+        }
+    }
+
     function closeTypeChambre(){
+        setOpened(!opened);
         props.setOpenLoad(true);
         const data = {
             _id: props.idTypeChambre, 
             dateDebut: utility.getDate(props.statusDay.date),
             dateFin: utility.getDate(props.statusDay.date)
         };
-        console.log(data);
-        callAPI('post', '/typeChambre/close', data, function(res){console.log(res); props.getPrix()} );
+        callAPI('post', '/typeChambre/close', data, callbackCloseTypeChambre );
     }
     return (
         <>
@@ -44,7 +48,7 @@ const CloseLine = (props) => {
                 },
                 position: 'relative',
                 }}
-                onClick={() => {setOpened(!opened); closeTypeChambre()}}
+                onClick={closeTypeChambre}
             >
                 {props.day}
             </Box>
