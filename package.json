@@ -39,6 +39,8 @@
     "datatables.net": "^1.11.3",
     "datatables.net-dt": "^1.11.3",
     "date-fns": "^2.26.0",
+    "dompurify": "^2.3.6",
+    "draft-convert": "^2.1.12",
     "draft-js": "^0.11.7",
     "draftjs-to-html": "^0.9.1",
     "express": "^4.17.1",

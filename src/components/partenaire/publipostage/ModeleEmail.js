@@ -11,6 +11,8 @@ import { ContentState, convertToRaw } from 'draft-js';
 import './ModeleEmail.css';
 import draftToHtml from 'draftjs-to-html';
 import LogoComponent from './LogoComponent.js';
+import { convertToHTML } from 'draft-convert';
+
 function ModeleEmail(props){
     
     let confiramtionHeader=getHtmlConfirmation();
@@ -31,12 +33,29 @@ function ModeleEmail(props){
     const [editorStateFooter, setEditorStateFooter] = useState(editorDataStateFooter);
     const [logo,setLogo]= useState("https://www.hotel-restaurant-colbert.com/wp-content/uploads/2012/06/Logo-Colbert1-Copier.jpg")
     const [visibility, setVisibility] = useState(false);
+    const [content,setContent] = useState({logo_url:'',htmlConfirmation:'',htmlHotelsInfos:'',htmlFooter:''})
 
     const popupCloseHandler = (e) => {
         setVisibility(e);
     };
     const changeLogo=(e) =>{
         setLogo(e)
+    }
+
+    // Get html and logo
+
+    const valider=(e) =>{
+        let htmlConfirmation = convertToHTML(editorStateConfirmation.getCurrentContent());
+        let htmlHotelsInfos= convertToHTML(editorDataStatehotelsInfos.getCurrentContent());
+        let htmlFooter= convertToHTML(editorDataStateFooter.getCurrentContent());
+        
+        console.log("html");
+        console.log(htmlConfirmation);
+        console.log(htmlHotelsInfos);
+        console.log(htmlFooter);
+
+        setContent({logo_url:logo,htmlConfirmation:htmlConfirmation,htmlHotelsInfos:htmlHotelsInfos,htmlFooter:htmlFooter});
+        //Call API Insert
     }
 
     
@@ -226,7 +245,7 @@ function ModeleEmail(props){
                 </div>
                 <div style={{marginTop:20,display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
                     <button class="button_mail btn_blue">Previsualiser</button>
-                    <button class="button_mail btn_red">Sauvegarder</button>
+                    <button onClick={valider} class="button_mail btn_red">Sauvegarder</button>
                 </div>
                 
           </div>
