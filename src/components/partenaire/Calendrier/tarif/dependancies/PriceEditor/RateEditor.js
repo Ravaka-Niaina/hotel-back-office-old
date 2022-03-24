@@ -48,10 +48,10 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
             forTarif: true,
             isTarifOpen: value === "open" ? true : false,
             idTypeChambre: idTypeChambre,
-            tabIdTarif: [idPlanTarifaire],
+            idTarif: idPlanTarifaire,
             modifierOuvertureTarif: changeStatusRate,
             nbPers: nbPers,
-            prix: prix,
+            prix: Number.parseInt(prix),
             minSejour: 1
         };
         console.log(data);
