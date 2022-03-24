@@ -10,6 +10,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { ContentState, convertToRaw } from 'draft-js';
 import './ModeleEmail.css';
 import draftToHtml from 'draftjs-to-html';
+import LogoComponent from './LogoComponent.js';
 function ModeleEmail(props){
     
     let confiramtionHeader=getHtmlConfirmation();
@@ -28,7 +29,17 @@ function ModeleEmail(props){
     const contentDataStateFooter = ContentState.createFromBlockArray(convertFromHTML(htmlFooter));
     const editorDataStateFooter = EditorState.createWithContent(contentDataStateFooter);
     const [editorStateFooter, setEditorStateFooter] = useState(editorDataStateFooter);
+    const [logo,setLogo]= useState("https://www.hotel-restaurant-colbert.com/wp-content/uploads/2012/06/Logo-Colbert1-Copier.jpg")
+    const [visibility, setVisibility] = useState(false);
 
+    const popupCloseHandler = (e) => {
+        setVisibility(e);
+    };
+    const changeLogo=(e) =>{
+        setLogo(e)
+    }
+
+    
     const onEditorStateConfirmationChange = (editorState) => {
       setEditorStateConfirmation(editorState)
     }
@@ -37,7 +48,34 @@ function ModeleEmail(props){
       }
       const onEditorStateFooterChange = (editorState) => {
         setEditorStateFooter(editorState)
-      }
+    }
+
+    const customContentStateConverter = (contentState) => {
+        // changes block type of images to 'atomic'
+        const newBlockMap = contentState.getBlockMap().map((block) => {
+            const entityKey = block.getEntityAt(0);
+            if (entityKey !== null) {
+                const entityBlock = contentState.getEntity(entityKey);
+                const entityType = entityBlock.getType();
+                switch (entityType) {
+                    case 'IMAGE': {
+                        const newBlock = block.merge({
+                            type: 'atomic',
+                            text: 'img',
+                        });
+                        return newBlock;
+                    }
+                    default:
+                        return block;
+                }
+            }
+            return block;
+        });
+        const newContentState = contentState.set('blockMap', newBlockMap);
+        return newContentState;
+    }
+
+
     function getHtmlConfirmation() {
         let  html="";
         var header="";
@@ -45,7 +83,7 @@ function ModeleEmail(props){
         header += "					<h3>Confirmation de l'itineraire <\/h3>";
         header += "					<p>Confirmation No. 12934802137<\/p>";
         header += "				<\/div>";
-    
+        
         html+=header;  
         return html  
     }
@@ -74,10 +112,16 @@ function ModeleEmail(props){
         
         <>
           
-
-          <div class="container" style={{fontFamily:'Roboto,RobotoDraft,Helvetica,Arial,sans-serif',width:800,margin:'0 auto',padding:'0 auto',marginTop:'20%'}}>
-                
-                    
+          <LogoComponent
+                            onClose={popupCloseHandler}
+                            show={visibility}
+                            title="Logo"
+                            logo={logo}
+                            changeLogo={changeLogo}
+                            
+                            /> 
+          <div class="container" style={{fontFamily:'Roboto,RobotoDraft,Helvetica,Arial,sans-serif',width:1000,margin:'0 auto',padding:'0 auto',marginTop:'20%'}}>
+              
                 <div class='itineraire' >  
                         
                         {/* <div class='header'  style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}} >
@@ -91,9 +135,14 @@ function ModeleEmail(props){
                                             
                         </div> */}
                         <div class='header'  style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}} >
-                            <img style={{width:'35%',height:'115%' }} src='https://www.hotel-restaurant-colbert.com/wp-content/uploads/2012/06/Logo-Colbert1-Copier.jpg' alt='logo'/>
+                            <img style={{width:'35%',height:'115%' }} src={logo} alt='logo'/>
+                           <div>
+                             <img style={{width:'35%',marginLeft:10,marginTop:30 }} onClick={(e) => setVisibility(!visibility)} src={process.env.PUBLIC_URL + '/camera.png'} />
+                                
+                                    
+                            </div> 
                            
-                            <div style={{marginTop:'-28%',marginLeft:'15%'}}>
+                            <div style={{marginTop:'-20%',marginLeft:'10%'}}>
                                 <Editor
                                     editorState={editorStateConfirmation}
                                     wrapperClassName="wrapper-class-confirmation"
@@ -175,7 +224,11 @@ function ModeleEmail(props){
                                 />
                       </div>
                 </div>
-         
+                <div style={{marginTop:20,display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
+                    <button class="button_mail btn_blue">Previsualiser</button>
+                    <button class="button_mail btn_red">Sauvegarder</button>
+                </div>
+                
           </div>
         </>
       

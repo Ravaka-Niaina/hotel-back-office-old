@@ -31,3 +31,27 @@
 
     
   }
+  .button_mail {
+    font-size: 1rem;
+    font-family: 'Futura Lt BT', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    text-transform: uppercase;
+    border-radius: 0px;
+    background: rgba(175,161,134,1);
+    border: 1px solid #c2b59b;
+    color: #ffffff;
+    padding: 1rem;
+   
+    margin-bottom: 0.1rem;
+}
+.btn_blue:hover{
+  background: #3399cc;
+  color: #ffffff;
+
+}
+.btn_red:hover{
+  background: #ac2863;
+  color: #ffffff;
+
+}
