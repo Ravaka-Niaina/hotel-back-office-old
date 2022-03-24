@@ -10,14 +10,27 @@ const PriceEditor = (props) => {
         props.closePopper(null);
     }
     const nbPers = props.typechambre.nbAdulte + props.typechambre.nbEnfant;
+    const getIndicePlanTarifaire = (selectedY) => {
+        let y = 1;
+        const nbOccupants = props.typechambre.nbAdulte + props.typechambre.nbEnfant;
+        for(let i = 0; i < props.typechambre.planTarifaire.length; i++){
+            for(let u = 0; u < nbOccupants; u++){
+                y++;
+                if(y === selectedY){
+                    return i
+                }
+            }
+        }
+    };
+    const indicePlanTarifaire = getIndicePlanTarifaire(props.selectedY);
 
     return(
         <>
             <br/>
             {props.isPrice ?
                 <RateEditor
-                    nomPlanTarifaire={props.typechambre.planTarifaire[props.selected].nom}
-                    idPlanTarifaire={props.typechambre.planTarifaire[props.selected]._id}
+                    nomPlanTarifaire={props.typechambre.planTarifaire[indicePlanTarifaire].nom}
+                    idPlanTarifaire={props.typechambre.planTarifaire[indicePlanTarifaire]._id}
                     fromto={props.fromto}
                     value={value}
                     setValue={setValue}

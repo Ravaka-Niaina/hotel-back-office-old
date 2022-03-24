@@ -17,11 +17,14 @@ if (navigator.userAgent.match(/AppleWebKit/) && ! navigator.userAgent.match(/Chr
 function ListTarifs(props){
     let list = [];
     for(let i = 0; i < props.planTarifaire.length; i++){
-        list.push(
-            <li className={sideList_css.sideElt}>
-                <span>{props.planTarifaire[i].nom} x2 <PersonOutline size={12} /></span>
-            </li>
-        );
+        let nbOccupants = props.typechambre.nbAdulte + props.typechambre.nbEnfant;
+        for(let u  = 0; u < nbOccupants; u++){
+            list.push(
+                <li className={sideList_css.sideElt}>
+                    <span>{props.planTarifaire[i].nom} x{u + 1} <PersonOutline size={12} /></span>
+                </li>
+            );
+        }
     }
     return list;
 }
@@ -56,7 +59,7 @@ const SideList = (props) => {
                 <li className={sideList_css.sideElt}>
                     <span>Booked</span>
                 </li>
-                <ListTarifs planTarifaire={props.typechambre.planTarifaire} />
+                <ListTarifs planTarifaire={props.typechambre.planTarifaire} typechambre={props.typechambre} />
             </ul>
         </Box>
         <FullPriceEditor
