@@ -1,3 +1,4 @@
+import useState from 'react'
 import { styled } from '@mui/material/styles'
 import Button from '@mui/material/Button'
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip'
@@ -27,12 +28,12 @@ const HtmlTooltip = styled(({ className, ...props }) => (
   },
 }))
 
+let isDebut = true;
+
 const DateIndicator = ({
   activeDates,
   selectDate,
   setSelectDate,
-  bornes,
-  setBornes,
   prix,
   context,
   closeOnce,
@@ -44,43 +45,52 @@ const DateIndicator = ({
     context.state.listTypeChambre = []
 
     setSelectDate(new Date(day))
-    let temp = JSON.parse(JSON.stringify(bornes))
-    if (bornes.isDebut) {
-      temp.debut = day
-      temp.fin = day
-      temp.isDebut = false
+    let temp = {...context.state};
+    let dateSejour = temp.dateSejour;
+    if (isDebut) {
+      dateSejour.debut = day
+      dateSejour.fin = ""
+      isDebut = false
       context.handleChange('listTypeChambre', [])
     } else {
-      temp.fin = day
-      temp.isDebut = true
+      dateSejour.fin = day
+      isDebut = true
     }
-    if (temp.debut === temp.fin) {
-      temp.fin = new Date(temp.fin)
-      temp.fin.setTime(
-        temp.fin.getTime() + temp.fin.getTimezoneOffset() * 60 * 1000,
+    if (dateSejour.debut === dateSejour.fin) {
+      dateSejour.fin = new Date(dateSejour.fin)
+      dateSejour.fin.setTime(
+        dateSejour.fin.getTime() + dateSejour.fin.getTimezoneOffset() * 60 * 1000,
       )
-      temp.fin.setDate(temp.fin.getDate() + 1)
-      temp.fin = utility.getDate(temp.fin)
-    } else if (new Date(temp.debut) > new Date(temp.fin)) {
-      temp.debut = temp.fin
-      temp.fin = new Date(temp.fin)
-      temp.fin.setTime(
-        temp.fin.getTime() + temp.fin.getTimezoneOffset() * 60 * 1000,
-      )
-      temp.fin.setDate(temp.fin.getDate() + 1)
-      temp.fin = utility.getDate(temp.fin)
-      temp.isDebut = false
+      dateSejour.fin.setDate(dateSejour.fin.getDate() + 1)
+      dateSejour.fin = utility.getDate(dateSejour.fin)
+    } else if (dateSejour.fin !== "" && new Date(dateSejour.debut) > new Date(dateSejour.fin)) {
+      dateSejour.debut = dateSejour.fin
+      dateSejour.fin = "";
+      isDebut = false;
     }
 
-    let bigState = { ...context.state }
-    bigState.dateSejour = temp
-    context.setState(bigState, () => {
-      applyFilter(undefined, true);
+    if(temp.itineraires.length === 1){
+      if(temp.itineraires[0].dateSejour.debut === '' &&
+        temp.itineraires[0].dateSejour.fin === '' ||
+        temp.itineraires[0].tarifReserves.length === 0){
+          temp.itineraires[0].dateSejour.debut = dateSejour.debut;
+          temp.itineraires[0].dateSejour.debut = dateSejour.fin;
+      }
+    }
+    if(temp.reservationEnCours.itineraires.length === 1){
+      if(temp.reservationEnCours.itineraires[0].dateSejour.debut === '' &&
+        temp.reservationEnCours.itineraires[0].dateSejour.fin === ''){
+          temp.reservationEnCours.itineraires[0].dateSejour.debut = dateSejour.debut;
+          temp.reservationEnCours.itineraires[0].dateSejour.fin = dateSejour.fin;
+      }
+    }
+
+    context.setState(temp, () => {
+      if(dateSejour.fin !== ""){
+        applyFilter(undefined, true);
+      }
     })
-    setBornes(temp)
-
-    const dates = [temp.debut, temp.fin]
-    context.haddleChangeDate(dates)
+    context.haddleChangeDate([dateSejour.debut, dateSejour.fin]);
   }
 
   const datesInMonth = getDatesInMonthDisplay(
@@ -139,12 +149,12 @@ const DateIndicator = ({
     }
   }
 
-  const debut = new Date(bornes.debut)
-  let fin = new Date(bornes.fin)
-  let today = new Date()
-  today = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  const debut = new Date(context.state.dateSejour.debut)
+  let fin = new Date(context.state.dateSejour.fin)
+  let today = new Date();
+  today = new Date(today.getFullYear(), today.getMonth(), today.getDate());
   const monthDates = datesInMonth.map((i, key) => {
-    const temp = new Date(utility.getDate(i.date))
+    const temp = new Date(utility.getDate(i.date));
     let notValid = ''
     let price = ''
     if (today > i.date) {
@@ -155,12 +165,15 @@ const DateIndicator = ({
       price = '€ ' + i.price
       notValid = notValid + ' date-icon'
       if (getDate(fin) === getDate(i.date)) {
-        price = ''
+        price = '';
+      }
+      if (getDate(fin) === getDate(i.date) || getDate(debut) === getDate(i.date)) {
+        notValid = notValid + ' active';
       }
     }
 
     let reloadDate = false
-    if(reloadSelectedDatePrices){
+    if (reloadSelectedDatePrices) {
       if (debut <= temp && fin >= temp) {
         reloadDate = true;
       }
@@ -173,14 +186,32 @@ const DateIndicator = ({
         {i.currentMonth ? (
           <div>
             {reloadAllPrices || reloadDate ? <RefreshDay />
-            : <>{i.price !== undefined ? (
-              <div>
-                {i.promotions !== undefined &&
-                i.promotions.length > 0 &&
-                getDate(fin) !== getDate(i.date) ? (
-                  <HtmlTooltip
-                    title={getHtmlPromo(i.prixOriginal, i.promotions)}
-                  >
+              : <>{i.price !== undefined ? (
+                <div>
+                  {i.promotions !== undefined &&
+                    i.promotions.length > 0 &&
+                    getDate(fin) !== getDate(i.date) ? (
+                    <HtmlTooltip
+                      title={getHtmlPromo(i.prixOriginal, i.promotions)}
+                    >
+                      <div
+                        className={`${notValid}`}
+                        data-active-month={i.currentMonth}
+                        data-date={i.date.toString()}
+                        key={key}
+                        onClick={(e) => changeDate(utility.getDate(i.date))}
+                      >
+                        <div style={{ textAlign: 'center' }}>
+                          {' '}
+                          {getDayOfMonth(i.date)}{' '}
+                        </div>
+                        <div style={{ textAlign: 'center' }}> {price} </div>
+                        <div
+                          style={{ height: '3px', backgroundColor: 'blue' }}
+                        ></div>
+                      </div>
+                    </HtmlTooltip>
+                  ) : (
                     <div
                       className={`${notValid}`}
                       data-active-month={i.currentMonth}
@@ -193,35 +224,17 @@ const DateIndicator = ({
                         {getDayOfMonth(i.date)}{' '}
                       </div>
                       <div style={{ textAlign: 'center' }}> {price} </div>
-                      <div
-                        style={{ height: '3px', backgroundColor: 'blue' }}
-                      ></div>
                     </div>
-                  </HtmlTooltip>
-                ) : (
-                  <div
-                    className={`${notValid}`}
-                    data-active-month={i.currentMonth}
-                    data-date={i.date.toString()}
-                    key={key}
-                    onClick={(e) => changeDate(utility.getDate(i.date))}
-                  >
-                    <div style={{ textAlign: 'center' }}>
-                      {' '}
-                      {getDayOfMonth(i.date)}{' '}
-                    </div>
-                    <div style={{ textAlign: 'center' }}> {price} </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div style={{ width: '45px', height: '46px' }}>
-                <div className={`${notValid}`} key={key}></div>
-                <div style={{ textAlign: 'center', paddingTop: '7px' }}>
-                  {getDayOfMonth(i.date)}
+                  )}
                 </div>
-              </div>
-            )}</>}
+              ) : (
+                <div style={{ width: '45px', height: '46px' }}>
+                  <div className={`${notValid}`} key={key}></div>
+                  <div style={{ textAlign: 'center', paddingTop: '7px' }}>
+                    {getDayOfMonth(i.date)}
+                  </div>
+                </div>
+              )}</>}
           </div>
         ) : null}
       </div>

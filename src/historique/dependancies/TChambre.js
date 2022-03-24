@@ -398,7 +398,6 @@ function Recherche(props){
     );
 }
 export default function recherche_(props) {
-  // console.log("TRLALALA"+ JSON.stringify(props));
   return(
       <ResponsiveDrawer 
           title = "Type de chambre"

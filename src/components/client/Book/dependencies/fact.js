@@ -83,16 +83,15 @@ function Reservations(props){
             const u = i;
             const nbNuit = getDiffDays(new Date(tarif.dateSejour.debut), new Date(tarif.dateSejour.fin));
             // 
-            // console.log(tarif);
+            console.log(tarif);
             if(tarif.etat == 1 || tarif.etat == undefined){
-                console.log("Tarif");
                 return (
                         <Card className={styles.stay}>
                         <CardContent>
                             <div>
-                                <span><BedIcon/>{tarif.nomTypeChambre}</span>
+                                <span><BedIcon/>{props.context.state.traduction ? tarif.TypeChambreName : tarif.nomTypeChambre }</span>
                                 <span><ModeNightIcon/>{nbNuit + t('night')}</span>
-                                <span><LocalOfferIcon/>{tarif.nomTarif}</span>
+                                <span><LocalOfferIcon/>{props.context.state.traduction ? tarif.TarifName : tarif.nomTarif}</span>
                             </div>
                             <div>
                                 <span><PersonOutlineIcon/>x {tarif.nbPers} {t('person')}</span>
@@ -101,14 +100,14 @@ function Reservations(props){
                                         <HtmlTooltip
                                             title={
                                                 <InfoPolitiqueAnnul 
-                                                    checkIn={tarif.dateSejour.debut} 
-                                                    politique={tarif.politiqueAnnulAtrb[0]} 
+                                                    checkIn={tarif.dateSejour.debut}
+                                                    politique={tarif.politiqueAnnulAtrb[0]}
                                             />}
                                             placement="left-start"
                                         >
-                                            <span><PolicyIcon/>{tarif.politiqueAnnulAtrb.nom}</span>
+                                            {/* <span><PolicyIcon/>{tarif.politiqueAnnulAtrb.nom}</span> */}
+                                            <span><PolicyIcon/>{tarif.politiqueAnnulAtrb[0].nom}</span>
                                         </HtmlTooltip>
-                                        <span>{tarif.politiqueAnnulAtrb[0].nom}</span>
                                     </> 
                                 : null }
                                 <span></span>
@@ -188,7 +187,6 @@ class Fact extends React.Component{
         if(res.status === 200){
             console.log("validation reservation");
             console.log(res.reservation);
-            // props.context.setReservationEnCours(res.reservation);
         }else{
             console.log(res);
         }
@@ -196,6 +194,7 @@ class Fact extends React.Component{
     }
     validerReservation(){
         this.setState({load:false});
+        localStorage.setItem('access', 2);
         this.props.context.handleChange("err", null);
         this.props.context.handleChange("resultApplyReservation", null);
         try{
@@ -203,10 +202,9 @@ class Fact extends React.Component{
             let emailVide = true;
             if(this.props.context.state.reservationEnCours._id != ""){
                 idVide = false;
-                // this.props.context.props.history.push("/reservation/" + this.props.context.state.reservationEnCours._id + "/apply");
                 const itineraires =  this.props.context.state.itineraires;
-                const data = {itineraires: itineraires};
-
+                const data = {itineraires: itineraires, dateCreationPanier: this.props.context.state.reservationEnCours.dateCreationPanier};
+                console.log(data);
                 callAPI("post" , "/reservation/insertReservationPanier" , data , (res)=>{
                     if(res.status==200){
                         this.props.context.clearCookies();
@@ -222,37 +220,10 @@ class Fact extends React.Component{
     }
 
     componentDidMount(){
-        console.log("check cookies");
-        // // console.log(this.props.context.state.reservationEnCours);
-        // console.log("fact did mount");
         this.props.context.setReservationEnCours(null, true,false);
-        // axios({
-        //     method: 'get',
-        //     url: process.env.REACT_APP_BACK_URL + '/reservation/',
-        //     withCredentials: true,
-        //     data: {}
-        // })
-        // .then(res => {
-        //     let reserv = res.data.reservation === null ? null : res.data.reservation[0];
-        //     console.log(reserv);
-        //     
-        // }).catch(err => console.log(err));
     }
 
     annulerReservation(context, idReservation, indexItineraire, indexTarifReserve){
-        // const data = { _id: idReservation, indexItineraire: indexItineraire, indexTarifReserve: indexTarifReserve };
-        // console.log(data);
-        // console.log(context.state.itineraires);
-        // axios({
-        //     method: 'post',
-        //     url: process.env.REACT_APP_BACK_URL + '/reservation/delete',
-        //     withCredentials: true,
-        //     data: data
-        // })
-        // .then(res => { 
-        //     console.log(res);                                               
-        //     context.setReservationEnCours(res.data.reservation)})
-        // .catch(err => console.log(err));
         let reservation = context.state.reservationEnCours;
         try{
             reservation.itineraires[indexItineraire].tarifReserves.splice(indexTarifReserve, 1); 
@@ -280,7 +251,7 @@ class Fact extends React.Component{
                         {
                             this.state.load ?
                         <Button size='medium' variant="contained"  onClick={(e) => this.validerReservation()} endIcon={<CallMissedOutgoingIcon/>}>
-                            Valider réservation
+                            {this.props.context.state.traduction ? "Validate" : "Valider réservation" }
                         </Button>
                         :
                         <ButtonLoad/>
@@ -309,7 +280,7 @@ class Fact extends React.Component{
                 <div style={{textAlign:'center'}}>
                     <Itineraires context={this.props.context} annulerReservation={this.annulerReservation} />
                     <p id='bigLabel'>TOTAL : {toPay}</p>
-                    <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()} endIcon={<CallMissedOutgoingIcon/>}>Ajouter itinéraire</Button></p>
+                    <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()} endIcon={<CallMissedOutgoingIcon/>}>{this.props.context.state.traduction ? "Add itinerary" : "Ajouter itinéraire" }</Button></p>
                 </div>
                 <Modal
                     open={this.props.context.state.open}

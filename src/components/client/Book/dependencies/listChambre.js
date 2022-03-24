@@ -96,13 +96,48 @@ class DChambre extends React.Component{
                                     <PhotoTypeChambre photos={typeChambre.photo}/>
                                 </div>
                                 <div class="col">
-                                    <span>{typeChambre.nom}</span><br/>
-                                    <span><PersonOutline/> max : 
-                                        {typeChambre.nbAdulte} Adultes +
-                                        {typeChambre.nbEnfant} enfants
-                                    </span>
-                                    <span>{typeChambre.description.substring(0,85) + "..."}</span>
-                                    <DetailsTypeChambre context={this} typeChambre={typeChambre} indexTypeChambre={u} />
+                                    <div className="row">
+                                    
+                                    {this.props.context.state.traduction ?
+                                        <div className="">
+                                            <span>{typeChambre.name}</span>
+                                        </div>
+                                        :
+                                        <div className="">
+                                            <span>{typeChambre.nom}</span>
+                                        </div>
+                                    }
+    
+                                    </div>
+
+                                    {this.props.context.state.traduction ?
+                                        <span style={{fontSize:'14px'}}><PersonOutline/> max : 
+                                            {typeChambre.nbAdulte} Adult +
+                                            {typeChambre.nbEnfant} Children
+                                        </span>
+                                        :
+                                        <span style={{fontSize:'14px'}}><PersonOutline/> max : 
+                                            {typeChambre.nbAdulte} Adultes +
+                                            {typeChambre.nbEnfant} enfants
+                                        </span>
+                                    }
+
+                                    {this.props.context.state.traduction ?
+                                            <div>
+                                                {typeChambre.desc ?
+                                                <span style={{fontSize:'12px'}}>{typeChambre.desc.substring(0,85) + "..."}</span>
+                                                :
+                                                null
+                                                }
+                                            </div>
+                                        :
+                                            <div>
+                                                <span style={{fontSize:'12px'}}>{typeChambre.description.substring(0,85) + "..."}</span>
+                                            </div>
+                                    }
+
+                                    
+                                    <DetailsTypeChambre context={this.props.context} typeChambre={typeChambre} indexTypeChambre={u} />
                                         <div className={styles.equipements}>
                                         {
                                             typeChambre.equipements.map(equipement => {

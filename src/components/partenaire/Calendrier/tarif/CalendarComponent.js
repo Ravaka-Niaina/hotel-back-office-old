@@ -57,8 +57,8 @@ const CalendarComponent = () => {
     const [isFirst, setIsFirst] = useState(true);
     const [isAccept, setIsAccept] = React.useState(false);
     const [isTextField, setIsTextField] = React.useState(false);
-    function getPrix(dates){
-        setOpenLoad(true);
+    function getPrix(dates, startLoad, endLoad){
+        startLoad ? startLoad() : setOpenLoad(true);
         try{
             axios({
                 method: 'post',
@@ -90,9 +90,12 @@ const CalendarComponent = () => {
                     );
                 }
                 setRateLine(tmp);
-                setOpenLoad(false);
+                endLoad ? endLoad() : setOpenLoad(false);
             })
-            .catch(err => {console.log(err); setOpenLoad(false);});
+            .catch(err => {
+                console.log(err);
+                endLoad ? endLoad() : setOpenLoad(false);
+            });
         }catch(err){
             console.error(err);
         }

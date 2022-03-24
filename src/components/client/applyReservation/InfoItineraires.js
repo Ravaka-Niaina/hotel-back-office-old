@@ -11,27 +11,34 @@ import {StyledTableCell, StyledTableRow,
 import TarifReserves from './TarifReserves.js';
 import './Itineraires.css';
 function InfoItineraires(props){
+    console.log(props.reservation);
     let itineraires = [];
+    let x = 0;
     if(props.reservation != null){
         for(let i = 0; i < props.reservation.itineraires.length; i++){
-            const u = i;
-            itineraires.push(
-                <div class ="box_itineraire">
-                    <h2 class ="title_itineraire">Informations itinéraire {u + 1}</h2>
-                    
-                    <TarifReserves  
-                        indexItineraire={u}
-                        reservation={props.reservation}
-                        setReservation={props.setReservation}
-                        reservateur={props.reservateur}
-                        isEditEnabled={props.isEditEnabled}
-                        affilie={props.affilie}
-                        setAffilie={props.setAffilie}
-                        openLoad={props.openLoad}
-                        setOpenLoad={props.setOpenLoad}
-                        isEditEnabled={props.isEditEnabled} />
-                </div>
-            );
+            for(let j = 0 ; j < props.reservation.itineraires[i].tarifReserves.length ; j++){
+                if(props.reservation.itineraires[i].tarifReserves[j].etat !== 0){
+                    const u = i;
+                    x = x+1;
+                    itineraires.push(
+                        <div class ="box_itineraire">
+                            <h2 class ="title_itineraire">Informations itinéraire {x}</h2>
+                            
+                            <TarifReserves  
+                                indexItineraire={u}
+                                reservation={props.reservation}
+                                setReservation={props.setReservation}
+                                reservateur={props.reservateur} 
+                                isEditEnabled={props.isEditEnabled}
+                                affilie={props.affilie}
+                                setAffilie={props.setAffilie}
+                                openLoad={props.openLoad}
+                                setOpenLoad={props.setOpenLoad}
+                                ShowModalAnnulation={props.ShowModalAnnulation} />
+                        </div>
+                    );
+                } 
+            }    
         }
     }
     

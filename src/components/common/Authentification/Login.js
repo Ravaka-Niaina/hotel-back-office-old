@@ -79,6 +79,8 @@ const Login = (props) => {
     const [mdp, setMdp] = React.useState("");
     const [errorMdp, setErrorMdp] = React.useState(null);
     const [ambiguousError, setAmbiguousError] = React.useState(null);
+    const [loading, setLoading] = React.useState(false);
+
 
     const history = useHistory();
 
@@ -115,11 +117,16 @@ const Login = (props) => {
                 }
             });
         }
+        setLoading(false);
     };
 
     const login = (e) => {
         e.preventDefault();
+        setLoading(true);
         setAmbiguousError(null);
+        let test = "ye";
+        test = "aaa";
+        test = "inona?";
         const data = {
             isPartner: isPartner,
             email: email.trim(),
@@ -163,6 +170,11 @@ const Login = (props) => {
     const handleShowPassword = () => {
         setShowPassword((show) => !show);
     };
+    const keyPress = (e) => {
+        if(e.keyCode == 13){
+           login(e);
+        }
+    }
     
     return(
         <>
@@ -203,6 +215,7 @@ const Login = (props) => {
                                 {...getFieldProps('email')}
                                 value={email} onChange={(e) => {setErrorEmail(null); setEmail(e.target.value)}}
                                 error={errorEmail === null ? false : true}
+                                onKeyDown={keyPress}
                                 helperText={errorEmail === null ? null : errorEmail}
                             />
 
@@ -223,6 +236,7 @@ const Login = (props) => {
                                 }}
                                 value={mdp} onChange={(e) => {setErrorMdp(null); setMdp(e.target.value)}}
                                 error={errorMdp === null ? false : true}
+                                onKeyDown={keyPress}
                                 helperText={errorMdp === null ? null : errorMdp}
                             />
                             </Stack>

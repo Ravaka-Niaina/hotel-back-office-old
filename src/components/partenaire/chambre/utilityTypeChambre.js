@@ -1,32 +1,6 @@
-
-import { Checkbox } from "@mui/material";
-import TextField from '@mui/material/TextField';
-
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
 import './typeChambre.css';
-
-export const FileInput = ({value, handlePhotoChange, text, accepts, error}) => {
-    if(!text){
-        text =<p id='bigLabel'>Cliquez pour choisir une photo...</p>;
-    }
-    if(!accepts){
-        accepts = "image/*"
-    }
-    return(
-        <div>
-            <label>
-                {text}
-                <input 
-                style={{display: 'none'}}
-                type="file"
-                accept= {accepts}
-                multiple="multiple"
-                onChange={(e) => handlePhotoChange(e)}
-                />
-            </label>
-        </div>
-    );
-}
 
 export function handleInputChange(context, event, inputName){
     const currentState = JSON.parse(JSON.stringify(context.state));

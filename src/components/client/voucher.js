@@ -9,6 +9,10 @@ import ItinerairesVoucher from './voucher/ItineraireVoucher';
 import ModalAnnulation from '../common/ModalAnnulation.js';
 import ModalAnnulationChambre from '../common/ModalAnnulationChambre.js';
 import { useHistory } from 'react-router-dom';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
+
+import NavBarStepper from "./NavbarClient/NavBar&Stepper.js"; 
 
 function Voucher(props){
     const [reservation, setReservation] = useState(null);
@@ -25,6 +29,8 @@ function Voucher(props){
     const[ variableAnnuler , setVariableAnnuler] = useState({idReservation:'', indexItineraire :'',indexTarifsReserve : ''});
     const [message , setMessage] = useState("");
     const [isReservation , setIsReservation] = useState(true);
+    const [isConnected , setIsConnected] = useState(null);
+    const [run , setRun] = useState(true);
 
     function ShowModalAnnulation(isTrue,ObjectChambreAnnuler){
         if(isTrue){
@@ -50,18 +56,6 @@ function Voucher(props){
         }
     }
 
-    function handleResponse2(res){
-        console.log(res);
-        if(res.status == 200){
-            history.push('/reservation/'+variableAnnuler.idReservation+'/voucher');
-        }else{
-            setAlertError(res.errors[0].message);
-            window.location.href = '#error';
-        }
-        setLoad(false);
-        setShowModalChambre(false); 
-    }
-
     function annulerReservation(){
         setLoad(true);
         if(isReservation){
@@ -77,28 +71,6 @@ function Voucher(props){
         setLoad(true);
         const data = { _id: variableAnnuler.idReservation, indexItineraire: variableAnnuler.indexItineraire, indexTarifReserve: variableAnnuler.indexTarifsReserve };
         callAPI('post', '/reservation/delete', data, setDetailReservation );
-  
-        // axios({
-        //     method: 'post',
-        //     url: process.env.REACT_APP_BACK_URL + '/reservation/delete',
-        //     withCredentials: true,
-        //     data: data
-        // })
-        // .then(res => { 
-        //     console.log(res);                                               
-        //     context.setReservationEnCours(res.data.reservation)})
-        // .catch(err => console.log(err));
-        // let reservation = context.state.reservationEnCours;
-        // try{
-        //     reservation.itineraires[indexItineraire].tarifReserves.splice(indexTarifReserve, 1); 
-        //     if(reservation.itineraires[indexItineraire].tarifReserves.length ==0){
-        //         reservation.itineraires.splice(indexItineraire,1);
-        //     }
-            
-        // }catch(e){
-
-        // }
-        // context.setReservationEnCours(reservation);
     }
 
 
@@ -109,7 +81,6 @@ function Voucher(props){
 
         setMessage(res.message);
         setOpenLoad(false);
-        console.log(res);
         if(res.status === 200){
             try{
                 let current = JSON.parse(JSON.stringify(res.reservation));
@@ -140,8 +111,6 @@ function Voucher(props){
                 if(res.reservation.reservateur != undefined){
                     setReservateur(res.reservation.reservateur);
                 }
-                console.log("reservation:");
-                console.log(current);
             }catch(err){
                 console.log(err);
             }
@@ -154,20 +123,42 @@ function Voucher(props){
         if(res.message !== null){
             history.push('#redirect')
         }
+        setRun(false);
     }
 
     function redirect(){
+        localStorage.setItem('access', 0);
         return history.push('/')
+    }
+
+    function precedent(){
+        localStorage.setItem('access',0);
+        return history.push('/front/researchReservation');
+    }
+    
+    function ControllerAcces(){
+        if(localStorage.access == "1"){
+            setIsConnected(true);
+        }else{
+            setIsConnected(false);
+        }
+    }
+    function ModificationReservation(id){
+        localStorage.setItem('access',2);
+        // return history.push('/reservation/'+id+'/apply');
+        return history.push("/reservation/"+id+"/apply/"+1);
     }
     
     useEffect(() => {
+        ControllerAcces();
         callAPI('get', '/reservation/details/' + _id, {}, setDetailReservation);
     }, [_id]);
 
 
     return(
+        <>
+        <NavBarStepper access = {localStorage.access} id = {_id} indice = {2}  numeroItineraire={"1"} isConnected={isConnected} />
         <div class="voucher_container">
-            
             <div class="voucher_infos">
                 <div class="voucher_border voucher_bravo">
                     <div>
@@ -222,18 +213,35 @@ function Voucher(props){
                 <hr style={{marginLeft:'0.1em'}}></hr>
 
                 <div>
-                    <p><strong><span>Modification des réservations</span></strong></p>
-                    <button   class="button_pannel" >Modifier la réservation</button>
-                    <p style={{marginTop:'1rem'}}><strong><span>Annulations</span></strong></p>
+                    <p><strong><span>{message == "Cette réservation n'existe pas ou est déjà annulée" ? "précédent" : "Modification des réservations"}</span></strong></p>
+
+                        {
+                                message == "Cette réservation n'existe pas ou est déjà annulée" ? <button   class="button_pannel"  onClick={() => precedent()}>précédent</button>  
+                                : 
+                                <> {
+                                    isConnected ?  <button   class="button_pannel"  onClick={() => ModificationReservation(_id)}>Modifier la réservation</button> : 
+                                    <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained" disabled>Modifier la réservation</button>
+                                } </>
+                                  
+                        }
+                    <p style={{marginTop:'1rem'}}><strong><span>Annulations</span></strong></p> 
                     {
-                        isReservation ? 
-                            <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained"
-                                onClick={(e) => ShowModalAnnulation(true)}>Annuler réservation</button>
-                        : 
-                            <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained" 
-                                onClick={(e) => redirect()}>Redirect Client</button>
-                      
-                    }      
+                        isConnected ? <>
+                            {
+                                isReservation ? 
+                                    <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained"
+                                        onClick={(e) => ShowModalAnnulation(true)}>Annuler réservation</button>
+                                : 
+                                    <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained" 
+                                        onClick={(e) => redirect()}>nouvelle réservation</button>
+                            
+                            } 
+                            </> : <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained" 
+                                        disabled>Annuler réservation</button>
+                    }
+                    <br/> <br/>
+                    <p><strong><span>nouvelle réservation</span></strong></p>
+                    <button  class="button_pannel" onClick={(e) => redirect()}>nouvelle réservation</button>   
                 </div>
 
                 
@@ -241,7 +249,14 @@ function Voucher(props){
             <ModalAnnulationChambre ShowModalAnnulation={ShowModalAnnulation} showModal={showModalChambre} AnnulationReservationChambre = {AnnulationReservationChambre}  load ={load}  />  
         
             <ModalAnnulation ShowModalAnnulation={ShowModalAnnulation} showModal={showModal}  annulerReservation={annulerReservation} load ={load}  />  
+            <Backdrop
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={run}
+            >
+                <CircularProgress color="inherit" />
+            </Backdrop> 
         </div>
+        </>
     );
 }
 

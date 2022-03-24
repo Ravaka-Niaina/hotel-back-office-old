@@ -223,6 +223,42 @@ const getValue = (row, fieldName) => {
   return value;
 }
 
+const BootstrapButton = styled(Button)({
+  boxShadow: 'none',
+  textTransform: 'none',
+  fontSize: 16,
+  padding: '6px 12px',
+  border: '1px solid',
+  lineHeight: 1.5,
+  backgroundColor: '#3CB371',
+  borderColor: '#3CB371',
+  fontFamily: [
+    '-apple-system',
+    'BlinkMacSystemFont',
+    '"Segoe UI"',
+    'Roboto',
+    '"Helvetica Neue"',
+    'Arial',
+    'sans-serif',
+    '"Apple Color Emoji"',
+    '"Segoe UI Emoji"',
+    '"Segoe UI Symbol"',
+  ].join(','),
+  '&:hover': {
+    backgroundColor: '#0069d9',
+    borderColor: '#0062cc',
+    boxShadow: 'none',
+  },
+  '&:active': {
+    boxShadow: 'none',
+    backgroundColor: '#0062cc',
+    borderColor: '#005cbf',
+  },
+  '&:focus': {
+    boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
+  },
+});
+
 function Recherche(props){
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
@@ -360,16 +396,15 @@ function Recherche(props){
                   <Grid item xs={10}>
                   </Grid>
                   <Grid item xs={2}>
-                      <Button 
+                      <BootstrapButton 
                           variant="contained" 
-                          color="success"
                           endIcon={<AddIcon style={{color:'white'}}/>}
                           onClick={ ()=> redirection(props.btnInsert.urlRedirect) }
                           style={{textDecoration:'none'}}
                           sx={{ borderRadius:3 }}
                       >
                           <span style={{color:'white', fontSize:'14px', fontWeight:'bold'}}>{props.btnInsert.label}</span>
-                      </Button>
+                      </BootstrapButton>
                   </Grid> 
                 </Grid>
             
@@ -492,7 +527,6 @@ function Recherche(props){
     );
 }
 export default function recherche_(props) {
-  // console.log("TRLALALA"+ JSON.stringify(props));
   return(
       <ResponsiveDrawer 
           title = {props.title}

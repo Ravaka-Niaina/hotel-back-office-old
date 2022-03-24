@@ -42,7 +42,9 @@ import  Front_client  from "./front_client/front_client";
 
 import  Reservation  from "./components/client/reservation.js";
 import  ApplyReservation  from "./components/client/applyReservation.js";
+import  ApplyReservationModif  from "./components/client/applyReservationModif.js";
 import Voucher from "./components/client/voucher.js";
+import Voucher1 from "./components/client/voucher1.js";
 
 import  BasicDateRangePicker  from "./components/client/dateSejourClient";
 import Calendrier from "./components/partenaire/Calendrier/Calendrier";
