@@ -17,20 +17,20 @@ const PriceEditor = (props) => {
             for(let u = 0; u < nbOccupants; u++){
                 y++;
                 if(y === selectedY){
-                    return i
+                    return {indicePlanTarifaire: i, nbPers: u + 1};
                 }
             }
         }
     };
-    const indicePlanTarifaire = getIndicePlanTarifaire(props.selectedY);
+    const version = getIndicePlanTarifaire(props.selectedY);
 
     return(
         <>
             <br/>
             {props.isPrice ?
                 <RateEditor
-                    nomPlanTarifaire={props.typechambre.planTarifaire[indicePlanTarifaire].nom}
-                    idPlanTarifaire={props.typechambre.planTarifaire[indicePlanTarifaire]._id}
+                    nomPlanTarifaire={props.typechambre.planTarifaire[version.indicePlanTarifaire].nom}
+                    idPlanTarifaire={props.typechambre.planTarifaire[version.indicePlanTarifaire]._id}
                     fromto={props.fromto}
                     value={value}
                     setValue={setValue}
@@ -38,7 +38,7 @@ const PriceEditor = (props) => {
                     idTypeChambre={props.typechambre._id}
                     alldays={props.alldays}
                     getPrix={props.getPrix}
-                    nbPers={nbPers}  />
+                    nbPers={version.nbPers}  />
             : ""}
             {!props.isPrice && props.selected == -2  ?
                 <RoomEditor

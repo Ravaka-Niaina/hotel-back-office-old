@@ -13,16 +13,11 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
     handleChange, closePopper, idTypeChambre, alldays, getPrix, nbPers}) => {
     const [changeStatusRate, setChangeStatusRate] = useState(false);
     const [loading, setLoading] = React.useState(false);
-    const [versions, setVersions] = React.useState(() => {
-        let tmp = [];
-        for(let i = 0; i < nbPers; i++){
-            tmp.push({
-                nbPers: i + 1,
-                prix: ""
-            });
-        }
-        return tmp;
-    });
+    const [prix, setPrix] = React.useState("");
+
+    if(fromto.length === 1){
+        fromto.push({...fromto[0]});
+    }
 
     const switchChangeStatusRate = () => {
         setChangeStatusRate(!changeStatusRate);
@@ -41,19 +36,9 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
         }
     };
 
-    const setPrix = (i, value) => {
-        let tmp = JSON.parse(JSON.stringify(versions));
-        tmp[i].prix = value;
-        setVersions(tmp);
-    };
-
     const savePrixTarif = (e) => {
         e.preventDefault();
         setLoading(true);
-        let tmpVersions = JSON.parse(JSON.stringify(versions));
-        for(let i = 0; i < tmpVersions.length; i++){
-            tmpVersions[i].prix = Number.parseFloat(tmpVersions[i].prix);
-        }
 
         const data = {
             dateDebut: getDateYYYYMMDD(fromto[0]),
@@ -65,35 +50,13 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
             idTypeChambre: idTypeChambre,
             tabIdTarif: [idPlanTarifaire],
             modifierOuvertureTarif: changeStatusRate,
-            versions: tmpVersions,
+            nbPers: nbPers,
+            prix: prix,
             minSejour: 1
         };
-        callAPI('post', '/TCTarif/configPrix', data, refresh);
+        console.log(data);
+        callAPI('post', '/TCTarif/configPrixXPers', data, refresh);
     };
-
-    let inputPrix = [];
-    for(let i = 0; i < nbPers; i++){
-        inputPrix.push(
-            <>
-                <TextField
-                    size="small"
-                    id="outlined-number"
-                    label={"x " + (i + 1)} 
-                    type="number"
-                    InputProps={{
-                        startAdornment: <InputAdornment position="start"><PersonOutlineIcon/></InputAdornment>,
-                        endAdornment:<InputAdornment position="end">€</InputAdornment>
-                    }}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    value={versions[i].prix}
-                    onChange={(e) => setPrix(i, e.target.value)}
-                />
-                <br/>
-            </>
-        );
-    }
 
     return(
         <FormControl component="fieldset">
@@ -115,7 +78,22 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
                 <FormControlLabel value="close" control={<Radio />} label="Close" disabled={!changeStatusRate} />
             </RadioGroup>
             <br/>
-            {inputPrix}
+            <TextField
+                size="small"
+                id="outlined-number"
+                label={"x " + nbPers} 
+                type="number"
+                InputProps={{
+                    startAdornment: <InputAdornment position="start"><PersonOutlineIcon/></InputAdornment>,
+                    endAdornment:<InputAdornment position="end">€</InputAdornment>
+                }}
+                InputLabelProps={{
+                    shrink: true,
+                }}
+                value={prix}
+                onChange={(e) => setPrix(e.target.value)}
+            />
+            <br/>
             <Stack direction="row" spacing={2}>
                 <LoadingButton
                     color="secondary"
