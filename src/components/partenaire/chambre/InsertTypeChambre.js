@@ -392,7 +392,7 @@ function InsertTypeCHambre(){
                     <Galerie showGalerie={showGalerie} setShowGalerie={setShowGalerie} 
                       photoSortie={photo} setPhotoSortie={setPhoto} nbPhotoBeforeSortie={nbPhotoBefore}
                       previewSortie={preview} setPreviewSortie={setPreview} />
-                      
+                    
                     <VideoChambre state={state} setState={setState} />
 
                     <div style={{marginTop:'10px'}}>

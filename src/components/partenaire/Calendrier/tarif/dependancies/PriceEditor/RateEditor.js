@@ -16,7 +16,7 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
     const [prix, setPrix] = React.useState("");
 
     if(fromto.length === 1){
-        fromto.push({...fromto[0]});
+        fromto.push(fromto[0] + "");
     }
 
     const switchChangeStatusRate = () => {
@@ -39,7 +39,7 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
     const savePrixTarif = (e) => {
         e.preventDefault();
         setLoading(true);
-
+        console.log(fromto);
         const data = {
             dateDebut: getDateYYYYMMDD(fromto[0]),
             dateFin: getDateYYYYMMDD(fromto[1]),
@@ -51,7 +51,7 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
             idTarif: idPlanTarifaire,
             modifierOuvertureTarif: changeStatusRate,
             nbPers: nbPers,
-            prix: Number.parseInt(prix),
+            prix: Number.parseFloat(prix),
             minSejour: 1
         };
         console.log(data);

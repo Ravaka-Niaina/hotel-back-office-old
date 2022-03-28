@@ -26,7 +26,7 @@ function Promotions(props){
         })
     }
     
-    return  promo   
+    return  promo;
 }
 
 function Promotion (props){

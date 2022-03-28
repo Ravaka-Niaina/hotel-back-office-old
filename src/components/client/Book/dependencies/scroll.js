@@ -347,7 +347,6 @@ class Scroll extends React.Component{
  
     
     render(){
-       
         
         return(
             <div>
