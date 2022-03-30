@@ -150,10 +150,8 @@ export default function PersistentDrawerLeft(props) {
   React.useEffect(()=>{
 
     if(init){
-      console.log("initialisation aaaaaaaaaaaaaaaaaaaaaaaa");
       optionlist.map((option, i) =>{
         option.lien.map((opt, u) => {
-          console.log(window.location.href.split(url)[1] + " , " + option.lien[u].link);
           if(window.location.href.split(url)[1] === option.lien[u].link){
             console.log("curIndex "+i)
             setCurrentIndex(i);
@@ -263,7 +261,6 @@ export default function PersistentDrawerLeft(props) {
           {
             optionlist.map((option, index) => 
             {
-              console.log(window.location.href.split(url)[1])
               return(
               option.dropdown === false ?
               // <Link to={option.lien[0]["link"]} className="nav-link">
