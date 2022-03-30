@@ -269,20 +269,20 @@ export default function PersistentDrawerLeft(props) {
               // <Link to={option.lien[0]["link"]} className="nav-link">
                 <ListItem button key=  
                 {
-                  <Typography style={{ fontFamily: "Optima" }}>
+                  <Typography>
                     {option.text}
                   </Typography>
                 }
                 sx={{ backgroundColor: window.location.href.split(url)[1] === option.lien[0].link ? "#f0fff7":null, borderRight:window.location.href.split(url)[1] === option.lien[0].link ? 4: null, borderRightColor: window.location.href.split(url)[1] === option.lien[0].link ? "#3CB371" : null }}   
                 // sx={{ backgroundColor: "#f0fff7" }}
                 >
-                  <ListItemIcon sx={{ml:"35px"}}>
+                  <ListItemIcon sx={{ml:"35px", color: window.location.href.split(url)[1] === option.lien[0].link ? "#3CB371" : null }}>
                     <option.icon />
                   </ListItemIcon>
                   <ListItemText 
                   primary=
                   {
-                    <Typography style={{ fontFamily: "Optima" }}>
+                    <Typography style={{ fontFamily: "Arial", color: window.location.href.split(url)[1] === option.lien[0].link ? "#3CB371" : "#8c8c8c" }}>
                       {option.text}
                     </Typography>
                   }
@@ -297,13 +297,13 @@ export default function PersistentDrawerLeft(props) {
                   button key={option.text} 
                   onClick={(e) => handleClick(e, index)}
                 >
-                  <ListItemIcon sx={{ml:"35px"}}>
+                  <ListItemIcon sx={{ml:"35px", color: window.location.href.split(url)[1] === option.lien[0].link ? "#3CB371" : null}}>
                     <option.icon />
                   </ListItemIcon>
                   <ListItemText 
                     primary=
                     {
-                      <Typography style={{ fontFamily: "Optima" }}>
+                      <Typography style={{ fontFamily: "Arial", color: window.location.href.split(url)[1] === option.lien[0].link ? "#3CB371" : "#8c8c8c" }}>
                         {option.text}
                       </Typography>
                     }
@@ -330,14 +330,14 @@ export default function PersistentDrawerLeft(props) {
                             sx={{ pl:4, backgroundColor: window.location.href.split(url)[1] === optionlist[currentIndex].lien[ind].link ? "#f0fff7":null, borderRight:window.location.href.split(url)[1] === optionlist[currentIndex].lien[ind].link ? 4: null, borderRightColor: window.location.href.split(url)[1] === optionlist[currentIndex].lien[ind].link ? "#3CB371" : null }}
                             
                           >
-                            <ListItemIcon sx={{ml:"35px"}}>
+                            <ListItemIcon sx={{ml:"35px", color: window.location.href.split(url)[1] === optionlist[currentIndex].lien[ind].link ? "#3CB371" : null }}>
                               <StarBorder />
                             </ListItemIcon>
                             <ListItemText 
                               onClick={() => redirection(optionlist[currentIndex].lien[ind].link)}
                               primary=
                               {
-                                <Typography style={{ fontFamily: "Optima" }}>
+                                <Typography style={{ fontFamily: "Arial", color: window.location.href.split(url)[1] === optionlist[currentIndex].lien[ind].link ? "#3CB371" : "#8c8c8c" }}>
                                   {optionlist[currentIndex].lien[ind].nom}
                                 </Typography>
                               }

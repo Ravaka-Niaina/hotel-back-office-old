@@ -157,7 +157,7 @@ function EnhancedTableHead(props) {
     return (
 
       <TableHead>
-        <TableRow style={{backgroundColor :"#FFFFFF",color:'white'}}>
+        <TableRow style={{backgroundColor :"#bfbfbf",color:'white'}}>
           {props.headCells.map((headCell) => (
             <TableCell
               key={headCell.id}

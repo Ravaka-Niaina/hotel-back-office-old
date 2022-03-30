@@ -15,13 +15,15 @@ export default function EnhancedTableHead(props) {
   
     return (
       <TableHead>
-        <TableRow style={{backgroundColor :"#F6F8FC",color:'white'}}>
+        <TableRow style={{backgroundColor :"#bfbfbf",color:'white'}}>
           {props.headCells.map((headCell) => (
             <TableCell
               key={headCell.id}
-              align={headCell.numeric ? 'left' : 'center'}
+              // align={headCell.numeric ? 'left' : 'center'}
+              align = "right"
               padding={headCell.disablePadding ? 'none' : 'normal'}
               sortDirection={orderBy === headCell.id ? order : false}
+              sx={{ fontFamily:'Raleway', fontSize:17 }}
             >
               <TableSortLabel
                 active={orderBy === headCell.id}

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import  {useEffect, useState}  from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -20,6 +21,10 @@ import AddIcon from '@mui/icons-material/Add';
 
 import EditIcon from '@mui/icons-material/Edit';
 import Skeleton from '../../../SkeletonListe/skeleton';
+import Iconify from '../../../comp/Iconify';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import { styled } from '@mui/material/styles';
+import { Toolbar, IconButton } from '@mui/material';
 
 import callAPI from '../../../utility.js';
 import FooterList from '../../common/List/FooterList.js';
@@ -34,12 +39,354 @@ import {session} from '../../common/utilitySession.js';
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Stack from '@mui/material/Stack';
+import Card from '@mui/material/Card';
+
+import Collapse from '@mui/material/Collapse';
+import Typography from '@mui/material/Typography';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+
+const RootStyle = styled(Toolbar)(({ theme }) => ({
+    height: 200,
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: theme.spacing(0, 1, 0, 3)
+  }));
+  
+//   function Row(props) {
+//     const { row } = props;
+//     const [isOpen, setIsOpen] = React.useState(false);
+  
+//     return (
+//       <React.Fragment>
+          
+//         <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+//           <TableCell>
+//             <IconButton
+//               aria-label="expand row"
+//               size="small"
+//               onClick={() => setIsOpen(!isOpen)}
+//             >
+//               {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+//             </IconButton>
+//           </TableCell>
+//           <TableCell component="th" scope="row">
+//             {row.name}
+//           </TableCell>
+//           <TableCell align="right">{row.calories}</TableCell>
+//           <TableCell align="right">{row.fat}</TableCell>
+//           <TableCell align="right">{row.carbs}</TableCell>
+//           <TableCell align="right">{row.protein}</TableCell>
+//         </TableRow>
+//         <TableRow>
+//           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+//             <Collapse in={isOpen} timeout="auto" unmountOnExit>
+//               <Box sx={{ margin: 1 }}>
+//                 <Typography variant="h6" gutterBottom component="div">
+//                   History
+//                 </Typography>
+//                 <Table size="small" aria-label="purchases">
+//                   <TableHead>
+//                     <TableRow>
+//                       <TableCell>Date</TableCell>
+//                       <TableCell>Customer</TableCell>
+//                       <TableCell align="right">Amount</TableCell>
+//                       <TableCell align="right">Total price ($)</TableCell>
+//                     </TableRow>
+//                   </TableHead>
+//                   <TableBody>
+//                     {row.history.map((historyRow) => (
+//                       <TableRow key={historyRow.date}>
+//                         <TableCell component="th" scope="row">
+//                           {historyRow.date}
+//                         </TableCell>
+//                         <TableCell>{historyRow.customerId}</TableCell>
+//                         <TableCell align="right">{historyRow.amount}</TableCell>
+//                         <TableCell align="right">
+//                           {Math.round(historyRow.amount * row.price * 100) / 100}
+//                         </TableCell>
+//                       </TableRow>
+//                     ))}
+//                   </TableBody>
+//                 </Table>
+//               </Box>
+//             </Collapse>
+//           </TableCell>
+//         </TableRow>
+//       </React.Fragment>
+//     );
+//   }
+  
+//   Row.propTypes = {
+//     row: PropTypes.shape({
+//       calories: PropTypes.number.isRequired,
+//       carbs: PropTypes.number.isRequired,
+//       fat: PropTypes.number.isRequired,
+//       history: PropTypes.arrayOf(
+//         PropTypes.shape({
+//           amount: PropTypes.number.isRequired,
+//           customerId: PropTypes.string.isRequired,
+//           date: PropTypes.string.isRequired,
+//         }),
+//       ).isRequired,
+//       name: PropTypes.string.isRequired,
+//       price: PropTypes.number.isRequired,
+//       protein: PropTypes.number.isRequired,
+//     }).isRequired,
+//   };
+  
+  
+
+  function CollapsibleTable() {
+    return (
+      <TableContainer component={Paper}>
+        <Table aria-label="collapsible table">
+          <TableHead>
+            <TableRow>
+              <TableCell />
+              <TableCell>Dessert (100g serving)</TableCell>
+              <TableCell align="right">Calories</TableCell>
+              <TableCell align="right">Fat&nbsp;(g)</TableCell>
+              <TableCell align="right">Carbs&nbsp;(g)</TableCell>
+              <TableCell align="right">Protein&nbsp;(g)</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {/* {rows.map((row) => (
+              <Row key={row.name} row={row} />
+            ))} */}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  }
+
+function Rows(props){
+    {
+        stableSort(props.listResult, getComparator(props.order, props.orderBy))
+            .slice(props.page * props.nbContent, props.page * props.nbContent + props.nbContent)
+            .map((row, index) => {
+            const isItemSelected = null;
+            const labelId = `enhanced-table-checkbox-${index}`;
+            
+            return(
+                <>
+                <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+                    <TableCell>
+                        <IconButton
+                        aria-label="expand row"
+                        size="small"
+                        onClick={() => props.setIsOpen(!props.isOpen)}
+                        >
+                        {props.isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                        </IconButton>
+                    </TableCell>
+                    <TableCell component="th" scope="row">
+                        {row.etat}
+                    </TableCell>
+                    <TableCell align="right">{row.reservateur}</TableCell>
+                    <TableCell align="right">{row.dateValidation}</TableCell>
+                </TableRow>
+
+                <TableRow>
+                <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                  <Collapse in={props.isOpen} timeout="auto" unmountOnExit>
+                    <Box sx={{ margin: 1 }}>
+                      <Typography variant="h6" gutterBottom component="div">
+                        Itineraires
+                      </Typography>
+                      <Table size="small" aria-label="purchases">
+                        <TableHead>
+                          <TableRow>
+                            <TableCell>Numero Itineraire</TableCell>
+                            <TableCell>Date d'arrivee</TableCell>
+                            <TableCell align="right">Date de depart</TableCell>
+                            <TableCell align="right">Nombre de nuit</TableCell>
+                            <TableCell align="right">Type des chambres</TableCell>
+                            <TableCell align="right">Nom des Tarifs</TableCell>
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          {
+                            row.itineraires.map(itineraire =>(
+                            <TableRow key={itineraire.NumeroITineraire}>
+                              <TableCell component="th" scope="row">
+                                {itineraire.NumeroITineraire} 
+                              </TableCell>
+                              <TableCell>
+                                  {removeSpecialCharFromDate(itineraire.dateSejour.debut)}
+                              </TableCell>
+                              <TableCell align="right">
+                                  {removeSpecialCharFromDate(itineraire.dateSejour.fin)}
+                              </TableCell>
+                              <TableCell align="right">
+                                  {removeSpecialCharFromDate(itineraire.nights)}
+                              </TableCell>
+                              <TableCell align="right">
+                                <ul>
+                                    {
+                                        itineraire.tarifReserves.map(tarif => {
+                                        return(
+                                                <li>{tarif.nomTypeChambre}</li>
+                                        );
+                                    })}
+                                </ul>
+                              </TableCell>
+                              <TableCell>
+                                <ul>
+                                    {
+                                        itineraire.tarifReserves.map(tarif => {
+                                        return(
+                                                <li>{tarif.nomTarif}</li>
+                                        );
+                                    })}
+                                </ul>
+                              </TableCell>
+                            </TableRow>
+                            ))
+                          }
+                        </TableBody>
+                      </Table>
+                    </Box>
+                  </Collapse>
+                </TableCell>
+              </TableRow>
+              </>
+            );
+            
+        })}
+        {props.emptyRows > 0 && (
+            <TableRow
+            style={{
+                height: (props.dense ? 33 : 53) * props.emptyRows,
+            }}
+            >
+            <TableCell colSpan={6} />
+            
+            </TableRow>
+        )}
+}
+
+// function Row(props){
+//     {
+//         stableSort(listResult, getComparator(order, orderBy))
+//             .slice(page * nbContent, page * nbContent + nbContent)
+//             .map((row, index) => {
+//             const isItemSelected = null;
+//             const labelId = `enhanced-table-checkbox-${index}`;
+//             row.itineraires.map(itineraire =>{
+//                 return (
+//                     <TableRow
+//                     onClick={(event) => handleClick(event, row._id , true)}
+//                     role="checkbox"
+//                     tabIndex={-1}
+//                     key={row._id}
+//                     >   
+//                         <TableCell
+//                             component="td"
+//                             align = "left"
+//                         > 
+//                         {itineraire.NumeroITineraire}                 
+//                         </TableCell>
+//                         <TableCell
+//                             component="td"
+//                             align = "left"
+//                         >
+//                             {row.reservateur ? row.reservateur.nom + " " + row.reservateur.prenom : ""}
+//                         </TableCell>
+//                         <TableCell
+//                             component="td"
+//                             align = "left"
+//                         >
+//                             <ul>
+//                                 <li>Rabearisoa Miora</li>
+//                                 <li>Andriatsitoaina Feno</li>
+//                                 <li>Rabetrano Pierre</li>
+//                             </ul>
+//                         </TableCell>
+//                         <TableCell
+//                             component="td"
+//                             align = "left"
+//                         >
+//                             {row.dateValidation === null ? "" : removeSpecialCharFromDate(row.dateValidation)}
+//                         </TableCell>
+//                         <TableCell
+//                             component="td"
+//                             align = "left"
+//                         >
+//                             {removeSpecialCharFromDate(itineraire.dateSejour.debut)}
+//                         </TableCell>
+//                         <TableCell
+//                             component="td"
+//                             align = "left"
+//                         >
+//                             {removeSpecialCharFromDate(itineraire.dateSejour.fin)}
+//                         </TableCell>
+//                         <TableCell
+//                             component="td"
+//                             align = "left"
+//                         >
+//                             {removeSpecialCharFromDate(itineraire.nights)}
+//                         </TableCell>
+//                         <TableCell
+//                             component="td"
+//                             align = "left"
+//                         >
+                            
+//                             <ul>
+//                                 {
+//                                     itineraire.tarifReserves.map(tarif => {
+//                                     return(
+//                                             <li>{tarif.nomTypeChambre}</li>
+//                                     );
+//                                 })}
+//                             </ul>
+                                
+//                         </TableCell>
+//                         <TableCell
+//                             component="td"
+//                             align = "left"
+//                         >
+                            
+//                             <ul>
+//                                 {
+//                                     itineraire.tarifReserves.map(tarif => {
+//                                     return(
+//                                             <li>{tarif.nomTarif}</li>
+//                                     );
+//                                 })}
+//                             </ul>
+                                
+//                         </TableCell>
+//                         <TableCell
+//                             component="td"
+//                             align = "left"
+//                         >
+//                             {row.etat}
+//                         </TableCell>
+//                     </TableRow>
+//                 );
+//             })
+            
+//         })}
+//         {emptyRows > 0 && (
+//             <TableRow
+//             style={{
+//                 height: (dense ? 33 : 53) * emptyRows,
+//             }}
+//             >
+//             <TableCell colSpan={6} />
+            
+//             </TableRow>
+//         )}
+// } 
 
 function ListeReservation(props){
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('calories');
     const [dense, setDense] = useState(true);
     const [open, setOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const [indiceU, setId] = useState("");
     const [listResult, setListResult] = useState([]);
     const [nbContent, setNbContent] = useState(5);
@@ -151,181 +498,168 @@ function ListeReservation(props){
     return(
         
         <>
+
+            
             {/* <Navbar currentPage={props.currentPage}/><br/> */}
             
             <Box sx={{ width: '100%', padding :"50px" }}>
             <h1>{isNotif ? "Nouvelles réservations" : "Liste réservations"}</h1>
-            <InputRecherche 
-                debut={debut} setDebut={setDebut} 
-                fin={fin} setFin={setFin}
-                etat={etat} setEtat={setEtat}
-                errorEtat={errorEtat} setErrorEtat={setErrorEtat}
-                arrayEtat={arrayEtat} setArrayEtat={setArrayEtat}
-                searchDateOfWhich={searchDateOfWhich}
-                setSearchDateOfWich={setSearchDateOfWich}
-                rechercher={rechercher} />
-            {isLoading ? <Paper sx={{ width: '100%', mb: 2 }}><Skeleton /></Paper> :<>
-            <Paper sx={{ width: '100%', mb: 2 }}>
-                <TableContainer>
-                <Table
-                    sx={{ minWidth: 750 }}
-                    aria-labelledby="tableTitle"
-                    size={dense ? 'small' : 'medium'}
-                >
-                    <EnhancedTableHead
-                        numSelected={selected.length}
-                        order={order}
-                        orderBy={orderBy}
-                        onSelectAllClick={handleSelectAllClick}
-                        onRequestSort={handleRequestSort}
-                        rowCount={rows.length}
-                        headCells={headCells}
+            
+            
+            <Paper sx={{ width: '100%', mb: 2, borderRadius: 5, mt:3  }}>
+                <Card sx={{ borderRadius: 5 }}>
+
+                    <RootStyle>
+                    <InputRecherche 
+                        debut={debut} setDebut={setDebut} 
+                        fin={fin} setFin={setFin}
+                        etat={etat} setEtat={setEtat}
+                        errorEtat={errorEtat} setErrorEtat={setErrorEtat}
+                        arrayEtat={arrayEtat} setArrayEtat={setArrayEtat}
+                        searchDateOfWhich={searchDateOfWhich}
+                        setSearchDateOfWich={setSearchDateOfWich}
+                        rechercher={rechercher} 
                     />
-                    <TableBody>
-                    {
-                    stableSort(listResult, getComparator(order, orderBy))
-                        .slice(page * nbContent, page * nbContent + nbContent)
-                        .map((row, index) => {
-                        const isItemSelected = null;
-                        const labelId = `enhanced-table-checkbox-${index}`;
-                        
-                        return (
-                            <TableRow
-                            onClick={(event) => handleClick(event, row._id , true)}
-                            role="checkbox"
-                            tabIndex={-1}
-                            key={row._id}
-                            >   
-                                <TableCell
-                                    component="td"
-                                    align = "left"
+                    { isLoading ? <Skeleton /> :<> </> }
+                    
+                    </RootStyle>
+
+                    <TableContainer>
+                    <Table
+                        sx={{ minWidth: 750 }}
+                        aria-labelledby="tableTitle"
+                        size={dense ? 'small' : 'medium'}
+                    >
+                        <EnhancedTableHead
+                            numSelected={selected.length}
+                            order={order}
+                            orderBy={orderBy}
+                            onSelectAllClick={handleSelectAllClick}
+                            onRequestSort={handleRequestSort}
+                            rowCount={rows.length}
+                            headCells={headCells}
+                        />
+                        <TableBody>
+                        {
+                            stableSort(listResult, getComparator(order, orderBy))
+                                .slice(page * nbContent, page * nbContent + nbContent)
+                                .map((row, index) => {
+                                const isItemSelected = null;
+                                const labelId = `enhanced-table-checkbox-${index}`;
+                                
+                                return(
+                                    <>
+                                    <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+                                        <TableCell>
+                                            <IconButton
+                                            aria-label="expand row"
+                                            size="small"
+                                            onClick={() => setIsOpen(!isOpen)}
+                                            >
+                                            {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                            </IconButton>
+                                        </TableCell>
+                                        <TableCell component="th" scope="row">
+                                            {row.etat}
+                                        </TableCell>
+                                        <TableCell align="right">{row.reservateur}</TableCell>
+                                        <TableCell align="right">{row.dateValidation}</TableCell>
+                                    </TableRow>
+
+                                    <TableRow>
+                                    <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                                    <Collapse in={isOpen} timeout="auto" unmountOnExit>
+                                        <Box sx={{ margin: 1 }}>
+                                        <Typography variant="h6" gutterBottom component="div">
+                                            Itineraires
+                                        </Typography>
+                                        <Table size="small" aria-label="purchases">
+                                            <TableHead>
+                                            <TableRow>
+                                                <TableCell>Numero Itineraire</TableCell>
+                                                <TableCell>Date d'arrivee</TableCell>
+                                                <TableCell align="right">Date de depart</TableCell>
+                                                <TableCell align="right">Nombre de nuit</TableCell>
+                                                <TableCell align="right">Type des chambres</TableCell>
+                                                <TableCell align="right">Nom des Tarifs</TableCell>
+                                            </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                            {
+                                                row.itineraires.map(itineraire =>(
+                                                <TableRow key={itineraire.NumeroITineraire}>
+                                                <TableCell component="th" scope="row">
+                                                    {itineraire.NumeroITineraire} 
+                                                </TableCell>
+                                                <TableCell>
+                                                    {removeSpecialCharFromDate(itineraire.dateSejour.debut)}
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    {removeSpecialCharFromDate(itineraire.dateSejour.fin)}
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    {removeSpecialCharFromDate(itineraire.nights)}
+                                                </TableCell>
+                                                <TableCell align="right">
+                                                    <ul>
+                                                        {
+                                                            itineraire.tarifReserves.map(tarif => {
+                                                            return(
+                                                                    <li>{tarif.nomTypeChambre}</li>
+                                                            );
+                                                        })}
+                                                    </ul>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <ul>
+                                                        {
+                                                            itineraire.tarifReserves.map(tarif => {
+                                                            return(
+                                                                    <li>{tarif.nomTarif}</li>
+                                                            );
+                                                        })}
+                                                    </ul>
+                                                </TableCell>
+                                                </TableRow>
+                                                ))
+                                            }
+                                            </TableBody>
+                                        </Table>
+                                        </Box>
+                                    </Collapse>
+                                    </TableCell>
+                                </TableRow>
+                                </>
+                                );
+                                
+                            })}
+                            {emptyRows > 0 && (
+                                <TableRow
+                                style={{
+                                    height: (dense ? 33 : 53) * emptyRows,
+                                }}
                                 >
-                                    <ul>
-                                        {row.itineraires.map(itineraire => {
-                                            return(
-                                                <>
-                                                    <li>
-                                                        {itineraire.NumeroITineraire}
-                                                    </li>
-                                                </>
-                                            );
-                                        })}
-                                    </ul>
-                                </TableCell>
-                                <TableCell
-                                    component="td"
-                                    align = "left"
-                                >
-                                    Num reserv temp
-                                </TableCell>
-                                <TableCell
-                                    component="td"
-                                    align = "left"
-                                >
-                                    {row.reservateur ? row.reservateur.nom + " " + row.reservateur.prenom : ""}
-                                </TableCell>
-                                <TableCell
-                                    component="td"
-                                    align = "left"
-                                >
-                                    <ul>
-                                        <li>Rabearisoa Miora</li>
-                                        <li>Andriatsitoaina Feno</li>
-                                        <li>Rabetrano Pierre</li>
-                                    </ul>
-                                </TableCell>
-                                <TableCell
-                                    component="td"
-                                    align = "left"
-                                >
-                                    {row.dateValidation === null ? "" : removeSpecialCharFromDate(row.dateValidation)}
-                                </TableCell>
-                                <TableCell
-                                    component="td"
-                                    align = "left"
-                                >
-                                    <ul>
-                                        {row.itineraires.map(itineraire => {
-                                            return(<li>{removeSpecialCharFromDate(itineraire.dateSejour.debut)}</li>)
-                                        })}
-                                    </ul>
-                                </TableCell>
-                                <TableCell
-                                    component="td"
-                                    align = "left"
-                                >
-                                    <ul>
-                                        {row.itineraires.map(itineraire => {
-                                            return(<li>{removeSpecialCharFromDate(itineraire.dateSejour.fin)}</li>)
-                                        })}
-                                    </ul>
-                                </TableCell>
-                                <TableCell
-                                    component="td"
-                                    align = "left"
-                                >
-                                    <ul>
-                                        {row.itineraires.map(itineraire => {
-                                            return(<li>{removeSpecialCharFromDate(itineraire.nights)}</li>)
-                                        })}
-                                    </ul>
-                                </TableCell>
-                                <TableCell
-                                    component="td"
-                                    align = "left"
-                                >
-                                    {row.itineraires.map(itineraire => {
-                                        return(
-                                            <ul>
-                                                {
-                                                    itineraire.tarifReserves.map(tarif => {
-                                                    return(
-                                                            <li>{tarif.nomTypeChambre}</li>
-                                                    );
-                                                })}
-                                            </ul>
-                                        );
-                                    })}
-                                </TableCell>
-                                <TableCell
-                                    component="td"
-                                    align = "left"
-                                >
-                                    {row.itineraires.map(itineraire => {
-                                        return(
-                                            <ul>
-                                                {
-                                                    itineraire.tarifReserves.map(tarif => {
-                                                    return(
-                                                            <li>{tarif.nomTarif}</li>
-                                                    );
-                                                })}
-                                            </ul>
-                                        );
-                                    })}
-                                </TableCell>
-                                <TableCell
-                                    component="td"
-                                    align = "left"
-                                >
-                                    {row.etat}
-                                </TableCell>
-                            </TableRow>
-                        );
-                        })}
-                    {emptyRows > 0 && (
-                        <TableRow
-                        style={{
-                            height: (dense ? 33 : 53) * emptyRows,
-                        }}
-                        >
-                        <TableCell colSpan={6} />
-                        
-                        </TableRow>
-                    )}
-                    </TableBody>
-                </Table>
-                </TableContainer>
+                                <TableCell colSpan={6} />
+                                
+                                </TableRow>
+                            )}
+                            {/* <Rows 
+                                setResult = {setResult}
+                                order={order}
+                                orderBy={orderBy}
+                                page = {page}
+                                nbContent = {nbContent}
+                                isOpen = {isOpen}
+                                setIsOpen = {setIsOpen}
+                                listResult = {listResult}
+                                handleClick = {handleClick}
+                                emptyRows = {emptyRows}
+                                dense = {dense}
+                            /> */}
+                        </TableBody>
+                    </Table>
+                    </TableContainer>
+                </Card>
             </Paper>
             <FooterList 
               nbResult={nbResult} 
@@ -334,8 +668,7 @@ function ListeReservation(props){
               setNbContent={setNbContent}
               currentNumPage={currentNumPage} setCurrentNumPage={setCurrentNumPage}
               nbPage={nbPage} rechercher={rechercher}
-            /></>
-            }
+            />
             
           </Box>
       </>
