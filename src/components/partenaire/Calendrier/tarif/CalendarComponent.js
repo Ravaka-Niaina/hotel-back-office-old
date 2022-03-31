@@ -57,6 +57,7 @@ const CalendarComponent = () => {
     const [isFirst, setIsFirst] = useState(true);
     const [isAccept, setIsAccept] = React.useState(false);
     const [isTextField, setIsTextField] = React.useState(false);
+    
     function getPrix(dates, startLoad, endLoad){
         startLoad ? startLoad() : setOpenLoad(true);
         let data = {};
@@ -73,6 +74,7 @@ const CalendarComponent = () => {
                 data: data
             })
             .then(res => {
+                console.log(res.data.typeChambre);
                 const alldays = getDaysBetweenDates(dates[0],dates[1]);
                 let tmp = [];
                 for(var i = 0; i < res.data.typeChambre.length; i++) {

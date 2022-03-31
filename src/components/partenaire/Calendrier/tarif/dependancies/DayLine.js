@@ -66,7 +66,6 @@ const DayLine = (props) => {
     const openPopper = (target) => {
         setAnchorEl(target);
     };
-    let open = Boolean(anchorEl);
     let daycells = [];
     const [selecteds, setSelecteds] = useState([]);
     const [selectedY,setSelectedY] = useState(-1);
@@ -239,7 +238,8 @@ const DayLine = (props) => {
     return(
         <>
             <Popper
-                open={open}
+                open={anchorEl === null ? false : true}
+                onClose={() => setAnchorEl(null)}
                 anchorEl={anchorEl}
                 placement='top'
                 disableRestoreFocus

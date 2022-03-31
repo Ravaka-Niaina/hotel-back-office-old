@@ -85,7 +85,7 @@ const SideList = (props) => {
         <>
         <Box
             sx={{
-                width: 'auto',
+                width: '287px',
                 height: 'auto',
                 display: 'inline-block'
             }}

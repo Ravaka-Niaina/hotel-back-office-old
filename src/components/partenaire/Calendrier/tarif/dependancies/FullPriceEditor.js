@@ -231,7 +231,6 @@ const FullPriceEditor = (props) => {
         let versions = [];
 
         if(prix.length > 0){
-            console.log(prix);
             for(let i = 0; i < guestsMax; i++){
                 if((prix[i] + "").trim() != ""){
                     versions.push({nbPers: (i + 1), prix: Number.parseFloat(prix[i])});
