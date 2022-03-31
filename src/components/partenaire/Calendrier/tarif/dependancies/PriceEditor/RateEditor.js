@@ -5,6 +5,7 @@ import moment from 'moment';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
+import Alert from '@mui/material/Alert';
 
 import callAPI from '../../../../../../utility';
 import {days, getDateYYYYMMDD} from './utilEditor.js';
@@ -12,8 +13,9 @@ import {days, getDateYYYYMMDD} from './utilEditor.js';
 const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue, 
     handleChange, closePopper, idTypeChambre, alldays, getPrix, nbPers}) => {
     const [changeStatusRate, setChangeStatusRate] = useState(false);
-    const [loading, setLoading] = React.useState(false);
-    const [prix, setPrix] = React.useState("");
+    const [loading, setLoading] = useState(false);
+    const [prix, setPrix] = useState("");
+    const [error, setError] = useState(null);
 
     if(fromto.length === 1){
         fromto.push(fromto[0] + "");
@@ -31,7 +33,9 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
         if(data.status === 200){
             getPrix([moment(alldays[0], "MM-DD-YYYY"), moment(alldays[alldays.length - 1], "MM-DD-YYYY")], startLoad, endLoad);
         }else{
-            console.log("prix non configuré");
+            if(data.errors.other){
+                setError(data.errors.other);
+            }
             setLoading(false);
         }
     };
@@ -77,6 +81,13 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
                 <FormControlLabel value="open" control={<Radio />} label="Open" disabled={!changeStatusRate} />
                 <FormControlLabel value="close" control={<Radio />} label="Close" disabled={!changeStatusRate} />
             </RadioGroup>
+
+            {error === null 
+            ? null 
+            : <Stack sx={{ width: '100%' }} spacing={2}>
+            <Alert onClose={() => setError(null)}>{error}</Alert>
+            </Stack>}
+
             <br/>
             <TextField
                 size="small"
@@ -94,6 +105,7 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
                 onChange={(e) => setPrix(e.target.value)}
             />
             <br/>
+
             <Stack direction="row" spacing={2}>
                 <LoadingButton
                     color="secondary"
