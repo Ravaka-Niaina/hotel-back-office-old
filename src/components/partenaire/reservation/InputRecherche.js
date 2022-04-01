@@ -145,26 +145,17 @@ export default function InputRecherche({debut, setDebut, fin, setFin, etat, setE
                 </Box>
                 </Grid>
             </Grid>
-            </div>
             
-            <div>
-            <Grid container spacing={2}>
-                <Grid item xs={4}>
-                </Grid>
-                <Grid item xs={4}>
-                    <BootstrapButton 
-                        variant="contained" 
-                        onClick={(e) => rechercher()}
-                        endIcon={<SearchIcon style={{color:'white'}}/>}
-                        style={{textDecoration:'none'}}
-                        sx={{ borderRadius:3 }}
-                        >
-                            <span style={{color:'white', fontSize:'14px', fontWeight:'bold' }}>Rechercher</span>
-                    </BootstrapButton>
-                </Grid>
-                <Grid item xs={4}>
-                </Grid>
-            </Grid>
+            <BootstrapButton 
+                variant="contained" 
+                onClick={(e) => rechercher()}
+                endIcon={<SearchIcon style={{color:'white'}}/>}
+                style={{textDecoration:'none'}}
+                sx={{ borderRadius:3 }}
+                >
+                    <span style={{color:'white', fontSize:'14px', fontWeight:'bold' }}>Rechercher</span>
+            </BootstrapButton>
+                
             </div>
         </>
     );

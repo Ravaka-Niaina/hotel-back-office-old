@@ -426,6 +426,15 @@ function ListeReservation(props){
 
     const hasARReservation = session.getInstance().hasOneOfTheseAccessRights(["listeReservation", "superAdmin"]);
 
+    const [currentIndex, setCurrentIndex] = React.useState(0);
+
+    const cliquer = (event, index) => {
+        console.log("curIndex "+index)
+        // setAnchorEl(event.currentTarget);
+        setCurrentIndex(index);
+        setIsOpen(!isOpen)
+    };
+
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
           const newSelecteds = rows.map((n) => n.name);
@@ -554,20 +563,35 @@ function ListeReservation(props){
                                             <IconButton
                                             aria-label="expand row"
                                             size="small"
-                                            onClick={() => setIsOpen(!isOpen)}
+                                            // onClick={() => setIsOpen(!isOpen)}
+                                            onClick={(e) => cliquer(e, index)}
                                             >
-                                            {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                                            {isOpen && currentIndex === index ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                                             </IconButton>
                                         </TableCell>
-                                        <TableCell component="th" scope="row">
-                                            {row.etat}
+                                        
+                                        <TableCell align = "left">
+                                            {
+                                                row.reservateur != null ? row.reservateur : "pas de reservateur"
+                                            }
                                         </TableCell>
-                                        <TableCell align="right">{row.reservateur}</TableCell>
-                                        <TableCell align="right">{row.dateValidation}</TableCell>
+                                        <TableCell align = "left">
+                                            {
+                                                row.dateValidation != null ? row.dateValidation : "pas validee"
+                                            }
+                                        </TableCell>
+                                        <TableCell align = "left">
+                                            {
+                                                row.etat != null ? row.etat : "pas d'etat"
+                                            }
+                                        </TableCell>
                                     </TableRow>
-
+                                    
                                     <TableRow>
                                     <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+                                    {
+                                        currentIndex == index ?
+
                                     <Collapse in={isOpen} timeout="auto" unmountOnExit>
                                         <Box sx={{ margin: 1 }}>
                                         <Typography variant="h6" gutterBottom component="div">
@@ -627,8 +651,10 @@ function ListeReservation(props){
                                         </Table>
                                         </Box>
                                     </Collapse>
+                                    :null}
                                     </TableCell>
                                 </TableRow>
+                                
                                 </>
                                 );
                                 
