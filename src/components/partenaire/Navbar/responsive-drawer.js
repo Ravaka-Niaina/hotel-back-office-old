@@ -48,7 +48,7 @@ import callAPI from '../../../utility.js';
 import Grid from '@mui/material/Grid';
 import { Bluetooth } from '@mui/icons-material';
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 const url = process.env.REACT_APP_FRONT_URL;
 
@@ -182,7 +182,7 @@ export default function PersistentDrawerLeft(props) {
     
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar position="fixed" open={open} >
         <Toolbar>
           <IconButton
             color="inherit"
@@ -197,7 +197,7 @@ export default function PersistentDrawerLeft(props) {
 
       <Grid container spacing={2}>
         <Grid item xs={10}>
-              <Typography variant="h6" noWrap component="div" >
+              <Typography variant="h6" noWrap component="div" style={{ fontSize:'25px', fontWeight:'1000' }} >
                 {props.title}
               </Typography>
         </Grid>  
@@ -257,7 +257,9 @@ export default function PersistentDrawerLeft(props) {
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <List>
+        <List 
+        // sx={{ml:"35px", mr:"35px"}}
+        >
           {
             optionlist.map((option, index) => 
             {
@@ -265,15 +267,27 @@ export default function PersistentDrawerLeft(props) {
               return(
               option.dropdown === false ?
               // <Link to={option.lien[0]["link"]} className="nav-link">
-                <ListItem button key={option.text} 
-                 style={{ backgroundColor: window.location.href.split(url)[1] === option.lien[0].link ? "dodgerBlue" : null }}   
+                <ListItem button key=  
+                {
+                  <Typography>
+                    {option.text}
+                  </Typography>
+                }
+                sx={{ backgroundColor: window.location.href.split(url)[1] === option.lien[0].link ? "#f0fff7":null, borderRight:window.location.href.split(url)[1] === option.lien[0].link ? 4: null, borderRightColor: window.location.href.split(url)[1] === option.lien[0].link ? "#3CB371" : null }}   
+                // sx={{ backgroundColor: "#f0fff7" }}
                 >
-                  <ListItemIcon >
+                  <ListItemIcon sx={{ml:"35px", color: window.location.href.split(url)[1] === option.lien[0].link ? "#3CB371" : null }}>
                     <option.icon />
                   </ListItemIcon>
                   <ListItemText 
-                  primary={option.text} 
+                  primary=
+                  {
+                    <Typography style={{ fontFamily: "Arial", color: window.location.href.split(url)[1] === option.lien[0].link ? "#3CB371" : "#8c8c8c" }}>
+                      {option.text}
+                    </Typography>
+                  }
                   onClick={() => redirection(option.lien[0].link)}
+                  sx={{mr:"35px"}}
                   />
                 </ListItem>
               // </Link>
@@ -283,13 +297,19 @@ export default function PersistentDrawerLeft(props) {
                   button key={option.text} 
                   onClick={(e) => handleClick(e, index)}
                 >
-                  <ListItemIcon >
+                  <ListItemIcon sx={{ml:"35px", color: window.location.href.split(url)[1] === option.lien[0].link ? "#3CB371" : null}}>
                     <option.icon />
                   </ListItemIcon>
                   <ListItemText 
-                    primary={option.text} 
+                    primary=
+                    {
+                      <Typography style={{ fontFamily: "Arial", color: window.location.href.split(url)[1] === option.lien[0].link ? "#3CB371" : "#8c8c8c" }}>
+                        {option.text}
+                      </Typography>
+                    }
+                    sx={{mr:"35px"}}
                     />
-                  {ouvrir && currentIndex === index ? <ExpandLess /> : <ExpandMore />}
+                  {ouvrir && currentIndex === index ? <ExpandLess sx={{mr:"30px"}} /> : <ExpandMore sx={{mr:"30px"}} />}
 
                 </ListItem>
                 {
@@ -306,15 +326,22 @@ export default function PersistentDrawerLeft(props) {
                             // window.location.href.split("http://localhost:3001")[1] === optionlist[currentIndex].lien[ind].link ? setOuvrir(true) : null
                           return(
                           <ListItemButton 
-                            sx={{ pl: 4 }} 
-                            style={{ backgroundColor: window.location.href.split(url)[1] === optionlist[currentIndex].lien[ind].link ? "dodgerBlue" : null }}
+                            // sx={{ pl: 4, backgroundColor: "#f0fff7", borderRight:4, borderRightColor: "#3CB371" }} 
+                            sx={{ pl:4, backgroundColor: window.location.href.split(url)[1] === optionlist[currentIndex].lien[ind].link ? "#f0fff7":null, borderRight:window.location.href.split(url)[1] === optionlist[currentIndex].lien[ind].link ? 4: null, borderRightColor: window.location.href.split(url)[1] === optionlist[currentIndex].lien[ind].link ? "#3CB371" : null }}
+                            
                           >
-                            <ListItemIcon>
+                            <ListItemIcon sx={{ml:"35px", color: window.location.href.split(url)[1] === optionlist[currentIndex].lien[ind].link ? "#3CB371" : null }}>
                               <StarBorder />
                             </ListItemIcon>
                             <ListItemText 
                               onClick={() => redirection(optionlist[currentIndex].lien[ind].link)}
-                              primary={optionlist[currentIndex].lien[ind].nom} 
+                              primary=
+                              {
+                                <Typography style={{ fontFamily: "Arial", color: window.location.href.split(url)[1] === optionlist[currentIndex].lien[ind].link ? "#3CB371" : "#8c8c8c" }}>
+                                  {optionlist[currentIndex].lien[ind].nom}
+                                </Typography>
+                              }
+                              sx={{mr:"35px"}}
                             />
                           </ListItemButton>
                           );

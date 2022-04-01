@@ -2,17 +2,16 @@ import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
 
 const tmpHeadCells = [
-    [ "numItineraire", "numero itineraire" ],
-    [ "numReservation", "numero de reservation" ],
+    // [ "numItineraire", "Numero itineraire" ],
     [ "infoReservateur", "Infos reservateur" ],
-    [ "infoOccupant", "Infos occupant" ],
-    [ "dateReserv", "date de reservation" ],
-    [ "checkIn", "date d'arrivee" ],
-    [ "checkOut", "date de depart" ],
-    [ "nbNuitee", "nombre de nuitee" ],
-    [ "chambre", "chambre" ],
-    [ "tarifs", "tarifs" ],
-    [ "status", "Statut" ]
+    // [ "infoOccupant", "Infos occupant" ],
+    [ "dateReserv", "Date de reservation" ],
+    // [ "checkIn", "Date d'arrivee" ],
+    // [ "checkOut", "Date de depart" ],
+    // [ "nbNuitee", "Nombre de nuitee" ],
+    // [ "chambre", "Chambre" ],
+    // [ "tarifs", "Tarifs" ],
+    [ "status", "Etat" ]
 ];
 export let headCells = [];
 for(let i = 0; i < tmpHeadCells.length; i++){
