@@ -17,7 +17,8 @@ import  ResponsiveDrawer  from "../../partenaire/Navbar/responsive-drawer.js";
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
-
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import LoadingButton from '@mui/lab/LoadingButton';
 import EditIcon from '@mui/icons-material/Edit';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
@@ -146,6 +147,7 @@ function Recherche(props){
     const [nbResult, setNbResult] = React.useState(0);
     const [openModalDelete, setOpenModalDelete] = React.useState(false);
     const [toDelete, setToDelete] = React.useState({_id: null, nom: null});
+    const [isActivationPending, setIsActivationPending] = React.useState([]);
     
 
     const history = useHistory();
@@ -153,6 +155,7 @@ function Recherche(props){
     let hasARToViewInsert = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToViewInsert);
     let hasARToDelete = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToDelete);
     let hasARToViewDetails = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToViewDetails);
+    let hasARToSwitchActivation = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToSwitchActivation);
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
@@ -206,7 +209,6 @@ function Recherche(props){
                 }
               }
             }
-            
         }
         let fieldsToPrint = [];
         props.fieldsToPrint.map(infoField => {
@@ -226,6 +228,7 @@ function Recherche(props){
             setNbPage(data.nbPage);
             setNbResult(data.nbResult);
             setIsLoading(false);
+            setIsActivationPending(new Array(data.list.length).fill(false));
         });
     };
     
@@ -271,6 +274,17 @@ function Recherche(props){
     const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * nbContent - rows.length) : 0;
     let rows = [];
+
+    const switchIsActif = (_id, index) => {
+      let tmp = JSON.parse(JSON.stringify(isActivationPending));
+      tmp[index] = true;
+      setIsActivationPending(tmp);
+      callAPI("post", props.urlSwitchActivation, {_id: _id, isActif: listResult[index].isActif ? true : false}, (data) => {
+
+      });
+      console.log(_id);
+    };
+
     return(
         <>
             {/* <Navbar currentPage={props.currentPage}/><br/> */}
@@ -358,6 +372,17 @@ function Recherche(props){
                                           <DeleteIcon style={{color : "red" , cursor :'pointer'}} 
                                           onClick={(e) => {setToDelete(row); setOpenModalDelete(true)}} />
                                       </HtmlTooltip> 
+                                    : null }
+                                    { hasARToSwitchActivation
+                                    ? <HtmlTooltip title="Activer/Désactiver" >
+                                          <LoadingButton
+                                            onClick={(e) => switchIsActif(row._id, index)}
+                                            loading={isActivationPending[index]}
+                                            color={row.isActif ? "success" : "error"}
+                                          >
+                                            <PowerSettingsNewIcon />
+                                          </LoadingButton>
+                                      </HtmlTooltip>
                                     : null }
                                 </TableCell>
                             </TableRow>

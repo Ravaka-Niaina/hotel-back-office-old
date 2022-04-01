@@ -18,15 +18,19 @@ const fieldsToPrint = [
     {field: "planTarifaire", label: "Plan tarifaire"}, 
     {field: "typeChambre", label: "Type chambre"}, 
     {field: "dateDebutS", label: "Debut sejour", type: "DateTime"}, 
-    {field: "dateFinS", label: "Fin sejour", type: "Date"}
+    {field: "dateFinS", label: "Fin sejour", type: "Date"},
+    {field: "isActif", type: "Boolean"}
 ];
+
 const nbContent = 5;
 const urlEdit = '/back/promotion/detail/';
+const urlSwitchActivation = "/back/promotion/switchActivation";
 const rowsPerPageOptions = [5, 10, 20];
 const accessRightToViewInsert = ["superAdmin", "insertPlanTarifaire"];
 const accessRightToDelete = ["superAdmin", "deletePlanTarifaire"];
 const accessRightToViewDetails = ["superAdmin", "getPlanTarifaire", "updatePlanTarifaire"];
 const accessRightToViewList = ["superAdmin", "getListPromotion"];
+const accessRightToSwitchActivation = ["superAdmin", "activatePromotion"];
 
 export default function ListPromotion(){
     return(
@@ -44,7 +48,9 @@ export default function ListPromotion(){
             accessRightToViewDetails={accessRightToViewDetails}
             accessRightToDelete={accessRightToDelete}
             accessRightToViewList={accessRightToViewList}
+            accessRightToSwitchActivation={accessRightToSwitchActivation}
             title="Liste des promotions"
+            urlSwitchActivation = {urlSwitchActivation}
         />
     );
 }
