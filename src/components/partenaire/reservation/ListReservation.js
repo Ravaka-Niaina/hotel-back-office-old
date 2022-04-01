@@ -52,90 +52,7 @@ const RootStyle = styled(Toolbar)(({ theme }) => ({
     justifyContent: 'space-between',
     padding: theme.spacing(0, 1, 0, 3)
   }));
-  
-//   function Row(props) {
-//     const { row } = props;
-//     const [isOpen, setIsOpen] = React.useState(false);
-  
-//     return (
-//       <React.Fragment>
-          
-//         <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-//           <TableCell>
-//             <IconButton
-//               aria-label="expand row"
-//               size="small"
-//               onClick={() => setIsOpen(!isOpen)}
-//             >
-//               {isOpen ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-//             </IconButton>
-//           </TableCell>
-//           <TableCell component="th" scope="row">
-//             {row.name}
-//           </TableCell>
-//           <TableCell align="right">{row.calories}</TableCell>
-//           <TableCell align="right">{row.fat}</TableCell>
-//           <TableCell align="right">{row.carbs}</TableCell>
-//           <TableCell align="right">{row.protein}</TableCell>
-//         </TableRow>
-//         <TableRow>
-//           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-//             <Collapse in={isOpen} timeout="auto" unmountOnExit>
-//               <Box sx={{ margin: 1 }}>
-//                 <Typography variant="h6" gutterBottom component="div">
-//                   History
-//                 </Typography>
-//                 <Table size="small" aria-label="purchases">
-//                   <TableHead>
-//                     <TableRow>
-//                       <TableCell>Date</TableCell>
-//                       <TableCell>Customer</TableCell>
-//                       <TableCell align="right">Amount</TableCell>
-//                       <TableCell align="right">Total price ($)</TableCell>
-//                     </TableRow>
-//                   </TableHead>
-//                   <TableBody>
-//                     {row.history.map((historyRow) => (
-//                       <TableRow key={historyRow.date}>
-//                         <TableCell component="th" scope="row">
-//                           {historyRow.date}
-//                         </TableCell>
-//                         <TableCell>{historyRow.customerId}</TableCell>
-//                         <TableCell align="right">{historyRow.amount}</TableCell>
-//                         <TableCell align="right">
-//                           {Math.round(historyRow.amount * row.price * 100) / 100}
-//                         </TableCell>
-//                       </TableRow>
-//                     ))}
-//                   </TableBody>
-//                 </Table>
-//               </Box>
-//             </Collapse>
-//           </TableCell>
-//         </TableRow>
-//       </React.Fragment>
-//     );
-//   }
-  
-//   Row.propTypes = {
-//     row: PropTypes.shape({
-//       calories: PropTypes.number.isRequired,
-//       carbs: PropTypes.number.isRequired,
-//       fat: PropTypes.number.isRequired,
-//       history: PropTypes.arrayOf(
-//         PropTypes.shape({
-//           amount: PropTypes.number.isRequired,
-//           customerId: PropTypes.string.isRequired,
-//           date: PropTypes.string.isRequired,
-//         }),
-//       ).isRequired,
-//       name: PropTypes.string.isRequired,
-//       price: PropTypes.number.isRequired,
-//       protein: PropTypes.number.isRequired,
-//     }).isRequired,
-//   };
-  
-  
+
 
   function CollapsibleTable() {
     return (
@@ -266,120 +183,6 @@ function Rows(props){
             </TableRow>
         )}
 }
-
-// function Row(props){
-//     {
-//         stableSort(listResult, getComparator(order, orderBy))
-//             .slice(page * nbContent, page * nbContent + nbContent)
-//             .map((row, index) => {
-//             const isItemSelected = null;
-//             const labelId = `enhanced-table-checkbox-${index}`;
-//             row.itineraires.map(itineraire =>{
-//                 return (
-//                     <TableRow
-//                     onClick={(event) => handleClick(event, row._id , true)}
-//                     role="checkbox"
-//                     tabIndex={-1}
-//                     key={row._id}
-//                     >   
-//                         <TableCell
-//                             component="td"
-//                             align = "left"
-//                         > 
-//                         {itineraire.NumeroITineraire}                 
-//                         </TableCell>
-//                         <TableCell
-//                             component="td"
-//                             align = "left"
-//                         >
-//                             {row.reservateur ? row.reservateur.nom + " " + row.reservateur.prenom : ""}
-//                         </TableCell>
-//                         <TableCell
-//                             component="td"
-//                             align = "left"
-//                         >
-//                             <ul>
-//                                 <li>Rabearisoa Miora</li>
-//                                 <li>Andriatsitoaina Feno</li>
-//                                 <li>Rabetrano Pierre</li>
-//                             </ul>
-//                         </TableCell>
-//                         <TableCell
-//                             component="td"
-//                             align = "left"
-//                         >
-//                             {row.dateValidation === null ? "" : removeSpecialCharFromDate(row.dateValidation)}
-//                         </TableCell>
-//                         <TableCell
-//                             component="td"
-//                             align = "left"
-//                         >
-//                             {removeSpecialCharFromDate(itineraire.dateSejour.debut)}
-//                         </TableCell>
-//                         <TableCell
-//                             component="td"
-//                             align = "left"
-//                         >
-//                             {removeSpecialCharFromDate(itineraire.dateSejour.fin)}
-//                         </TableCell>
-//                         <TableCell
-//                             component="td"
-//                             align = "left"
-//                         >
-//                             {removeSpecialCharFromDate(itineraire.nights)}
-//                         </TableCell>
-//                         <TableCell
-//                             component="td"
-//                             align = "left"
-//                         >
-                            
-//                             <ul>
-//                                 {
-//                                     itineraire.tarifReserves.map(tarif => {
-//                                     return(
-//                                             <li>{tarif.nomTypeChambre}</li>
-//                                     );
-//                                 })}
-//                             </ul>
-                                
-//                         </TableCell>
-//                         <TableCell
-//                             component="td"
-//                             align = "left"
-//                         >
-                            
-//                             <ul>
-//                                 {
-//                                     itineraire.tarifReserves.map(tarif => {
-//                                     return(
-//                                             <li>{tarif.nomTarif}</li>
-//                                     );
-//                                 })}
-//                             </ul>
-                                
-//                         </TableCell>
-//                         <TableCell
-//                             component="td"
-//                             align = "left"
-//                         >
-//                             {row.etat}
-//                         </TableCell>
-//                     </TableRow>
-//                 );
-//             })
-            
-//         })}
-//         {emptyRows > 0 && (
-//             <TableRow
-//             style={{
-//                 height: (dense ? 33 : 53) * emptyRows,
-//             }}
-//             >
-//             <TableCell colSpan={6} />
-            
-//             </TableRow>
-//         )}
-// } 
 
 function ListeReservation(props){
     const [order, setOrder] = useState('asc');
@@ -563,7 +366,6 @@ function ListeReservation(props){
                                             <IconButton
                                             aria-label="expand row"
                                             size="small"
-                                            // onClick={() => setIsOpen(!isOpen)}
                                             onClick={(e) => cliquer(e, index)}
                                             >
                                             {isOpen && currentIndex === index ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -669,19 +471,7 @@ function ListeReservation(props){
                                 
                                 </TableRow>
                             )}
-                            {/* <Rows 
-                                setResult = {setResult}
-                                order={order}
-                                orderBy={orderBy}
-                                page = {page}
-                                nbContent = {nbContent}
-                                isOpen = {isOpen}
-                                setIsOpen = {setIsOpen}
-                                listResult = {listResult}
-                                handleClick = {handleClick}
-                                emptyRows = {emptyRows}
-                                dense = {dense}
-                            /> */}
+                            
                         </TableBody>
                     </Table>
                     </TableContainer>
