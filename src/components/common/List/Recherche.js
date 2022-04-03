@@ -25,7 +25,8 @@ import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import {Container} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import LoadingButton from '@mui/lab/LoadingButton';
 import EditIcon from '@mui/icons-material/Edit';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
@@ -100,9 +101,12 @@ const HtmlTooltip = styled(({ className, ...props }) => (
   
     return (
       <>
-          <IconButton ref={ref} onClick={() => setIsOpen(true)}>
+          <button ref={ref} onClick={() => setIsOpen(true)}>
+            <span>+</span>
+          </button>
+          {/* <IconButton ref={ref} onClick={() => setIsOpen(true)}>
             <Iconify icon="eva:more-vertical-fill" width={20} height={20} />
-          </IconButton>
+          </IconButton> */}
 
             <Menu
               open={isOpen}
@@ -141,6 +145,31 @@ const HtmlTooltip = styled(({ className, ...props }) => (
               </MenuItem>
               : null
             } 
+
+            { props.hasARToSwitchActivation
+              ? 
+                <MenuItem sx={{ color: 'text.secondary' }} onClick={(e) => props.switchIsActif(props.row._id, props.index)}>
+                  <LoadingButton
+                    onClick={(e) => props.switchIsActif(props.row._id, props.index)}
+                    loading={props.isActivationPending[props.index]}
+                    color={props.row.isActif ? "success" : "error"}
+                  >
+                    <PowerSettingsNewIcon/>
+                    <span>{props.row.isActif ? "Désactiver" : "Activer"}</span>
+                  </LoadingButton>
+                </MenuItem>
+                // <HtmlTooltip title="Activer/Désactiver" >
+                //     <LoadingButton
+                //       onClick={(e) => props.switchIsActif(props.row._id, props.index)}
+                //       loading={props.isActivationPending[props.index]}
+                //       color={props.row.isActif ? "success" : "error"}
+                //     >
+                //       <PowerSettingsNewIcon />
+                //       <span>{props.row.isActif ? "Désactiver" : "Activer"}</span>
+                //     </LoadingButton>
+                // </HtmlTooltip>
+              : null 
+            }
 
             </Menu>
             
@@ -263,6 +292,7 @@ function Recherche(props){
     const [nbResult, setNbResult] = React.useState(0);
     const [openModalDelete, setOpenModalDelete] = React.useState(false);
     const [toDelete, setToDelete] = React.useState({_id: null, nom: null});
+    const [isActivationPending, setIsActivationPending] = React.useState([]);
     
     
 
@@ -271,6 +301,7 @@ function Recherche(props){
     let hasARToViewInsert = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToViewInsert);
     let hasARToDelete = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToDelete);
     let hasARToViewDetails = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToViewDetails);
+    let hasARToSwitchActivation = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToSwitchActivation);
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
@@ -328,7 +359,6 @@ function Recherche(props){
                 }
               }
             }
-            
         }
         let fieldsToPrint = [];
         props.fieldsToPrint.map(infoField => {
@@ -348,6 +378,7 @@ function Recherche(props){
             setNbPage(data.nbPage);
             setNbResult(data.nbResult);
             setIsLoading(false);
+            setIsActivationPending(new Array(data.list.length).fill(false));
         });
     };
     
@@ -394,14 +425,28 @@ function Recherche(props){
     page > 0 ? Math.max(0, (1 + page) * nbContent - rows.length) : 0;
     let rows = [];
 
+    const switchIsActif = (_id, index) => {
+      let tmp = JSON.parse(JSON.stringify(isActivationPending));
+      tmp[index] = true;
+      setIsActivationPending(tmp);
+      callAPI("post", props.urlSwitchActivation, {_id: _id, isActif: !listResult[index].isActif ? true : false}, (data) => {
+        if(data.status === 200){
+          let tmpListResult = JSON.parse(JSON.stringify(listResult));
+          tmpListResult[index].isActif = !tmpListResult[index].isActif;
+          setListResult(tmpListResult);
+        }
+        let tmp = JSON.parse(JSON.stringify(isActivationPending));
+        tmp[index] = false;
+        setIsActivationPending(tmp);
+      });
+      console.log(_id);
+    };
+
     return(
 
         <>
-            {/* <Navbar currentPage={props.currentPage}/><br/> */}
-            {/* <Container> */}
-            <Box sx={{ width: '100%', pt:"60px", pl:"50px", pr:"50px" }}>
+          <Box sx={{ width: '100%', pt:"60px", pl:"50px", pr:"50px" }}>
             {hasARToViewInsert
-            //  ? <Link to={props.btnInsert.urlRedirect}  style={{float : 'left'}}>
               ? 
               <Grid container spacing={2}>
                 <Grid item xs={10}>
@@ -501,23 +546,11 @@ function Recherche(props){
                                   setToDelete={setToDelete}
                                   setOpenModalDelete={setOpenModalDelete}
                                   hasARToViewDetails={hasARToViewDetails}
+                                  hasARToSwitchActivation={hasARToSwitchActivation}
+                                  index={index}
+                                  isActivationPending={isActivationPending}
+                                  switchIsActif={switchIsActif}
                                   />
-                                      {/* { 
-                                        hasARToViewDetails
-                                        ? <Link to={props.urlEdit + row._id}>
-                                          <HtmlTooltip title="Editer"> 
-                                              <EditIcon style={{color : "gray"}} />
-                                          </HtmlTooltip> 
-                                        </Link > 
-                                        : null
-                                      }
-                                    
-                                      { hasARToDelete
-                                      ? <HtmlTooltip title="Supprimer" > 
-                                            <DeleteIcon style={{color : "gray" , cursor :'pointer'}} 
-                                            onClick={(e) => {setToDelete(row); setOpenModalDelete(true)}} />
-                                        </HtmlTooltip> 
-                                      : null } */}
                                 </TableCell>
                             </TableRow>
                         );
@@ -545,11 +578,6 @@ function Recherche(props){
                 />
               </Card>
             </Paper>
-            {/* </>
-            }</> : null } */}
-            
-          </Box>
-          {/* </Container> */}
           <ValidationSuppression 
             openModalDelete={openModalDelete}
             setOpenModalDelete={setOpenModalDelete}
@@ -559,7 +587,7 @@ function Recherche(props){
             setCurrentNumPage={setCurrentNumPage}
             accessRightToDelte={props.accessRightToDelete}
           />
-          
+        </Box>
       </>
     );
 }
