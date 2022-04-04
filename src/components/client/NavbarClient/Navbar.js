@@ -22,8 +22,6 @@ import {session} from "../../common/utilitySession.js";
 import { useState } from 'react';
 import { useTranslation } from "react-i18next";
 
-import { useTranslation } from "react-i18next";
-
 import ButtonLoading from "./buttonLoading.js";
 
 function Navbar(props) {

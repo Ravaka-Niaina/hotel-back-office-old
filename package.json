@@ -65,12 +65,8 @@
     "react-cookie": "^4.1.1",
     "react-day-picker": "^7.4.10",
     "react-dom": "^17.0.2",
-<<<<<<< HEAD
     "react-google-map-picker": "^1.2.3",
-    "react-helmet": "^6.1.0",
-=======
     "react-helmet-async": "^1.2.3",
->>>>>>> b0ae896751201a146791b8842835ee9acd2f2b8d
     "react-i18next": "^11.14.0",
     "react-image-file-resizer": "^0.4.7",
     "react-player": "^2.9.0",
