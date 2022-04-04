@@ -23,53 +23,39 @@ function getMin2(arr){
     return min;
 }
 
-function getMinPrix(versions){
-    let prixValid = [];
-    for(let i = 0; i < versions.length; i++){
-        if(versions[i].prix != ""){
-            prixValid.push(versions[i]);
-        }
-    }
-    if(prixValid.length > 0){
-        return getMin2(prixValid);
-    }
-    return {nbPers: null, prix: null};
-}
-
 function RateCells(props){
-    let rows = [];
-    for(let i = 0; i < props.typechambre.planTarifaire.length; i++){
-        let row = [];
-        for(let u = 0; u < props.typechambre.planTarifaire[i].prixTarif.length; u++){
-            const minPrix = getMinPrix(props.typechambre.planTarifaire[i].prixTarif[u].versions);
-            // console.log(minPrix);
-            row.push(
-                <td>
-                    <DayCell
-                        customize="toSell"
-                        isprice={true} 
-                        highlight={props.selecteds.indexOf(u) >= 0 && props.selectedY == i+2} 
-                        key={u.toString()}
-                        x={u}
-                        y={i+2}
-                        deselectDay={props.rmSelection.bind(props.context)} 
-                        selectDay={props.addSelection.bind(props.context)} 
-                        selectOneDay={props.oneSelection.bind(props.context)} 
-                        data={minPrix.prix}
-                        nbPers={minPrix.nbPers}
-                        closed={props.typechambre.planTarifaire[i].prixTarif[u].closed} />
-                </td>
-            );
-        }
-        rows.push(row);
-    }
     let ratecells = [];
-    for(let i = 0; i < rows.length; i++){
-        const a = i;
-        ratecells.push(
-            <tr>{rows[a]}</tr>
-        );
+    const nbOccupants = props.typechambre.nbAdulte + props.typechambre.nbEnfant;
+    let y = 1;
+    for(let i = 0; i < props.typechambre.planTarifaire.length; i++){
+        for(let v = 0; v < nbOccupants; v++){
+            let row = [];
+            y++;
+            for(let u = 0; u < props.typechambre.planTarifaire[i].prixTarif.length; u++){
+                const minPrix = props.typechambre.planTarifaire[i].prixTarif[u].versions[v];
+                row.push(
+                    <td>
+                        <DayCell
+                            customize="toSell"
+                            isprice={true} 
+                            highlight={props.selecteds.indexOf(u) >= 0 && props.selectedY == y} 
+                            key={u.toString()}
+                            x={u}
+                            y={y}
+                            deselectDay={props.rmSelection.bind(props.context)} 
+                            selectDay={props.addSelection.bind(props.context)} 
+                            selectOneDay={props.oneSelection.bind(props.context)} 
+                            data={minPrix.prix}
+                            nbPers={minPrix.nbPers}
+                            closed={props.typechambre.planTarifaire[i].prixTarif[u].closed} />
+                    </td>
+                );
+            }
+            ratecells.push(<tr>{row}</tr>);
+        }
+        
     }
+
     return ratecells;
 }
 
@@ -80,7 +66,6 @@ const DayLine = (props) => {
     const openPopper = (target) => {
         setAnchorEl(target);
     };
-    let open = Boolean(anchorEl);
     let daycells = [];
     const [selecteds, setSelecteds] = useState([]);
     const [selectedY,setSelectedY] = useState(-1);
@@ -133,7 +118,7 @@ const DayLine = (props) => {
         }else{
             setBornesEditDate([ bornesEditDate[0] , props.daterange[i] ]);
         }
-    }
+    } 
     const rmSelection = (i, y) => {
         // const tmp = [...selecteds];
         // const r = selecteds.indexOf(i);
@@ -254,7 +239,8 @@ const DayLine = (props) => {
     return(
         <>
             <Popper
-                open={open}
+                open={anchorEl === null ? false : true}
+                onClose={() => setAnchorEl(null)}
                 anchorEl={anchorEl}
                 placement='top'
                 disableRestoreFocus
@@ -263,6 +249,7 @@ const DayLine = (props) => {
                 <PriceEditor 
                     isPrice={selectedY > 1} 
                     selected={selectedY - 2} 
+                    selectedY={selectedY} 
                     typechambre={props.typechambre} 
                     fromto={bornesEditDate} 
                     closePopper={closePopper.bind(this)}

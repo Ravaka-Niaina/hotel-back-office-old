@@ -57,7 +57,7 @@ import  guest  from "./components/partenaire/guest.js";
 import  hideShow  from "./hideShow.js";
 
 import DropDown from './pagination/pagination.js';
-import {BrowserRouter as Router, Route , useHistory ,Switch} from 'react-router-dom';
+// import {BrowserRouter as Router, Route , useHistory ,Switch} from 'react-router-dom';
 
 import  ListTChambre  from "./dataTable/datatable.js";
 

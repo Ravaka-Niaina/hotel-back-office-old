@@ -10,7 +10,10 @@ export default function FooterList(props){
     }
 
     return(
-        <div className={styles.footer}>
+        <div 
+         className={styles.footer}
+         style={{ marginLeft:10, marginRight:20, marginTop:15 }}
+        >
             <div>
                 <span>Résultats:</span><strong>{props.nbResult}</strong>
             </div>

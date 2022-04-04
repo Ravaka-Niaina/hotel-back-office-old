@@ -40,7 +40,7 @@ function TarifReserves(props){
     for(let i = 0; i < props.reservation.itineraires[props.indexItineraire].tarifReserves.length; i++){
         let object = {idReservation : props.reservation._id , indexItineraire : props.indexItineraire ,indexTarifsReserve : i}
 
-        if(props.reservation.itineraires[props.indexItineraire].tarifReserves[i].dateAnnulation === undefined){
+        if(props.reservation.itineraires[props.indexItineraire].tarifReserves[i].etat !== 0 ){
             const u = i;
            // console.log("u = " + u);
             const tarif = props.reservation.itineraires[props.indexItineraire].tarifReserves[i];

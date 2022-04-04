@@ -157,7 +157,6 @@ const FullPriceEditor = (props) => {
     const history = useHistory();
 
     useEffect( () => {
-        console.log(props.typechambre.planTarifaire);
         let taf = JSON.parse(JSON.stringify(props.typechambre.planTarifaire));
         for(let i = 0; i < taf.length; i++){
             taf.checked = false;
@@ -232,7 +231,6 @@ const FullPriceEditor = (props) => {
         let versions = [];
 
         if(prix.length > 0){
-            console.log(prix);
             for(let i = 0; i < guestsMax; i++){
                 if((prix[i] + "").trim() != ""){
                     versions.push({nbPers: (i + 1), prix: Number.parseFloat(prix[i])});

@@ -1,8 +1,19 @@
 .sidelist{
-    width: 15% !important;
+    width: 287px;
     position: absolute;
     left: 0;
     bottom: 0;
+}
+.sideElt > span{
+    width: 200px;
+    display: inline-block;
+}
+.sideElt > button{
+    display: relative;
+    width: 75px;
+    display: inline-block;
+    top: -15px;
+    left: 195px;
 }
 .sidelist ul{
     list-style-type: none;

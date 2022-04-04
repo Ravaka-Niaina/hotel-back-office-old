@@ -1,7 +1,14 @@
 import  React,{useEffect}  from 'react';
+import { useHistory } from 'react-router-dom';
+import { useRef, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+// material
+import { Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import { Card } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -34,6 +41,7 @@ import { styled } from '@mui/material/styles';
 import Skeleton from '../../../SkeletonListe/skeleton';
 import FooterList from '../../common/List/FooterList.js';
 import callAPI from '../../../utility.js';
+import Iconify from '../../../comp/Iconify';
 import ValidationSuppression from "../../common/List/ValidationSuppression.js";
 const moment = require('moment');
 
@@ -86,6 +94,58 @@ function DatePrice(props){
     });
     return stabilizedThis.map((el) => el[0]);
   }
+  const RootStyle = styled(Toolbar)(({ theme }) => ({
+    height: 96,
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: theme.spacing(0, 1, 0, 3)
+  }));
+
+  function UserMoreMenu(props) {
+    const ref = useRef(null);
+    const [isOpen, setIsOpen] = useState(false);
+  
+    return (
+      <>
+          <IconButton ref={ref} onClick={() => setIsOpen(true)}>
+            <Iconify icon="eva:more-vertical-fill" width={20} height={20} />
+          </IconButton>
+
+            <Menu
+              open={isOpen}
+              anchorEl={ref.current}
+              onClose={() => setIsOpen(false)}
+              PaperProps={{
+                sx: { width: 200, maxWidth: '100%' }
+              }}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            >
+              <MenuItem 
+              sx={{ color: 'text.secondary' }}
+              onClick={(e) => {props.setToDelete(props.row); props.setOpenModalDelete(true)}}
+              >
+                <ListItemIcon>
+                  <Iconify icon="eva:trash-2-outline" width={24} height={24} />
+                </ListItemIcon> 
+                <ListItemText primary="Supprimer" primaryTypographyProps={{ variant: 'body2' }} />
+              </MenuItem>
+             
+              <MenuItem 
+              component={RouterLink} to={props.urlEdit + props.row._id} sx={{ color: 'text.secondary' }}>
+                <ListItemIcon>
+                  <Iconify icon="eva:edit-fill" width={24} height={24} />
+                </ListItemIcon>
+                <ListItemText primary="Modifier" primaryTypographyProps={{ variant: 'body2' }} />
+              </MenuItem>
+              
+
+            </Menu>
+            
+      </> 
+
+    );
+  }  
 
 function EnhancedTableHead(props) {
     const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
@@ -95,14 +155,17 @@ function EnhancedTableHead(props) {
     };
   
     return (
+
       <TableHead>
-        <TableRow style={{backgroundColor :"#F6F8FC",color:'white'}}>
+        <TableRow style={{backgroundColor :"#bfbfbf",color:'white'}}>
           {props.headCells.map((headCell) => (
             <TableCell
               key={headCell.id}
-              align={headCell.numeric ? 'left' : 'center'}
+              // align={headCell.numeric ? 'left' : 'center'}
+              align = "left"
               padding={headCell.disablePadding ? 'none' : 'normal'}
               sortDirection={orderBy === headCell.id ? order : false}
+              sx={{ fontFamily:'Raleway', fontSize:17 }}
             >
               <TableSortLabel
                 active={orderBy === headCell.id}
@@ -160,6 +223,42 @@ const getValue = (row, fieldName) => {
   return value;
 }
 
+const BootstrapButton = styled(Button)({
+  boxShadow: 'none',
+  textTransform: 'none',
+  fontSize: 16,
+  padding: '6px 12px',
+  border: '1px solid',
+  lineHeight: 1.5,
+  backgroundColor: '#3CB371',
+  borderColor: '#3CB371',
+  fontFamily: [
+    '-apple-system',
+    'BlinkMacSystemFont',
+    '"Segoe UI"',
+    'Roboto',
+    '"Helvetica Neue"',
+    'Arial',
+    'sans-serif',
+    '"Apple Color Emoji"',
+    '"Segoe UI Emoji"',
+    '"Segoe UI Symbol"',
+  ].join(','),
+  '&:hover': {
+    backgroundColor: '#0069d9',
+    borderColor: '#0062cc',
+    boxShadow: 'none',
+  },
+  '&:active': {
+    boxShadow: 'none',
+    backgroundColor: '#0062cc',
+    borderColor: '#005cbf',
+  },
+  '&:focus': {
+    boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
+  },
+});
+
 function Recherche(props){
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
@@ -180,6 +279,7 @@ function Recherche(props){
     const [nbResult, setNbResult] = React.useState(0);
     const [openModalDelete, setOpenModalDelete] = React.useState(false);
     const [toDelete, setToDelete] = React.useState({_id: null, nom: null});
+    const history = useHistory();
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
@@ -188,6 +288,10 @@ function Recherche(props){
           return;
         }
         setSelected([]);
+    };
+
+    const redirection = (link) =>{
+      history.push(link);
     };
 
     const handleClick = (event, field , bol) => {
@@ -288,36 +392,50 @@ function Recherche(props){
         <>
             {/* <Navbar  currentPage={props.currentPage}/><br/> */}
               <Box sx={{ width: '100%', padding :"50px" }} >
-                    <Link to={props.btnInsert.urlRedirect}  style={{float : 'left'}}>
-                        <Button 
-                            variant="contained" 
-                            endIcon={<AddIcon style={{color:'white'}}/>}
-                            style={{textDecoration:'none'}}>
-                            <span style={{color:'white'}}>{props.btnInsert.label}</span>
-                        </Button>
-                    </Link> 
-                    <div style={{float : 'right'}}>  
-                        <Box sx={{ display: { xs: 'none', md: 'flex'  }, gap : 1,paddingLeft :"50px" }}>
-                            <TextField 
-                                id="outlined-size-small"
-                                size="small" label ="Search"
-                                name="Search"
-                                type="text"
-                                value={toSearch}
-                                onChange={(e) => setToSearch(e.target.value)}
-                                InputProps={{ endAdornment: 
-                                <InputAdornment position="end">
-                                    <SearchIcon style={{color:"blue"}} 
-                                        onClick={(e) => rechercher(1)} />
-                                </InputAdornment>
-                                }}
-                            />
-                        </Box>
-                        </div><br/><br/>
+                <Grid container spacing={2}>
+                  <Grid item xs={10}>
+                  </Grid>
+                  <Grid item xs={2}>
+                      <BootstrapButton 
+                          variant="contained" 
+                          endIcon={<AddIcon style={{color:'white'}}/>}
+                          onClick={ ()=> redirection(props.btnInsert.urlRedirect) }
+                          style={{textDecoration:'none'}}
+                          sx={{ borderRadius:3 }}
+                      >
+                          <span style={{color:'white', fontSize:'14px', fontWeight:'bold'}}>{props.btnInsert.label}</span>
+                      </BootstrapButton>
+                  </Grid> 
+                </Grid>
+            
+            <Paper sx={{ width: '100%', mb: 2, borderRadius: 5, mt:3 }}>
+              <Card sx={{ borderRadius: 5 }}>
 
-            {
-                isLoading ? <Paper sx={{ width: '100%', mb: 2 }}><Skeleton /></Paper> :<>
-            <Paper sx={{ width: '100%', mb: 2 }}>
+              <RootStyle>
+                  <TextField 
+                      id="outlined-size-small"
+                      size="small" label ="Search"
+                      name="Search"
+                      type="text"
+                      value={toSearch}
+                      onChange={(e) => setToSearch(e.target.value)}
+                      InputProps={{ endAdornment: 
+                      <InputAdornment position="end">
+                          <SearchIcon style={{color:"grey"}} 
+                              onClick={(e) => rechercher(1)} />
+                      </InputAdornment>
+                      }}
+                  />
+                  {
+                    isLoading ? 
+                    <Skeleton /> : <></>
+                  }
+                  <Tooltip title="Filter list">
+                    <IconButton>
+                      <Iconify icon="ic:round-filter-list" />
+                    </IconButton>
+                  </Tooltip>
+              </RootStyle>
             
                 <TableContainer>
                 <Table
@@ -350,10 +468,16 @@ function Recherche(props){
                             key={row._id}
                             >
                                 <TableCell align="left">{row.nom}</TableCell>
-                                <TableCell align="rigth"><DatePrice row = {row.datePrice}  type = {row.type}/></TableCell>
-                                <TableCell align="center">{row.remboursable ? "oui" : "non"}</TableCell>
-                                <TableCell align="center">
-                                    <Link to={props.urlEdit + row._id}>
+                                <TableCell align="left"><DatePrice row = {row.datePrice}  type = {row.type}/></TableCell>
+                                <TableCell align="left">{row.remboursable ? "oui" : "non"}</TableCell>
+                                <TableCell align="left">
+                                  <UserMoreMenu 
+                                    row={row}
+                                    urlEdit={props.urlEdit}
+                                    setToDelete={setToDelete}
+                                    setOpenModalDelete={setOpenModalDelete}
+                                  />
+                                    {/* <Link to={props.urlEdit + row._id}>
                                     <HtmlTooltip title="Editer"> 
                                         <EditIcon style={{color : "green"}} />
                                     </HtmlTooltip> 
@@ -361,7 +485,7 @@ function Recherche(props){
                                     <HtmlTooltip title="Supprimer" > 
                                         <DeleteIcon style={{color : "red" , cursor :'pointer'}} 
                                         onClick={(e) => {setToDelete(row); setOpenModalDelete(true)}} />
-                                    </HtmlTooltip> 
+                                    </HtmlTooltip>  */}
                                 </TableCell>
                             </TableRow>
                         );
@@ -379,16 +503,17 @@ function Recherche(props){
                     </TableBody>
                 </Table>
                 </TableContainer>
+                <FooterList 
+                  nbResult={nbResult} 
+                  rowsPerPageOptions={rowsPerPageOptions}
+                  nbContent={nbContent}
+                  setNbContent={setNbContent}
+                  currentNumPage={currentNumPage} setCurrentNumPage={setCurrentNumPage}
+                  nbPage={nbPage} rechercher={rechercher}
+                />
+              </Card>  
             </Paper>
-            <FooterList 
-              nbResult={nbResult} 
-              rowsPerPageOptions={rowsPerPageOptions}
-              nbContent={nbContent}
-              setNbContent={setNbContent}
-              currentNumPage={currentNumPage} setCurrentNumPage={setCurrentNumPage}
-              nbPage={nbPage} rechercher={rechercher}
-            /></>
-            }
+            
           </Box>
           <ValidationSuppression 
             openModalDelete={openModalDelete}
@@ -402,7 +527,6 @@ function Recherche(props){
     );
 }
 export default function recherche_(props) {
-  // console.log("TRLALALA"+ JSON.stringify(props));
   return(
       <ResponsiveDrawer 
           title = {props.title}

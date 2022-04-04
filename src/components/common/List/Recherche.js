@@ -1,7 +1,14 @@
 import  React,{useEffect}  from 'react';
 import { useHistory } from 'react-router-dom';
+import { useRef, useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
+// material
+import { Menu, MenuItem, ListItemIcon, ListItemText } from '@mui/material';
+
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import { Card, Toolbar, IconButton } from '@mui/material';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -16,8 +23,10 @@ import { visuallyHidden } from '@mui/utils';
 import  ResponsiveDrawer  from "../../partenaire/Navbar/responsive-drawer.js";
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
+import {Container} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+import LoadingButton from '@mui/lab/LoadingButton';
 import EditIcon from '@mui/icons-material/Edit';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
@@ -33,6 +42,28 @@ import Login from '../../common/Authentification/Login.js';
 import NotEnoughAccessRight from '../NotEnoughAccessRight.js';
 import InputRecherche from './Recherche/InputRecherche.js';
 
+// import UserMoreMenu from '../../../sections/@dashboard/user/UserMoreMenu';
+import UserListToolbar from '../../../sections/@dashboard/user/UserListToolbar';
+
+import Iconify from '../../../comp/Iconify';
+
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === 'desc'
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+
 const HtmlTooltip = styled(({ className, ...props }) => (
     <Tooltip {...props} classes={{ popper: className }} />
   ))(({ theme }) => ({
@@ -45,21 +76,12 @@ const HtmlTooltip = styled(({ className, ...props }) => (
     },
   }));
 
-  function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-      return -1;
-    }
-    if (b[orderBy] > a[orderBy]) {
-      return 1;
-    }
-    return 0;
-  }
-
-  function getComparator(order, orderBy) {
-    return order === 'desc'
-      ? (a, b) => descendingComparator(a, b, orderBy)
-      : (a, b) => -descendingComparator(a, b, orderBy);
-  }
+  const RootStyle = styled(Toolbar)(({ theme }) => ({
+    height: 96,
+    display: 'flex',
+    justifyContent: 'space-between',
+    padding: theme.spacing(0, 1, 0, 3)
+  }));
 
   function stableSort(array, comparator) {
     const stabilizedThis = array.map((el, index) => [el, index]);
@@ -73,6 +95,89 @@ const HtmlTooltip = styled(({ className, ...props }) => (
     return stabilizedThis.map((el) => el[0]);
   }
 
+  function UserMoreMenu(props) {
+    const ref = useRef(null);
+    const [isOpen, setIsOpen] = useState(false);
+  
+    return (
+      <>
+          <button ref={ref} onClick={() => setIsOpen(true)}>
+            <span>+</span>
+          </button>
+          {/* <IconButton ref={ref} onClick={() => setIsOpen(true)}>
+            <Iconify icon="eva:more-vertical-fill" width={20} height={20} />
+          </IconButton> */}
+
+            <Menu
+              open={isOpen}
+              anchorEl={ref.current}
+              onClose={() => setIsOpen(false)}
+              PaperProps={{
+                sx: { width: 200, maxWidth: '100%' }
+              }}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+            >
+            { 
+              props.hasARToDelete
+              ?
+              <MenuItem 
+              sx={{ color: 'text.secondary' }}
+              onClick={(e) => {props.setToDelete(props.row); props.setOpenModalDelete(true)}}
+              >
+                <ListItemIcon>
+                  <Iconify icon="eva:trash-2-outline" width={24} height={24} />
+                </ListItemIcon> 
+                <ListItemText primary="Supprimer" primaryTypographyProps={{ variant: 'body2' }} />
+              </MenuItem>
+              : null
+            }
+
+            { 
+              props.hasARToViewDetails
+              ?
+              <MenuItem 
+              component={RouterLink} to={props.urlEdit + props.row._id} sx={{ color: 'text.secondary' }}>
+                <ListItemIcon>
+                  <Iconify icon="eva:edit-fill" width={24} height={24} />
+                </ListItemIcon>
+                <ListItemText primary="Modifier" primaryTypographyProps={{ variant: 'body2' }} />
+              </MenuItem>
+              : null
+            } 
+
+            { props.hasARToSwitchActivation
+              ? 
+                <MenuItem sx={{ color: 'text.secondary' }} onClick={(e) => props.switchIsActif(props.row._id, props.index)}>
+                  <LoadingButton
+                    onClick={(e) => props.switchIsActif(props.row._id, props.index)}
+                    loading={props.isActivationPending[props.index]}
+                    color={props.row.isActif ? "success" : "error"}
+                  >
+                    <PowerSettingsNewIcon/>
+                    <span>{props.row.isActif ? "Désactiver" : "Activer"}</span>
+                  </LoadingButton>
+                </MenuItem>
+                // <HtmlTooltip title="Activer/Désactiver" >
+                //     <LoadingButton
+                //       onClick={(e) => props.switchIsActif(props.row._id, props.index)}
+                //       loading={props.isActivationPending[props.index]}
+                //       color={props.row.isActif ? "success" : "error"}
+                //     >
+                //       <PowerSettingsNewIcon />
+                //       <span>{props.row.isActif ? "Désactiver" : "Activer"}</span>
+                //     </LoadingButton>
+                // </HtmlTooltip>
+              : null 
+            }
+
+            </Menu>
+            
+      </> 
+
+    );
+  }  
+
 function EnhancedTableHead(props) {
     const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
       props;
@@ -81,14 +186,17 @@ function EnhancedTableHead(props) {
     };
   
     return (
-      <TableHead>
-        <TableRow style={{backgroundColor :"#F6F8FC",color:'white'}}>
+      
+      <TableHead >
+        <TableRow style={{backgroundColor :"#bfbfbf",color:'white'}}>
           {props.headCells.map((headCell) => (
             <TableCell
               key={headCell.id}
-              align={headCell.numeric ? 'left' : 'center'}
+              // align={headCell.numeric ? 'left' : 'center'}
+              align="left"
               padding={headCell.disablePadding ? 'none' : 'normal'}
               sortDirection={orderBy === headCell.id ? order : false}
+              sx={{ fontFamily:'Raleway', fontSize:17 }}
             >
               <TableSortLabel
                 active={orderBy === headCell.id}
@@ -106,6 +214,7 @@ function EnhancedTableHead(props) {
           ))}
         </TableRow>
       </TableHead>
+      
     );
 }
 
@@ -127,6 +236,43 @@ const getValue = (row, fieldName) => {
   return value;
 }
 
+const BootstrapButton = styled(Button)({
+  boxShadow: 'none',
+  textTransform: 'none',
+  fontSize: 16,
+  padding: '6px 12px',
+  border: '1px solid',
+  lineHeight: 1.5,
+  backgroundColor: '#3CB371',
+  borderColor: '#3CB371',
+  fontFamily: [
+    '-apple-system',
+    'BlinkMacSystemFont',
+    '"Segoe UI"',
+    'Roboto',
+    '"Helvetica Neue"',
+    'Arial',
+    'sans-serif',
+    '"Apple Color Emoji"',
+    '"Segoe UI Emoji"',
+    '"Segoe UI Symbol"',
+  ].join(','),
+  '&:hover': {
+    backgroundColor: '#0069d9',
+    borderColor: '#0062cc',
+    boxShadow: 'none',
+  },
+  '&:active': {
+    boxShadow: 'none',
+    backgroundColor: '#0062cc',
+    borderColor: '#005cbf',
+  },
+  '&:focus': {
+    boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
+  },
+});
+
+
 function Recherche(props){
     const [order, setOrder] = React.useState('asc');
     const [orderBy, setOrderBy] = React.useState('calories');
@@ -146,6 +292,8 @@ function Recherche(props){
     const [nbResult, setNbResult] = React.useState(0);
     const [openModalDelete, setOpenModalDelete] = React.useState(false);
     const [toDelete, setToDelete] = React.useState({_id: null, nom: null});
+    const [isActivationPending, setIsActivationPending] = React.useState([]);
+    
     
 
     const history = useHistory();
@@ -153,6 +301,7 @@ function Recherche(props){
     let hasARToViewInsert = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToViewInsert);
     let hasARToDelete = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToDelete);
     let hasARToViewDetails = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToViewDetails);
+    let hasARToSwitchActivation = session.getInstance().hasOneOfTheseAccessRights(props.accessRightToSwitchActivation);
 
     const handleSelectAllClick = (event) => {
         if (event.target.checked) {
@@ -167,6 +316,10 @@ function Recherche(props){
         setId(field);
         setOpen(bol);
         
+      };
+
+      const redirection = (link) =>{
+        history.push(link);
       };
 
     const handleRequestSort = (event, property) => {
@@ -206,7 +359,6 @@ function Recherche(props){
                 }
               }
             }
-            
         }
         let fieldsToPrint = [];
         props.fieldsToPrint.map(infoField => {
@@ -226,6 +378,7 @@ function Recherche(props){
             setNbPage(data.nbPage);
             setNbResult(data.nbResult);
             setIsLoading(false);
+            setIsActivationPending(new Array(data.list.length).fill(false));
         });
     };
     
@@ -271,25 +424,64 @@ function Recherche(props){
     const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * nbContent - rows.length) : 0;
     let rows = [];
+
+    const switchIsActif = (_id, index) => {
+      let tmp = JSON.parse(JSON.stringify(isActivationPending));
+      tmp[index] = true;
+      setIsActivationPending(tmp);
+      callAPI("post", props.urlSwitchActivation, {_id: _id, isActif: !listResult[index].isActif ? true : false}, (data) => {
+        if(data.status === 200){
+          let tmpListResult = JSON.parse(JSON.stringify(listResult));
+          tmpListResult[index].isActif = !tmpListResult[index].isActif;
+          setListResult(tmpListResult);
+        }
+        let tmp = JSON.parse(JSON.stringify(isActivationPending));
+        tmp[index] = false;
+        setIsActivationPending(tmp);
+      });
+      console.log(_id);
+    };
+
     return(
+
         <>
-            {/* <Navbar currentPage={props.currentPage}/><br/> */}
-            <Box sx={{ width: '100%', padding :"50px" }}>
+          <Box sx={{ width: '100%', pt:"60px", pl:"50px", pr:"50px" }}>
             {hasARToViewInsert
-             ? <Link to={props.btnInsert.urlRedirect}  style={{float : 'left'}}>
-                <Button 
-                variant="contained" 
-                endIcon={<AddIcon style={{color:'white'}}/>}
-                style={{textDecoration:'none'}}>
-                    <span style={{color:'white'}}>{props.btnInsert.label}</span>
-                </Button>
-            </Link>
+              ? 
+              <Grid container spacing={2}>
+                <Grid item xs={10}>
+                </Grid>
+                <Grid item xs={2}>
+                  <BootstrapButton 
+                  variant="contained" 
+                  onClick={ ()=> redirection(props.btnInsert.urlRedirect) }
+                  endIcon={<AddIcon style={{color:'white'}}/>}
+                  style={{textDecoration:'none'}}
+                  sx={{ borderRadius:3 }}
+                  >
+                      <span style={{color:'white', fontSize:'14px', fontWeight:'bold' }}>{props.btnInsert.label}</span>
+                  </BootstrapButton>
+                </Grid>
+              </Grid>
+            // </Link>
             : null }
-            <InputRecherche rechercher={rechercher} toSearch={toSearch} setToSearch={setToSearch} /> <br/><br/>
-            { hasARViewList ? <>{
-                isLoading ? <Paper sx={{ width: '100%', mb: 2 }}><Skeleton /></Paper> :<>
-            <Paper sx={{ width: '100%', mb: 2 }}>
             
+            <Paper sx={{ width: '100%', mb: 2, borderRadius: 5, mt:3 }}>
+              <Card sx={{ borderRadius: 5 }}>
+
+                <RootStyle>
+                  <InputRecherche rechercher={rechercher} toSearch={toSearch} setToSearch={setToSearch} /> <br/><br/>
+                  { hasARViewList ? <>{
+                      isLoading ? <Skeleton /> :<>
+                    </>
+                  } </>:null}
+                  <Tooltip title="Filter list">
+                    <IconButton>
+                      <Iconify icon="ic:round-filter-list" />
+                    </IconButton>
+                  </Tooltip>
+                </RootStyle>
+
                 <TableContainer>
                 <Table
                     sx={{ minWidth: 750 }}
@@ -304,6 +496,7 @@ function Recherche(props){
                         onRequestSort={handleRequestSort}
                         rowCount={rows.length}
                         headCells={headCells}
+                        
                     />
                     <TableBody>
                     {
@@ -319,6 +512,7 @@ function Recherche(props){
                             role="checkbox"
                             tabIndex={-1}
                             key={row._id}
+                            style={{height:60}}
                             >
                                 {
                                     Object.keys(row).map(k => {
@@ -343,22 +537,20 @@ function Recherche(props){
                                         );
                                     })
                                 }
-                                <TableCell align="rigth">
-                                    { 
-                                      hasARToViewDetails
-                                      ? <Link to={props.urlEdit + row._id}>
-                                        <HtmlTooltip title="Editer"> 
-                                            <EditIcon style={{color : "green"}} />
-                                        </HtmlTooltip> 
-                                      </Link > 
-                                      : null
-                                    }
-                                    { hasARToDelete
-                                    ? <HtmlTooltip title="Supprimer" > 
-                                          <DeleteIcon style={{color : "red" , cursor :'pointer'}} 
-                                          onClick={(e) => {setToDelete(row); setOpenModalDelete(true)}} />
-                                      </HtmlTooltip> 
-                                    : null }
+                                <TableCell align="left">
+
+                                  <UserMoreMenu 
+                                  row={row}
+                                  urlEdit={props.urlEdit}
+                                  hasARToDelete={hasARToDelete}
+                                  setToDelete={setToDelete}
+                                  setOpenModalDelete={setOpenModalDelete}
+                                  hasARToViewDetails={hasARToViewDetails}
+                                  hasARToSwitchActivation={hasARToSwitchActivation}
+                                  index={index}
+                                  isActivationPending={isActivationPending}
+                                  switchIsActif={switchIsActif}
+                                  />
                                 </TableCell>
                             </TableRow>
                         );
@@ -376,18 +568,16 @@ function Recherche(props){
                     </TableBody>
                 </Table>
                 </TableContainer>
+                <FooterList 
+                  nbResult={nbResult} 
+                  rowsPerPageOptions={rowsPerPageOptions}
+                  nbContent={nbContent}
+                  setNbContent={setNbContent}
+                  currentNumPage={currentNumPage} setCurrentNumPage={setCurrentNumPage}
+                  nbPage={nbPage} rechercher={rechercher}
+                />
+              </Card>
             </Paper>
-            <FooterList 
-              nbResult={nbResult} 
-              rowsPerPageOptions={rowsPerPageOptions}
-              nbContent={nbContent}
-              setNbContent={setNbContent}
-              currentNumPage={currentNumPage} setCurrentNumPage={setCurrentNumPage}
-              nbPage={nbPage} rechercher={rechercher}
-            /></>
-            }</> : null }
-            
-          </Box>
           <ValidationSuppression 
             openModalDelete={openModalDelete}
             setOpenModalDelete={setOpenModalDelete}
@@ -397,12 +587,12 @@ function Recherche(props){
             setCurrentNumPage={setCurrentNumPage}
             accessRightToDelte={props.accessRightToDelete}
           />
+        </Box>
       </>
     );
 }
 
 export default function recherche_(props) {
-  // console.log("TRLALALA"+ JSON.stringify(props));
   return(
       <ResponsiveDrawer 
           title = {props.title}

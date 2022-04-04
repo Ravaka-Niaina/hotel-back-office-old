@@ -26,7 +26,7 @@ function InputContact(props){
         }
     }
     function handleChangeInfoReservateur(field, value){
-    
+        props.setisVariableUpdate(true);
         let errorField = JSON.parse(JSON.stringify(errorEmpty));
         let reservation = {...props.reservation};
         reservation.itineraires[props.indiceItineraire].tarifReserves[props.indiceTarifReserver].reservateurWithEmail[field] = value;

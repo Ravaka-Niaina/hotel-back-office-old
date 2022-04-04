@@ -22,6 +22,9 @@ import './confirmation_reservation.css';
 import PaiementField from './applyReservation/PaiementField';
 import { is } from 'date-fns/locale';
 import ModalAnnulationChambre from '../common/ModalAnnulationChambre.js';
+import NavBar from "./NavbarClient/Navbar.js" 
+
+import NavBarStepper from "./NavbarClient/NavBar&Stepper.js"; 
 
 
 function TabPanel(props) {
@@ -70,6 +73,14 @@ function ApplyReservation(props){
     const [inputGrise, setInputGrise] = useState({prenom:false,nom: false, email: false, tel: false});
     const [showResults, setShowResults] = useState(false);
 
+    const [load, setLoad] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [showModalChambre, setShowModalChambre] = useState(false);
+    const[ variableAnnuler , setVariableAnnuler] = useState({idReservation:'', indexItineraire :'',indexTarifsReserve : ''});
+    const [indiceI , setIndice] = useState(null);
+    const [isCompte , setisCompte] = useState(false);
+
+
     const interpretResponse = (data) => {
         if(data.status === 200){
             history.push('/front/login');
@@ -88,20 +99,40 @@ function ApplyReservation(props){
         console.log(data);
         callAPI('post', '/user/register', data, interpretResponse);
     };
-    const [load, setLoad] = useState(false);
-    const [showModal, setShowModal] = useState(false);
-    const [showModalChambre, setShowModalChambre] = useState(false);
-    const[ variableAnnuler , setVariableAnnuler] = useState({idReservation:'', indexItineraire :'',indexTarifsReserve : ''});
 
-    function AnnulationReservationChambre(){
+    function AnnulationReservationChambre(e){
+        e.preventDefault();
+        setOpenLoad(true);
         setLoad(true);
-        const data = { _id: variableAnnuler.idReservation, indexItineraire: variableAnnuler.indexItineraire, indexTarifReserve: variableAnnuler.indexTarifsReserve };
-        callAPI('post', '/reservation/delete', data, setDetailReservation );
+        console.log(reservation);
+        const data = { _id: variableAnnuler.idReservation, indexItineraire: variableAnnuler.indexItineraire, indexTarifReserve: variableAnnuler.indexTarifsReserve ,val :true};
+        callAPI('post', '/reservation/AnnuleApplyR', data, setDetailReservation1 );
     }
 
+    function setDetailReservation1(res){
+        // console.log(res);
+        if(res.status == 200){
+            setShowModalChambre(!showModalChambre);
+            setLoad(false);
+            GetDetails();
+            history.push('#redirect');
+        }else{
+            setAlertError(res.message);
+            history.push('#error');
+        }
+         
+    }
     function ShowModalAnnulation(isTrue,ObjectChambreAnnuler){
+        setLoad(false);
+        // console.log(ObjectChambreAnnuler);
         if(isTrue){
             setShowModal(!showModal);
+            let current = {...variableAnnuler};
+            variableAnnuler["idReservation"]='';
+            current["indexItineraire"]='';
+            current["indexTarifsReserve"]='';
+            setVariableAnnuler(current);
+
             setLoad(false);
         }else{
             setShowModalChambre(!showModalChambre)
@@ -139,14 +170,19 @@ function ApplyReservation(props){
             setConditionError(true);
             window.location.href = '#conditions';
         }
-     
     }
+
+   
 
     function setDetailReservation(res){
         console.log("details reservation");
         //
         setOpenLoad(false);
         console.log(res);
+        if(res.reservation == null){
+            setOpenLoad(false);
+            history.push("/")
+        }
         if(res.status === 200){
             try{
                 let current = JSON.parse(JSON.stringify(res.reservation));
@@ -155,6 +191,7 @@ function ApplyReservation(props){
                     tempAffilie.push(false);
                     const a = i;
                     for(let u = 0; u < current.itineraires[i].tarifReserves.length; u++){
+
                         const b = u;
                         if(current.itineraires[a].tarifReserves[b] != undefined){
     
@@ -177,6 +214,7 @@ function ApplyReservation(props){
                 setAffilie(tempAffilie);
 
                 if(res.reservation.reservateur != undefined){
+                    setisCompte(true);
                     setReservateur(res.reservation.reservateur);
                 }
 
@@ -209,9 +247,13 @@ function ApplyReservation(props){
         }
     }
 
+    function GetDetails(){
+       return callAPI('get', '/reservation/details/' + _id, {}, setDetailReservation);
+    }
+
     useEffect(() => {
         ControllerAcces();
-        callAPI('get', '/reservation/details/' + _id, {}, setDetailReservation);
+        GetDetails();
     }, [_id]);
 
     function generatePDF(){
@@ -267,10 +309,9 @@ function ApplyReservation(props){
         <>
             {(reservation !== null) ? 
                 <div id="content" style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
+                    <NavBarStepper access = {localStorage.access} id = {_id} indice = {1} /><br/>
                     <Box sx={{ bgcolor: 'background.paper', maxWidth: 800, margin: "0 auto"
                     , padding: "15px 15px"}}>
-                        {/* <h1>Détails réservation</h1> */}
-                        <button class="btn button_btn button_secondary button_sm" datatest="Button"><span>CONNECTER-VOUS POUR RÉSERVER RAPIDEMENT</span></button>
                         {alertSuccess != null ? 
                             <div id="success">
                                 <Stack sx={{ width: '100%' }} spacing={2}>
@@ -376,14 +417,19 @@ function ApplyReservation(props){
 
                                                 
                                         </Box>
-                                        <hr style={{marginLeft:'0.8em'}}></hr>
-                                        <h2 class="infos_heading"><span>Réserver plus rapidement (en option)</span></h2>
-                                        
-                                        <div class="inscription_quick">
-                                            <input type="checkbox" id="inscription_quick" name="scales" 
-                                                    checked={isConnectionShowing} onChange={quickConnection}/>
-                                            <label for="scales">J'aimerais créer un compte.</label>
-                                        </div>
+                                        {
+                                            isCompte ? "" : <>
+                                                 <hr style={{marginLeft:'0.8em'}}></hr>
+                                                <h2 class="infos_heading"><span>Réserver plus rapidement (en option)</span></h2>
+                                                
+                                                <div class="inscription_quick">
+                                                    <input type="checkbox" id="inscription_quick" name="scales" 
+                                                            checked={isConnectionShowing} onChange={quickConnection}/>
+                                                    <label for="scales">J'aimerais créer un compte.</label>
+                                                </div>
+                                            </>
+                                        }
+                                       
                                         {isConnectionShowing ?
                                             <div class="password_quick">
                                                     <div class="input-field">
@@ -453,10 +499,11 @@ function ApplyReservation(props){
                          </div>
                     </Box>
                 </div>
-                : <Stack sx={{ width: '100%' }} spacing={2}>
-                    <Icon><img src="../../warning.svg" style={{width:'50%'}} ></img></Icon>
-                    <Alert severity="error">{alertError}</Alert>
-                </Stack>
+                :<> {
+                    alertError ? <Stack sx={{ width: '100%' }} spacing={2}>
+                        <Alert severity="error">{alertError}</Alert>
+                    </Stack>: ""
+                }</>
             }
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}

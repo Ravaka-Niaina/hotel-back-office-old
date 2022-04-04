@@ -57,16 +57,24 @@ const CalendarComponent = () => {
     const [isFirst, setIsFirst] = useState(true);
     const [isAccept, setIsAccept] = React.useState(false);
     const [isTextField, setIsTextField] = React.useState(false);
+    
     function getPrix(dates, startLoad, endLoad){
         startLoad ? startLoad() : setOpenLoad(true);
+        let data = {};
+        try{
+            data = {dateDebut: getDate(dates[0].format()), dateFin: getDate(dates[1].format())}
+        }catch(err){
+            data = {dateDebut: dates, dateFin: dates};
+        }
         try{
             axios({
                 method: 'post',
                 url: process.env.REACT_APP_BACK_URL + "/TCTarif/prix",
                 withCredentials: true,
-                data: {dateDebut: getDate(dates[0].format()), dateFin: getDate(dates[1].format())}
+                data: data
             })
             .then(res => {
+                console.log(res.data.typeChambre);
                 const alldays = getDaysBetweenDates(dates[0],dates[1]);
                 let tmp = [];
                 for(var i = 0; i < res.data.typeChambre.length; i++) {

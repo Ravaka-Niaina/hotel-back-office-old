@@ -100,7 +100,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 var init = true;
 
 export default function PersistentDrawerLeft(props) {
-console.log("TRLALALA"+ JSON.stringify(props));
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const [nbNotifs, setNbNotifs] = React.useState(0);
@@ -151,10 +150,8 @@ console.log("TRLALALA"+ JSON.stringify(props));
   React.useEffect(()=>{
 
     if(init){
-      console.log("initialisation aaaaaaaaaaaaaaaaaaaaaaaa");
       optionlist.map((option, i) =>{
         option.lien.map((opt, u) => {
-          console.log(window.location.href.split(url)[1] + " , " + option.lien[u].link);
           if(window.location.href.split(url)[1] === option.lien[u].link){
             console.log("curIndex "+i)
             setCurrentIndex(i);
@@ -264,7 +261,6 @@ console.log("TRLALALA"+ JSON.stringify(props));
           {
             optionlist.map((option, index) => 
             {
-              console.log(window.location.href.split(url)[1])
               return(
               option.dropdown === false ?
               // <Link to={option.lien[0]["link"]} className="nav-link">

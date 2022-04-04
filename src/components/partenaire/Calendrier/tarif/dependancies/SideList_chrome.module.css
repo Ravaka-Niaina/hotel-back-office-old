@@ -1,5 +1,5 @@
 .sidelist{
-    width: 15% !important;
+    width: 287px;
     position: absolute;
     top: 100px;
     left: 0;
@@ -38,6 +38,18 @@
     padding-top: 0px;
     height: 51px !important;
 }
+.sideElt > span{
+    width: 200px;
+    display: inline-block;
+}
+.sideElt > button{
+    display: relative;
+    width: 75px;
+    display: inline-block;
+    top: -15px;
+    left: 195px;
+}
+
 .sidelist ul > li > span{
     padding-left: 8px !important;
     font-size: 12px !important;

@@ -15,7 +15,7 @@ export default function InputRecherche({rechercher, toSearch, setToSearch}){
                 onChange={(e) => setToSearch(e.target.value)}
                 InputProps={{ endAdornment: 
                 <InputAdornment position="end">
-                    <SearchIcon style={{color:"blue"}} onClick={(e) => rechercher(1)} />
+                    <SearchIcon style={{color:"#D3D3D3"}} onClick={(e) => rechercher(1)} />
                 </InputAdornment>
                 }}
             />

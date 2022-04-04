@@ -5,6 +5,7 @@ import moment from 'moment';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LoadingButton from '@mui/lab/LoadingButton';
 import SaveIcon from '@mui/icons-material/Save';
+import Alert from '@mui/material/Alert';
 
 import callAPI from '../../../../../../utility';
 import {days, getDateYYYYMMDD} from './utilEditor.js';
@@ -12,17 +13,13 @@ import {days, getDateYYYYMMDD} from './utilEditor.js';
 const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue, 
     handleChange, closePopper, idTypeChambre, alldays, getPrix, nbPers}) => {
     const [changeStatusRate, setChangeStatusRate] = useState(false);
-    const [loading, setLoading] = React.useState(false);
-    const [versions, setVersions] = React.useState(() => {
-        let tmp = [];
-        for(let i = 0; i < nbPers; i++){
-            tmp.push({
-                nbPers: i + 1,
-                prix: ""
-            });
-        }
-        return tmp;
-    });
+    const [loading, setLoading] = useState(false);
+    const [prix, setPrix] = useState("");
+    const [error, setError] = useState(null);
+
+    if(fromto.length === 1){
+        fromto.push(fromto[0] + "");
+    }
 
     const switchChangeStatusRate = () => {
         setChangeStatusRate(!changeStatusRate);
@@ -36,25 +33,17 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
         if(data.status === 200){
             getPrix([moment(alldays[0], "MM-DD-YYYY"), moment(alldays[alldays.length - 1], "MM-DD-YYYY")], startLoad, endLoad);
         }else{
-            console.log("prix non configuré");
+            if(data.errors.other){
+                setError(data.errors.other);
+            }
             setLoading(false);
         }
-    };
-
-    const setPrix = (i, value) => {
-        let tmp = JSON.parse(JSON.stringify(versions));
-        tmp[i].prix = value;
-        setVersions(tmp);
     };
 
     const savePrixTarif = (e) => {
         e.preventDefault();
         setLoading(true);
-        let tmpVersions = JSON.parse(JSON.stringify(versions));
-        for(let i = 0; i < tmpVersions.length; i++){
-            tmpVersions[i].prix = Number.parseFloat(tmpVersions[i].prix);
-        }
-
+        console.log(fromto);
         const data = {
             dateDebut: getDateYYYYMMDD(fromto[0]),
             dateFin: getDateYYYYMMDD(fromto[1]),
@@ -63,37 +52,15 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
             forTarif: true,
             isTarifOpen: value === "open" ? true : false,
             idTypeChambre: idTypeChambre,
-            tabIdTarif: [idPlanTarifaire],
+            idTarif: idPlanTarifaire,
             modifierOuvertureTarif: changeStatusRate,
-            versions: tmpVersions,
+            nbPers: nbPers,
+            prix: Number.parseFloat(prix),
             minSejour: 1
         };
-        callAPI('post', '/TCTarif/configPrix', data, refresh);
+        console.log(data);
+        callAPI('post', '/TCTarif/configPrixXPers', data, refresh);
     };
-
-    let inputPrix = [];
-    for(let i = 0; i < nbPers; i++){
-        inputPrix.push(
-            <>
-                <TextField
-                    size="small"
-                    id="outlined-number"
-                    label={"x " + (i + 1)} 
-                    type="number"
-                    InputProps={{
-                        startAdornment: <InputAdornment position="start"><PersonOutlineIcon/></InputAdornment>,
-                        endAdornment:<InputAdornment position="end">€</InputAdornment>
-                    }}
-                    InputLabelProps={{
-                        shrink: true,
-                    }}
-                    value={versions[i].prix}
-                    onChange={(e) => setPrix(i, e.target.value)}
-                />
-                <br/>
-            </>
-        );
-    }
 
     return(
         <FormControl component="fieldset">
@@ -114,8 +81,31 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
                 <FormControlLabel value="open" control={<Radio />} label="Open" disabled={!changeStatusRate} />
                 <FormControlLabel value="close" control={<Radio />} label="Close" disabled={!changeStatusRate} />
             </RadioGroup>
+
+            {error === null 
+            ? null 
+            : <Stack sx={{ width: '100%' }} spacing={2}>
+            <Alert onClose={() => setError(null)}>{error}</Alert>
+            </Stack>}
+
             <br/>
-            {inputPrix}
+            <TextField
+                size="small"
+                id="outlined-number"
+                label={"x " + nbPers} 
+                type="number"
+                InputProps={{
+                    startAdornment: <InputAdornment position="start"><PersonOutlineIcon/></InputAdornment>,
+                    endAdornment:<InputAdornment position="end">€</InputAdornment>
+                }}
+                InputLabelProps={{
+                    shrink: true,
+                }}
+                value={prix}
+                onChange={(e) => setPrix(e.target.value)}
+            />
+            <br/>
+
             <Stack direction="row" spacing={2}>
                 <LoadingButton
                     color="secondary"
