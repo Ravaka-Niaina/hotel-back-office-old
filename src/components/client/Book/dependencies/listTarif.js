@@ -13,8 +13,12 @@ import { styled } from '@mui/material/styles';
 import callAPI from '../../../../utility.js';
 import numeroConfirmation from './numeroConfirmation.js';
 import PolicyIcon from '@mui/icons-material/Policy';
+import Reservation from '../../reservation';
+import axios from "axios";
+import {session} from "../../../../components/common/utilitySession.js";
 import {getDiffDays} from '../../../../utility/utilityDate.js';
 import ButtonLoading from '../../../partenaire/buttonLoading.js';
+import { useTranslation } from "react-i18next";
 
 const style = {
     position: 'absolute',
@@ -64,13 +68,24 @@ function getDate(date){
 function ListTarif(props){
     const [error, setError] = React.useState(null);
     const [showButton, setShowButton] = React.useState(false);
+    const { t, i18n } = useTranslation();
     function setReservationEnCours(res){
         if(res.status === 200){
+            console.log("add reservation");
+            console.log(res.reservation);
             props.context.setReservationEnCours(res.reservation);
         }else{
             console.log(res);
         }
         setShowButton(false);
+    }
+    function typeChambre(res){
+        
+        if(res.status === 200){
+         
+        }else{
+            console.log(res);
+        }
     }
 
     function NumeroIntineraire (random , nameHotel ,TChambre){
@@ -95,14 +110,16 @@ function ListTarif(props){
         
     }
 
-    function addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre){
+    function addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre,tarif,toPay){
         setShowButton(true);
-        if(props.context.state.itineraires.length === 0){
-            let temp = {...props.context.state};
-            temp.err = "Veuillez d'abord choisir une date de sejour";
-            props.context.setState(temp);
-        }
+        // if(props.context.state.itineraires.length === 0){
+        //     let temp = {...props.context.state};
+        //     temp.err = "Veuillez d'abord choisir une date de sejour";
+        //     props.context.setState(temp);
+        // }
+        let isFirstTarif=false;
         if(props.context.state.itineraires.length > 0){
+
             let itineraires = JSON.parse(JSON.stringify(props.context.state.itineraires));
             let dateSejour = props.context.state.dateSejour;
             const lastItineraire = itineraires.length - 1;
@@ -113,22 +130,67 @@ function ListTarif(props){
                     fin: itineraires[itineraires.length - 1].tarifReserves[lastTarif].dateSejour.fin
                 };
             }
+            if(props.context.state.itineraires.length == 1 && itineraires[lastItineraire].tarifReserves.length==0){
+                    isFirstTarif=true;
+            }
             //numero itineraire
             const Random = NumeroIntineraire(props.context.state.random , props.context.state.nameHotel,TChambre);
             //numero confirmation
             const numeroConfirm = numeroConfirmation(0,props.context.state.nameHotel, TChambre);
-            console.log(numeroConfirm);
-            itineraires[lastItineraire].tarifReserves.push({
-                idTarif: id, 
-                dateSejour: dateSejour,
-                dateReservation: getDate(Date.now()),
-                guests: props.context.state.guests,
-                idTypeChambre : idTypeChambre,
-                nbPers: nbPers,
-                numeroConfirmation : numeroConfirm
-            });
-            const data = {itineraires: itineraires , numeroIntineraire : Random };
-            callAPI("post" , "/reservation/insert" , data , setReservationEnCours);
+            // console.log(numeroConfirm);
+          
+            // const data = {itineraires: itineraires , numeroIntineraire : Random };
+            //  callAPI("get" , "/TypeChambre/detailsChambre/"+idTypeChambre , {} , typeChambre);
+                
+                let headers = {
+                    idsession: session.getInstance().getId(),
+                    ispartner: session.getInstance().getIsPartner()
+                };
+                const session_temp = localStorage.getItem("session_temp");
+                if(session_temp !== null){
+                    headers.session_temp = session_temp;
+                }
+                axios({
+                    method: "get",      
+                    url: process.env.REACT_APP_BACK_URL + "/TypeChambre/detailsChambre/"+idTypeChambre,
+                    withCredentials: true,
+                    data: {},
+                    headers: headers
+                })
+                .then(res => {                                           
+                    let typeChambre = res.data.typeChambre;
+                    console.log("typeChambre");
+                    console.log(typeChambre);
+                    if(res.data.status==200){
+                        itineraires[lastItineraire].NumeroITineraire =Random;
+                        itineraires[lastItineraire].tarifReserves.push({
+                            idTarif: id, 
+                            dateSejour: dateSejour,
+                            dateReservation: getDate(Date.now()),
+                            guests: props.context.state.guests,
+                            idTypeChambre : idTypeChambre,
+                            nbPers: nbPers,
+                            reservateurWithEmail: {nom: "", prenom: "", email: "", tel: ""},
+                            numeroConfirmation : numeroConfirm,
+                            nomTypeChambre:typeChambre.nom,
+                            TypeChambreName:typeChambre.name,
+                            politiqueAnnulAtrb:tarif.politiqueAnnulAtrb,
+                            nomTarif:tarif.nom,
+                            TarifName:tarif.name,
+                            toPay:{afterProm:toPay.prix,beforeProm:toPay.prixOriginal},
+                        }); 
+                          
+                        let reserv = props.context.state.reservationEnCours;
+                        reserv.itineraires=itineraires;
+                        console.log(reserv);
+                        props.context.setReservationEnCours(reserv,true,isFirstTarif);
+                    }
+                })
+                .catch(err =>{console.log(err); console.log("erreur");} );
+
+
+         
+
         }
     }
 
@@ -145,24 +207,38 @@ function ListTarif(props){
     }));
     
     let tarifs = props.tarifs.map(tarif => {
+            const nbPers = props.context.state.guests.nbAdulte + props.context.state.guests.nbEnfant;
+            // console.log("tarifs negga");
+            // console.log(tarif);
             const nbNuit =  getDiffDays(new Date(tarif.dateSejour.debut), new Date(tarif.dateSejour.fin));
             return (
                     <div className={styles.listTarif}>
                         <ul>
                             <li>
                                 <div className="row">
-                                    <span>{tarif.nom}</span>
+                                    
+                                {props.context.state.traduction ?
+                                    <div className="row">
+                                        <span>{tarif.name}</span>
+                                    </div>
+                                :
+                                    <div className="row">
+                                        <span>{tarif.nom}</span>
+                                    </div>
+                                }
+
                                 </div>
                                 <div class="row">
                                     {tarif.politiqueAnnulAtrb !== undefined &&  tarif.politiqueAnnulAtrb[0] !== undefined? <HtmlTooltip
                                             title={
                                                 <InfoPolitiqueAnnul 
-                                                    checkIn={tarif.dateSejour.debut} 
+                                                    checkIn={props.context.state.dateSejour.debut} 
                                                     politique={tarif.politiqueAnnulAtrb[0]} 
+                                                    context={props.context}
                                             />}
-                                            placement="left-start"
+                                            placement="top"
                                         >
-                                            <span><PolicyIcon/>{tarif.politiqueAnnulAtrb[0].nom}</span>
+                                            <span><PolicyIcon/> {props.context.state.traduction ? tarif.politiqueAnnulAtrb[0].name : tarif.politiqueAnnulAtrb[0].nom }</span>
                                         </HtmlTooltip> : ""
                                     }
                                 </div>
@@ -180,14 +256,13 @@ function ListTarif(props){
                                                     <span className={styles.afterProm}>&nbsp;{(version.prix) + " EUR "}</span>
                                                 </div>
                                                 <div className={styles.bookNow}>
-                                                    {showButton ? <ButtonLoading />
-                                                    : <Button variant="contained"
-                                                        onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre, version.nbPers , props.nameTC)}
+                                                    <Button variant="contained"
+                                                        onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre, version.nbPers , props.nameTC,tarif,version)}
                                                         endIcon={<AddIcon/>}
                                                         className="bookNow"
                                                     >
-                                                        Book
-                                                    </Button> }
+                                                        {t('Book')}
+                                                    </Button> 
                                                 </div>
                                             </div>
                                         );

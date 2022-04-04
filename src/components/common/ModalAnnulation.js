@@ -23,7 +23,7 @@ const annulerReservation = (props) => {
     return (
         <Modal
             open={props.showModal}
-            onClose={(e) => props.ShowModalAnnulation()}
+            onClose={(e) => props.ShowModalAnnulation(true)}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
         >
@@ -44,7 +44,7 @@ const annulerReservation = (props) => {
                             props.load ? <ButtonLoad/> :
                              <div class="bouton-aligne">
                                  <Button variant ="contained" sx={{marginRight: 5}} color="warning" onClick = {(e) => props.annulerReservation()}>Oui</Button>
-                                 <Button variant ="contained" color="success" onClick = {(e) => props.ShowModalAnnulation()}>Non</Button>
+                                 <Button variant ="contained" color="success" onClick = {(e) => props.ShowModalAnnulation(true)}>Non</Button>
                             </div>
                         }
                     </div>

@@ -34,20 +34,19 @@ function TarifsVoucher(props){
         console.log(temp);
         setAnnulChambre(temp);
     }
-   
+
     
     let tarifs = [];
     let hotelItineraire=null;
     for(let i = 0; i < props.reservation.itineraires[props.indexItineraire].tarifReserves.length; i++){
+        let object = {idReservation : props.reservation._id , indexItineraire : props.indexItineraire ,indexTarifsReserve : i}
+
         if(props.reservation.itineraires[props.indexItineraire].tarifReserves[i].dateAnnulation === undefined){
             const u = i;
-           // console.log("u = " + u);
             const tarif = props.reservation.itineraires[props.indexItineraire].tarifReserves[i];
             if(i==0){
                 hotelItineraire = tarif.infoTypeChambre.infoHotel;
             }
-             console.log("tarif");
-             console.log(tarif);
             const datedebut = new Date(tarif.dateSejour.debut);
             const datefin = new Date(tarif.dateSejour.fin);
             const months = ['jan','fev','mar', 'av','mai','juin','juil','août','sept','oct','nov','déc'];
@@ -69,12 +68,12 @@ function TarifsVoucher(props){
                 <div class="voucher_details_tarifs">
                     
                     <div class="image_tarifs">
-                        
+                         <img style={{width:'90%',marginTop:'0.8rem'}}  src={process.env.REACT_APP_BACK_URL+"/"+tarif.infoTypeChambre.photo[0]}/>
                     </div>
                     <div class="voucher_info_tarifs">
                         <div style={{display:'flex',flexDirection:'row',marginTop:'0.8rem'}}>
                             <h3 class="voucher_title2"> Chambre {i+1} </h3>
-                            <span class="voucher_title2" style={{marginLeft:'1.5rem'}}>CONFIRMER #59973SC016091</span>
+                            <span class="voucher_title2" style={{marginLeft:'1.5rem'}}>CONFIRMER #{props.reservation.itineraires[props.indexItineraire].tarifReserves[i].numeroConfirmation}</span>
                             
                         </div>
                         <div class="flex_voucher_tarif" style={{marginTop:'0.8rem'}}><strong class="voucher_bold">{tarif.nomTypeChambre}</strong><div class="booking-summary-reservations_roomTotal"><span class="sr-only"><span>Prix de la chambre</span> </span><span class="voucher_bold">{tarif.toPay.afterProm}&nbsp;€</span></div></div>
@@ -103,23 +102,22 @@ function TarifsVoucher(props){
                         </div>
                         <div style={{marginTop:'0.8rem'}}>
                             <strong class="voucher_bold">Informations du client</strong>
-                            <div>prenom nom </div>
-                            <div> email </div>
-                            <div> numero </div>
+                            <div>{props.reservation.itineraires[props.indexItineraire].tarifReserves[i].reservateurWithEmail.prenom}  {props.reservation.itineraires[props.indexItineraire].tarifReserves[i].reservateurWithEmail.nom} </div>
+                            <div> {props.reservation.itineraires[props.indexItineraire].tarifReserves[i].reservateurWithEmail.email} </div>
+                            <div> {props.reservation.itineraires[props.indexItineraire].tarifReserves[i].reservateurWithEmail.tel} </div>
                         </div>
                         <div style={{marginTop:'0.8rem'}}>
                             <strong class="voucher_bold">Détails et préférences supplémentaires</strong>
-                            <div>details </div>
+                            <div>{props.reservation.itineraires[props.indexItineraire].tarifReserves[i].reservateurWithEmail.messageParticulier} </div>
                             
                         </div>
-                        <button  style={{marginTop:'0.8rem'}} class="voucher_link" datatest="Button"><span>annuler la réservation de la chambre</span></button>
+                        <button  style={{marginTop:'0.8rem'}} class="voucher_link" datatest="Button"  
+                            onClick={(e) => props.ShowModalAnnulation(false , object)}><span style={{fontSize : "12px"}}>annuler la réservation de la chambre</span></button>
                         <hr style={{marginTop:-2}}></hr>
                         <div style={{textAlign:'right',fontWeight:700,marginTop:'0.8rem'}}><span>Total de la réservation&nbsp;:</span> <span class="booking-summary-reservations_amount"><span>{tarif.toPay.afterProm}&nbsp;€</span></span></div>
                         
                     </div>
                    
-                
-                    
                 </div>
                 
             );
@@ -136,20 +134,11 @@ function TarifsVoucher(props){
          
         }
     }
-    // tarifs.push(
-    //     <div class="voucher_politiques voucher_border">
-    //         <Politiques politiques={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTarif.infoPolitique} tarif={tarif} />
-    //     </div>
-        
-    
-    // );
+  
     tarifs.push(<ConfirmAnnulChambre annulChambre={annulChambre} setAnnulChambre={setAnnulChambre} key={annulChambre} openLoad={props.openLoad} setOpenLoad={props.setOpenLoad} />);
     
     return (<div>
-                
-                
                 {tarifs}
-
             </div>);
 }
 

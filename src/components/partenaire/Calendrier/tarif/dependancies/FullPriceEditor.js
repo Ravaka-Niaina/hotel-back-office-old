@@ -217,23 +217,19 @@ const FullPriceEditor = (props) => {
     }
 
     function refresh(res){
-        console.log(res);
         if(res.status === 200){
-            console.log("Redirection en cours...");
-            props.getPrix();
+            props.getPrix(props.value);
             removeErrorConfigPrix(error, setError)
         }else{
             console.log("prix non configuré");
             handleErrorConfigPrix(res.errors, error, setError);
             props.setOpenLoad(false);
         }
-        
     }
 
     function savePrix(forTypeChambre, forTarif){
-        props.setOpenLoad(true);
+        //props.setOpenLoad(true);
         let versions = [];
-        console.log(prix);
 
         if(prix.length > 0){
             console.log(prix);
@@ -257,8 +253,6 @@ const FullPriceEditor = (props) => {
             }
         }
         const dateOublie = "Vous avez oublié de choisir une date";
-        console.log(interval[0]);
-        console.log(interval[1]);
         let tempError = {...error};
         if(interval[0] === null){
             tempError.dateDebut = dateOublie;

@@ -12,7 +12,8 @@ import Box from '@mui/material/Box';
 
 import Button from '@mui/material/Button';
 import callAPI from '../../../../utility';
-import  Navbar  from "../../Navbar/Navbar";
+// import  Navbar  from "../../Navbar/Navbar";
+import  ResponsiveDrawer  from "../../Navbar/responsive-drawer.js";
 import ButtonLoading from "../../buttonLoading.js"
 
 import {session} from '../../../common/utilitySession.js';
@@ -41,7 +42,9 @@ function InsertTarif(){
         chambresAtrb: null,
         politiqueAnnulAtrb: null,
         debutReserv: null,
-        finReserv: null
+        finReserv: null,
+        name: null,
+        desc: null,
     });
     const [planTarifaire, setPlanTarifaire] = useState({
         nom: '',
@@ -51,6 +54,10 @@ function InsertTarif(){
         dateSejour: {debut: '', fin: ''},
         isLeadHour: true,
         lead: {min: '', max: ''},
+
+        name: '',
+        desc: '',
+
         chambresAtrb: [],
         politiqueAnnulAtrb: [
 
@@ -66,6 +73,7 @@ function InsertTarif(){
     const [reservAToutMoment, setReservAToutMoment] = useState(true);
     const [areDateReservDisabled, setAreDateReservDisabled] = useState(true);
     const [aucunFinDateSejour, setAucunFinDateSejour] = useState(false);
+    
     const { _id } = useParams();
 
     const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
@@ -128,7 +136,9 @@ function InsertTarif(){
             dateSejourDebut: null, 
             dateSejourFin: null,
             leadMin: null, 
-            leadMax: null
+            leadMax: null,
+            name: null,
+            desc: null,
         };
         setBtnLoad(false);
         if(res.status === 200){
@@ -170,7 +180,7 @@ function InsertTarif(){
 
     return(
         <div className="">
-            <Navbar currentPage={1}/>
+            {/* <Navbar currentPage={1}/> */}
             <div className="">
                     <div className="">
                         <div className="jumbotron">
@@ -181,7 +191,9 @@ function InsertTarif(){
                             <CustomError errors={errors} />
                             <form className="needs-validation" style={{marginTop:'15px'}}>
                                 <Box>
-                                    <div style={{marginTop:''}}>
+
+                                <div className='row'>
+                                <div style={{marginTop:''}} className='col'>
                                         <TextField 
                                             id="outlined-basic"
                                             variant="outlined"
@@ -194,7 +206,24 @@ function InsertTarif(){
                                             error={error.nom === null ? false : true}
                                             helperText={error.nom === null ? null : error.nom}
                                         />
-                                    </div>
+                                </div>
+
+                                <div style={{marginTop:''}} className='col'>
+                                        <TextField 
+                                                id="outlined-basic"
+                                                variant="outlined"
+                                                style={{width: '300px'}}
+                                                type="text"
+                                                size='small'
+                                                label="Name"
+                                                value={planTarifaire.name}
+                                                onChange={(e) => utility.handleInputChange1(planTarifaire, setPlanTarifaire, error, setError, e, "name")}
+                                                error={error.name === null ? false : true}
+                                                helperText={error.name === null ? null : error.name}
+                                            />
+                                </div>
+
+                                </div>
                                     <div style={{marginTop:'20px'}}>
                                         <label style={{textDecoration: 'underline'}} id='bigLabel'>Déscription </label> 
                                         <br/>
@@ -216,7 +245,27 @@ function InsertTarif(){
                                             error={error.description === null ? false : true}
                                             helperText={error.description === null ? null : error.description}
                                         />
+                    
+                                        <TextField 
+                                            id="outlined-basic"
+                                            variant="outlined"
+                                            multiline
+                                            rows={2}
+                                            rowsMax={4}
+                                            label="Déscription en Anglais"
+                                            style={{
+                                            width:'100%',
+                                            height:'50px',
+                                            marginTop:'55px'
+                                                  }}
+                                            type="text"
+                                            value={planTarifaire.desc}
+                                            onChange={(e) => utility.handleInputChange1(planTarifaire, setPlanTarifaire, error, setError, e, "desc")}
+                                            error={error.desc === null ? false : true}
+                                            helperText={error.desc === null ? null : error.desc}
+                                        />
                                     </div>
+                                    
                                     <InsertTarifDateReservation
                                         reservAToutMoment={reservAToutMoment}
                                         setReservAToutMoment={setReservAToutMoment}
@@ -312,4 +361,15 @@ function InsertTarif(){
             </div>
     );
 }
-export default InsertTarif;
+export default function insertion_tarif(){
+    const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
+    // const [titre, setTitre] = useState(false);
+    let titre = "";
+    isInsert ? titre = "Ajout plan tarifaire" : titre = "Modifier plan tarifaire"
+    return (
+        <ResponsiveDrawer
+            title = {titre}
+            getContent = {InsertTarif}
+        />
+    );
+}

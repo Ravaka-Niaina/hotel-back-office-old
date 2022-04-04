@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import {FormControl,FormControlLabel} from '@mui/material';
+import { useTranslation } from "react-i18next";
 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -25,6 +26,8 @@ const style = {
 };
 
 const Guest = ({context, applyFilter, occupancy}) => {
+
+  const { t, i18n } = useTranslation();
 
   function changeNbGuests(categ, value){
     let temp = {...context.state};
@@ -47,7 +50,7 @@ const Guest = ({context, applyFilter, occupancy}) => {
               fullwidth={false}
               size="small"
               id="outlined-number"
-              label="Adulte" 
+              label={t('Adult')}
               value={context.state.guests.nbAdulte}
               type="number"
               InputLabelProps={{
@@ -60,7 +63,7 @@ const Guest = ({context, applyFilter, occupancy}) => {
               fullwidth={false}
               size="small"
               id="outlined-number"
-              label="Enfant" 
+              label={t('Children')} 
               value={context.state.guests.nbEnfant}
               type="number"
               InputLabelProps={{

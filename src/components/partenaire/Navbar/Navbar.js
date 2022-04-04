@@ -15,6 +15,9 @@ import NotificationsActiveOutlinedIcon from '@mui/icons-material/NotificationsAc
 import IconButton from '@mui/material/IconButton';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import Divider from '@mui/material/Divider';
+import GroupIcon from '@mui/icons-material/Group';
+import AddCardIcon from '@mui/icons-material/AddCard';
+import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Box from '@mui/material/Box';
 import { Link } from 'react-router-dom';
@@ -44,6 +47,7 @@ function Navbar(props) {
     const [showPartenaire, setShowPartenaire] = React.useState(true);
     const [showDroitAcces, setShowDroitAcces] = React.useState(true);
     const [showReservation, setShowReservation] = React.useState(true);
+    const [nbNotifs, setNbNotifs] = React.useState(0);
 
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -85,7 +89,22 @@ function Navbar(props) {
         setShowDroitAcces(session.getInstance().hasOneOfTheseAccessRights(["superAdmin", "getListDroitAcces", "insertDroitAcces", "getDroitAcces", "updateDroitAcces", "deleteDroitAcces"]));
         setShowReservation(session.getInstance().hasOneOfTheseAccessRights(["superAdmin", "getListReservation"]));
     }, []);
-    
+
+    function getNotification(){
+        return new Promise((resolve, reject) => {
+            setInterval(() => {
+                callAPI('post', '/notifPartenaire', {}, (data) => {
+                    setNbNotifs(data.nbNotifs);
+                });
+            }, 120000);
+        });
+    }
+
+    getNotification();
+
+    function seeNotifications(){
+        history.push('/back/reservation/notif');
+    }
     
     return (
         <nav className="navbar navbar-expand-lg navbar-dark" id="navbar">
@@ -98,9 +117,9 @@ function Navbar(props) {
                 { showHistorique ? <Tab value={5} icon={<DocumentScannerOutlinedIcon />}  iconPosition="start" label="historique" onClick={handleClick2}/> : null }
                 <Tab value={6} component={Link} icon={<FormatListBulletedOutlinedIcon />} to="/front" iconPosition="start" label="Client" />
                 <Tab value={7} icon={<PersonPinIcon />} iconPosition="start" label="Mon compte" />
-                { showPartenaire ? <Tab value={8} component={Link} to="/back/user" icon={<PersonPinIcon />} iconPosition="start" label="Partenaires" /> : null }
-                { showDroitAcces ? <Tab value={9} component={Link} to="/back/accessRight" icon={<PersonPinIcon />} iconPosition="start" label="Droit d'accès" /> : null }
-                { showReservation ? <Tab value={10} component={Link} to="/back/reservation" icon={<PersonPinIcon />} iconPosition="start" label="Réservation" /> : null }
+                { showPartenaire ? <Tab value={8} component={Link} to="/back/user" icon={<GroupIcon />} iconPosition="start" label="Partenaires" /> : null }
+                { showDroitAcces ? <Tab value={9} component={Link} to="/back/accessRight" icon={<AddCardIcon />} iconPosition="start" label="Droit d'accès" /> : null }
+                { showReservation ? <Tab value={10} component={Link} to="/back/reservation" icon={<ShoppingBagIcon />} iconPosition="start" label="Réservation" /> : null }
                 <Drop click = {handleChange} close ={handleClose} open={open} anchorEl={anchorEl} />
                 <DropHisto click = {handleChange} close ={handleClose1} open={open1} anchorEl={anchorEl1} />
             </Tabs>
@@ -112,16 +131,19 @@ function Navbar(props) {
                 width: 'fit-content',
                 }}
             >
-                <Badge
-                sx={{
-                    "& .MuiBadge-badge": {
-                    color: "white",
-                    backgroundColor: "red"
-                    }
-                }}
-                className="mail-button" badgeContent={4}>
-                    <NotificationsActiveOutlinedIcon fontSize="large" color="action" />
-                </Badge>
+                { nbNotifs > 0 
+                ? <Badge
+                    sx={{
+                        "& .MuiBadge-badge": {
+                        color: "white",
+                        backgroundColor: "red"
+                        }
+                    }}
+                    className="mail-button" badgeContent={nbNotifs}
+                    onClick={(e) => seeNotifications()} >
+                        <NotificationsActiveOutlinedIcon fontSize="large" color="action" onClick={(e) => seeNotifications()} />
+                    </Badge>
+                : <NotificationsActiveOutlinedIcon fontSize="large" color="action" /> }
                 <Divider orientation="vertical" variant="middle" flexItem />
                 <IconButton aria-label="fingerprint" color="success" onClick={(e) => logout(e)}>
                     <LogoutOutlinedIcon />

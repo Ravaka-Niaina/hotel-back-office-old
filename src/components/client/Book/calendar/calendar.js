@@ -15,6 +15,7 @@ import { presetDateTracker } from './utils/date-utils'
 
 import callAPI from '../../../../utility.js'
 import { getDate } from '../../../partenaire/Calendrier/tarif/utility.js'
+import moment from 'moment';
 
 const HtmlTooltip = styled(({ className, ...props }) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -56,37 +57,65 @@ const BaeCalendar = ({
   let oneMonth = new Date(today.getFullYear(), today.getMonth() + 2, 0)
   const [monthLater, setMonthLater] = useState(oneMonth)
   const [reloadAllPrices, setReloadAllPrices] = useState(false);
-  const [bornes, setBornes] = useState({
-    debut: null,
-    fin: null,
-    isDebut: true,
-  })
 
   let [prix, setPrix] = useState(null)
+  let [isFirstRender, setIsFirstRender] = useState(true);
 
   function closeOnce() {
     setOpen(false)
     setTimeout(() => setOpen(undefined), 1000)
   }
 
+  function setDefaultItineraire(dateDebut, dateFin){
+    dateDebut = moment(dateDebut).format("YYYY/MM/DD");
+    dateFin = moment(dateFin).format("YYYY/MM/DD");
+    let current = JSON.parse(JSON.stringify(context.state));
+    current.dateSejour.debut = dateDebut; 
+    current.dateSejour.fin = dateFin;
+    if(current.itineraires.length ==0){
+      current.itineraires.push({ 
+        edit: false,
+        dateSejour: JSON.parse(JSON.stringify(current.dateSejour)),
+        tarifReserves: []
+      });
+    }
+  
+    context.setState(current);   
+  }
+
   function populatePrix(res) {
     if (res.status === 200) {
       if (res.checkIn && res.checkOut) {
+        if(isFirstRender){
+          setDefaultItineraire(res.checkIn, res.checkOut);
+          setIsFirstRender(false);
+        }
         let checkIn = new Date(res.checkIn)
         let checkOut = new Date(res.checkOut)
-        setBornes({ debut: checkIn, fin: checkOut, isDebut: true })
+        let tmp = {...context.state, bornes: { debut: checkIn, fin: checkOut, isDebut: true }}
+        context.setState(tmp);
         let firstMonth = new Date(res.result[0].month)
         let secondMonth = new Date(res.result[1].month)
         setSelectDate(firstMonth)
         setMonthLater(secondMonth)
 
         let temp = { ...context.state }
-        temp.dateSejour.debut = getDate(checkIn)
-        temp.dateSejour.fin = getDate(checkOut)
+        const debut = getDate(checkIn);
+        const fin = getDate(checkOut);
+        temp.dateSejour.debut = debut;
+        temp.dateSejour.fin = fin;
+        if(temp.itineraires.length == 1 && 
+          temp.itineraires[0].dateSejour.debut == "" &&
+          temp.itineraires[0].dateSejour.fin == ""){
+            temp.itineraires[0].dateSejour.debut = debut;
+            temp.itineraires[0].dateSejour.fin = fin;
+        }
+
         context.setState(temp)
       }
       setPrix(res.result);
       setReloadAllPrices(false);
+      applyFilter(undefined, true);
     }
   }
 
@@ -116,7 +145,7 @@ const BaeCalendar = ({
   
   let prixFinal = JSON.parse(JSON.stringify(prix));
 
-  if(prixFinal !== null && priceCheapestRate !== null){
+  if(prixFinal !== null && priceCheapestRate !== null && priceCheapestRate !== undefined){
     for(let i = 0; i < prixFinal.length; i++){
       let tmp = new Date(prixFinal[i].month);
       tmp.setTime( tmp.getTime() + tmp.getTimezoneOffset() * 60 * 1000 );
@@ -134,7 +163,7 @@ const BaeCalendar = ({
       }
     }
   }
-  console.log(selectDate);
+  
   return (
     <HtmlTooltip
       title={
@@ -154,8 +183,6 @@ const BaeCalendar = ({
                 activeDates={presetActiveDates.current}
                 selectDate={selectDate}
                 setSelectDate={setSelectDate}
-                bornes={bornes}
-                setBornes={setBornes}
                 prix={prixFinal}
                 context={context}
                 closeOnce={closeOnce}
@@ -171,8 +198,6 @@ const BaeCalendar = ({
                 activeDates={presetActiveDates.current}
                 selectDate={monthLater}
                 setSelectDate={setMonthLater}
-                bornes={bornes}
-                setBornes={setBornes}
                 prix={prixFinal}
                 context={context}
                 closeOnce={closeOnce}

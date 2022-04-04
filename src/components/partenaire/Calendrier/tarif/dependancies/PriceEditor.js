@@ -1,67 +1,45 @@
 import React from 'react';
-import {Button,Stack,TextField,Radio,RadioGroup,FormControl,FormControlLabel,InputAdornment} from '@mui/material';
-import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
+import {Button,Stack,TextField,Radio,RadioGroup,FormControl,FormControlLabel} from '@mui/material';
+import moment from 'moment';
+import RoomEditor from './PriceEditor/RoomEditor.js';
+import RateEditor from './PriceEditor/RateEditor.js';
 
 const PriceEditor = (props) => {
     const [value, setValue] = React.useState('open');
-    const handleChange = (event) => {
-        setValue(event.target.value);
-    };
     const closePopper = () => {
         props.closePopper(null);
     }
+    const nbPers = props.typechambre.nbAdulte + props.typechambre.nbEnfant;
+
     return(
         <>
-            <span>{props.typechambre.nom}</span>
             <br/>
-            <span>{props.fromto[0] + ' - ' + props.fromto[1]}</span>
-            {/* <span>{props.fromto[0].format('ll') + ' - ' + props.fromto[1].format('ll')}</span> */}
-            <br/>
-            <FormControl component="fieldset">
-                <RadioGroup
-                    aria-label="gender"
-                    name="controlled-radio-buttons-group"
+            {props.isPrice ?
+                <RateEditor
+                    nomPlanTarifaire={props.typechambre.planTarifaire[props.selected].nom}
+                    idPlanTarifaire={props.typechambre.planTarifaire[props.selected]._id}
+                    fromto={props.fromto}
                     value={value}
-                    onChange={handleChange}
-                    row
-                >
-                    <FormControlLabel value="open" control={<Radio />} label="Open" />
-                    <FormControlLabel value="close" control={<Radio />} label="Close" />
-                </RadioGroup>
-                <br/>
-                <TextField
-                size="small"
-                id="outlined-number"
-                label="Rooms to sell"
-                type="number"
-                InputLabelProps={{
-                    shrink: true,
-                }}
+                    setValue={setValue}
+                    closePopper={closePopper}
+                    idTypeChambre={props.typechambre._id}
+                    alldays={props.alldays}
+                    getPrix={props.getPrix}
+                    nbPers={nbPers}  />
+            : ""}
+            {!props.isPrice && props.selected == -2  ?
+                <RoomEditor
+                    fromto={props.fromto}
+                    value={value}
+                    setValue={setValue}
+                    alldays={props.alldays} 
+                    selecteds={props.selecteds} 
+                    idTypeChambre={props.typechambre._id}
+                    closePopper={closePopper}
+                    getPrix={props.getPrix}
+                    typechambre={props.typechambre}
                 />
-                <br/>
-                <TextField
-                size="small"
-                id="outlined-number"
-                label="x 2"
-                type="number"
-                InputProps={{
-                    startAdornment: <InputAdornment position="start"><PersonOutlineIcon/></InputAdornment>,
-                    endAdornment:<InputAdornment position="end">€</InputAdornment>
-                }}
-                InputLabelProps={{
-                    shrink: true,
-                }}
-                />
-                <br/>
-                <Stack direction="row" spacing={2}>
-                    <Button variant="contained" disabled>
-                        Save
-                    </Button>
-                    <Button onClick={() => closePopper()} variant="contained">
-                        Close
-                    </Button>
-                </Stack>
-            </FormControl>
+            : ""}
         </>
     )
 }

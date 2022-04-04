@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import CustomError from '../../../CustomError';
-import React, {useEffect} from "react";
-import Navbar from "../Navbar/Navbar";
+import {useEffect} from "react";
+// import Navbar from "../Navbar/Navbar";
+import ResponsiveDrawer from "../Navbar/responsive-drawer.js";
 import { Checkbox } from "@mui/material";
 import './typeChambre.css';
 import TextField from '@mui/material/TextField';
@@ -10,10 +11,9 @@ import {Link} from 'react-router-dom';
 
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { useParams, useHistory } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom';
 
 import callAPI from '../../../utility';
-import {FileInput, Preview, Videos, Font} from './utilityTypeChambre.js';
 import {session} from '../../common/utilitySession.js';
 import NotEnoughAccessRight from '../../common/NotEnoughAccessRight';
 
@@ -22,6 +22,7 @@ import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
 import PhotoChambre from './InsertTypeChambre/Photo/PhotoChambre.js';
 import VideoChambre from './InsertTypeChambre/Video/VideoChambre.js';
 import Equipement from './InsertTypeChambre/Equipement.js';
+import Galerie from './InsertTypeChambre/Photo/Galerie.js';
 
 function PlanTarifaire(props){
   let i = -1;
@@ -29,7 +30,7 @@ function PlanTarifaire(props){
       i++;
       let u = i;
       return(
-        <FormControlLabel 
+        <FormControlLabel  
           checked={tarif.checked}
           control={<Checkbox/>}
           onChange={(e) => props.handleCheckBoxPlanTarifaire(e, u)}
@@ -57,12 +58,13 @@ function InsertTypeCHambre(){
         etage:null,
         superficie:null,
         description:null,
-        photo: null
+        photo: null,
+        name: null,
+        desc: null
       },
       nom: '',
       nbAdulte: '',
       nbEnfant: '',
-      photo: [],
       
       chambreTotal:'',
       etage:'',
@@ -70,12 +72,15 @@ function InsertTypeCHambre(){
       description:'',
       planTarifaire: [],
       equipements: [],
-      preview: [noImage],
-      videos: []
+      videos: [],
+      name: '',
+      desc: ''
     }
   );
   const { _id } = useParams();
   const [skeletonAffiche , setSkeleton] = useState(true);
+  const [photo, setPhoto] = useState([]);
+  const [preview, setPreview] = useState([]);
   
   const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
   const hasARInsert = session.getInstance().hasOneOfTheseAccessRights(["insertTypeChambre", "superAdmin"]);
@@ -84,35 +89,53 @@ function InsertTypeCHambre(){
   const fieldsToSet = ["_id", "nom", "nbAdulte", "nbEnfant", "photo",
       "chambreTotal", "etage", "superficie", "description",
       "planTarifaire", "equipements", "videos"];
-
+  
+  const [areImagesLoading, setAreImagesLoading] = useState(isInsert ? false : true);
   const [btnLoad, setBtnLoad] = useState(false);
+  const [showGalerie, setShowGalerie] = useState(false);
+
+  const switchShowGalerie = (e) => {
+    e.preventDefault();
+    setShowGalerie(!showGalerie);
+  };
   
   const setDetailsTypeChambre = (data) => {
     let currentState = {...state};
+
     if(data.status === 401){//Unauthorized
       history.push('/back/login');
     }else if(data.status === 403){
       history.push('/notEnoughAccessRight');
     }
+
     fieldsToSet.map(field => {
       currentState[field] = data.typeChambre[field];
     });
-    if(currentState.photo != '' || 
-        currentState.photo != undefined ||
-        currentState.photo != null){
-            currentState.preview = [];
-            for(let i = 0; i < currentState.photo.length; i++){
-                currentState.preview[i] = process.env.REACT_APP_BACK_URL + "/" + currentState.photo[i];
-            }
-        }
+
+    let tmpPhoto = JSON.parse(JSON.stringify(data.typeChambre.photo));
+    delete currentState.photo;
+    
+    if(photo != '' || 
+      photo != undefined ||
+      photo != null){
+      let tmpPreview = [];
+      for(let i = 0; i < tmpPhoto.length; i++){
+        tmpPreview[i] = process.env.REACT_APP_BACK_URL + "/" + tmpPhoto[i];
+      }
+      setPreview(tmpPreview);
+    }
+
+    setPhoto(tmpPhoto);
     setState(currentState);
     setSkeleton(false);
-}
+    setAreImagesLoading(false);
+  }
 
   useEffect(() => {
     if(isInsert && hasARInsert){
       callAPI('get', '/TCTarif/infoInsertTypeChambre', {}, setInfo);
     }else if(hasARGet || hasARUpdate){
+      setAreImagesLoading(true);
       callAPI("get", "/typeChambre/details/" + _id, {}, setDetailsTypeChambre);
     }
   }, [_id]);
@@ -193,6 +216,7 @@ function InsertTypeCHambre(){
       }
     }
     toSend.planTarifaire = selectedPlan;
+    toSend.photo = photo;
     callAPI('post', '/typeChambre/insert', toSend, tryRedirect);
   }
 
@@ -218,6 +242,8 @@ function InsertTypeCHambre(){
         }
     }
     toSend.planTarifaire = planTarifaire;
+    toSend.photo = photo;
+    console.log(toSend);
     callAPI('post', '/typeChambre/update/', toSend, tryRedirect);
   }
 
@@ -228,14 +254,11 @@ function InsertTypeCHambre(){
       setState(currentState);
   }
 
-  function handleVideoChange(e){
-    let currentState = JSON.parse(JSON.stringify(state));
-    currentState.videos = [];
-    for(let i = 0; i < e.target.files.length; i++){
-      currentState.videos.push({});
+  function handleInputChange2( e, name1, name2){
+    let current = JSON.parse(JSON.stringify(state));
+    current[name1][name2] = e.target.value;
+    setState(current);
     }
-    setState(currentState);
-  }
 
   const style = {
     position: 'absolute',
@@ -251,16 +274,18 @@ function InsertTypeCHambre(){
 
   return (
     <div> 
-        <Navbar  currentPage={2}/>
+        {/* <Navbar  currentPage={2}/> */}
               <div className="jumbotron">
               {
                   skeletonAffiche ? <SkelettonForm /> : <>
 
                 <h4 className="" id='title1'>{isInsert ? "Ajouter type chambre" : "Modifier type chambre"}</h4>
                 <CustomError errors={state.errors} />
-                <form className="needs-validation" className='forms' style={{marginTop:'15px'}}>
-                    <div style={{marginTop:'40px'}} id='input-group1'>
-                      <TextField 
+                <form className="needs-validation" style={{marginTop:'15px'}}>
+
+                  <div className="row">
+                    <div className="col">
+                    <TextField 
                       id="outlined-basic"
                       variant="outlined"
                       size='small'
@@ -269,45 +294,70 @@ function InsertTypeCHambre(){
                       Nom
                       </p>
                             } 
-                      style={{width:'370px'}}
+                      style={{width:'315px'}}
                       type="text" 
                       value={state.nom} onChange={(e) => handleInputChange(e, "nom")}
                       error={state.error.nom === null ? false : true}
                       helperText={state.error.nom === null ? null : state.error.nom}
-                      />
-                    <TextField
+                      />                    
+                    </div>
+                    <div className="col">
+                    <TextField 
                       id="outlined-basic"
                       variant="outlined"
                       size='small'
                       label={
-                        <p id='libel'>
-                        Chambre total
-                        </p>
-                             } 
-                      type="number"
-                      style={{width:'370px',marginLeft:'123px'}}
-                      value={state.chambreTotal} onChange={(e) => handleInputChange(e, "chambreTotal")}
-                      error={state.error.chambreTotal === null ? false : true}
-                      helperText={state.error.chambreTotal === null ? null : state.error.chambreTotal}
-                    />
-                     </div>
-                    <div style={{marginTop:'40px'}} id='input-group1'>
-                      <TextField 
+                      <p id='libel'>
+                      Name
+                      </p>
+                            } 
+                      style={{width:'315px'}}
+                      type="text" 
+                      value={state.name} onChange={(e) => handleInputChange(e, "name")}
+                      error={state.error.name === null ? false : true}
+                      helperText={state.error.name === null ? null : state.error.name}
+                      />                    
+                    </div>  
+                  </div>
+
+                    <div style={{marginTop:'40px'}} className='row'>
+                      <div className="col">
+                      <TextField
                         id="outlined-basic"
                         variant="outlined"
                         size='small'
                         label={
                           <p id='libel'>
-                              Etage
+                          Chambre total
                           </p>
                               } 
                         type="number"
-                        style={{width:'370px'}}
-                        value={state.etage} onChange={(e) => handleInputChange(e, "etage")}
-                        error={state.error.etage === null ? false : true}
-                        helperText={state.error.etage === null ? null : state.error.etage}
+                        style={{width:'315px'}}
+                        value={state.chambreTotal} onChange={(e) => handleInputChange(e, "chambreTotal")}
+                        error={state.error.chambreTotal === null ? false : true}
+                        helperText={state.error.chambreTotal === null ? null : state.error.chambreTotal}
                       />
+                      </div>
+                      <div className="col">
                       <TextField 
+                          id="outlined-basic"
+                          variant="outlined"
+                          size='small'
+                          label={
+                            <p id='libel'>
+                                Etage
+                            </p>
+                                } 
+                          type="number"
+                          style={{width:'315px'}}
+                          value={state.etage} onChange={(e) => handleInputChange(e, "etage")}
+                          error={state.error.etage === null ? false : true}
+                          helperText={state.error.etage === null ? null : state.error.etage}
+                      />   
+                      </div> 
+                     </div>
+                    <div style={{marginTop:'40px'}} id='input-group1'>
+                      <TextField
                         id="outlined-basic"
                         variant="outlined"
                         size='small'
@@ -315,15 +365,19 @@ function InsertTypeCHambre(){
                           <p id='libel'>
                               Superficie
                           </p>
-                              } 
-                        type="number" 
-                        style={{width:'370px',marginLeft:'123px'}}
+                              }
+                        type="number"
+                        style={{width:'315px'}}
                         value={state.superficie} onChange={(e) => handleInputChange(e, "superficie")}
                         error={state.error.superficie === null ? false : true}
                         helperText={state.error.superficie === null ? null : state.error.superficie}
                       />
                     </div>
-                    <PhotoChambre state={state} setState={setState} noImage={noImage} />
+                    <PhotoChambre state={state} setState={setState} noImage={noImage}
+                      photo={photo} setPhoto={setPhoto} preview={preview} setPreview={setPreview}
+                      areImagesLoading={areImagesLoading} setAreImagesLoading={setAreImagesLoading} />
+                    <button onClick={switchShowGalerie}>Galerie photos</button>
+                    <Galerie showGalerie={showGalerie} setShowGalerie={setShowGalerie} />
                     <VideoChambre state={state} setState={setState} />
 
                     <div style={{marginTop:'10px'}}>
@@ -333,39 +387,45 @@ function InsertTypeCHambre(){
                         Occupation 
                       </label>
                     </div>
-                    <div style={{marginTop:'5px'}}>
+                    <div style={{marginTop:'5px'}} className='row'>
+
+                      <div className="col">
                       <TextField 
-                      id="outlined-basic"
-                      variant="outlined"
-                      size='small' 
-                      label={
-                        <p id='libel'>
-                            Adulte
-                        </p>
-                             }
-                      type="number"
-                      value={state.nbAdulte}
-                      onChange={(e) => handleInputChange(e, "nbAdulte")}
-                      style={{width:'370px'}}
-                      error={state.error.nbAdulte === null ? false : true}
-                      helperText={state.error.nbAdulte === null ? null : state.error.nbAdulte}
+                          id="outlined-basic"
+                          variant="outlined"
+                          size='small' 
+                          label={
+                            <p id='libel'>
+                                Adulte
+                            </p>
+                                }
+                          type="number"
+                          value={state.nbAdulte}
+                          onChange={(e) => handleInputChange(e, "nbAdulte")}
+                          style={{width:'315px'}}
+                          error={state.error.nbAdulte === null ? false : true}
+                          helperText={state.error.nbAdulte === null ? null : state.error.nbAdulte}
                       />
-                      <TextField 
-                      id="outlined-basic"
-                      variant="outlined"
-                      size='small'
-                      label={
-                        <p id='libel'>
-                            Enfant
-                        </p>
-                             }  
-                      type="number" 
-                      value={state.nbEnfant}
-                      onChange={(e) => handleInputChange(e, "nbEnfant")}
-                      style={{width:'370px',marginLeft:'123px'}}
-                      error={state.error.nbEnfant === null ? false : true}
-                      helperText={state.error.nbEnfant === null ? null : state.error.nbEnfant}
-                      />
+                      </div>
+
+                      <div className="col">
+                        <TextField 
+                        id="outlined-basic"
+                        variant="outlined"
+                        size='small'
+                        label={
+                          <p id='libel'>
+                              Enfant
+                          </p>
+                              }  
+                        type="number" 
+                        value={state.nbEnfant}
+                        onChange={(e) => handleInputChange(e, "nbEnfant")}
+                        style={{width:'315px'}}
+                        error={state.error.nbEnfant === null ? false : true}
+                        helperText={state.error.nbEnfant === null ? null : state.error.nbEnfant}
+                        />
+                      </div>
                     </div>
 
                     <div style={{marginTop:'15px'}}>
@@ -392,6 +452,25 @@ function InsertTypeCHambre(){
                       error={state.error.description === null ? false : true}
                       helperText={state.error.description === null ? null : state.error.description}
                     />
+
+                    <TextField id="outlined-basic" variant="outlined" type='text'
+                      placeholder=""
+                      multiline
+                      rows={2}
+                      rowsmax={4}
+                      label={
+                        <p id='libel'>
+                            Description en Anglais
+                        </p>
+                             }
+                      style={{width:'100%',height:'50px',marginTop:'55px'}}
+                      value={state.desc}
+                      onChange={(e) => handleInputChange(e, "desc")} 
+                      error={state.error.desc === null ? false : true}
+                      helperText={state.error.desc === null ? null : state.error.desc}
+                    />
+
+                    
                     <Equipement state={state} setState={setState} />
                     <div style={{marginTop:'15px'}}>
                       <div>
@@ -457,4 +536,14 @@ function InsertTypeCHambre(){
   );
 }
 
-export default InsertTypeCHambre;
+export default function InsertTypeCHambre_(){
+  const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
+  let titre = "";
+  isInsert ? titre = "Ajout type chambre" : titre = "Modifier type chambre"
+  return (
+    <ResponsiveDrawer
+      title= {titre}
+      getContent = {InsertTypeCHambre}
+    />
+  );
+};

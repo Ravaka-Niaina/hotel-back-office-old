@@ -15,8 +15,9 @@ import RadioGroup from '@mui/material/RadioGroup';
 import callAPI from '../../../utility.js';
 import ButtonLoading from "../buttonLoading.js";
 import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
-import  Navbar  from "../Navbar/Navbar";
+import  ResponsiveDrawer  from "../Navbar/responsive-drawer.js";
 import JoursPromotion from "./JoursPromotion.js";
+import NbJoursAttribProm from "./insertPromotion/nbJourAttribProm.js";
 
 import "./promotion.css";
 
@@ -94,7 +95,8 @@ function InsertPromotion() {
       debutReserv: null,
       finReserv: null,
       planTarifaire: null,
-      typeChambre: null
+      typeChambre: null,
+      name: null
     },
     nom: '',
     planTarifaire: [],
@@ -110,11 +112,12 @@ function InsertPromotion() {
       samedi: 1,
       dimanche: 1,
     },
-    sejourMin: '',
+    sejourMin: '1',
     premierJour: '',
     dernierJour: '',
     isLeadHour: true,
     lead: { min: '', max: '' },
+    name: '',
     isRemiseEuro: true,
     remise: '',
   })
@@ -135,6 +138,7 @@ function InsertPromotion() {
   const [reservAllTime, setReservAllTime] = useState(false);
   const [allDays, setAllDays] = useState(true);
   const [isWithLead, setIsWithLead] = useState(true);
+  const [withNbDaysGetProm, setWithNbDaysGetProm] = useState(false);
 
   const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
   
@@ -201,6 +205,8 @@ function InsertPromotion() {
     setDebutReserv(data.promotion.debutReserv);
     setFinReserv(data.promotion.finReserv);
     setIsWithLead(data.promotion.isWithLead);
+    setWithNbDaysGetProm(data.promotion.withNbDaysGetProm);
+    console.log(data.promotion);
 
     let tmp = data.listTypeChambre;
     let tmpAllRoomTypes = true;
@@ -346,6 +352,8 @@ function InsertPromotion() {
     toSend.reservAToutMoment = reservAToutMoment;
     toSend.isWithLead = isWithLead;
     toSend.reservAllTime = reservAllTime;
+    toSend.withNbDaysGetProm = withNbDaysGetProm;
+    console.log(toSend);
     callAPI('post', '/promotion/create', toSend, tryRedirect);
   }
 
@@ -375,6 +383,7 @@ function InsertPromotion() {
     toSend.reservAToutMoment = reservAToutMoment;
     toSend.isWithLead = isWithLead;
     toSend.reservAllTime = reservAllTime;
+    toSend.withNbDaysGetProm = withNbDaysGetProm;
     setBtnLoad(true);
 
     callAPI('post', '/promotion/updateP', toSend, tryRedirect);
@@ -501,9 +510,15 @@ function InsertPromotion() {
     setState(current);
   }
 
+    function handleInputChange2( e, name1, name2){
+    let current = JSON.parse(JSON.stringify(state));
+    current[name1][name2] = e.target.value;
+    setState(current);
+    }
+
   return (
     <>
-      <Navbar currentPage={3}/>
+      {/* <Navbar currentPage={3}/> */}
       <div className="block">
         {
           skeletonAffiche ? <SkelettonForm  heigth = {300} />  : <>
@@ -879,43 +894,12 @@ function InsertPromotion() {
       </div>
     </div>
   </div>
-
-  <div className="form-group" style={{marginTop:"40px"}}>
-    <label id='bigLabel'>
-      Nombre de jour d'attribution de la promotion
-    </label>
-    <div className="form-group" style={{marginTop:"25px"}}>
-      <p>
-        <TextField id="outlined-basic" 
-          label="Premier jour" 
-          variant="outlined" 
-          className="form-control"  
-          style={{width:"200px"}}
-          type="number" 
-          name="premierJour" 
-          value={state.premierJour}
-          onChange={(e) => handleInputChange(e, "premierJour")}
-          size="small"
-          error={state.error.premierJour === null ? false : true}
-          helperText={state.error.premierJour === null ? null : state.error.premierJour}
-        />
-
-        <TextField id="outlined-basic" 
-          label="Dernier jour" 
-          variant="outlined" 
-          className="form-control"  
-          style={{width:"200px",marginLeft:'20px'}}
-          type="number" 
-          name="dernierJour"
-          value={state.dernierJour}
-          onChange={(e) => handleInputChange(e, "dernierJour")}
-          size="small"
-          error={state.error.dernierJour === null ? false : true}
-          helperText={state.error.dernierJour === null ? null : state.error.dernierJour}
-          />
-        </p>
-      </div>
-    </div>
+  <NbJoursAttribProm
+    state={state}
+    setState={setState}
+    withNbDaysGetProm={withNbDaysGetProm}
+    setWithNbDaysGetProm={setWithNbDaysGetProm}
+    handleInputChange={handleInputChange} />
   
   <div className="form-group" style={{marginTop:"15px"}}> 
     <label id='bigLabel'>Jour d’attribution de la promotion</label>
@@ -942,16 +926,33 @@ function InsertPromotion() {
         label="Nom"
         variant="outlined"
         className="form-control" 
-        style={{width:"400px"}}
+        style={{width:"400px",marginTop:"15px"}}
         size="small"
         type="text" 
         name="nom" 
         onChange={(e) => handleInputChange(e, "nom")} 
         value={state.nom}
-        style={{marginTop:"15px"}}
         error={state.error.nom === null ? false : true}
         helperText={state.error.nom === null ? null : state.error.nom}
-      /> 
+      />
+
+      <TextField 
+        id="outlined-basic" 
+        label="Name"
+        variant="outlined"
+        className="form-control" 
+        style={{width:"400px",marginTop:"15px"}}
+        size="small"
+        type="text" 
+        name="name" 
+        onChange={(e) => handleInputChange(e, "name")} 
+        value={state.name}
+        error={state.error.name === null ? false : true}
+        helperText={state.error.name === null ? null : state.error.name}
+      />
+
+
+
    </div><br/>
    <div>
     <div class="bouton-aligne">
@@ -994,4 +995,17 @@ function InsertPromotion() {
   );
 }
 
-export default InsertPromotion
+export default function recherche_() {
+  const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
+  // const [titre, setTitre] = useState(false);
+  let titre = "";
+  isInsert ? titre = "Ajout nouvelle promotion" : titre = "Modifier promotion"
+  // console.log("TRLALALA"+ JSON.stringify(props));
+  return(
+      <ResponsiveDrawer 
+          title = {titre}
+          getContent = {InsertPromotion} 
+      />
+      
+  );
+}

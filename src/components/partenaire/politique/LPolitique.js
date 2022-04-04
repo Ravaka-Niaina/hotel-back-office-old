@@ -37,6 +37,7 @@ export default function ListPolitque(){
             accessRightToViewInsert={accessRightToViewInsert}
             accessRightToViewDetails={accessRightToViewDetails}
             accessRightToDelete={accessRightToDelete}
+            title="Politique"
         />
     );
 }

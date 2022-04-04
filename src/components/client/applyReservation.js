@@ -13,16 +13,16 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Alert from '@mui/material/Alert';
 import Icon from '@mui/material/Icon';
 import { useHistory } from 'react-router-dom';
-import Checkbox from '@mui/material/Checkbox';
 import Total from './applyReservation/Total.js';
 import InfoItineraires from './applyReservation/InfoItineraires.js';
 import {Champs} from '../common/commonAssets.js';
 import FormControlLabel from '@mui/material/FormControlLabel';
-    import {setValue} from '../../../src/utility2.js';
+import {setValue} from '../../../src/utility2.js';
 import './confirmation_reservation.css';
 import PaiementField from './applyReservation/PaiementField';
 import { is } from 'date-fns/locale';
-import ModalAnnulation from '../common/ModalAnnulation.js';
+import ModalAnnulationChambre from '../common/ModalAnnulationChambre.js';
+
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -67,47 +67,74 @@ function ApplyReservation(props){
     const [isConnectionShowing, setIsConnectionShowing] = useState(false);
     const [isConditionAccepted, setIsConditionAccepted] = useState(false);
     const [conditionError, setConditionError] = useState(false);
-    const [showModal, setShowModal] = useState(false);
-    const [load, setLoad] = useState(false);
+    const [inputGrise, setInputGrise] = useState({prenom:false,nom: false, email: false, tel: false});
+    const [showResults, setShowResults] = useState(false);
 
+    const interpretResponse = (data) => {
+        if(data.status === 200){
+            history.push('/front/login');
+        }
+    };
+
+    const register = (e) => {
+        e.preventDefault();
+        const data = {
+            nom: reservateur.nom.trim(),
+            prenom: reservateur.prenom.trim(),
+            email: reservateur.email.trim(),
+            mdp: user.mdp.trim(),
+            confirmMdp: user.confirmMdp.trim()
+        };
+        console.log(data);
+        callAPI('post', '/user/register', data, interpretResponse);
+    };
+    const [load, setLoad] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [showModalChambre, setShowModalChambre] = useState(false);
+    const[ variableAnnuler , setVariableAnnuler] = useState({idReservation:'', indexItineraire :'',indexTarifsReserve : ''});
+
+    function AnnulationReservationChambre(){
+        setLoad(true);
+        const data = { _id: variableAnnuler.idReservation, indexItineraire: variableAnnuler.indexItineraire, indexTarifReserve: variableAnnuler.indexTarifsReserve };
+        callAPI('post', '/reservation/delete', data, setDetailReservation );
+    }
+
+    function ShowModalAnnulation(isTrue,ObjectChambreAnnuler){
+        if(isTrue){
+            setShowModal(!showModal);
+            setLoad(false);
+        }else{
+            setShowModalChambre(!showModalChambre)
+            let keys = Object.keys(ObjectChambreAnnuler);
+            let current = {...variableAnnuler};
+            keys.map(field => {
+                current[field] = ObjectChambreAnnuler[field];
+            })
+            setVariableAnnuler(current);
+        }
+
+    }
     
     function handleResponse(res){
-        console.log(res);
         setOpenLoad(false);
         if(res.status === 200){
+            localStorage.setItem('access', 1);
             setAlertSuccess(res.message);
-         
-            window.location.href = "/reservation/" + _id + "/voucher";
+            history.push("/reservation/" + _id + "/voucher");
         }else{
             setAlertError(res.errors[0].message);
-            window.location.href = '#error';
+            history.push('#error');
         }
     }
-    function ShowModalAnnulation(){
-        setShowModal(!showModal);
-    }
-    function handleResponse1(res){
-        if(res.status == 200){
-            history.push('/');
-        }else{
-            setAlertError(res.errors[0].message);
-            window.location.href = '#error';
-        }
-    }
-
-    function annulerReservation(){
-        setLoad(true);
-        callAPI('post', '/reservation/annulerReservationWithEmail', {_id: reservation._id, reservateur: reservateur, reservation: reservation , email : reservateur.email}, handleResponse1 );
-     }
+    
 
     function validerReservation(){
         if(isConditionAccepted){
             setOpenLoad(true);
             setAlertSuccess(null);
             setAlertError(null);
-           // console.log("reservateur:");
-            // console.log(reservateur);
-            callAPI('post', '/reservation/applyWithEmail', {_id: reservation._id, reservateur: reservateur, reservation: reservation}, handleResponse );
+            const data = {_id: reservation._id, reservateur: reservateur, reservation: reservation};
+            callAPI('post', '/reservation/applyWithEmail', data, handleResponse );
         }else{
             setConditionError(true);
             window.location.href = '#conditions';
@@ -116,6 +143,8 @@ function ApplyReservation(props){
     }
 
     function setDetailReservation(res){
+        console.log("details reservation");
+        //
         setOpenLoad(false);
         console.log(res);
         if(res.status === 200){
@@ -140,24 +169,48 @@ function ApplyReservation(props){
                             }catch(err){}
                             
                             const max = nbEnfant + nbAdulte;
+                            
                         }
                     }
                 }
                 setReservation(current);
                 setAffilie(tempAffilie);
+
                 if(res.reservation.reservateur != undefined){
                     setReservateur(res.reservation.reservateur);
                 }
+
+                if(res.reservateur.nom !== ""){
+                    let objectKeys = Object.keys(res.reservateur);
+                    let grise = {...inputGrise};
+                    let currentReservateur = {...reservateur};
+                    for(let i = 0 ; i < objectKeys.length ; i++){
+                        if(res.reservateur[objectKeys[i]] !== ""){
+                            grise[objectKeys[i]] = true;
+                            currentReservateur[objectKeys[i]] = res.reservateur[objectKeys[i]];
+                        }
+                    }
+                    setInputGrise(grise);
+                    setReservateur(currentReservateur);
+                }
+
             }catch(err){
                 console.log(err);
             }
+            console.log(res.reservation);
         }else{
             console.log(res.errors[0].message);
             setAlertError(res.errors[0].message);
         }
     }
+    function ControllerAcces(){
+        if(localStorage.access !== "2"){
+            history.push("/");
+        }
+    }
 
     useEffect(() => {
+        ControllerAcces();
         callAPI('get', '/reservation/details/' + _id, {}, setDetailReservation);
     }, [_id]);
 
@@ -196,6 +249,12 @@ function ApplyReservation(props){
             setConditionError(false);
         }
         setIsConditionAccepted(!isConditionAccepted);
+    }
+
+    function handleChangeInfoUser(field, value){
+        let current = JSON.parse(JSON.stringify(user));
+        current[field] = value;
+        setUser(current);
     }
 
     function handleChangeInfoUser(field, value){
@@ -248,21 +307,34 @@ function ApplyReservation(props){
                                             class="container_infos"
                                         >
                                             <div class="input-field">
+                                                {
+                                                    inputGrise.prenom ?  
+                                                        <input type="text" value={reservateur.prenom} disabled/> 
+                                                    : <>
                                                     <input type="text" value={reservateur.prenom}
-                                                onChange={(e) => handleChangeInfoReservateur("prenom", e.target.value)} onBlur={(e) => handleEmptyInfoReservateur("prenom")} required />
-                                                    <label>Prénom <span class="red_required">*</span></label>
-                                                    {
-                                                        errorEmpty.prenom ?
-                                                        <div class="error_text">
-                                                            Le prénom est obligatoire.
-                                                        </div>
-                                                        :null
-                                                    }
+                                                        onChange={(e) => handleChangeInfoReservateur("prenom", e.target.value)} 
+                                                        onBlur={(e) => handleEmptyInfoReservateur("prenom")} required desabled/>
+                                                        <label>Prénom <span class="red_required">*</span></label>
+                                                        {
+                                                            errorEmpty.prenom ?
+                                                            <div class="error_text">
+                                                                Le prénom est obligatoire.
+                                                            </div>
+                                                            :null
+                                                        }
+                                                         </>
+                                                }
+                                                        
                                                 </div>
                                                 <div class="input-field">
-                                                    <input type="text" value={reservateur.nom} onBlur={(e) => handleEmptyInfoReservateur("nom")}
-                                                             onChange={(e) => handleChangeInfoReservateur("nom", e.target.value)} required />
-                                                        <label>Nom <span class="red_required">*</span></label>
+                                                {
+                                                    inputGrise.nom ?  
+                                                        <input type="text" value={reservateur.nom} disabled/> 
+                                                    :<>
+                                                    <input type="text" value={reservateur.nom} 
+                                                        onBlur={(e) => handleEmptyInfoReservateur("nom")}
+                                                         onChange={(e) => handleChangeInfoReservateur("nom", e.target.value)} required />
+                                                         <label>Nom <span class="red_required">*</span></label>
                                                         {
                                                             errorEmpty.nom ?
                                                             <div class="error_text">
@@ -270,23 +342,35 @@ function ApplyReservation(props){
                                                             </div>
                                                             :null
                                                         }
+                                                        </>
+                                                }
+                                                        
                                                 </div>
                                                 <div class="input-field">
+                                                    
                                                     <input type="text" value={reservateur.tel}
                                                             onChange={(e) => handleChangeInfoReservateur("tel", e.target.value)} required />
                                                         <label>Téléphone pendant la journée</label>
                                                 </div>
                                                 <div class="input-field input-email">
-                                                    <input type="text" value={reservateur.email} onBlur={(e) => handleEmptyInfoReservateur("email")}
-                                                            onChange={(e) => handleChangeInfoReservateur("email", e.target.value)} required />
-                                                        <label>Adresse e-mail <span class="red_required">*</span></label>
-                                                        {
-                                                            errorEmpty.email ?
-                                                            <div class="error_text">
-                                                                L'adresse e-mail est obligatoire.
-                                                            </div>
-                                                            :null
-                                                        }
+                                                    {
+                                                        inputGrise.email ?  
+                                                            <input type="text" value={reservateur.email} disabled/> 
+                                                        : <>
+                                                            <input type="text" value={reservateur.email} 
+                                                                onBlur={(e) => handleEmptyInfoReservateur("email")}
+                                                                onChange={(e) => handleChangeInfoReservateur("email", e.target.value)} required />
+                                                            <label>Adresse e-mail <span class="red_required">*</span></label>
+                                                            {
+                                                                errorEmpty.email ?
+                                                                <div class="error_text">
+                                                                    L'adresse e-mail est obligatoire.
+                                                                </div>
+                                                                :null
+                                                            }
+                                                        </>
+                                                    }
+  
                                                      <p class="infos_mail">Voici l'adresse e-mail à laquelle votre confirmation sera envoyée.</p>    
                                                 </div>
 
@@ -303,17 +387,22 @@ function ApplyReservation(props){
                                         {isConnectionShowing ?
                                             <div class="password_quick">
                                                     <div class="input-field">
-                                                        <input type="password" required />
+                                                        <input type="password" required 
+                                                        value={reservateur.mdp}
+                                                        onChange={(e) => handleChangeInfoUser("mdp", e.target.value)} />
                                                             <label>Mot de passe <span class="red_required">*</span></label>
                                                     </div>
                                                     
                                                     <div class="input-field">
-                                                        <input type="password" required />
+                                                        <input type="password" required
+                                                        value={reservateur.confirmMdp}
+                                                        onChange={(e) => handleChangeInfoUser("confirmMdp", e.target.value)} />
                                                         <label>Confirmer le mot de passe <span class="red_required">*</span></label>
                                                     </div>
                                             </div>
                                         :null
                                         }
+                                        
                                         
                                     </div>
                                     : <div class="champs">
@@ -334,11 +423,11 @@ function ApplyReservation(props){
                             setAffilie={setAffilie}
                             isEditEnabled={isEditEnabled}
                             openLoad={openLoad}
-                            setOpenLoad={setOpenLoad}
-                            isEditEnabled={isEditEnabled} />
+                            setOpenLoad={setOpenLoad} 
+                            ShowModalAnnulation={ShowModalAnnulation} />
                         <div class="infos_contact">
                             <h2 class="infos_heading">Paiement</h2>
-                            <PaiementField reservation={reservation}/>
+                            <PaiementField reservation={reservation} reservateur={reservateur} setReservateur ={setReservateur} />
                             <Total toPay={reservation.toPay} />
                             
                         </div>
@@ -358,14 +447,10 @@ function ApplyReservation(props){
                         </div>
                         <br />
                         <div style={{display:'flex',flexDirection:'row',flexWrap:'no-wrap',justifyContent:'space-between'}}>
-                            <button style={{minWidth:250,heigth:80}} class="btn button_btn button_secondary button_sm" variant="contained" onClick={(e) => ShowModalAnnulation()}>Annuler réservation</button>
-                            <button  style={{minWidth:250,heigth:80}}  class="btn button_btn button_pink button_sm" variant="contained" onClick={(e) => validerReservation()}>Valider réservation</button>
-                       
+                            
+                                <button  style={{minWidth:250,heigth:80}}  class="btn button_btn button_pink button_sm" variant="contained" onClick={(e) => {validerReservation();register(e);}}>Valider réservation</button>
+                                
                          </div>
-                        
-                       
-                         
-                        
                     </Box>
                 </div>
                 : <Stack sx={{ width: '100%' }} spacing={2}>
@@ -379,7 +464,9 @@ function ApplyReservation(props){
             >
                 <CircularProgress color="inherit" />
             </Backdrop>
-            <ModalAnnulation ShowModalAnnulation={ShowModalAnnulation} showModal={showModal}  annulerReservation={annulerReservation} load ={load}  />        
+            <ModalAnnulationChambre ShowModalAnnulation={ShowModalAnnulation} showModal={showModalChambre} AnnulationReservationChambre = {AnnulationReservationChambre}  load ={load}  />  
+        
+                  
         </>
     );
 

@@ -10,6 +10,8 @@ import {getDiffDays} from '../../client/utility.js';
 import './Itineraires.css';
 import Box from '@mui/material/Box';
 import InputContact from './InputContact.js';
+import InfoPolitiqueAnnul from '../Book/dependencies/infoPolitiqueAnnul.js';
+
 function TarifReserves(props){
     const [annulChambre, setAnnulChambre] = useState(
         {
@@ -36,6 +38,8 @@ function TarifReserves(props){
     
     let tarifs = [];
     for(let i = 0; i < props.reservation.itineraires[props.indexItineraire].tarifReserves.length; i++){
+        let object = {idReservation : props.reservation._id , indexItineraire : props.indexItineraire ,indexTarifsReserve : i}
+
         if(props.reservation.itineraires[props.indexItineraire].tarifReserves[i].dateAnnulation === undefined){
             const u = i;
            // console.log("u = " + u);
@@ -49,7 +53,7 @@ function TarifReserves(props){
                 <div class="box_reservation">
                     
                     <div class="infos_chambre">
-                        <img  src={tarif.infoTypeChambre.photo[0]}/>
+                        <img  src={process.env.REACT_APP_BACK_URL+"/"+tarif.infoTypeChambre.photo[0]}/>
                         <div class="details_chambre">
                             <p class="title_hotel">Chambre {(i+1)}</p>
                             <p class="chambre"> {tarif.nomTypeChambre} </p>
@@ -62,19 +66,26 @@ function TarifReserves(props){
 
                     </div> 
                     <div class="input_utilisateur">
-                        <InputContact isEditEnabled={props.isEditEnabled} reservateur={props.reservateur} />
+                        <InputContact isEditEnabled={props.isEditEnabled} reservateur={props.reservateur} 
+                                reservation ={props.reservation} setReservation = {props.setReservation} 
+                                indiceItineraire = {props.indexItineraire} 
+                                indiceTarifReserver = {i}/>
 
                     </div>
                     
                     <div class="politique_annulation">
                         <hr style={{marginLeft:'0.8em'}}></hr>    
                         <h2 class="infos_heading">Politiques d'annulation et paiement:</h2>
-                        <Politiques politiques={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTarif.infoPolitique} tarif={tarif} />
+                        <InfoPolitiqueAnnul
+                            checkIn={tarif.dateSejour.debut}
+                            politique={tarif.politiqueAnnulAtrb}
+                        />
+                        {/* <Politiques politique={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTarif.infoPolitique} tarif={tarif} /> */}
                         <div class="prix_tarif">
                             <p class="prix">Prix:</p>
                             <p class="prix">{tarif.toPay.afterProm} € </p>
                         </div>
-                        <button style={{marginLeft:'0.8em'}} class="btn button_btn button_secondary button_sm" datatest="Button"><span>Annuler</span></button>
+                        <button style={{marginLeft:'0.8em'}} class="btn button_btn button_secondary button_sm" datatest="Button" onClick={(e) => props.ShowModalAnnulation(false , object)}><span>Annuler</span></button>
                         
                         <hr style={{marginLeft:'0.6em'}}></hr> 
                         

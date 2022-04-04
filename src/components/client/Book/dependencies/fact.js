@@ -19,12 +19,18 @@ import callAPI from '../../../../utility';
 import {setValue} from '../../../../utility2.js';
 import SkeletonFacture from './skeletons/skeletonFacture.js';
 import InfoPolitiqueAnnul from './infoPolitiqueAnnul.js';
-
+import { useCookies,Cookies,withCookies } from "react-cookie";
+import { instanceOf } from 'prop-types';
 import './filtre.css';
 import styles from '../Book.module.css';
 
 import {getDiffDays} from '../../../../utility/utilityDate.js';
+import { useTranslation } from "react-i18next";
+import ButtonLoad from '../../../partenaire/buttonLoading.js';
 
+// const { t, i18n } = useTranslation();
+
+const name_cookies="reservation-real";
 function PrintDateSejour(props){
     // itineraire, borne, handleChange, label
     let retour = [];
@@ -57,6 +63,7 @@ function PrintDateSejour(props){
 }
 
 function Reservations(props){
+    const { t, i18n } = useTranslation();
     const HtmlTooltip = styled(({ className, ...props }) => (
         <Tooltip {...props} classes={{ popper: className }} />
     ))(({ theme }) => ({
@@ -75,38 +82,44 @@ function Reservations(props){
             i++;
             const u = i;
             const nbNuit = getDiffDays(new Date(tarif.dateSejour.debut), new Date(tarif.dateSejour.fin));
-            console.log(tarif.politiqueAnnulAtrb);
+            // 
+            // console.log(tarif);
             if(tarif.etat == 1 || tarif.etat == undefined){
                 return (
                         <Card className={styles.stay}>
                         <CardContent>
                             <div>
-                                <span><BedIcon/>{tarif.nomTypeChambre}</span>
-                                <span><ModeNightIcon/>{nbNuit + " nuit(s)"}</span>
-                                <span><LocalOfferIcon/>{tarif.nomTarif}</span>
+                                <span><BedIcon/>{props.context.state.traduction ? tarif.TypeChambreName : tarif.nomTypeChambre }</span>
+                                <span><ModeNightIcon/>{nbNuit + t('night')}</span>
+                                <span><LocalOfferIcon/>{props.context.state.traduction ? tarif.TarifName : tarif.nomTarif}</span>
                             </div>
                             <div>
-                                <span><PersonOutlineIcon/>x {tarif.nbPers} personnes</span>
-                                {tarif.politiqueAnnulAtrb && tarif.politiqueAnnulAtrb.length !== 0 ? 
-                                    <HtmlTooltip
-                                        title={
-                                            <InfoPolitiqueAnnul 
-                                                checkIn={tarif.dateSejour.debut} 
-                                                politique={tarif.politiqueAnnulAtrb} 
-                                        />}
-                                        placement="left-start"
-                                    >
-                                        <span><PolicyIcon/>{tarif.politiqueAnnulAtrb.nom}</span>
-                                    </HtmlTooltip>
+                                <span><PersonOutlineIcon/>x {tarif.nbPers} {t('person')}</span>
+                                {tarif.politiqueAnnulAtrb && tarif.politiqueAnnulAtrb.length !== 0 ?
+                                    <>
+                                        <HtmlTooltip
+                                            title={
+                                                <InfoPolitiqueAnnul 
+                                                    checkIn={tarif.dateSejour.debut}
+                                                    politique={tarif.politiqueAnnulAtrb[0]}
+                                                    context={props.context}
+                                            />}
+                                            placement="left-start"
+                                        >
+                                            <span><PolicyIcon/>{tarif.politiqueAnnulAtrb.nom}</span>
+                                        </HtmlTooltip>
+                                        <span>{props.context.state.traduction ? tarif.politiqueAnnulAtrb[0].name : tarif.politiqueAnnulAtrb[0].nom }</span>
+                                    </> 
+
                                 : null }
                                 <span></span>
                             </div>
                         </CardContent>
                         <div><span>Prix : {tarif.toPay.afterProm.toFixed(2)} EUR</span></div>
                         <CardActions>
-                            <Button size="small">Modifier</Button>
+                            <Button size="small">{t('Modify')}</Button>
                             <Button size="small" onClick={(e) => props.annulerReservation(props.context, props.context.state.reservationEnCours._id, props.indexItineraire, u)}>
-                                Annuler
+                            {t('Cancel')}
                             </Button>
                         </CardActions>
                         </Card>
@@ -120,21 +133,27 @@ function Reservations(props){
 }
 
 function Itineraires(props){
+    const { t, i18n } = useTranslation();
     let itineraires = [];
     for(let i = 0; i < props.context.state.itineraires.length; i++){
+        let itineraire=props.context.state.itineraires[i];
+        let toPay=0;
+        for(let u = 0; u < itineraire.tarifReserves.length; u++){
+            toPay += itineraire.tarifReserves[u].toPay.afterProm;
+        }
         itineraires.push(
             <Box className={styles.sidetitle}>
                 <Card><p>
-                    Check in : <span>{props.context.state.itineraires[i].dateSejour.debut}</span>
+                   {t('Check-in')} : <span>{props.context.state.itineraires[i].dateSejour.debut}</span>
                     </p>
                     <p>
-                    Check out : <span>{props.context.state.itineraires[i].dateSejour.fin}</span>
+                   {t('Check-out')} : <span>{props.context.state.itineraires[i].dateSejour.fin}</span>
                     </p>
                 </Card>
                 <Reservations context={props.context} indexItineraire={i} annulerReservation={props.annulerReservation} />
                 <Card>
                     <p>
-                    Total : <span>{props.context.state.itineraires[i].toPay ? props.context.state.itineraires[i].toPay.toFixed(2) : ""} EUR</span>
+                    Total : <span>{toPay} EUR</span>
                     </p>
                 </Card>
             </Box>
@@ -144,8 +163,12 @@ function Itineraires(props){
 }
 
 class Fact extends React.Component{
+   
+
     constructor(props){
         super(props);
+        const cookies= props;
+        
         this.style = {
             position: 'absolute',
             top: '50%',
@@ -157,9 +180,23 @@ class Fact extends React.Component{
             boxShadow: 24,
             p: 4,
           };
-    }
+        this.state = {load:true}
 
+    }
+    
+    
+    reservationValide(res){
+        if(res.status === 200){
+            console.log("validation reservation");
+            console.log(res.reservation);
+        }else{
+            console.log(res);
+        }
+      
+    }
     validerReservation(){
+        this.setState({load:false});
+        localStorage.setItem('access', 2);
         this.props.context.handleChange("err", null);
         this.props.context.handleChange("resultApplyReservation", null);
         try{
@@ -167,7 +204,15 @@ class Fact extends React.Component{
             let emailVide = true;
             if(this.props.context.state.reservationEnCours._id != ""){
                 idVide = false;
-                this.props.context.props.history.push("/reservation/" + this.props.context.state.reservationEnCours._id + "/apply");
+                const itineraires =  this.props.context.state.itineraires;
+                const data = {itineraires: itineraires, dateCreationPanier: this.props.context.state.reservationEnCours.dateCreationPanier};
+                console.log(data);
+                callAPI("post" , "/reservation/insertReservationPanier" , data , (res)=>{
+                    if(res.status==200){
+                        this.props.context.clearCookies();
+                        this.props.context.props.history.push("/reservation/" + res.reservation._id + "/apply")
+                    }
+                });
             }
             if(this.props.context.state.email != ""){
                 emailVide = false;
@@ -177,49 +222,67 @@ class Fact extends React.Component{
     }
 
     componentDidMount(){
-        callAPI('get', '/reservation', {}, (data) => {
-            let reserv = data.reservation === null ? null : data.reservation[0];
-            this.props.context.setReservationEnCours(reserv, true);
-        });
+        this.props.context.setReservationEnCours(null, true,false);
     }
 
     annulerReservation(context, idReservation, indexItineraire, indexTarifReserve){
-        const data = { _id: idReservation, indexItineraire: indexItineraire, indexTarifReserve: indexTarifReserve };
-        console.log(data);
-        console.log(context.state.itineraires);
-        axios({
-            method: 'post',
-            url: process.env.REACT_APP_BACK_URL + '/reservation/delete',
-            withCredentials: true,
-            data: data
-        })
-        .then(res => { 
-            console.log(res);                                               
-            context.setReservationEnCours(res.data.reservation)})
-        .catch(err => console.log(err));
+        let reservation = context.state.reservationEnCours;
+        try{
+            reservation.itineraires[indexItineraire].tarifReserves.splice(indexTarifReserve, 1); 
+            if(reservation.itineraires[indexItineraire].tarifReserves.length ==0){
+                reservation.itineraires.splice(indexItineraire,1);
+            }
+            
+        }catch(e){
+
+        }
+        context.setReservationEnCours(reservation);
     }
 
     printFacture(){
+
         let valider = null;
+        
         let toPay = 0;
         for(let i = 0; i < this.props.context.state.itineraires.length; i++){
+         
             for(let u = 0; u < this.props.context.state.itineraires[i].tarifReserves.length; u++){
                 if(this.props.context.state.itineraires[i].tarifReserves[u].etat == undefined
                     || this.props.context.state.itineraires[i].tarifReserves[u].etat == 1){
-                    valider = (<p style={{textAlign:'center',paddingBottom:'12px'}}><Button size='medium' variant="contained"  onClick={(e) => this.validerReservation()} endIcon={<CallMissedOutgoingIcon/>}>Valider réservation</Button></p>);
+                    valider = (<p style={{textAlign:'center',paddingBottom:'12px'}}>
+                        {
+                            this.state.load ?
+                        <Button size='medium' variant="contained"  onClick={(e) => this.validerReservation()} endIcon={<CallMissedOutgoingIcon/>}>
+                            {this.props.context.state.traduction ? "Validate" : "Valider réservation" }
+                        </Button>
+                        :
+                        <ButtonLoad/>
+                        }
+                        </p>);
                     break;
                 }
             }
-            if(this.props.context.state.itineraires[i].toPay > 0){
-                toPay += this.props.context.state.itineraires[i].toPay;
-            }
+           
+            
         }
+        for(let i = 0; i < this.props.context.state.itineraires.length; i++){
+            let toPayItineraire =0;
+            for(let u = 0; u < this.props.context.state.itineraires[i].tarifReserves.length; u++){
+                toPayItineraire += this.props.context.state.itineraires[i].tarifReserves[u].toPay.afterProm;
+              
+            }
+           
+            
+            toPay += toPayItineraire;
+            
+        }
+
         return(
             <div className={styles.printFacture}>
                 <div style={{textAlign:'center'}}>
                     <Itineraires context={this.props.context} annulerReservation={this.annulerReservation} />
                     <p id='bigLabel'>TOTAL : {toPay}</p>
-                    <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()} endIcon={<CallMissedOutgoingIcon/>}>Ajouter itinéraire</Button></p>
+                    <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()} endIcon={<CallMissedOutgoingIcon/>}>{this.props.context.state.traduction ? "Add itinerary" : "Ajouter itinéraire" }</Button></p>
                 </div>
                 <Modal
                     open={this.props.context.state.open}
@@ -267,8 +330,9 @@ class Fact extends React.Component{
             </div>
         );
     }
-
+        
     render(){
+        
         return(
             <div>
                 {this.props.context.state.isFactureReceived ? this.printFacture() : <SkeletonFacture />}

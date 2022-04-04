@@ -38,11 +38,16 @@ import ListPolitique from "./components/partenaire/politique/LPolitique.js"
 import testData from "./components/partenaire/politique/listpolitique.js"
 import ListeReservation from "./components/partenaire/reservation/ListReservation.js";
 
+import  InsertHotel  from "./components/partenaire/hotel/createHotel.js";
+import  Localisation  from "./components/partenaire/hotel/localisation";
+
 import  Front_client  from "./front_client/front_client";
 
 import  Reservation  from "./components/client/reservation.js";
 import  ApplyReservation  from "./components/client/applyReservation.js";
+import  ApplyReservationModif  from "./components/client/applyReservationModif.js";
 import Voucher from "./components/client/voucher.js";
+import Voucher1 from "./components/client/voucher1.js";
 
 import  BasicDateRangePicker  from "./components/client/dateSejourClient";
 import Calendrier from "./components/partenaire/Calendrier/Calendrier";
@@ -64,6 +69,9 @@ import  Tooltip from "./SkeletonListe/modal.js";
 import NotFound from "./components/common/404NotFound.js";
 import NotEnoughAccessRight from "./components/common/NotEnoughAccessRight.js";
 import RechercheReservation from "./components/client/RechercheReseravation.js";
+
+import Menu from "./components/menu/sidebar.js";
+import ResponsiveDrawer from "./components/menu/responsive-drawer.js";
 
 function App(){
   return(
@@ -103,6 +111,10 @@ function App(){
         <Route path="/back/TypeChambre/insert" exact component={InsertTypeChambre} />
         <Route path="/back/TypeChambre/details/:_id" exact component={InsertTypeChambre} />
 
+        <Route path="/back/hotel/insert" exact component={InsertHotel} />
+        <Route path="/localisation" exact component={Localisation} />
+        <Route path="/back/hotel/detail/:_id" exact component={InsertHotel} />
+
         <Route path="/back/promotion" exact component={PromotionList} />
         <Route path="/back/promotion/insert" exact component={InsertPromotion} />
         <Route path="/back/promotion/detail/:_id" exact component={InsertPromotion} />
@@ -112,6 +124,7 @@ function App(){
         <Route path="/back/politique/list" exact component={ListPolitique} />
         <Route path="/back/politique/testData" exact component={testData} />
         <Route path="/back/reservation" exact component={ListeReservation} />
+        <Route path="/back/reservation/notif" exact component={ListeReservation} />
 
 
         <Route path="/" exact component={AppClient} />
@@ -128,7 +141,9 @@ function App(){
 
         <Route path="/reservation/:_id" exact component={Reservation} />
         <Route path="/reservation/:_id/apply" exact component={ApplyReservation} />
+        <Route path="/reservation/:_id/apply/:numeroItineraire" exact component={ApplyReservationModif} />
         <Route path="/reservation/:_id/voucher" exact component={Voucher} />
+        <Route path="/reservation/:_id/voucher/:numeroItineraire" exact component={Voucher1} />
         <Route path="/drop" exact component={DropDown} />
 
         <Route path="/CalendarClient" exact component={BasicDateRangePicker} />
@@ -141,10 +156,13 @@ function App(){
         <Route path="/404NotFound" exact component={NotFound} />
         <Route path="/NotEnoughAccessRight" exact component={NotEnoughAccessRight} />
         <Route path="/modal" exact component={Tooltip} />
+
+        <Route path="/navBarClient" exact component={Navbar} />
+
+        <Route path="/menu" exact component={Menu} />
+        <Route path="/responsive" exact component={ResponsiveDrawer} />
       </Router>
     </div>
-    
   );
-
 }
 export default App;

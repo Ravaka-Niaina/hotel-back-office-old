@@ -16,11 +16,16 @@ import SearchIcon from '@mui/icons-material/Search';
 import MenuItem from '@mui/material/MenuItem';
 import Stack from '@mui/material/Stack';
 import axios from "axios";
+import LoadingButton from '@mui/lab/LoadingButton';
 
 import {session} from "../../common/utilitySession.js";
 import { useEffect } from "react";
 
 import { useState } from 'react';
+
+import { useTranslation } from "react-i18next";
+
+import ButtonLoading from "./buttonLoading.js";
 
 function Navbar(props) {
   const [email, setEmail] = React.useState("");
@@ -29,9 +34,23 @@ function Navbar(props) {
   const [errorMdp, setErrorMdp] = React.useState(null);
   const [ambiguousError, setAmbiguousError] = React.useState(null);
   const history = useHistory();
+  const { t, i18n } = useTranslation();
+  const [btnLoad, setBtnLoad] = useState(false)
+
+  function translation(){
+    let temp = {...props.context.state};
+    temp.traduction= !temp.traduction;
+    props.context.setState(temp);
+}
+
+  const changeLanguageHandler = (e) => {
+    const languageValue = e.target.value
+    i18n.changeLanguage(languageValue);
+  }
   
   const interpretResponse = (res) => {
       console.log(res);
+      setBtnLoad(false);
       const data = res.data;
       if(data.status === 200){
           localStorage.setItem("user_session", res.headers.user_session);
@@ -62,6 +81,7 @@ function Navbar(props) {
   const login = (e) => {
       e.preventDefault();
       setAmbiguousError(null);
+      setBtnLoad(true)
       const data = {
           email: email.trim(),
           mdp: mdp.trim()
@@ -95,16 +115,16 @@ function Navbar(props) {
                     </Typography>
                     <Box sx={{ flexGrow: 1 }} />
                     <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
-                    <Button variant="outlined" startIcon={<SearchIcon/> } onClick={(e) => props.clickRetour()}>
                         <Link to='/front/researchReservation' style={{textDecoration : "none" ,color : "#887B62"}}>
-                            RECHERCHE UNE RESERVATION
+                            <Button variant="outlined" startIcon={<SearchIcon/> }>
+                                {t('search for a reservation')}
+                            </Button>
                         </Link>
-                    </Button>
                     <PopupState variant="popper" popupId="demo-popup-popper">
       {(popupState) => (
         <div>
           <Button variant="outlined" startIcon={<Login />} onClick={(e) => login(e)} {...bindToggle(popupState)}>
-                Se connecter
+          {t('Log in')}
             </Button>
           <Popper {...bindPopper(popupState)} transition>
             {({ TransitionProps }) => (
@@ -116,7 +136,7 @@ function Navbar(props) {
                   children={
                       <>
                         <div className='title11'>
-                          <h4 id='title11'>Se connecter</h4>
+                          <h4 id='title11'>{t('Log in')}</h4>
                         </div>
                           {ambiguousError === null ? null : <Alert severity="error">{ambiguousError}</Alert>}
                           <Box
@@ -161,20 +181,26 @@ function Navbar(props) {
                           <Box>
                           <div id='buttons'>
                            <div class="login">
+                           { btnLoad ? 
+                                <LoadingButton loading sx={{width: 200}} variant="outlined">
+                                   Submit
+                               </LoadingButton>
+                           :
                             <Button sx={{width: 200}} variant="contained" onClick={(e) => login(e)}>
-                                <span style={{color:'white'}}>Se connecter</span>
+                                <span style={{color:'white'}}>{t('log in')}</span>
                             </Button>
+                           }
                             <div class="mdp">
                            <Link to={'/login/identify'} style={{textDecoration:'none'}}>
                             <Button  id="mdp">
-                            <span style={{color:'black'}}>Mot de passe oublié?</span>
+                            <span style={{color:'black'}}>{t('Forgot your password')}</span>
                             </Button>
                             </Link>
                             </div>
                            </div>
                            <div class="register">
                             <Button id="register" sx={{width: 200}} onClick={(e) => register(e)}>
-                                <span style={{color:'black'}}>S'inscrire</span>
+                                <span style={{color:'black'}}>{t('Register')}</span>
                             </Button>
                            </div>
                           </div>
@@ -198,6 +224,12 @@ function Navbar(props) {
                         >
                             <Language/>
                         </IconButton>
+
+                <select className="custom-select" style={{width: 200}} onChange={(e) =>{changeLanguageHandler(e);translation(e)}}>
+                    <option value="fr" >Francais</option>                            
+                    <option value="en" >English</option>
+                </select>
+
                     </Box>
                     </Toolbar>
                 </AppBar>

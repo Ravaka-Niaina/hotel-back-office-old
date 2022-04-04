@@ -10,12 +10,13 @@ import FormControl from '@mui/material/FormControl'
 import Alert from '@mui/material/Alert';
 import {useEffect} from 'react';
 import callAPI from '../../../utility.js';
-import Navbar from '../Navbar/Navbar.js'
+import ResponsiveDrawer from '../Navbar/responsive-drawer.js'
 import { useParams, useHistory, Link } from 'react-router-dom'
 import "./global.css";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
 import ButtonLoading from "../buttonLoading.js"
+import {session} from '../../common/utilitySession.js';
 
 function Global(){
     const [datePrice , setDatePrice] = useState([{ date:"" , pourcentage: ""}]);
@@ -34,13 +35,16 @@ function Global(){
             description : null ,
             type : null,
             pourcentage : null,
-            vide : null
+            vide : null,
+            name: '',
+            desc: ''
         }
     );  
     const [btnLoad, setBtnLoad] = useState(false); 
   
-    
-       
+    const hasARInsertPolitique = session.getInstance().hasOneOfTheseAccessRights(["insertPolitique", "superAdmin"]);
+    const hasARModifierPolitique = session.getInstance().hasOneOfTheseAccessRights(["modifierPolitique", "superAdmin"]);
+
     let history = useHistory();
     const functionAppel=(res)=>{
         console.log(res);
@@ -65,6 +69,7 @@ function Global(){
        }
            
     }
+
     /* handle input change*/
     const handleInputChange = (e, index) => {
         let existeVide = false;
@@ -105,27 +110,27 @@ function Global(){
     };
     
  
-   const handleInputChange2 = (e , indice ,fieldname) => {
-    const current = JSON.parse(JSON.stringify(datePrice));
-    current[indice][fieldname] = e.target.value;
+    const handleInputChange2 = (e , indice ,fieldname) => {
+        const current = JSON.parse(JSON.stringify(datePrice));
+        current[indice][fieldname] = e.target.value;
 
-    let errorS = {...state};
-    errorS.type = null;
-    errorS.vide = null;
-    setState(errorS);
+        let errorS = {...state};
+        errorS.type = null;
+        errorS.vide = null;
+        setState(errorS);
 
-    setDatePrice(current);
-    let existeVide = false;
-    for (let i = 0; i < current.length ; i++){
-        if((current[i].pourcentage +"").trim() === "" || (current[i].date  +"").trim() === ""){
-            existeVide = true; 
+        setDatePrice(current);
+        let existeVide = false;
+        for (let i = 0; i < current.length ; i++){
+            if((current[i].pourcentage +"").trim() === "" || (current[i].date  +"").trim() === ""){
+                existeVide = true; 
+            }
         }
-    }
-    if(existeVide){
-        setGrise(true);
-    }else{
-        setGrise(false); 
-    }
+        if(existeVide){
+            setGrise(true);
+        }else{
+            setGrise(false); 
+        }
    }
    const handleRemoveClick = index => {
        let existeVide = false;
@@ -177,43 +182,59 @@ function Global(){
         }
     }
 
-    const setListPolitiqueAnnulation = (data) => {
-        if(data.politique.nom != null){
-                let currentNom = JSON.parse(JSON.stringify(nom));
-                currentNom = data.politique.nom;
-                setNom(currentNom);
-                let currentDesc = JSON.parse(JSON.stringify(description));
-                currentDesc = data.politique.description;
-                setDescription(currentDesc);
-            if(data.politique.datePrice.length != 0){
-                let current = JSON.parse(JSON.stringify(datePrice));
-                current = data.politique.datePrice;
-                let temp = 0;
-                for(let i = 0 ; i < data.politique.datePrice.length; i++){
-                    temp += data.politique.datePrice[i].pourcentage;
-                }
-                let rest = (100 - temp);
-                setVal(rest);
-                setShow(true);
-                setDatePrice(current);
- 
-            }else{
-                console.log("datePriceVide")
-            }
-            setSkeleton(false);
-        }else{
-            console.log("setListPolitiqueAnnulation");
+    function handleInputChange3( e, name1, name2){
+        let current = JSON.parse(JSON.stringify(state));
+        current[name1][name2] = e.target.value;
+        setState(current);
         }
-        setGrise(false);
-       
+
+    const setListPolitiqueAnnulation = (data) => {
+        
+            if(data.politique.nom != null){
+                    let currentNom = JSON.parse(JSON.stringify(nom));
+                    currentNom = data.politique.nom;
+                    setNom(currentNom);
+                    let currentDesc = JSON.parse(JSON.stringify(description));
+                    currentDesc = data.politique.description;
+                    setDescription(currentDesc);
+                if(data.politique.datePrice.length != 0){
+                    let current = JSON.parse(JSON.stringify(datePrice));
+                    current = data.politique.datePrice;
+                    let temp = 0;
+                    for(let i = 0 ; i < data.politique.datePrice.length; i++){
+                        temp += data.politique.datePrice[i].pourcentage;
+                    }
+                    let rest = (100 - temp);
+                    setVal(rest);
+                    setShow(true);
+                    setDatePrice(current);
+    
+                }else{
+                    console.log("datePriceVide")
+                }
+                setSkeleton(false);
+            }else{
+                console.log("setListPolitiqueAnnulation");
+            }
+            setGrise(false);
+    }
+    const droit = () =>{
+        if(!hasARInsertPolitique){
+            history.push("/NotEnoughAccessRight");
+        }
     }
 
     useEffect(() => {
         if(_id != null){
-            callAPI('get', '/politique/detail/'+ _id, {}, setListPolitiqueAnnulation);
-            console.log("modification")
-        }else{
+            if(!hasARModifierPolitique){
+                history.push("/NotEnoughAccessRight");
+            }else{
+                callAPI('get', '/politique/detail/'+ _id, {}, setListPolitiqueAnnulation);
+                console.log("modification")
+            }
+        }else {
             console.log("insertion")
+            droit();
             setSkeleton(false);
         }  
     }, [_id])
@@ -226,9 +247,9 @@ function Global(){
             datePrice[i].pourcentage = Number.parseInt(datePrice[i].pourcentage); 
         }
         if(show){
-            callAPI('post' , "/politique/insertionPolitique" ,{nom : nom ,description : description, type : dateTime , datePrice : datePrice , remboursable : true}, functionAppel)
+            callAPI('post' , "/politique/insertionPolitique" ,{nom : nom ,description : description, type : dateTime , datePrice : datePrice , remboursable : true,name:state.name,desc:state.desc}, functionAppel)
         }else{
-            callAPI('post' , "/politique/insertionPolitique" ,{nom : nom ,description : description,  remboursable : false}, functionAppel)
+            callAPI('post' , "/politique/insertionPolitique" ,{nom : nom ,description : description,  remboursable : false,name:state.name,desc:state.desc}, functionAppel)
         }
       }
 
@@ -244,6 +265,12 @@ function Global(){
         }else{
             callAPI('post' , "/politique/updateP/"+_id ,{ id : id1 , nom : nom ,description : description,  remboursable : false}, functionAppel)
         }
+      }
+
+      function handleInputChange3(event, inputName) {
+        const currentState = JSON.parse(JSON.stringify(state))
+        currentState[inputName] = event.target.value
+        setState(currentState)
       }
 
     const date = datePrice.map( (x, i) => {   
@@ -297,11 +324,11 @@ function Global(){
 
         return (
             <>
-                <Navbar currentPage={4}/>
+                {/* <Navbar currentPage={4}/> */}
                     
                         <div className ="politiqueContent">
                             {
-                             skeletonAffiche ?  <SkelettonForm heigth = {300} />  : 
+                             skeletonAffiche && hasARModifierPolitique ?  <SkelettonForm heigth = {300} />  : 
                              <>
                             <h4 id="title1">Politique d'annulation</h4><hr/>
                             <label>Concellation preference</label><br/>
@@ -378,7 +405,21 @@ function Global(){
                                                 value = {nom}
                                                 onChange={e => handleInputChangeInputNom(e)}
                                             />
+
+                                        <TextField
+                                                id="outlined-size-small"
+                                                size="small" label ="Name"
+                                                // error = {message ? true : false}
+                                                // helperText={message}
+                                                name="name"
+                                                type="text"
+                                                style={{marginTop:'15px',marginLeft:'25px'}}
+                                                value = {state.name}
+                                                onChange={e => handleInputChange3(e,'name')}
+                                            />
+
                                 </div>
+
                                 <div style = {{marginTop :"15px"}}> 
                                     <label id='bigLabel' style={{textDecoration:'underline'}}>Description : </label>
                                         <TextField
@@ -394,12 +435,29 @@ function Global(){
                                                 value = {description}
                                                 onChange={e => handleInputChangeInputDesc(e)}
                                             />
-                                </div> <br/>
+
+                                        <TextField
+                                                id="outlined-size-small"
+                                                size="small" 
+                                                label ="description en Anglais"
+                                                multiline 
+                                                // helperText = {(state.description)}
+                                                // error = {(state.description !== null ? true : false)}
+                                                rows={2} 
+                                                rowsMax={4}
+                                                style={{width:'100%',height:'50px',marginTop:'25px'}}
+                                                name="desc"
+                                                type="text"
+                                                value = {state.desc}
+                                                onChange={e => handleInputChange3(e,'desc')}
+                                            />
+
+                                </div>
                                 
-                                   <div style = {{width : "fit-content" , margin : " 0 auto" }}>
+                                   <div style = {{width : "fit-content" , margin : " 0 auto",marginTop:'25px'}}>
                                         <div class="bouton-aligne">
                                        { 
-                                        _id == null ? 
+                                        _id == null && hasARInsertPolitique ? 
                                            <> 
                                                {
                                                     nom == "" ? 
@@ -462,4 +520,17 @@ function Global(){
     
 }
 
-export default Global;
+export default function global_() {
+    const isInsert = new RegExp("/detail", "i").exec(window.location.href) === null ? true : false;
+    // const [titre, setTitre] = useState(false);
+    let titre = "";
+    isInsert ? titre = "Ajout politique d'annulation " : titre = "Modifier politique d'annulation"
+    // console.log("TRLALALA"+ JSON.stringify(props));
+    return(
+        <ResponsiveDrawer 
+            title = {titre}
+            getContent = {Global} 
+        />
+        
+    );
+  }

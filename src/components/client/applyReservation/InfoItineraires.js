@@ -5,6 +5,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableBody from '@mui/material/TableBody';
 
+
 import {StyledTableCell, StyledTableRow, 
     rows, rowsPaiement, Champs, ChampsImportant, line} from '../../common/commonAssets.js';
 import TarifReserves from './TarifReserves.js';
@@ -17,19 +18,7 @@ function InfoItineraires(props){
             itineraires.push(
                 <div class ="box_itineraire">
                     <h2 class ="title_itineraire">Informations itinéraire {u + 1}</h2>
-                    {/* <div style={line}>
-                        <Champs 
-                            label={"Numéro de réservation " + (u + 1)} 
-                            value={props.reservation.itineraires[u].num === undefined ? "Vide" : props.reservation.itineraires[u].num } />
-                        <Champs 
-                            label="Nom client" 
-                            value="Ritsy Andriamanantsoa" />
-                    </div>
-                    <div style={line}>
-                        <ChampsImportant label="Check in" value={props.reservation.itineraires[u].dateSejour.debut} />
-                        <ChampsImportant label="Check out" value={props.reservation.itineraires[u].dateSejour.fin} />
-                        <Champs label="Nombre de nuité" value={(props.reservation.itineraires[u].nights + 1) + " nights"} />
-                    </div> */}
+                    
                     <TarifReserves  
                         indexItineraire={u}
                         reservation={props.reservation}
@@ -40,7 +29,7 @@ function InfoItineraires(props){
                         setAffilie={props.setAffilie}
                         openLoad={props.openLoad}
                         setOpenLoad={props.setOpenLoad}
-                        isEditEnabled={props.isEditEnabled} />
+                        ShowModalAnnulation={props.ShowModalAnnulation} />
                 </div>
             );
         }

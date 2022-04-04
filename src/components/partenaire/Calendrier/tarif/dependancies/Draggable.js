@@ -8,7 +8,8 @@ const Draggable = (props) =>{
     const icon = (props.pos === 'right') ? <ChevronRightIcon /> : <ChevronLeftIcon />;
     return(
         <IconButton data-pos={props.pos} sx={{ 
-            left: ((props.pos === 'right') ? props.rightSelected() : props.leftSelected()) + 'px'
+            left: ((props.pos === 'right') ? props.rightSelected() : props.leftSelected()) + 'px',
+            top: props.top
         }} 
         fontSize="small"
         onDragStart={props.dragStart} 
