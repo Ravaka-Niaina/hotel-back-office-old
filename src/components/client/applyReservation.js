@@ -96,7 +96,6 @@ function ApplyReservation(props){
             mdp: user.mdp.trim(),
             confirmMdp: user.confirmMdp.trim()
         };
-        console.log(data);
         callAPI('post', '/user/register', data, interpretResponse);
     };
 
@@ -104,13 +103,11 @@ function ApplyReservation(props){
         e.preventDefault();
         setOpenLoad(true);
         setLoad(true);
-        console.log(reservation);
         const data = { _id: variableAnnuler.idReservation, indexItineraire: variableAnnuler.indexItineraire, indexTarifReserve: variableAnnuler.indexTarifsReserve ,val :true};
         callAPI('post', '/reservation/AnnuleApplyR', data, setDetailReservation1 );
     }
 
     function setDetailReservation1(res){
-        // console.log(res);
         if(res.status == 200){
             setShowModalChambre(!showModalChambre);
             setLoad(false);
@@ -124,7 +121,6 @@ function ApplyReservation(props){
     }
     function ShowModalAnnulation(isTrue,ObjectChambreAnnuler){
         setLoad(false);
-        // console.log(ObjectChambreAnnuler);
         if(isTrue){
             setShowModal(!showModal);
             let current = {...variableAnnuler};
@@ -172,11 +168,8 @@ function ApplyReservation(props){
         }
     }
 
-   
-
     function setDetailReservation(res){
         setOpenLoad(false);
-        console.log(res);
         if(res.reservation == null){
             setOpenLoad(false);
             history.push("/")
@@ -233,9 +226,7 @@ function ApplyReservation(props){
             }catch(err){
                 console.log(err);
             }
-            console.log(res.reservation);
         }else{
-            console.log(res.errors[0].message);
             setAlertError(res.errors[0].message);
         }
     }

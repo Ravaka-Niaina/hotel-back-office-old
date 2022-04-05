@@ -120,7 +120,6 @@ function ApplyReservationModif(props){
             setShowModal(!showModal);
             setLoad(false);
         }else{
-            console.log(ObjectChambreAnnuler);
             setShowModalChambre(!showModalChambre)
             let keys = Object.keys(ObjectChambreAnnuler);
             let current = {...variableAnnuler};
@@ -177,6 +176,7 @@ function ApplyReservationModif(props){
     }
 
     function setDetailReservation(res){
+        console.log(res);
         if(res.indiceI != null){
             setIndice(res.indiceI);
         }
@@ -190,23 +190,20 @@ function ApplyReservationModif(props){
         }
     }
 
-    function ControllerAcces(){
-        if(localStorage.access !== "2"){
-            history.push("/");
-        }
-    }
-
     function redirect(){
         history.push("/");
     }
 
     useEffect(() => {
-        ControllerAcces();
-        let num = "";
-        if(numeroItineraire !== "1"){
-            num = numeroItineraire;
+        if(localStorage.access !== "2"){
+            history.push("/");
+        }else{
+            let num = "";
+            if(numeroItineraire !== "1"){
+                num = numeroItineraire;
+            }
+            callAPI('post', '/reservation/details/' , {_id , numeroItineraire : num}, setDetailReservation);
         }
-        callAPI('post', '/reservation/details/' , {_id , numeroItineraire : num}, setDetailReservation);
     }, [_id]);
 
 
@@ -277,6 +274,7 @@ function ApplyReservationModif(props){
                                 </Stack>
                             </div> : null
                         }
+                        {reservation.infoEtat === null ? null : <strong>Statut réservation: {reservation.infoEtat.label} le {reservation.infoEtat.date}</strong>}
                         <div class="infos_contact">
                             <div class="infos_contact_header">
                                 <h2 class="infos_heading">Informations de contact</h2>

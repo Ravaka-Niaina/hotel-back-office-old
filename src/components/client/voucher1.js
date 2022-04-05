@@ -175,6 +175,10 @@ function Voucher(props){
                     </div>
 
                 </div>
+                {reservation == null || reservation.infoEtat === null 
+                    ? null 
+                    : <span class="confirmation-message_Confirmed"><span>Statut réservation: {reservation.infoEtat.label} le {reservation.infoEtat.date}</span></span>
+                }
                 <div class="voucher_itineraires">
                     {
                         isReservation ?

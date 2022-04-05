@@ -73,14 +73,7 @@ import Router from "./routes";
 
 function App(){
   return(
-      <Router />
-        
-    // <ThemeConfig>
-    //   <ScrollToTop />
-    //   <GlobalStyles />
-    //   <BaseOptionChartStyle />
-    //   <Router />
-    // </ThemeConfig>
+    <Router />
   );
 }
 export default App;

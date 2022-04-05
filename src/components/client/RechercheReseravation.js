@@ -65,11 +65,13 @@ function ReponseListTrue(props){
     return list;
 }
 function ReponseListFalse(props){
+    console.log(props.list);
         return (
             <div style={div}>
                 {
                     props.skeleton ? <SkeletonForm /> : <>
                     <img src="/hotel.jpg" style={photo}/> 
+                    {props.list.reservation.infoEtat === null ? null : <p><strong>Statut réservation: {props.list.reservation.infoEtat.label} le {props.list.reservation.infoEtat.date}</strong></p>}
                     <span
                         component="div"
                         sx={{ display: {xs : "none" ,  sm: 'block' }, padding : "10px" }}
@@ -79,6 +81,10 @@ function ReponseListFalse(props){
                     <span>{props.list.client.nom} , {props.list.client.prenom}</span><br/>
                     <span>{props.list.client.email} </span><br/><br/>
                     <strong>N° itineraire : </strong><span>{props.list.reservation.NumeroITineraire}</span><br/><br/>
+                    {props.list.reservation.infoEtat === null 
+                        ? null 
+                        : <p><strong>Statut itinéraire: {props.list.reservation.infoEtat.label} le {props.list.reservation.infoEtat.date}</strong></p>
+                    }
                     <ItineraireLogFalse tarifReserves = {props.list.reservation.tarifReserves}/>
                     <div style={{float : 'right'}}>
                         <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" 
@@ -174,7 +180,7 @@ function Numero(props){
                             props.btnLoad ?  <BtnLoad /> :
                             <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" variant="contained" 
                                 onClick={() => props.conx()}>
-                                RECHERCHE UNE RESERVATION
+                                RECHERCHER UNE RESERVATION
                             </button>
                         } </>
                         
@@ -257,6 +263,7 @@ function RechercheReservation (){
         
       }
       const callBack = (data) => {
+          console.log(data);
         setCount(data.count);
         let curr = {...list};
         curr.reservation = [];
@@ -267,7 +274,7 @@ function RechercheReservation (){
             if(data.status === 200){
                 let current = {...list};
                 current.reservation = data.reservation;
-                current.client = data.client;  
+                current.client = data.client;
                 setList(current);
                 setResponseLogTrue(false)
                 setResponse(true)
@@ -506,7 +513,7 @@ function RechercheReservation (){
                         {
                             response ?  <>
                             <h1 id="pageTitle">
-                                <span> Liste des reservations </span>
+                                <span> Liste des reservations</span>
                             </h1> 
                              <div>
                                 <div style={{float : 'left' , fontSize :"450px" , width :"30px",cursor:"pointer"}}>  
@@ -531,7 +538,7 @@ function RechercheReservation (){
                         {
                             responseLogTrue ? <>
                             <h1 id="pageTitle">
-                                <span> Liste des reservations </span>
+                                <span> Liste des reservations ito</span>
                             </h1> 
                             <Box sx={{ display: { xs: 'none', md: 'flex'  }, gap : 1 , padding : "30px"}}>
                                 {
