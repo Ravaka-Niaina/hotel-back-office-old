@@ -161,6 +161,7 @@ function ListTarif(props){
                     let typeChambre = res.data.typeChambre;
                     console.log("typeChambre");
                     console.log(typeChambre);
+                    console.log(TChambre);
                     if(res.data.status==200){
                         itineraires[lastItineraire].NumeroITineraire =Random;
                         itineraires[lastItineraire].tarifReserves.push({

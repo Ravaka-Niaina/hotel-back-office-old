@@ -6,8 +6,10 @@ import Modal from '@mui/material/Modal';
 import { useState } from 'react';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 
-import callAPI from '../../../utility';import styles from './Galerie.module.css';
+import callAPI from '../../../utility';
+import styles from './Galerie.module.css';
 import UploadPhoto from './UploadPhoto.js';
+
 
 const style = {
     position: 'absolute',
@@ -55,7 +57,7 @@ const removePhoto = (event, preview, setPreview, photo, setPhoto, indicePhoto) =
     }
 };
 
-const Galerie = ({showGalerie, setShowGalerie, photoSortie, setPhotoSortie, nbPhotoBeforeSortie, previewSortie, setPreviewSortie}) => {
+const Galerie = ({showGalerie, setShowGalerie, photoSortie, setPhotoSortie, nbPhotoBeforeSortie, previewSortie, setPreviewSortie , imageCrop, setImageCrop}) => {
     const [photo, setPhoto] = useState([]);
     const [preview, setPreview] = useState([]);
     const [areImagesLoading, setAreImagesLoading] = useState(false);
@@ -63,6 +65,7 @@ const Galerie = ({showGalerie, setShowGalerie, photoSortie, setPhotoSortie, nbPh
     const [selectImage, setSelectImage] = useState(false);
     const [imageSelected, setImageSelected] = useState([]);
     const [showUpload, setShowUpload] = useState(false);
+
 
     function displayResult(data){
         if(data.status === 200){
@@ -121,10 +124,20 @@ const Galerie = ({showGalerie, setShowGalerie, photoSortie, setPhotoSortie, nbPh
     function closeGalerie(){
         setShowGalerie(false);
         setImageSelected(new Array(imageSelected.length).fill(false));
+        if(imageCrop === null){
+            setImageCrop(null)
+        }
+        
+    }
+
+    function ShowGalerie(){
+        setShowGalerie(true);
+        setPreviewSortie([]);
     }
 
     function choosePhotos(e){
         e.preventDefault();
+
         nbPhotoBeforeSortie.value = photoSortie.length;
         let photosToTake = [];
         let previewToTake = [];
@@ -134,9 +147,13 @@ const Galerie = ({showGalerie, setShowGalerie, photoSortie, setPhotoSortie, nbPh
                 previewToTake.push(process.env.REACT_APP_BACK_URL + "/" + photo[i]);
             }
         }
+     
         setPhotoSortie(photoSortie.concat(photosToTake));
         setPreviewSortie(previewSortie.concat(previewToTake));
         closeGalerie();
+        console.log(previewToTake);
+        
+        
     }
 
     function switchSelectImage(e){
@@ -147,7 +164,7 @@ const Galerie = ({showGalerie, setShowGalerie, photoSortie, setPhotoSortie, nbPh
         setSelectImage(!selectImage);
     }
     
-    function changeImageSelected(i){
+    function changeImageSelected(i, e , img){
         let tmp = JSON.parse(JSON.stringify(imageSelected));
         if(selectImage){
             tmp[i] = !tmp[i];
@@ -170,6 +187,7 @@ const Galerie = ({showGalerie, setShowGalerie, photoSortie, setPhotoSortie, nbPh
             >
                 <Box sx={style}>
                     {preview.map((imgSrc, i) => {
+                        // console.log(imgSrc + " -- " + i);
                         return(
                             <div 
                                 className={selectImage 
@@ -177,7 +195,7 @@ const Galerie = ({showGalerie, setShowGalerie, photoSortie, setPhotoSortie, nbPh
                                         ? styles.conteneurPhoto + " " + styles.conteneurPhoto1 + " " + styles.photoSelected
                                         : styles.conteneurPhoto + " " + styles.conteneurPhoto1 
                                     : styles.conteneurPhoto + " " + styles.conteneurPhoto1}
-                                onClick={() => changeImageSelected(i)}>
+                                onClick={(e) => changeImageSelected(i, e , imgSrc)} >
                                     <div className={styles.close}><button onClick={(e) => removePhoto(e, preview, setPreview, photo, setPhoto, i)}><span>X</span></button></div>
                                     <img className={styles.photo} src={imgSrc} />
                             </div>
@@ -215,6 +233,7 @@ const Galerie = ({showGalerie, setShowGalerie, photoSortie, setPhotoSortie, nbPh
                 removePhotoLocal={removePhotoLocal}
                 getContentGalerie={getContentGalerie}
             />
+    
         </>
     );
 };

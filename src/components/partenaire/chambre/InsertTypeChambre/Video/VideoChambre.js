@@ -66,7 +66,14 @@ function Videos(props){
             style={{width:'40%'}}/>
             {remove}
             {add}
-            <ReactPlayer url={videos[u]} />
+            {
+                videos[u] && (
+                    <div>
+                        <ReactPlayer url={videos[u]} />
+                    </div>
+                ) 
+            }
+            
         </div> 
         inputs.push(input);
     }
@@ -97,7 +104,7 @@ function Videos(props){
 
 export default function VideoChambre({state, setState}){
     return(
-        <div style={{marginTop:'15px'}}>
+        <div style={{marginTop:'15px',width:"100%"}}>
             <div className="row">
             <div style={{marginTop:'10px'}}>
                 <label className="form-label mt-4" style={{textDecoration:'underline'}} id='bigLabel'>Videos  </label>

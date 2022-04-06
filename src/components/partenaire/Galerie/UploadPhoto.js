@@ -60,7 +60,7 @@ const removePhotoLocal = (preview, setPreview, photo, setPhoto, indicePhoto) => 
 };
 
 let increment = 1;
-const PreviewPhotoToUpload = ({imgSrc, preview, setPreview, photo, setPhoto, i, functionUploadPhoto}) => {
+const PreviewPhotoToUpload = ({imgSrc, preview, setPreview, photo, setPhoto, i, functionUploadPhoto , switchShowImageCrop}) => {
     const [id, setId] = useState('default');
     const [progress, setProgress] = useState(0);
     const [isUploadCompleted, setIsUploadCompleted] = useState(false);
@@ -143,11 +143,11 @@ const PreviewPhotoToUpload = ({imgSrc, preview, setPreview, photo, setPhoto, i, 
 }
 
 let functionUploadPhoto = [];
-const UploadPhoto = ({showUpload, switchShowUpload, removePhotoLocal, getContentGalerie}) => {
+const UploadPhoto = ({showUpload, switchShowUpload, removePhotoLocal, getContentGalerie,switchShowImageCrop}) => {
     const [photo, setPhoto] = useState([]);
     const [preview, setPreview] = useState([]);
-    
 
+    
     function closeUpload(e){
         switchShowUpload(e);
         setPhoto([]);
@@ -180,6 +180,7 @@ const UploadPhoto = ({showUpload, switchShowUpload, removePhotoLocal, getContent
                         if(finished === e.target.files.length){
                             setPhoto(photo.concat(tmpPhoto));
                             setPreview(preview.concat(tmpPreview));
+
                         }
                     }
                     reader.readAsDataURL(img);
@@ -272,6 +273,7 @@ const UploadPhoto = ({showUpload, switchShowUpload, removePhotoLocal, getContent
                             {preview.map((imgSrc, i) => {
                                 return(
                                     <PreviewPhotoToUpload 
+                                        switchShowImageCrop={switchShowImageCrop}
                                         imgSrc={imgSrc}
                                         removePhotoLocal={removePhotoLocal}
                                         preview={preview}

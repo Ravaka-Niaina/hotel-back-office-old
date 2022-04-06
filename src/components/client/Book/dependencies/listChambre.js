@@ -93,7 +93,7 @@ class DChambre extends React.Component{
                             <div>
                             <div class="row mb-4">
                                 <div class="col">
-                                    <PhotoTypeChambre photos={typeChambre.photo}/>
+                                    <PhotoTypeChambre photos={typeChambre.photo} photoProfil ={typeChambre.photoCrop[0]}/>
                                 </div>
                                 <div class="col">
                                     <div className="row">
