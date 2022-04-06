@@ -16,7 +16,6 @@ function InfoItineraires(props){
     let x = 0;
     if(props.reservation != null){
         for(let i = 0; i < props.reservation.itineraires.length; i++){
-            for(let j = 0 ; j < props.reservation.itineraires[i].tarifReserves.length ; j++){
                 const u = i;
                 x = x+1;
                 itineraires.push(
@@ -35,8 +34,7 @@ function InfoItineraires(props){
                             setOpenLoad={props.setOpenLoad}
                             ShowModalAnnulation={props.ShowModalAnnulation} />
                     </div>
-                );
-            }    
+                ); 
         }
     }
     

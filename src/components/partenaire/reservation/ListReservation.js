@@ -274,10 +274,12 @@ function ListeReservation(props){
             etat: etat !== "" ? Number.parseInt(etat) : undefined,
             listIdNewReserv: isNotif ? listIdNewReserv: undefined
         };
+        console.log(toSend);
         callAPI('post', '/reservation/partenaire', toSend, setResult);
     }
 
     function setResult(data){
+        console.log(data);
         setListResult(data.list);
     }
     function setResultNewReserv(data){
@@ -374,7 +376,7 @@ function ListeReservation(props){
                                         
                                         <TableCell align = "left">
                                             {
-                                                row.reservateur != null ? row.reservateur : "pas de reservateur"
+                                                row.reservateur != null ? row.reservateur.nom + " " + row.reservateur.prenom : "pas de reservateur"
                                             }
                                         </TableCell>
                                         <TableCell align = "left">

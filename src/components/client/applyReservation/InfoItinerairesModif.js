@@ -6,7 +6,6 @@ function InfoItineraires(props){
     let number = 0;
     if(props.reservation != null){
         for(let i = 0; i < props.reservation.itineraires.length; i++){
-            for(let j = 0 ; j < props.reservation.itineraires[i].tarifReserves.length ; j++){
                 number = number + 1;
                 const u = i;
                 itineraires.push(
@@ -26,8 +25,7 @@ function InfoItineraires(props){
                             ShowModalAnnulation={props.ShowModalAnnulation}
                             indiceI = {props.indiceI} setisVariableUpdate={props.setisVariableUpdate}/>
                     </div>
-                );
-            }   
+                );  
         }
     }    
     return(
