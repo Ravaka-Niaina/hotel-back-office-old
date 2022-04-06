@@ -69,6 +69,8 @@ import RechercheReservation from "./components/client/RechercheReseravation.js";
 
 import Menu from "./components/menu/sidebar.js";
 import ResponsiveDrawer from "./components/menu/responsive-drawer.js";
+import Tphoto from "./TPhoto1.js";
+import Crop from "./CropImage.js";
 
 function App(){
   return(
@@ -154,6 +156,9 @@ function App(){
 
         <Route path="/menu" exact component={Menu} />
         <Route path="/responsive" exact component={ResponsiveDrawer} />
+
+        <Route path="/Tphoto" exact component={Tphoto} />
+        <Route path="/crop" exact component={Crop} />
       </Router>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import CustomError from '../../../CustomError';
 import {useEffect} from "react";
 // import Navbar from "../Navbar/Navbar";
@@ -23,6 +23,11 @@ import PhotoChambre from './InsertTypeChambre/Photo/PhotoChambre.js';
 import VideoChambre from './InsertTypeChambre/Video/VideoChambre.js';
 import Equipement from './InsertTypeChambre/Equipement.js';
 import Galerie from '../Galerie/Galerie.js';
+import ImageCrop from '../Galerie/ImageCrop.js';
+
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
+
 
 function PlanTarifaire(props){
   let i = -1;
@@ -95,13 +100,48 @@ function InsertTypeCHambre(){
   const [areImagesLoading, setAreImagesLoading] = useState(isInsert ? false : true);
   const [btnLoad, setBtnLoad] = useState(false);
   const [showGalerie, setShowGalerie] = useState(false);
+  const [isModifImgCrop, setIsModifImgCrop]= useState(false);
 
+
+  const [imageCrop, setImageCrop] = useState(null);
+  const [showImageCrop , setShowImageCrop]= useState(false);
+  const [srcImg ,setImgSrc]= useState("");
+  const [AlertRedirect , setAlertRedirect] = useState(false);
+
+  const switchShowImageCrop = (e , isTrue, img) => {
+      if(isTrue){
+        setAlertRedirect(false);
+      }
+      e.preventDefault();
+      toDataUrl1(img, function(myBase64) {
+          setImgSrc(myBase64);
+      });
+      setShowImageCrop(isTrue);
+  }
+
+  const errorRef = useRef(null);
+
+  function toDataUrl1(url, callback) {
+      var xhr = new XMLHttpRequest();
+      xhr.onload = function() {
+          var reader = new FileReader();
+          reader.onloadend = function() {
+              callback(reader.result);
+          }
+          reader.readAsDataURL(xhr.response);
+      };
+      xhr.open('GET', url);
+      xhr.responseType = 'blob';
+      xhr.send();
+  }
+  
   const switchShowGalerie = (e) => {
     e.preventDefault();
     setShowGalerie(!showGalerie);
   };
   
   const setDetailsTypeChambre = (data) => {
+    // console.log(data);
     let currentState = {...state};
     if(data.status === 401){//Unauthorized
       history.push('/back/login');
@@ -130,6 +170,7 @@ function InsertTypeCHambre(){
     setState(currentState);
     setSkeleton(false);
     setAreImagesLoading(false);
+    setImageCrop(process.env.REACT_APP_BACK_URL + "/"+data.typeChambre.photoCrop[0]);
   }
 
   useEffect(() => {
@@ -228,7 +269,7 @@ function InsertTypeCHambre(){
     }
     toSend.planTarifaire = selectedPlan;
     toSend.photo = photo;
-    callAPI('post', '/typeChambre/insert', toSend, tryRedirect);
+    callAPI('post', '/typeChambre/insert', {toSend, imgCrop: imageCrop}, tryRedirect);
   }
 
   function update(e){
@@ -254,7 +295,7 @@ function InsertTypeCHambre(){
     }
     toSend.planTarifaire = planTarifaire;
     toSend.photo = photo;
-    callAPI('post', '/typeChambre/update/', toSend, tryRedirect);
+    callAPI('post', '/typeChambre/update/', {toSend , imgCrop: {imageCrop: imageCrop , isModifPhoto : isModifImgCrop}}, tryRedirect);
   }
 
   function handleInputChange(event, inputName){
@@ -282,17 +323,27 @@ function InsertTypeCHambre(){
     p: 4,
   };
 
+  function  redirectError(e){
+      e.preventDefault();
+      setAlertRedirect(true);
+      window.location.href = '#error';
+      // errorRef.current.scrollIntoView({
+      //   behavior :"smonth",
+      //   block :'center',
+      //   inline:"center"
+      // })
+  }
+
   return (
     <div> 
         {/* <Navbar  currentPage={2}/> */}
-              <div className="jumbotron">
+              <div className="jumbotron" style={{width:"1000px"}}>
               {
                   skeletonAffiche ? <SkelettonForm /> : <>
 
                 <h4 className="" id='title1'>{isInsert ? "Ajouter type chambre" : "Modifier type chambre"}</h4>
                 <CustomError errors={state.errors} />
                 <form className="needs-validation" style={{marginTop:'15px'}}>
-
                   <div className="row">
                     <div className="col">
                     <TextField 
@@ -383,16 +434,40 @@ function InsertTypeCHambre(){
                         helperText={state.error.superficie === null ? null : state.error.superficie}
                       />
                     </div>
-                    <PhotoChambre state={state} setState={setState} noImage={noImage}
-                      photo={photo} setPhoto={setPhoto} preview={preview} setPreview={setPreview}
-                      areImagesLoading={areImagesLoading} setAreImagesLoading={setAreImagesLoading}
-                      showGalerie={showGalerie} setShowGalerie={setShowGalerie} switchShowGalerie={switchShowGalerie}
-                      nbPhotoBefore={nbPhotoBefore} isInsert={isInsert} />
-
+                    <div id="error" ref={errorRef}>
+                      <PhotoChambre state={state} setState={setState} noImage={noImage}
+                        photo={photo} setPhoto={setPhoto} preview={preview} setPreview={setPreview}
+                        areImagesLoading={areImagesLoading} setAreImagesLoading={setAreImagesLoading}
+                        showGalerie={showGalerie} setShowGalerie={setShowGalerie} switchShowGalerie={switchShowGalerie}
+                        nbPhotoBefore={nbPhotoBefore} isInsert={isInsert} setImageCrop={setImageCrop}
+                        switchShowImageCrop={switchShowImageCrop} setAlertRedirect={setAlertRedirect}
+                        
+                      />
+                      
+                    {
+                      imageCrop && (
+                        <div style={{marginTop:'10px'}}>
+                          <div>
+                            <label className="form-label mt-4" style={{textDecoration:'underline'}} id='bigLabel'>Photo Crop</label>
+                          </div>
+                            <img src={imageCrop} />
+                        </div>
+                      )
+                    }
+                      
+                        {
+                          AlertRedirect ?<Stack sx={{ width: '100%' }} spacing={2}>
+                            <Alert severity="error">photo profil null</Alert>
+                          </Stack> : null
+                        }
+                    </div>
                     <Galerie showGalerie={showGalerie} setShowGalerie={setShowGalerie} 
                       photoSortie={photo} setPhotoSortie={setPhoto} nbPhotoBeforeSortie={nbPhotoBefore}
-                      previewSortie={preview} setPreviewSortie={setPreview} />
-                      
+                      previewSortie={preview} setPreviewSortie={setPreview} 
+                      setImageCrop={setImageCrop} imageCrop={imageCrop}
+                    />
+
+
                     <VideoChambre state={state} setState={setState} />
 
                     <div style={{marginTop:'10px'}}>
@@ -504,20 +579,35 @@ function InsertTypeCHambre(){
 
                     <div className="pied" style={{marginTop:'30px'}}>   
                      <div class="bouton-aligne">
-                      { isInsert && hasARInsert 
-                      ? <>
-                        { btnLoad 
-                        ? <ButtonLoading /> 
-                        : <Button  
-                          variant="contained" 
-                          type='submit' 
-                          id='btn1'
-                          onClick={(e) => insert(e)}
-                          style={{backgroundColor:'#2ac4ea' }}>
-                          <span style={{color:'white'}}>Ajouter</span>
-                        </Button> }
-                       </> 
-                      : null }
+
+                       {
+                         imageCrop == null ? 
+                          <Button  
+                            variant="contained" 
+                            type='submit' 
+                            id='btn1'
+                            onClick={(e) =>redirectError(e)}
+                            style={{backgroundColor:'#2ac4ea' }}>
+                            <span style={{color:'white'}}>Ajouter</span>
+                          </Button> : 
+                          <>
+                              { isInsert && hasARInsert 
+                                ? <>
+                                  { btnLoad 
+                                  ? <ButtonLoading /> 
+                                  : <Button  
+                                    variant="contained" 
+                                    type='submit' 
+                                    id='btn1'
+                                    onClick={(e) => insert(e)}
+                                    style={{backgroundColor:'#2ac4ea' }}>
+                                    <span style={{color:'white'}}>Ajouter</span>
+                                  </Button> }
+                                </> 
+                                : null }
+                          </>
+                       }
+                      
 
                       { !isInsert && hasARUpdate
                       ? <>
@@ -544,6 +634,14 @@ function InsertTypeCHambre(){
                      </div>
                     </div>
                 </form>
+
+                <ImageCrop showImageCrop={showImageCrop}
+                    switchShowImageCrop={switchShowImageCrop} 
+                    srcImg={srcImg} 
+                    imageCrop={imageCrop} 
+                    setImageCrop={setImageCrop}
+                    setIsModifImgCrop={setIsModifImgCrop}
+                /> 
                 </>
               }
               </div>

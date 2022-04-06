@@ -19,10 +19,10 @@ const style = {
   
   const PhotoTypeChambre = (props) => {
     let images = [];
-    let photo = "";
+    let photo = props.photoProfil;
     const [open, setOpen] = React.useState(false);
     if (props.photos && props.photos.length){
-        photo = props.photos[0];
+        // photo = props.photos[0];
         for(let i = 0; i < props.photos.length; i++){
             images.push({ url: process.env.REACT_APP_BACK_URL + "/" + props.photos[i].replace("\\","/") });
         }

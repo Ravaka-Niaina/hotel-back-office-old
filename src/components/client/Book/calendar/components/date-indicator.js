@@ -186,55 +186,60 @@ const DateIndicator = ({
         {i.currentMonth ? (
           <div>
             {reloadAllPrices || reloadDate ? <RefreshDay />
-              : <>{i.price !== undefined ? (
-                <div>
-                  {i.promotions !== undefined &&
-                    i.promotions.length > 0 &&
-                    getDate(fin) !== getDate(i.date) ? (
-                    <HtmlTooltip
-                      title={getHtmlPromo(i.prixOriginal, i.promotions)}
-                    >
-                      <div
-                        className={`${notValid}`}
-                        data-active-month={i.currentMonth}
-                        data-date={i.date.toString()}
-                        key={key}
-                        onClick={(e) => changeDate(utility.getDate(i.date))}
-                      >
-                        <div style={{ textAlign: 'center' }}>
-                          {' '}
-                          {getDayOfMonth(i.date)}{' '}
-                        </div>
-                        <div style={{ textAlign: 'center' }}> {price} </div>
+              : <>
+                {
+                  i.price !== undefined ? (
+                    <div>
+                      { i.promotions !== undefined && i.promotions.length > 0 && getDate(fin) !== getDate(i.date) ? (
+                        <HtmlTooltip
+                          title={getHtmlPromo(i.prixOriginal, i.promotions)}
+                        >
+                          <div
+                            className={`${notValid}`}
+                            data-active-month={i.currentMonth}
+                            data-date={i.date.toString()}
+                            key={key}
+                            onClick={(e) => changeDate(utility.getDate(i.date))}
+                          >
+                            <div style={{ textAlign: 'center' }}>
+                              {' '}
+                              {getDayOfMonth(i.date)}{' '}
+                            </div>
+                            <div style={{ textAlign: 'center' }}> {price} </div>
+                            <div
+                              style={{ height: '3px', backgroundColor: 'blue' }}
+                            ></div>
+                          </div>
+                        </HtmlTooltip>
+                      ) 
+                      : (
                         <div
-                          style={{ height: '3px', backgroundColor: 'blue' }}
-                        ></div>
+                          className={`${notValid}`}
+                          data-active-month={i.currentMonth}
+                          data-date={i.date.toString()}
+                          key={key}
+                          onClick={(e) => changeDate(utility.getDate(i.date))}
+                        >
+                          <div style={{ textAlign: 'center' }}>
+                            {' '}
+                            {getDayOfMonth(i.date)}{' '}
+                          </div>
+                          <div style={{ textAlign: 'center' }}> {price} </div>
+                        </div>
+                      )}
                       </div>
-                    </HtmlTooltip>
-                  ) : (
-                    <div
-                      className={`${notValid}`}
-                      data-active-month={i.currentMonth}
-                      data-date={i.date.toString()}
-                      key={key}
-                      onClick={(e) => changeDate(utility.getDate(i.date))}
-                    >
-                      <div style={{ textAlign: 'center' }}>
-                        {' '}
-                        {getDayOfMonth(i.date)}{' '}
+                  ) 
+                  : (
+                    <div style={{ width: '45px', height: '46px' }}>
+                      <div className={`${notValid}`} key={key}></div>
+                      <div style={{ textAlign: 'center', paddingTop: '7px' }}>
+                        {getDayOfMonth(i.date)}
                       </div>
-                      <div style={{ textAlign: 'center' }}> {price} </div>
                     </div>
-                  )}
-                </div>
-              ) : (
-                <div style={{ width: '45px', height: '46px' }}>
-                  <div className={`${notValid}`} key={key}></div>
-                  <div style={{ textAlign: 'center', paddingTop: '7px' }}>
-                    {getDayOfMonth(i.date)}
-                  </div>
-                </div>
-              )}</>}
+                  )
+                }
+            </>
+          }
           </div>
         ) : null}
       </div>

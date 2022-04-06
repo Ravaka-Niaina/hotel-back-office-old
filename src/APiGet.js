@@ -6,6 +6,7 @@ export default function APIGeT(method , url , callback){
         url : process.env.REACT_APP_BACK_URL + url,
         withCredentials: true
     })
+    
     .then(res => { callback(res.data)})
     .catch(err => {console.log(err) })
 }

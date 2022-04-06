@@ -1,6 +1,10 @@
 import Box from '@mui/material/Box';
 import styles from '../../InsertTypeChambre/Photo/PreviewPhotoChambre.module.css';
 import callAPI from '../../../../../utility';
+import { Button } from '@mui/material';
+import Tooltip from '@mui/material/Tooltip';
+import React , {useState} from "react";
+import "./cssTest.css";
 
 const removePhotoLocal = (preview, setPreview, photo, setPhoto, indicePhoto) => {
   let tmpPreview = JSON.parse(JSON.stringify(preview));
@@ -26,13 +30,25 @@ const removePhoto = (event, preview, setPreview, photo, setPhoto, indicePhoto, s
   }
 };
 
-export default function PreviewPhotoChambre({preview, setPreview, noImage, photo, setPhoto, state, isInsert}){
+function ButtonOnclick(indicePhoto, switchShowImageCrop,setImageCrop,setAlertRedirect){
+  return (
+      <Button  
+        variant="contained" 
+        type='submit' 
+        onClick={(e => {switchShowImageCrop(e, true , indicePhoto )})}>
+        <span style={{color:'white'}}>definir comme photo de profil</span>
+      </Button>
+  );
+}
+export default function PreviewPhotoChambre({preview, setPreview, noImage, photo, setPhoto, state, isInsert,switchShowImageCrop,setAlertRedirect }){
   let list = [];
   for(let i = 0; i < preview.length; i++){
     list.push(
       <div className={styles.conteneurPhoto}>
         <div className={styles.close}><button onClick={(e) => removePhoto(e, preview, setPreview, photo, setPhoto, i, state, isInsert)}><span>X</span></button></div>
-        <img className={styles.photo} src={preview[i]} />
+        <Tooltip title={ButtonOnclick(preview[i],switchShowImageCrop,setAlertRedirect)}>
+            <img className={styles.photo}  src={preview[i]} id='Imghover' />
+        </Tooltip>
       </div>
     );
   }
