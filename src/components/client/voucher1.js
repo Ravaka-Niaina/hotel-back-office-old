@@ -12,6 +12,8 @@ import { useHistory } from 'react-router-dom';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 
+import NavBarStepper from "./NavbarClient/NavBar&Stepper.js"; 
+
 function Voucher(props){
     const [reservation, setReservation] = useState(null);
     const { _id , numeroItineraire } = useParams();
@@ -159,6 +161,8 @@ function Voucher(props){
 
 
     return(
+         <>
+        <NavBarStepper access = {localStorage.access} id = {_id} indice = {2} numeroItineraire={numeroItineraire}  isConnected={isConnected}/>
         <div class="voucher_container">
             
             <div class="voucher_infos">
@@ -253,6 +257,7 @@ function Voucher(props){
                 <CircularProgress color="inherit" />
             </Backdrop>  
         </div>
+        </>
     );
 }
 

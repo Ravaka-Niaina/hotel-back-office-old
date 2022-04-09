@@ -12,6 +12,11 @@ import './ModeleEmail.css';
 import draftToHtml from 'draftjs-to-html';
 import LogoComponent from './LogoComponent.js';
 import { convertToHTML } from 'draft-convert';
+import {stateFromHTML} from 'draft-js-import-html';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import 'react-quill/dist/quill.bubble.css';
+import callAPI from '../../../utility';
 
 function ModeleEmail(props){
     
@@ -19,21 +24,41 @@ function ModeleEmail(props){
     let hotelsInfos=getHtmlHotelInfos();
     let htmlFooter=getHtmlFooter();
 
-    const contentDataStateConfirmation = ContentState.createFromBlockArray(convertFromHTML(confiramtionHeader));
-    const editorDataStateConfirmation = EditorState.createWithContent(contentDataStateConfirmation);
-    const [editorStateConfirmation, setEditorStateConfirmation] = useState(editorDataStateConfirmation);
+    // const contentDataStateConfirmation = ContentState.createFromBlockArray(convertFromHTML(confiramtionHeader));
+    // const editorDataStateConfirmation = EditorState.createWithContent(contentDataStateConfirmation);
+    // const [editorStateConfirmation, setEditorStateConfirmation] = useState(editorDataStateConfirmation);
 
-    const contentDataStatehotelsInfos = ContentState.createFromBlockArray(convertFromHTML(hotelsInfos));
-    const editorDataStatehotelsInfos = EditorState.createWithContent(contentDataStatehotelsInfos);
-    const [editorStatehotelsInfos, setEditorStatehotelsInfos] = useState(editorDataStatehotelsInfos);
+    // const contentDataStatehotelsInfos = ContentState.createFromBlockArray(convertFromHTML(hotelsInfos));
+    // const editorDataStatehotelsInfos = EditorState.createWithContent(contentDataStatehotelsInfos);
+    // const [editorStatehotelsInfos, setEditorStatehotelsInfos] = useState(editorDataStatehotelsInfos);
 
-
-    const contentDataStateFooter = ContentState.createFromBlockArray(convertFromHTML(htmlFooter));
-    const editorDataStateFooter = EditorState.createWithContent(contentDataStateFooter);
-    const [editorStateFooter, setEditorStateFooter] = useState(editorDataStateFooter);
+    
+    const  modules  = {
+        toolbar: [
+            [{ font: [] }],
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            ["bold", "italic", "underline", "strike"],
+            [{ color: [] }, { background: [] }],
+            [{ script:  "sub" }, { script:  "super" }],
+            ["blockquote", "code-block"],
+            [{ list:  "ordered" }, { list:  "bullet" }],
+            [{ indent:  "-1" }, { indent:  "+1" }, { align: [] }],
+            ["link", "image", "video"],
+            ["clean"],
+        ],
+    };
+    // const contentDataStateFooter = ContentState.createFromBlockArray(convertFromHTML(htmlFooter));
+    // const editorDataStateFooter = EditorState.createWithContent(contentDataStateFooter);
+    // const [editorStateFooter, setEditorStateFooter] = useState(editorDataStateFooter);
     const [logo,setLogo]= useState("https://www.hotel-restaurant-colbert.com/wp-content/uploads/2012/06/Logo-Colbert1-Copier.jpg")
     const [visibility, setVisibility] = useState(false);
-    const [content,setContent] = useState({logo_url:'',htmlConfirmation:'',htmlHotelsInfos:'',htmlFooter:''})
+    
+    const [valueConfirmation, setValueConfirmation] =  useState(confiramtionHeader);
+    const [valueHotelInfos, setValueHotelsInfos] =  useState(hotelsInfos);
+    const [valueFooter, setValueFooter] =  useState(htmlFooter);
+
+
+    
 
     const popupCloseHandler = (e) => {
         setVisibility(e);
@@ -43,31 +68,46 @@ function ModeleEmail(props){
     }
 
     // Get html and logo
+    function handleResponse(res){
+      
+        if(res.status === 200){
+            // localStorage.setItem('access', 1);
+            // setAlertSuccess(res.message);
+            // history.push("/reservation/" + _id + "/voucher");
+        }else{
+            // setAlertError(res.errors[0].message);
+            // history.push('#error');
+        }
+    }
 
     const valider=(e) =>{
-        let htmlConfirmation = convertToHTML(editorStateConfirmation.getCurrentContent());
-        let htmlHotelsInfos= convertToHTML(editorDataStatehotelsInfos.getCurrentContent());
-        let htmlFooter= convertToHTML(editorDataStateFooter.getCurrentContent());
+        // let htmlConfirmation = convertToHTML(editorStateConfirmation.getCurrentContent());
+        // let htmlHotelsInfos= convertToHTML(editorDataStatehotelsInfos.getCurrentContent());
+        // let htmlFooter= convertToHTML(editorDataStateFooter.getCurrentContent());
         
-        console.log("html");
-        console.log(htmlConfirmation);
-        console.log(htmlHotelsInfos);
-        console.log(htmlFooter);
+        // console.log("html");
+        // console.log(htmlConfirmation);
+        // console.log(htmlHotelsInfos);
+        // console.log(htmlFooter);
 
-        setContent({logo_url:logo,htmlConfirmation:htmlConfirmation,htmlHotelsInfos:htmlHotelsInfos,htmlFooter:htmlFooter});
+        // setContent({logo_url:logo,htmlConfirmation:htmlConfirmation,htmlHotelsInfos:htmlHotelsInfos,htmlFooter:htmlFooter});
         //Call API Insert
+
+        let content = {logo_url:logo,htmlConfirmation:valueConfirmation,htmlHotelsInfos:valueHotelInfos,htmlFooter:htmlFooter}
+        const data = { content: content};
+        callAPI('post', '/reservation/modeleEmail', data, handleResponse );
     }
 
     
-    const onEditorStateConfirmationChange = (editorState) => {
-      setEditorStateConfirmation(editorState)
-    }
-    const onEditorStateInfosChange = (editorState) => {
-        setEditorStatehotelsInfos(editorState)
-      }
-      const onEditorStateFooterChange = (editorState) => {
-        setEditorStateFooter(editorState)
-    }
+    // const onEditorStateConfirmationChange = (editorState) => {
+    //   setEditorStateConfirmation(editorState)
+    // }
+    // const onEditorStateInfosChange = (editorState) => {
+    //     setEditorStatehotelsInfos(editorState)
+    //   }
+    //   const onEditorStateFooterChange = (editorState) => {
+    //     setEditorStateFooter(editorState)
+    // }
 
     const customContentStateConverter = (contentState) => {
         // changes block type of images to 'atomic'
@@ -99,7 +139,7 @@ function ModeleEmail(props){
         let  html="";
         var header="";
         header += "				<div  style='margin-left: 40%;'>";
-        header += "					<h3>Confirmation de l'itineraire <\/h3>";
+        header += "					<h3 class='test'>Confirmation de l'itineraire <\/h3>";
         header += "					<p>Confirmation No. 12934802137<\/p>";
         header += "				<\/div>";
         
@@ -141,6 +181,7 @@ function ModeleEmail(props){
                             /> 
           <div class="container" style={{fontFamily:'Roboto,RobotoDraft,Helvetica,Arial,sans-serif',width:1000,margin:'0 auto',padding:'0 auto',marginTop:'20%'}}>
               
+                
                 <div class='itineraire' >  
                         
                         {/* <div class='header'  style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}} >
@@ -161,14 +202,16 @@ function ModeleEmail(props){
                                     
                             </div> 
                            
-                            <div style={{marginTop:'-20%',marginLeft:'10%'}}>
-                                <Editor
+                            <div style={{marginTop:'-10%',marginLeft:'10%'}}>
+                                {/* <Editor
                                     editorState={editorStateConfirmation}
                                     wrapperClassName="wrapper-class-confirmation"
                                     editorClassName="editor-class-confirmation"
                                     toolbarClassName="toolbar-class-confirmation"
                                     onEditorStateChange={onEditorStateConfirmationChange}
-                                />
+                                /> */}
+
+                                <ReactQuill className="editor-class-confirmation" modules={modules} value={valueConfirmation} theme="snow" onChange={setValueConfirmation}/> 
                                 
                             </div>
                                             
@@ -179,13 +222,14 @@ function ModeleEmail(props){
                          <strong>Cher(e)</strong> nom prenom 
                          </p>
                         <p>Nous vous remercions d'avoir choisi [Nom de l'hotel] pour votre réservation. Nous vous confirmons que nous avons bien reçu votre réservation.</p> */}
-                        <Editor
+                        {/* <Editor
                                     editorState={editorStatehotelsInfos}
                                     wrapperClassName="wrapper-class"
                                     editorClassName="editor-class"
                                     toolbarClassName="toolbar-class"
                                     onEditorStateChange={onEditorStateInfosChange}
-                                />
+                                /> */}
+                                <ReactQuill className="editor-class" modules={modules} value={valueHotelInfos} theme="snow" onChange={setValueHotelsInfos}/> 
                       </div>
                       <hr style={{margin:'0.5rem'}}></hr>
                       <div class='infos_contact' style={{fontFamily:'arial,helvetica,sans-serif',fontSize:11,color:'#666666',backgroundColor: '#f3f0e9',paddingTop: '1rem',paddingBottom: '1rem'}}>
@@ -234,13 +278,14 @@ function ModeleEmail(props){
                       <div style={{fontFamily:'arial,helvetica,sans-serif',marginTop: '1rem',marginLeft:'1rem',fontSize:12,color:'#333333',width:588.008}}>
                         {/* <p><span style={{fontSize:10}}>Pour toute question concernant votre réservation, veuillez appeler le département de réservation de "+ hotel.nom+" sur le [telephone de l'hotel] ou envoyer un email au <a href='"+hotel.email+"' target='_blank'>[email]</a><br/><br/></span>Salutations,<br/>[nom de l'hotel]<br/><br/></p> */}
 
-                        <Editor
+                        {/* <Editor
                                     editorState={editorStateFooter}
                                     wrapperClassName="wrapper-class"
                                     editorClassName="editor-class"
                                     toolbarClassName="toolbar-class"
                                     onEditorStateChange={onEditorStateFooterChange}
-                                />
+                                /> */}
+                                <ReactQuill className="editor-class" modules={modules} value={valueFooter} theme="snow" onChange={setValueFooter}/> 
                       </div>
                 </div>
                 <div style={{marginTop:20,display:'flex',flexDirection:'row',justifyContent:'space-between'}}>

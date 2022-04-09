@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import styles from '../Photo/PreviewPhotoChambre.module.css';
+import styles from '../../InsertTypeChambre/Photo/PreviewPhotoChambre.module.css';
 import callAPI from '../../../../../utility';
 
 const removePhotoLocal = (preview, setPreview, photo, setPhoto, indicePhoto) => {
@@ -12,10 +12,12 @@ const removePhotoLocal = (preview, setPreview, photo, setPhoto, indicePhoto) => 
   setPhoto(tmpPhoto);
 };
 
-const removePhoto = (event, preview, setPreview, photo, setPhoto, indicePhoto, state) => {
+const removePhoto = (event, preview, setPreview, photo, setPhoto, indicePhoto, state, isInsert) => {
   event.preventDefault();
-  console.log(photo);
-  if(photo[indicePhoto].startsWith("typeChambre")){
+  console.log(photo[indicePhoto]);
+  if(isInsert){
+    removePhotoLocal(preview, setPreview, photo, setPhoto, indicePhoto);
+  }else{
     callAPI('post', '/typeChambre/photo/delete', {path: photo[indicePhoto], idTypeChambre: state._id}, (data) => {
       if(data.status === 200){
         removePhotoLocal(preview, setPreview, photo, setPhoto, indicePhoto);
@@ -24,12 +26,12 @@ const removePhoto = (event, preview, setPreview, photo, setPhoto, indicePhoto, s
   }
 };
 
-export default function PreviewPhotoChambre({preview, setPreview, noImage, photo, setPhoto, state}){
+export default function PreviewPhotoChambre({preview, setPreview, noImage, photo, setPhoto, state, isInsert}){
   let list = [];
   for(let i = 0; i < preview.length; i++){
     list.push(
       <div className={styles.conteneurPhoto}>
-        <div className={styles.close}><button onClick={(e) => removePhoto(e, preview, setPreview, photo, setPhoto, i, state)}><span>X</span></button></div>
+        <div className={styles.close}><button onClick={(e) => removePhoto(e, preview, setPreview, photo, setPhoto, i, state, isInsert)}><span>X</span></button></div>
         <img className={styles.photo} src={preview[i]} />
       </div>
     );

@@ -98,7 +98,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }));
 
 export default function PersistentDrawerLeft(props) {
-console.log("TRLALALA"+ JSON.stringify(props));
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const [nbNotifs, setNbNotifs] = React.useState(0);
