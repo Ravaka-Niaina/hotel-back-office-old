@@ -144,8 +144,8 @@ function ModeleEmail(props){
         let  html="";
         var header="";
         header += "				<div  style='margin-left: 40%;'>";
-        header += "					<h3 class='test'>Confirmation de l'itineraire <\/h3>";
-        header += "					<p>Confirmation No. 12934802137<\/p>";
+        header += "					<h3 class='test'>Confirmation de l'itineraire [index] <\/h3>";
+        header += "					<p>Confirmation No. [num_itineraire]<\/p>";
         header += "				<\/div>";
         
         html+=header;  
