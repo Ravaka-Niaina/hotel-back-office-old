@@ -2,7 +2,7 @@
 import { visuallyHidden } from '@mui/utils';
 // import  Navbar  from "../../partenaire/Navbar/Navbar.js";
 import  ResponsiveDrawer  from "../Navbar/responsive-drawer.js";
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState ,convertFromHTML} from 'draft-js';
 
@@ -79,35 +79,40 @@ function ModeleEmail(props){
             // history.push('#error');
         }
     }
+    function  setModele(res){
+        if(res.status === 200){
+            // localStorage.setItem('access', 1);
+            // setAlertSuccess(res.message);
+            console.log("res");
+            let current = JSON.parse(JSON.stringify(res.data));
+            console.log(current);
+            if(current){
+                setLogo(current.logo_url);
+                setValueConfirmation(current.htmlConfirmation);
+                setValueHotelsInfos(current.htmlHotelsInfos);
+                setValueFooter(current.htmlFooter);
+            }
+        }else{
+            // setAlertError(res.errors[0].message);
+            // history.push('#error');
+        }
+    }
+
+    useEffect(() => {
+        console.log("useEffect");
+        callAPI('get', '/reservation/modeleEmail' , {}, setModele);
+    }, [])
 
     const valider=(e) =>{
-        // let htmlConfirmation = convertToHTML(editorStateConfirmation.getCurrentContent());
-        // let htmlHotelsInfos= convertToHTML(editorDataStatehotelsInfos.getCurrentContent());
-        // let htmlFooter= convertToHTML(editorDataStateFooter.getCurrentContent());
-        
-        // console.log("html");
-        // console.log(htmlConfirmation);
-        // console.log(htmlHotelsInfos);
-        // console.log(htmlFooter);
+     
 
-        // setContent({logo_url:logo,htmlConfirmation:htmlConfirmation,htmlHotelsInfos:htmlHotelsInfos,htmlFooter:htmlFooter});
-        //Call API Insert
-
-        let content = {logo_url:logo,htmlConfirmation:valueConfirmation,htmlHotelsInfos:valueHotelInfos,htmlFooter:htmlFooter}
+        let content = {logo_url:logo,htmlConfirmation:valueConfirmation,htmlHotelsInfos:valueHotelInfos,htmlFooter:valueFooter}
         const data = { content: content};
         callAPI('post', '/reservation/modeleEmail', data, handleResponse );
     }
 
     
-    // const onEditorStateConfirmationChange = (editorState) => {
-    //   setEditorStateConfirmation(editorState)
-    // }
-    // const onEditorStateInfosChange = (editorState) => {
-    //     setEditorStatehotelsInfos(editorState)
-    //   }
-    //   const onEditorStateFooterChange = (editorState) => {
-    //     setEditorStateFooter(editorState)
-    // }
+
 
     const customContentStateConverter = (contentState) => {
         // changes block type of images to 'atomic'
