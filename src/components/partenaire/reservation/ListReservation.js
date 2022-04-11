@@ -45,6 +45,7 @@ import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import {getFCMToken} from './Notification.js';
 
 const RootStyle = styled(Toolbar)(({ theme }) => ({
     height: 200,
@@ -322,7 +323,7 @@ function ListeReservation(props){
             
             <Paper sx={{ width: '100%', mb: 2, borderRadius: 5, mt:3  }}>
                 <Card sx={{ borderRadius: 5 }}>
-
+                    <button onClick={() => getFCMToken()}>Subscribe to browser notifications</button>
                     <RootStyle>
                     <InputRecherche 
                         debut={debut} setDebut={setDebut} 

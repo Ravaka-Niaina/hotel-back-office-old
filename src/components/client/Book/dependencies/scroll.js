@@ -68,6 +68,7 @@ class Scroll extends React.Component{
     static propTypes = {
         cookies: instanceOf(Cookies).isRequired
     };
+    applyFilter = () => {};
     
     constructor(props){
         super(props);
@@ -106,7 +107,11 @@ class Scroll extends React.Component{
             user_session : {
                 id:""
             },
-            isDebut: true
+            isDebut: true,
+            pagination: {
+                currentNumPage: 1,
+                nbPage: 5,
+            }
         };
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
         this.setResult = this.setResult.bind(this);
@@ -115,6 +120,12 @@ class Scroll extends React.Component{
         const intervalId = setInterval(() => {
             that.checkExpirationCookie();
         }, 30000);
+    }
+
+    setCurrentNumPage(numPage){
+        let tmpState = JSON.parse(JSON.stringify(this.state));
+        tmpState.pagination.currentNumPage = numPage;
+        this.setState(tmpState);
     }
     
     clearCookies(){

@@ -23,7 +23,6 @@ function Promotions(props){
     
     if(props.tab != null){
         promo = props.tab.map(prom => {
-            console.log(prom)
             return(
                 <HtmlTooltip  title={prom.nom} placement="right-start">
                 <Card className={styles.promotion}>

@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-  ]
+, "src/components/partenaire/reservation/firebase-messaging-sw.js"  ]
 }
