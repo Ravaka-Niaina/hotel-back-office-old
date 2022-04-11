@@ -89,14 +89,16 @@ function ApplyReservation(props){
 
     const register = (e) => {
         e.preventDefault();
-        const data = {
-            nom: reservateur.nom.trim(),
-            prenom: reservateur.prenom.trim(),
-            email: reservateur.email.trim(),
-            mdp: user.mdp.trim(),
-            confirmMdp: user.confirmMdp.trim()
-        };
-        callAPI('post', '/user/register', data, interpretResponse);
+        if(isConnectionShowing){
+            const data = {
+                nom: reservateur.nom.trim(),
+                prenom: reservateur.prenom.trim(),
+                email: reservateur.email.trim(),
+                mdp: user.mdp.trim(),
+                confirmMdp: user.confirmMdp.trim()
+            };
+            callAPI('post', '/user/register', data, interpretResponse);
+        }
     };
 
     function AnnulationReservationChambre(e){
