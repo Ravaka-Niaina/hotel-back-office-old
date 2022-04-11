@@ -35,6 +35,7 @@ const BookComponent = (props) => {
     }
 
     function setResult(res){
+        console.log(res);
         let currentState = {...props.context.state};
         currentState.listTypeChambre = res.list;
         currentState.isListTarifDispoReceived = true;
@@ -42,6 +43,8 @@ const BookComponent = (props) => {
             currentState.dateSejour.debut = '';
             currentState.dateSejour.fin = '';
         }
+        currentState.pagination.nbPage = res.nombrePages;
+        currentState.pagination.currentNumPage = 1;
         props.context.setState(currentState);
         setLoadingFilter(false);
         props.context.changeOpenFiltre(false);
@@ -49,7 +52,7 @@ const BookComponent = (props) => {
         setReloadSelectedDatePrices(false);
     }
 
-    function applyFilter(moreData, reloadDate){
+    function applyFilter(moreData, reloadDate, numPage){
         setLoadingFilter(true);
         if(reloadDate){
             setReloadSelectedDatePrices(true);
@@ -60,12 +63,14 @@ const BookComponent = (props) => {
                 filtres: moreData,
                 guests: props.context.state.guests,
                 dateDebut: props.context.state.dateSejour.debut,
-                dateFin: props.context.state.dateSejour.fin
+                dateFin: props.context.state.dateSejour.fin,
+                numPage: numPage ? numPage : 1
             }
             props.context.handleChange("isListTarifDispoReceived", false);
             callAPI('post', '/TCTarif/', data, setResult);
         }
     }
+    props.context.applyFilter = applyFilter;
     const [loadingFilter, setLoadingFilter] = React.useState(false);
   return(
     <div className={styles.Book}>

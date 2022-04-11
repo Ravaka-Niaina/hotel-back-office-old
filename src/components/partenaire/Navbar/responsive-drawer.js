@@ -23,8 +23,6 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
 
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import DocumentScannerOutlinedIcon from '@mui/icons-material/DocumentScannerOutlined';
 import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import BedroomChildOutlinedIcon from '@mui/icons-material/BedroomChildOutlined';
@@ -38,15 +36,11 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import GroupIcon from '@mui/icons-material/Group';
 import AddCardIcon from '@mui/icons-material/AddCard';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
-import { components } from 'react-select';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
 
 import { useHistory } from 'react-router-dom';
 import callAPI from '../../../utility.js';
 
 import Grid from '@mui/material/Grid';
-import { Bluetooth } from '@mui/icons-material';
 
 const drawerWidth = 280;
 
@@ -101,6 +95,10 @@ export default function PersistentDrawerLeft(props) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const [nbNotifs, setNbNotifs] = React.useState(0);
+
+  useEffect(() => {
+    
+  }, []);
 
   var init = true;
 

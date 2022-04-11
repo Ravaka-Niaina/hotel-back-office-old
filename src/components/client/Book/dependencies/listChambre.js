@@ -13,6 +13,9 @@ import PhotoTypeChambre from './photoTypeChambre.js';
 import {Font} from '../../../partenaire/chambre/utilityTypeChambre.js';
 import callAPI from '../../../../utility';
 
+import Pagination from '@mui/material/Pagination';
+import Stack from '@mui/material/Stack';
+
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     padding: theme.spacing(1),
@@ -56,6 +59,7 @@ class DChambre extends React.Component{
             listTypeChambre : []
         };
     }
+
     switchShowDetailsTC(indexTypeChambre){
         let temp = {...this.props.context.state};
         temp.listTypeChambre[indexTypeChambre].show = !temp.listTypeChambre[indexTypeChambre].show;
@@ -178,7 +182,14 @@ class DChambre extends React.Component{
             } 
         return (
             <div>
-                 {listChambre}
+                {listChambre}
+                <Stack spacing={2}>
+                    <Pagination
+                        page={this.props.context.state.pagination.currentNumPage} 
+                        count={this.props.context.state.pagination.nbPage}
+                        onChange={(e, val) => {this.props.context.setCurrentNumPage(val); this.props.context.applyFilter(undefined, undefined, val) }}
+                    />
+                </Stack>
             </div>
         );
     }
