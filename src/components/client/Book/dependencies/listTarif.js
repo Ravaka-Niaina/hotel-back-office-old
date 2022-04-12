@@ -11,11 +11,8 @@ import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import InfoPolitiqueAnnul from './infoPolitiqueAnnul.js';
 import { styled } from '@mui/material/styles';
 import callAPI from '../../../../utility.js';
-import numeroConfirmation from './numeroConfirmation.js';
 import PolicyIcon from '@mui/icons-material/Policy';
 import Reservation from '../../reservation';
-import axios from "axios";
-import {session} from "../../../../components/common/utilitySession.js";
 import {getDiffDays} from '../../../../utility/utilityDate.js';
 import ButtonLoading from '../../../partenaire/buttonLoading.js';
 import { useTranslation } from "react-i18next";
@@ -33,37 +30,6 @@ const style = {
     px: 4,
     pb: 3,
   };
-
-function getNDigits(number, digit){
-    digit = digit + '';
-    const remain = number - digit.length;
-    for(let i = 0; i < remain; i++){
-        digit = "0" + digit;
-    }
-    return digit;
-}
-
-function getDateNotEspace(date){
-    date = new Date(date);
-    let year = date.getFullYear()+"";
-    let month = getNDigits(2, date.getMonth() + 1);
-    let day = getNDigits(2, date.getDate());
-    let annee = '';
-    for (let i = year.length-1; i > 1 ; i--){
-        annee = annee+year[i];   
-    }
-    date = annee  + month  + day;
-    return date;
-}
-
-function getDate(date){
-    date = new Date(date);
-    let year = date.getFullYear();
-    let month = getNDigits(2, date.getMonth() + 1);
-    let day = getNDigits(2, date.getDate());
-    date = year + '-' + month + '-' + day;
-    return date;
-}
 
 function ListTarif(props){
     const [error, setError] = React.useState(null);
@@ -85,113 +51,6 @@ function ListTarif(props){
          
         }else{
             console.log(res);
-        }
-    }
-
-    function NumeroIntineraire (random , nameHotel ,TChambre){
-        let hotel = '';
-        const number = 3;
-        const min = 1;
-        const max = 1000000;
-        const nameTC = TChambre.split(" ");
-        let rand = min + Math.random() * (max - min);
-        rand = Number.parseInt(rand);
-        let now = new Date();
-        let date = getDateNotEspace(now);
-        for(let i = 0; i < number ; i++){
-            hotel = hotel + nameHotel[i] ;
-        }
-        
-        try{//A revoir
-            return random = date+hotel+(random + rand)+nameTC[0][0] + nameTC[1][0];
-        }catch(err){
-            return random = date+hotel+(random + rand)+nameTC[0][0] + nameTC[0][0];
-        }
-        
-    }
-
-    function addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre,tarif,toPay){
-        setShowButton(true);
-        // if(props.context.state.itineraires.length === 0){
-        //     let temp = {...props.context.state};
-        //     temp.err = "Veuillez d'abord choisir une date de sejour";
-        //     props.context.setState(temp);
-        // }
-        let isFirstTarif=false;
-        if(props.context.state.itineraires.length > 0){
-
-            let itineraires = JSON.parse(JSON.stringify(props.context.state.itineraires));
-            let dateSejour = props.context.state.dateSejour;
-            const lastItineraire = itineraires.length - 1;
-            const lastTarif = itineraires[lastItineraire].tarifReserves.length - 1;
-            if(itineraires[lastItineraire].tarifReserves.length > 0){
-                dateSejour = {
-                    debut: itineraires[itineraires.length - 1].tarifReserves[lastTarif].dateSejour.debut,
-                    fin: itineraires[itineraires.length - 1].tarifReserves[lastTarif].dateSejour.fin
-                };
-            }
-            if(props.context.state.itineraires.length == 1 && itineraires[lastItineraire].tarifReserves.length==0){
-                    isFirstTarif=true;
-            }
-            //numero itineraire
-            const Random = NumeroIntineraire(props.context.state.random , props.context.state.nameHotel,TChambre);
-            //numero confirmation
-            const numeroConfirm = numeroConfirmation(0,props.context.state.nameHotel, TChambre);
-            // console.log(numeroConfirm);
-          
-            // const data = {itineraires: itineraires , numeroIntineraire : Random };
-            //  callAPI("get" , "/TypeChambre/detailsChambre/"+idTypeChambre , {} , typeChambre);
-                
-                let headers = {
-                    idsession: session.getInstance().getId(),
-                    ispartner: session.getInstance().getIsPartner()
-                };
-                const session_temp = localStorage.getItem("session_temp");
-                if(session_temp !== null){
-                    headers.session_temp = session_temp;
-                }
-                axios({
-                    method: "get",      
-                    url: process.env.REACT_APP_BACK_URL + "/TypeChambre/detailsChambre/"+idTypeChambre,
-                    withCredentials: true,
-                    data: {},
-                    headers: headers
-                })
-                .then(res => {                                           
-                    let typeChambre = res.data.typeChambre;
-                    console.log("typeChambre");
-                    console.log(typeChambre);
-                    console.log(TChambre);
-                    if(res.data.status==200){
-                        itineraires[lastItineraire].NumeroITineraire =Random;
-                        itineraires[lastItineraire].tarifReserves.push({
-                            idTarif: id, 
-                            dateSejour: dateSejour,
-                            dateReservation: getDate(Date.now()),
-                            guests: props.context.state.guests,
-                            idTypeChambre : idTypeChambre,
-                            nbPers: nbPers,
-                            reservateurWithEmail: {nom: "", prenom: "", email: "", tel: ""},
-                            numeroConfirmation : numeroConfirm,
-                            nomTypeChambre:typeChambre.nom,
-                            TypeChambreName:typeChambre.name,
-                            politiqueAnnulAtrb:tarif.politiqueAnnulAtrb,
-                            nomTarif:tarif.nom,
-                            TarifName:tarif.name,
-                            toPay:{afterProm:toPay.prix,beforeProm:toPay.prixOriginal},
-                        }); 
-                          
-                        let reserv = props.context.state.reservationEnCours;
-                        reserv.itineraires=itineraires;
-                        console.log(reserv);
-                        props.context.setReservationEnCours(reserv,true,isFirstTarif);
-                    }
-                })
-                .catch(err =>{console.log(err); console.log("erreur");} );
-
-
-         
-
         }
     }
 
@@ -258,7 +117,8 @@ function ListTarif(props){
                                                 </div>
                                                 <div className={styles.bookNow}>
                                                     <Button variant="contained"
-                                                        onClick = {(e) => addReservation(e,tarif._id, tarif.nom, props.idTypeChambre, version.nbPers , props.nameTC,tarif,version)}
+                                                        onClick = {(e) => props.contextListChambre.addReservation(e,tarif._id, tarif.nom, props.idTypeChambre
+                                                            , version.nbPers , props.nameTC,tarif,version, setShowButton)}
                                                         endIcon={<AddIcon/>}
                                                         className="bookNow"
                                                     >

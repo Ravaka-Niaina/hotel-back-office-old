@@ -1,8 +1,13 @@
 import React from 'react';
+import { useEffect } from 'react';
 import styles from './Book.module.css';
 import Navbar  from "../NavbarClient/Navbar";
 import {Button, TextField, Box, InputAdornment, ToggleButtonGroup, ToggleButton, Typography} from '@mui/material';
 import {ManageSearch, Search, ArrowDropDown, PersonOutline} from '@mui/icons-material';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from 'react-select';
+import MenuItem from '@mui/material/MenuItem';
 import BaeCalendar from "./calendar/calendar.js";
 import Guest from "./guest.js";
 import Filtre from "./dependencies/Filtre.js";
@@ -11,11 +16,20 @@ import { useTranslation } from "react-i18next";
 
 import {EventNote, ExpandMore} from '@mui/icons-material';
 
+let regrouperResultatsParChanged = false;
 const BookComponent = (props) => {
     const [groupby, setGroupBy] = React.useState('a');
     const [priceCheapestRate, setPriceCheapestRate] = React.useState(null);
     const [reloadSelectedDatePrices, setReloadSelectedDatePrices] = React.useState(false);
+    const [regrouperResultatsPar, setRegrouperResultatsPar] = React.useState("typeChambre");
     const { t, i18n } = useTranslation();
+    
+    useEffect(() => {
+        if(regrouperResultatsParChanged){
+            applyFilter();
+            regrouperResultatsParChanged = false;
+        }
+    });
 
     const changeLanguageHandler = (e) => {
         const languageValue = e.target.value
@@ -64,12 +78,19 @@ const BookComponent = (props) => {
                 guests: props.context.state.guests,
                 dateDebut: props.context.state.dateSejour.debut,
                 dateFin: props.context.state.dateSejour.fin,
-                numPage: numPage ? numPage : 1
+                numPage: numPage ? numPage : 1,
+                regrouperParTypeChambre: regrouperResultatsPar == "planTarifaire" ? false : true
             }
             props.context.handleChange("isListTarifDispoReceived", false);
             callAPI('post', '/TCTarif/', data, setResult);
         }
     }
+
+    function handleChangeRegrouperResultatsPar(value){
+        regrouperResultatsParChanged = true;
+        setRegrouperResultatsPar(value);
+    }
+
     props.context.applyFilter = applyFilter;
     const [loadingFilter, setLoadingFilter] = React.useState(false);
   return(
@@ -146,9 +167,15 @@ const BookComponent = (props) => {
             <Button variant="outlined" startIcon={<ManageSearch />} onClick={(e) => props.context.changeOpenFiltre(true)}>
             {t('filter')}
             </Button>
-                <div>
-                    <span><strong>{ props.context.state.listTypeChambre.length }</strong>{t('matching rooms')}</span>
-                </div>
+            <div>
+                <span><strong>{ props.context.state.listTypeChambre.length }</strong>{t('matching rooms')}</span>
+            </div>
+
+            <label for="regrouperResultatsPar">Regrouper résultats par</label>
+            <select name="regrouperResultatsPar" onChange={(e) => handleChangeRegrouperResultatsPar(e.target.value)}>
+                <option value="typeChambre">Type chambre</option>
+                <option value="planTarifaire">Plan tarifaire</option>
+            </select>
         </Box>
         <Filtre context={props.context} applyFilter={applyFilter} loadingFilter={loadingFilter} />
     </div>
