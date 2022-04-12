@@ -17,6 +17,9 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import 'react-quill/dist/quill.bubble.css';
 import callAPI from '../../../utility';
+import Galerie from '../Galerie/Galerie.js';
+import { Alert, Stack } from '@mui/material';
+import GalerieUnique from '../Galerie/GalerieUnique.js';
 
 function ModeleEmail(props){
     
@@ -32,7 +35,7 @@ function ModeleEmail(props){
     // const editorDataStatehotelsInfos = EditorState.createWithContent(contentDataStatehotelsInfos);
     // const [editorStatehotelsInfos, setEditorStatehotelsInfos] = useState(editorDataStatehotelsInfos);
 
-    
+    let nbPhotoBefore = {value: 0};
     const  modules  = {
         toolbar: [
             [{ font: [] }],
@@ -56,8 +59,16 @@ function ModeleEmail(props){
     const [valueConfirmation, setValueConfirmation] =  useState(confiramtionHeader);
     const [valueHotelInfos, setValueHotelsInfos] =  useState(hotelsInfos);
     const [valueFooter, setValueFooter] =  useState(htmlFooter);
+    const [photo, setPhoto] = useState([]);
+    const [preview, setPreview] = useState([]);
+    const [alertSuccess, setAlertSuccess] = useState(null);
+    const [alertError, setAlertError] = useState(null);
+    const [showGalerie, setShowGalerie] = useState(false);
 
-
+    const switchShowGalerie = (e) => {
+      e.preventDefault();
+      setShowGalerie(!showGalerie);
+    };
     
 
     const popupCloseHandler = (e) => {
@@ -72,10 +83,10 @@ function ModeleEmail(props){
       
         if(res.status === 200){
             // localStorage.setItem('access', 1);
-            // setAlertSuccess(res.message);
+              setAlertSuccess(res.message);
             // history.push("/reservation/" + _id + "/voucher");
         }else{
-            // setAlertError(res.errors[0].message);
+             setAlertError(res.errors[0].message);
             // history.push('#error');
         }
     }
@@ -176,14 +187,28 @@ function ModeleEmail(props){
         
         <>
           
-          <LogoComponent
+          {/* <LogoComponent
                             onClose={popupCloseHandler}
                             show={visibility}
                             title="Logo"
                             logo={logo}
                             changeLogo={changeLogo}
                             
-                            /> 
+                            />  */}
+                        {alertSuccess != null ? 
+                            <div id="success">
+                                <Stack sx={{ width: '100%' }} spacing={2}>
+                                <Alert severity="success">{alertSuccess}</Alert>
+                                </Stack>
+                            </div> : null
+                        }
+                        {alertError != null ?
+                            <div id="error">
+                                <Stack sx={{ width: '100%' }} spacing={2}>
+                                    <Alert severity="error">{alertError}</Alert>
+                                </Stack>
+                            </div> : null
+                        }
           <div class="container" style={{fontFamily:'Roboto,RobotoDraft,Helvetica,Arial,sans-serif',width:1000,margin:'0 auto',padding:'0 auto',marginTop:'20%'}}>
               
                 
@@ -202,11 +227,14 @@ function ModeleEmail(props){
                         <div class='header'  style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}} >
                             <img style={{width:'35%',height:'115%' }} src={logo} alt='logo'/>
                            <div>
-                             <img style={{width:'35%',marginLeft:10,marginTop:30 }} onClick={(e) => setVisibility(!visibility)} src={process.env.PUBLIC_URL + '/camera.png'} />
-                                
-                                    
+                             <img style={{width:'35%',marginLeft:10,marginTop:30 }}  onClick={switchShowGalerie} src={process.env.PUBLIC_URL + '/camera.png'} />
+                                      
                             </div> 
-                           
+                            
+                            <GalerieUnique showGalerie={showGalerie} setShowGalerie={setShowGalerie} 
+                            photoSortie={photo} setPhotoSortie={setPhoto} nbPhotoBeforeSortie={nbPhotoBefore} setLogo={setLogo}
+                            previewSortie={preview} setPreviewSortie={setPreview} />
+
                             <div style={{marginTop:'-10%',marginLeft:'10%'}}>
                                 {/* <Editor
                                     editorState={editorStateConfirmation}
@@ -293,8 +321,8 @@ function ModeleEmail(props){
                                 <ReactQuill className="editor-class" modules={modules} value={valueFooter} theme="snow" onChange={setValueFooter}/> 
                       </div>
                 </div>
-                <div style={{marginTop:20,display:'flex',flexDirection:'row',justifyContent:'space-between'}}>
-                    <button class="button_mail btn_blue">Previsualiser</button>
+                <div style={{marginTop:20,display:'flex',flexDirection:'row',justifyContent:'flex-end'}}>
+                    {/* <button class="button_mail btn_blue">Previsualiser</button> */}
                     <button onClick={valider} class="button_mail btn_red">Sauvegarder</button>
                 </div>
                 
