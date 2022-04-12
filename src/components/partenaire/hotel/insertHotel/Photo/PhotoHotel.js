@@ -2,7 +2,7 @@ import { useState } from 'react';
 import {FileInput} from '../utilityHotel.js';
 import PreviewPhotoHotel from './PreviewPhotoHotel.js';
 
-export default function Photo({state, setState, noImage}){
+export default function Photo({state, setState, noImage,setIsModifImg}){
 
     const [nbImage, setNbImage] = useState(1);
 
@@ -10,6 +10,7 @@ export default function Photo({state, setState, noImage}){
         let currentState = JSON.parse(JSON.stringify(state));
         currentState.photo = [];
         currentState.preview = [];
+        setIsModifImg(true);
         let finished = 0;
         for(let i = 0; i < e.target.files.length; i++){
             const u = i;

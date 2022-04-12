@@ -16,7 +16,7 @@ import callAPI from '../../../utility.js';
 import ButtonLoading from "../buttonLoading.js";
 import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
 import  ResponsiveDrawer  from "../Navbar/responsive-drawer.js";
-import PhotoChambre from './insertHotel/Photo/PhotoChambre.js';
+import PhotoHotel from './insertHotel/Photo/PhotoHotel.js';
 
 import MapPicker from "react-google-map-picker";
 
@@ -43,6 +43,7 @@ function InsertHotel() {
       checkOut : null,
       adresse : null,
       photo : null,
+      nom : null,
     },
 
     lien : "",
@@ -55,6 +56,7 @@ function InsertHotel() {
     checkIn : "",
     checkOut : "",
     adresse : "",
+    nom : "",
 
     ageEnfant: { min: '', max: '' },
     ageBebe: { min: '', max: '' },
@@ -65,8 +67,6 @@ function InsertHotel() {
   const [defaultLocation, setDefaultLocation] = useState(DefaultLocation);
   const [location, setLocation] = useState({lat: '', lng: ''});
   const [zoom, setZoom] = useState(DefaultZoom);
-  const [photo, setPhoto] = useState([]);
-  const [preview, setPreview] = useState([]);
 
   function handleChangeLocation(lat, lng) {
     setLocation({ lat: lat, lng: lng });
@@ -85,6 +85,7 @@ function InsertHotel() {
   const [skeletonAffiche, setSkeleton] = useState(true);
   const [taxe, setTaxe] = useState(true);
   const [maps, setMaps] = useState(false);
+  const [isModifImg, setIsModifImg]= useState(false);
 
   const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
 
@@ -92,10 +93,7 @@ function InsertHotel() {
 
   const { _id } = useParams();
 
-  function removeError(fields){
-    let current = {...state};
-
-  }
+  
 
   function setDetailsHotel(data){
     let error = {...state.error};
@@ -104,12 +102,14 @@ function InsertHotel() {
     current.error = error;
     
     setLocation(data.hotel.location);
+
     
     if(current.photo != '' || 
     current.photo != undefined ||
     current.photo != null){
       current.preview = [];
             for(let i = 0; i < current.photo.length; i++){
+              console.log(current.photo[i]);
               current.preview[i] = process.env.REACT_APP_BACK_URL + "/" + current.photo[i];
             }
         }
@@ -161,6 +161,8 @@ function InsertHotel() {
     e.preventDefault();
     let toSend = JSON.parse(JSON.stringify(state));
     toSend.location=location;
+    toSend.isModifImg=isModifImg;
+
     setBtnLoad(true);
 
     callAPI('post', '/hotel/update', toSend, tryRedirect);
@@ -271,6 +273,22 @@ function InsertHotel() {
           <h4 id="title1">{isInsert ? "Ajouter une nouvelle hotel" : "Modifier une hotel"}</h4><br/>
 
         <div className="form-group" style={{}}>
+
+        <TextField
+                id="outlined-basic"
+                label="Nom"
+                variant="outlined"
+                className="form-control"
+                style={{width:"400px",marginTop:"15px"}}
+                size="small"
+                type="text"
+                name="nom"
+                onChange={(e) => handleInputChange(e, "nom")}
+                value={state.nom}
+                error={state.error.nom === null ? false : true}
+                helperText={state.error.nom === null ? null : state.error.nom}
+            />
+
             <TextField
                 id="outlined-basic"
                 label="lien"
@@ -357,10 +375,10 @@ function InsertHotel() {
 
         </div>
 
-        <PhotoChambre state={state} setState={setState} noImage={noImage}/>
+        <PhotoHotel state={state} setState={setState} noImage={noImage} setIsModifImg={setIsModifImg}/>
 
         <div className="form-group" style={{marginTop:'15px'}}>
-        <label >Horaire</label><br/>
+        <label style={{textDecoration:'underline'}} id='bigLabel'>Horaire</label><br/>
          <div style={{marginTop:'15px'}}>
           <box>
             <TextField
@@ -408,10 +426,11 @@ function InsertHotel() {
       name="radio-buttons-group"
     >
       <div className ="" style={{marginTop:'15px'}}>
-      <label>Votre tarifs inclus déjà la TVA ?</label>
+      <label style={{textDecoration:'underline'}} id='bigLabel'>Votre tarifs inclus déjà la TVA ?</label>
         <div className="">
           <FormControlLabel
             value="oui"
+            checked={state.TVA ? true : false }
             onClick={(e) => {handleIsTvaChange(true);setTaxe(true)}}
             control={<Radio />}
             label={<span id="litleLabel">Oui</span>}
@@ -420,6 +439,7 @@ function InsertHotel() {
         <div className="">
           <FormControlLabel
             value="non"
+            checked={state.TVA ? false : true}
             onClick={(e) => {handleIsTvaChange(false);setTaxe(false)}}
             control={<Radio />}
             label={<span id="litleLabel">Non</span>}
@@ -429,6 +449,8 @@ function InsertHotel() {
     </RadioGroup>
 
     <div className ="" style={{marginTop:'15px'}}>
+        { state.TVA ?
+         <div>
           { taxe ?
            <TextField
                 id="outlined-basic"
@@ -447,10 +469,14 @@ function InsertHotel() {
             :
             null
           }
+         </div>
+            :
+            null
+          }
       </div>
 
         <div className="form-group" style={{marginTop:"20px"}}>
-        <label>Age</label>
+        <label style={{textDecoration:'underline'}} id='bigLabel'>Age</label>
         <br/>
          <div style={{marginTop:'15px'}}>
           <box>
@@ -561,7 +587,7 @@ function InsertHotel() {
       }
     </div>
     <div class="bouton-aligne">
-      <Link to={'/back/promotion'} style={{textDecoration:'none'}}>
+      <Link to={'/back/hotel'} style={{textDecoration:'none'}}>
         <Button variant="outlined"
         id="btn2"
         >
