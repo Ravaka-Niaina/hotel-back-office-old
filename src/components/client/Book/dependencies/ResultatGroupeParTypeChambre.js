@@ -38,8 +38,16 @@ const ResultatGroupeParTypeChambre = (props) => {
                                         );
                                     })}
                                 </div>
-                                <div>promotion: {typeChambre.listPromotion[0].nom}</div>
-                                <div>politique d'annulation: {typeChambre.politiqueAnnulAtrb[0].nom}</div>
+                                {
+                                    typeChambre.listPromotion.length > 0
+                                    ? <div>promotion: {typeChambre.listPromotion[0].nom}</div>
+                                    : null
+                                }
+                                {
+                                    typeChambre.politiqueAnnulAtrb.length > 0
+                                    ? <div>politique d'annulation: {typeChambre.politiqueAnnulAtrb[0].nom}</div>
+                                    : null
+                                }
                                 <div className="prix">
                                     {typeChambre.toPayStay.map((version, v) => {
                                         return(
