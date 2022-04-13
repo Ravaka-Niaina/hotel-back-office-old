@@ -136,12 +136,18 @@ const Login = (props) => {
         }
         setLoading(false);
     };
+
     function IdBrowser(object){
-        var crypto = require("crypto");
-        var id = crypto.randomBytes(20).toString('hex');
+        var id = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"!#$%';
+        for ( var i = 0; i < characters.length; i++ ) {
+            id += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+
         object.idBrowser = id;
         object.isInsert = true;
         localStorage.setItem('idBrowser', id);
+        console.log(object);
         return object;
     }
     const login = (e) => {
