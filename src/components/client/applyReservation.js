@@ -171,6 +171,8 @@ function ApplyReservation(props){
     }
 
     function setDetailReservation(res){
+        console.log("details reservation");
+        //
         setOpenLoad(false);
         if(res.reservation == null){
             setOpenLoad(false);

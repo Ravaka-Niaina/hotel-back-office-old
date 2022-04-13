@@ -110,6 +110,7 @@ const DayLine = (props) => {
         for(var j = min; j <= max; j++) {
             tmp.push(j);
         }
+        console.log(tmp);
         setSelecteds(tmp);
         setSelectedY(y);
         if(props.daterange[i] < bornesEditDate[0]){

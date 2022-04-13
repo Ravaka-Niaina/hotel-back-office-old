@@ -14,6 +14,10 @@ import  DetailsUser from "./components/partenaire/User/DetailsUser.js";
 import  InsertTypeChambre  from "./components/partenaire/chambre/InsertTypeChambre.js";
 import  ListTypeChambre  from "./components/partenaire/chambre/ListTChambre.js";
 
+import  InsertHotel  from "./components/partenaire/hotel/createHotel.js";
+import  HotelList  from "./components/partenaire/hotel/listHotel.js";
+import  Localisation  from "./components/partenaire/hotel/localisation";
+
 import  InsertTarif  from "./components/partenaire/Calendrier/tarif/InsertTarif.js";
 
 import Tarif from "./components/partenaire/Calendrier/tarif/Tarif.js";
@@ -136,6 +140,11 @@ export default function Routes() {
             <Route path="/back/politique/testData" exact component={testData} />
             <Route path="/back/reservation" exact component={ListeReservation} />
             <Route path="/back/reservation/notif" exact component={ListeReservation} />
+
+            <Route path="/back/hotel/insert" exact component={InsertHotel} />
+            <Route path="/localisation" exact component={Localisation} />
+            <Route path="/back/hotel/detail/:_id" exact component={InsertHotel} />
+            <Route path="/back/hotel" exact component={HotelList} />
 
 
             <Route path="/" exact component={AppClient} />
