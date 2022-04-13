@@ -18,6 +18,7 @@ import stylesLogin from './Login.module.css';
 import Grid from '@mui/material/Grid';
 import * as Yup from 'yup';
 import { useState } from 'react';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
 
 import { useFormik, Form, FormikProvider } from 'formik';
 // material
@@ -43,6 +44,10 @@ import { LoginForm } from '../../../sections/authentication/login';
 import AuthSocial from '../../../sections/authentication/AuthSocial';
 
 // ----------------------------------------------------------------------
+import VerifyCompte from "./VerifyCompte";
+
+
+
 
 const RootStyle = styled(Page)(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
@@ -80,8 +85,11 @@ const Login = (props) => {
     const [errorMdp, setErrorMdp] = React.useState(null);
     const [ambiguousError, setAmbiguousError] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
+    const [isVerifyCompte , setIsVerifyCompte] = React.useState(false);
+    const [DataVerify , setIsDataVerify] = React.useState();
+    const [codeVerifyPhone , setCodeVerifyPhone] = React.useState();
 
-
+    const [errorCode, setErrorCode] = React.useState(null);
     const history = useHistory();
 
     useEffect(() => {
@@ -102,7 +110,16 @@ const Login = (props) => {
             }else{
                 history.push(isPartner ? '/back' : '/front');
             }
-        }else{
+        }else if(data.status === 400){
+            setIsVerifyCompte(true);
+            setIsDataVerify(data.body);
+        
+        }else if(data.status === 500){
+            setIsVerifyCompte(true);
+            setIsDataVerify(data.body);
+            setErrorCode(data.message);
+        }
+        else{
             const setErrors = [
                 {field: "ambiguous", setter: setAmbiguousError},
                 {field: "email", setter: setErrorEmail},
@@ -119,19 +136,32 @@ const Login = (props) => {
         }
         setLoading(false);
     };
-
+    function IdBrowser(object){
+        var crypto = require("crypto");
+        var id = crypto.randomBytes(20).toString('hex');
+        object.idBrowser = id;
+        object.isInsert = true;
+        localStorage.setItem('idBrowser', id);
+        return object;
+    }
     const login = (e) => {
         e.preventDefault();
+        var ObjectBrowser = {idBrowser : "" , isInsert : false};
+        if(!localStorage.getItem('idBrowser')){
+            ObjectBrowser = IdBrowser(ObjectBrowser);
+        }
+        ObjectBrowser.idBrowser = localStorage.getItem('idBrowser');
+
         setLoading(true);
         setAmbiguousError(null);
-        let test = "ye";
-        test = "aaa";
-        test = "inona?";
+
         const data = {
             isPartner: isPartner,
             email: email.trim(),
-            mdp: mdp.trim()
+            mdp: mdp.trim(),
+            browser : ObjectBrowser,
         };
+
         axios({
             method: "post",      
             url: process.env.REACT_APP_BACK_URL + '/user/login',
@@ -141,6 +171,30 @@ const Login = (props) => {
         .then(res => interpretResponse(res))
         .catch(err =>{console.log(err); console.log("erreur");} );
     };
+   
+
+    function verify(e){
+        e.preventDefault();
+
+        setLoading(true);
+        const data = {
+            isPartner: DataVerify.isPartner,
+            email: DataVerify.email.trim(),
+            mdp: DataVerify.mdp.trim(),
+            codeVerifyPhone :codeVerifyPhone.trim(),
+            browser :   localStorage.getItem('idBrowser')
+        };
+        axios({
+            method: "post",      
+            url: process.env.REACT_APP_BACK_URL + '/user/verify',
+            withCredentials: true,
+            data: data
+        })
+        .then(res => interpretResponse(res))
+        .catch(err =>{console.log(err); console.log("erreur");} );
+    };
+
+
 
     const register = (e) => {
         e.preventDefault();
@@ -178,161 +232,100 @@ const Login = (props) => {
     
     return(
         <>
-        <Grid container spacing={2}>
-            {/* <Grid item xs={4}> */}
-                {/* <AuthLayout>
-                    Don’t have an account? &nbsp;
-                    <Link underline="none" variant="subtitle2" component={RouterLink} to="/register">
-                    Get started
-                    </Link>
-                </AuthLayout> */}
-
-                {/* <SectionStyle sx={{ display: { xs: 'none', md: 'flex' } }}>
-                    <img src="/static/illustrations/illustration_login.png" alt="login" />
-                </SectionStyle> */}
-            {/* </Grid> */}
-            <Grid item xs={12}>
-                <Container maxWidth="sm">
-                    <ContentStyle>
-                    <Stack sx={{ mb: 5 }}>
-                        <Typography variant="h4" gutterBottom>
-                        <h1>{isPartner ? "Se connecter en tant que partenaire" : "Se connecter"}</h1>
-                          {ambiguousError === null ? null : <Alert severity="error">{ambiguousError}</Alert>}
-                        </Typography>
-                        <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
-                    </Stack>
-                    <AuthSocial />
-
-                    {/* <LoginForm /> */}
-                    <FormikProvider value={formik}>
-                        <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-                            <Stack spacing={3}>
-                            <TextField
-                                fullWidth
-                                autoComplete="username"
-                                type="email"
-                                label="Email address"
-                                {...getFieldProps('email')}
-                                value={email} onChange={(e) => {setErrorEmail(null); setEmail(e.target.value)}}
-                                error={errorEmail === null ? false : true}
-                                onKeyDown={keyPress}
-                                helperText={errorEmail === null ? null : errorEmail}
-                            />
-
-                            <TextField
-                                fullWidth
-                                autoComplete="current-password"
-                                type={showPassword ? 'text' : 'password'}
-                                label="Password"
-                                {...getFieldProps('password')}
-                                InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                    <IconButton onClick={handleShowPassword} edge="end">
-                                        <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                                    </IconButton>
-                                    </InputAdornment>
-                                )
-                                }}
-                                value={mdp} onChange={(e) => {setErrorMdp(null); setMdp(e.target.value)}}
-                                error={errorMdp === null ? false : true}
-                                onKeyDown={keyPress}
-                                helperText={errorMdp === null ? null : errorMdp}
-                            />
+        {
+            !isVerifyCompte ? 
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <Container maxWidth="sm">
+                            <ContentStyle>
+                            <Stack sx={{ mb: 5 }}>
+                                <Typography variant="h4" gutterBottom>
+                                <h1>{isPartner ? "Se connecter en tant que partenaire" : "Se connecter"}</h1>
+                                {ambiguousError === null ? null : <Alert severity="error">{ambiguousError}</Alert>}
+                                </Typography>
+                                <Typography sx={{ color: 'text.secondary' }}>Enter your details below.</Typography>
                             </Stack>
+                            <AuthSocial />
 
-                            <LoadingButton
-                            fullWidth
-                            size="large"
-                            type="submit"
-                            variant="contained"
-                            loading={isSubmitting}
-                            onClick={(e) => login(e)}
+                            <FormikProvider value={formik}>
+                                <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+                                    <Stack spacing={3}>
+                                    <TextField
+                                        fullWidth
+                                        autoComplete="username"
+                                        type="email"
+                                        label="Email address"
+                                        {...getFieldProps('email')}
+                                        value={email} onChange={(e) => {setErrorEmail(null); setEmail(e.target.value)}}
+                                        error={errorEmail === null ? false : true}
+                                        onKeyDown={keyPress}
+                                        helperText={errorEmail === null ? null : errorEmail}
+                                    />
+
+                                    <TextField
+                                        fullWidth
+                                        autoComplete="current-password"
+                                        type={showPassword ? 'text' : 'password'}
+                                        label="Password"
+                                        {...getFieldProps('password')}
+                                        InputProps={{
+                                        endAdornment: (
+                                            <InputAdornment position="end">
+                                            <IconButton onClick={handleShowPassword} edge="end">
+                                                <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                                            </IconButton>
+                                            </InputAdornment>
+                                        )
+                                        }}
+                                        value={mdp} onChange={(e) => {setErrorMdp(null); setMdp(e.target.value)}}
+                                        error={errorMdp === null ? false : true}
+                                        onKeyDown={keyPress}
+                                        helperText={errorMdp === null ? null : errorMdp}
+                                    />
+                                    </Stack><br/>
+
+                                    <LoadingButton
+                                        fullWidth
+                                        onClick={(e) => login(e)}
+                                        loading={loading}
+                                        loadingPosition="start"
+                                        startIcon={<HowToRegIcon />}
+                                        variant="contained"
+                                    >
+                                            <span style={{color:'white'}}>Login</span>
+                                    </LoadingButton>
+                                </Form>
+                                </FormikProvider>
+
+                            <Typography
+                                variant="body2"
+                                align="center"
+                                sx={{
+                                mt: 3,
+                                display: { sm: 'none' }
+                                }}
                             >
-                            Login
-                            </LoadingButton>
-                        </Form>
-                        </FormikProvider>
-
-                    <Typography
-                        variant="body2"
-                        align="center"
-                        sx={{
-                        mt: 3,
-                        display: { sm: 'none' }
-                        }}
-                    >
-                        Don’t have an account?&nbsp;
-                        <Link variant="subtitle2" component={RouterLink} to="register" underline="hover">
-                        Get started
-                        </Link>
-                    </Typography>
-                    </ContentStyle>
-                </Container>
-            </Grid>
-        </Grid>
-        </>
+                                Don’t have an account?&nbsp;
+                                <Link variant="subtitle2" component={RouterLink} to="register" underline="hover">
+                                Get started
+                                </Link>
+                            </Typography>
+                            </ContentStyle>
+                        </Container>
+                    </Grid>
+                </Grid>
+            :
+            <VerifyCompte 
+                codeVerifyPhone={codeVerifyPhone} 
+                setCodeVerifyPhone={setCodeVerifyPhone} 
+                loading={loading} verify={verify} 
+                setErrorCode={setErrorCode}
+                errorCode={errorCode}
+            />
+    }
+</>
 
 
-        // <div className={styles.auth + " " + stylesLogin.auth}>
-        //       <Paper 
-        //           elevation={1}
-        //           className={styles.auth}
-        //           children={
-        //               <>
-        //                   <h1>{isPartner ? "Se connecter en tant que partenaire" : "Se connecter"}</h1>
-        //                   {ambiguousError === null ? null : <Alert severity="error">{ambiguousError}</Alert>}
-        //                   <Box
-        //                       component="form"
-        //                       sx={{
-        //                           '& .MuiTextField-root': { m: 1, width: '25ch' },
-        //                       }}
-        //                       noValidate
-        //                       autoComplete="off"
-        //                   >
-        //                       <TextField 
-        //                           id="outlined-basic"
-        //                           variant="outlined"
-        //                           size='small'
-        //                           label={<p>Email</p>}
-        //                           type="email"
-        //                           value={email} onChange={(e) => {setErrorEmail(null); setEmail(e.target.value)}}
-        //                           error={errorEmail === null ? false : true}
-        //                           helperText={errorEmail === null ? null : errorEmail}
-        //                       /> 
-        //                   </Box>
-        //                   <Box
-        //                       component="form"
-        //                       sx={{
-        //                           '& .MuiTextField-root': { m: 1, width: '25ch' },
-        //                       }}
-        //                       noValidate
-        //                       autoComplete="off"
-        //                   >
-        //                       <TextField 
-        //                           id="outlined-basic"
-        //                           variant="outlined"
-        //                           size='small'
-        //                           label={<p>Mot de passe</p>}
-        //                           type="password"
-        //                           value={mdp} onChange={(e) => {setErrorMdp(null); setMdp(e.target.value)}}
-        //                           error={errorMdp === null ? false : true}
-        //                           helperText={errorMdp === null ? null : errorMdp}
-        //                       />
-        //                   </Box>
-        //                   <Stack spacing={1}>
-        //                     <Button sx={{width: 200}} variant="contained" onClick={(e) => login(e)}>
-        //                         <span style={{color:'white'}}>Se connecter</span>
-        //                     </Button>
-        //                     <Button sx={{width: 200}} variant="contained" onClick={(e) => register(e)}>
-        //                         <span style={{color:'white'}}>S'inscrire</span>
-        //                     </Button>
-        //                   </Stack>
-                            
-        //               </>
-        //           } 
-        //       />
-        // </div>
         );
     
     

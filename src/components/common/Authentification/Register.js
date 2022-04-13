@@ -63,6 +63,8 @@ const Register = () => {
     const [companie, setCompanie] = React.useState(null);
     const [errorCompanie, setErrorCompanie] = React.useState(null);
     const [loading, setLoading] = React.useState(false);
+    const [errorTel, setErrorTelephone] = React.useState(null);
+    const [telephone, setTelephone] = React.useState("");
 
 
     const history = useHistory();
@@ -84,7 +86,8 @@ const Register = () => {
                 {field: "email", setter: setErrorEmail},
                 {field: "mdp", setter: setErrorMdp},
                 {field: "confirmMdp", setter: setErrorConfirmMdp},
-                {field: "companie", setter: setErrorCompanie}
+                {field: "companie", setter: setErrorCompanie},
+                {field: "telephone", setter: setErrorTelephone}
             ];
             let keys = Object.keys(data.errors);
             keys.map(field => {
@@ -107,7 +110,8 @@ const Register = () => {
             prenom: prenom.trim(),
             email: email.trim(),
             mdp: mdp.trim(),
-            confirmMdp: confirmMdp.trim()
+            confirmMdp: confirmMdp.trim(),
+            telephone:telephone.trim()
         };
         if(isPartner){
             data.companie = companie;
@@ -163,6 +167,18 @@ const Register = () => {
                                 value={email} onChange={(e) => {setErrorEmail(null); setEmail(e.target.value)}}
                                 error={errorEmail === null ? false : true}
                                 helperText={errorEmail === null ? null : errorEmail}
+                                onKeyDown={keyPress}
+                            /> } />
+                        <CustomBox 
+                            content={<TextField 
+                                id="outlined-basic"
+                                variant="outlined"
+                                size='small'
+                                label={<p>telephone</p>}
+                                type="email"
+                                value={telephone} onChange={(e) => {setErrorTelephone(null); setTelephone(e.target.value)}}
+                                error={errorTel === null ? false : true}
+                                helperText={errorTel === null ? null : errorTel}
                                 onKeyDown={keyPress}
                             /> } />
                         <CustomBox 

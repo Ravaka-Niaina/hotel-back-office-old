@@ -327,7 +327,7 @@ function InsertTypeCHambre(){
       e.preventDefault();
       setAlertRedirect(true);
       window.location.href = '#error';
-      // errorRef.current.scrollIntoViewva({
+      // errorRef.current.scrollIntoView({
       //   behavior :"smonth",
       //   block :'center',
       //   inline:"center"
@@ -608,17 +608,7 @@ function InsertTypeCHambre(){
                           </>
                        }
                       
-                      {
-                         imageCrop == null ? 
-                          <Button  
-                            variant="contained" 
-                            type='submit' 
-                            id='btn1'
-                            onClick={(e) =>redirectError(e)}
-                            style={{backgroundColor:'#2ac4ea' }}>
-                            <span style={{color:'white'}}>Ajouter</span>
-                          </Button> : 
-                          <>
+
                       { !isInsert && hasARUpdate
                       ? <>
                         { btnLoad 
@@ -633,9 +623,6 @@ function InsertTypeCHambre(){
                         </Button> }
                         </>
                       : null}
-                      </>
-                     }
-                     
                      </div>
                      <div class="bouton-aligne">
                       <Link to={'/back/typeChambre'} style={{textDecoration:'none'}}>
