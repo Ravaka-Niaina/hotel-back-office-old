@@ -143,6 +143,7 @@ function InsertTypeCHambre(){
   const setDetailsTypeChambre = (data) => {
     // console.log(data);
     let currentState = {...state};
+
     if(data.status === 401){//Unauthorized
       history.push('/back/login');
     }else if(data.status === 403){

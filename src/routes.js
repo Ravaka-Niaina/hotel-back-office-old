@@ -72,6 +72,11 @@ import RechercheReservation from "./components/client/RechercheReseravation.js";
 
 import Menu from "./components/menu/sidebar.js";
 import ResponsiveDrawer from "./components/menu/responsive-drawer.js";
+
+import  InsertHotel  from "./components/partenaire/hotel/createHotel.js";
+import  HotelList  from "./components/partenaire/hotel/listHotel.js";
+import  Localisation  from "./components/partenaire/hotel/localisation";
+
 // ---------------------------------------------------------------------------------
 
 // layouts
@@ -137,6 +142,10 @@ export default function Routes() {
             <Route path="/back/reservation" exact component={ListeReservation} />
             <Route path="/back/reservation/notif" exact component={ListeReservation} />
 
+            <Route path="/back/hotel/insert" exact component={InsertHotel} />
+            <Route path="/localisation" exact component={Localisation} />
+            <Route path="/back/hotel/detail/:_id" exact component={InsertHotel} />
+            <Route path="/back/hotel" exact component={HotelList} />
 
             <Route path="/" exact component={AppClient} />
             <Route path="/front" exact component={AppClient} />
