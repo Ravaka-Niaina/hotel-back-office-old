@@ -4,9 +4,9 @@
     height: 140px;
   }
   .editor-class-confirmation {
-    background-color:lightgray;
+    /* background-color:lightgray;
     padding: 1rem;
-    border: 1px solid #ccc;
+    border: 1px solid #ccc; */
   
   }
   .toolbar-class-confirmation {
@@ -21,10 +21,10 @@
 
   }
   .editor-class {
-    background-color:lightgray;
+    /* background-color:lightgray;
     padding: 1rem;
     border: 1px solid #ccc;
-  
+   */
   }
   .toolbar-class {
     border: 1px solid #ccc;
