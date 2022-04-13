@@ -5,7 +5,7 @@ import  ResponsiveDrawer  from "../Navbar/responsive-drawer.js";
 import React, { useState,useEffect } from 'react';
 import { Editor } from "react-draft-wysiwyg";
 import { EditorState ,convertFromHTML} from 'draft-js';
-
+import { useHistory } from 'react-router-dom';
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { ContentState, convertToRaw } from 'draft-js';
 import './ModeleEmail.css';
@@ -22,7 +22,7 @@ import { Alert, Stack } from '@mui/material';
 import GalerieUnique from '../Galerie/GalerieUnique.js';
 
 function ModeleEmail(props){
-    
+    const history = useHistory();
     let confiramtionHeader=getHtmlConfirmation();
     let hotelsInfos=getHtmlHotelInfos();
     let htmlFooter=getHtmlFooter();
@@ -83,12 +83,16 @@ function ModeleEmail(props){
       
         if(res.status === 200){
             // localStorage.setItem('access', 1);
+                // history.push('#success');
               setAlertSuccess(res.message);
             // history.push("/reservation/" + _id + "/voucher");
+            // window.location.href = '#success';
+         
         }else{
              setAlertError(res.errors[0].message);
-            // history.push('#error');
+            //  window.location.href = '#error';
         }
+        window.scrollTo(0, 0)
     }
     function  setModele(res){
         if(res.status === 200){
@@ -195,23 +199,23 @@ function ModeleEmail(props){
                             changeLogo={changeLogo}
                             
                             />  */}
-                        {alertSuccess != null ? 
-                            <div id="success">
+                  
+          <div class="container" style={{fontFamily:'Roboto,RobotoDraft,Helvetica,Arial,sans-serif',width:1000,margin:'0 auto',padding:'0 auto',marginTop:'20%'}}>
+                <h1 style={{textAlign:'center',marginTop:'-25%'}}>Modèle email</h1>
+                {alertSuccess != null ? 
+                            <div id="success" class="message">
                                 <Stack sx={{ width: '100%' }} spacing={2}>
                                 <Alert severity="success">{alertSuccess}</Alert>
                                 </Stack>
                             </div> : null
                         }
                         {alertError != null ?
-                            <div id="error">
+                            <div id="error" class="message">
                                 <Stack sx={{ width: '100%' }} spacing={2}>
                                     <Alert severity="error">{alertError}</Alert>
                                 </Stack>
                             </div> : null
                         }
-          <div class="container" style={{fontFamily:'Roboto,RobotoDraft,Helvetica,Arial,sans-serif',width:1000,margin:'0 auto',padding:'0 auto',marginTop:'20%'}}>
-              
-                
                 <div class='itineraire' >  
                         
                         {/* <div class='header'  style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}} >
@@ -224,10 +228,10 @@ function ModeleEmail(props){
                             </div>
                                             
                         </div> */}
-                        <div class='header'  style={{display:'flex',flexDirection:'row',justifyContent:'space-between'}} >
+                        <div class='header'  style={{display:'flex',flexDirection:'row',justifyContent:'space-between',alignItems:'center'}} >
                             <img style={{width:'35%',height:'115%' }} src={logo} alt='logo'/>
                            <div>
-                             <img style={{width:'35%',marginLeft:10,marginTop:30 }}  onClick={switchShowGalerie} src={process.env.PUBLIC_URL + '/camera.png'} />
+                             <img class="camera" style={{width:45,height:45,marginLeft:10,cursor: 'pointer' }}  onClick={switchShowGalerie} src={process.env.PUBLIC_URL + '/camera.png'} />
                                       
                             </div> 
                             
@@ -235,7 +239,7 @@ function ModeleEmail(props){
                             photoSortie={photo} setPhotoSortie={setPhoto} nbPhotoBeforeSortie={nbPhotoBefore} setLogo={setLogo}
                             previewSortie={preview} setPreviewSortie={setPreview} />
 
-                            <div style={{marginTop:'-10%',marginLeft:'10%'}}>
+                            <div style={{marginLeft:'10%'}}>
                                 {/* <Editor
                                     editorState={editorStateConfirmation}
                                     wrapperClassName="wrapper-class-confirmation"
@@ -321,11 +325,13 @@ function ModeleEmail(props){
                                 <ReactQuill className="editor-class" modules={modules} value={valueFooter} theme="snow" onChange={setValueFooter}/> 
                       </div>
                 </div>
+               
+                
                 <div style={{marginTop:20,display:'flex',flexDirection:'row',justifyContent:'flex-end'}}>
                     {/* <button class="button_mail btn_blue">Previsualiser</button> */}
                     <button onClick={valider} class="button_mail btn_red">Sauvegarder</button>
                 </div>
-                
+               
           </div>
         </>
       

@@ -41,7 +41,7 @@ import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 import { components } from 'react-select';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-
+import EmailIcon from '@mui/icons-material/Email';
 import { useHistory } from 'react-router-dom';
 import callAPI from '../../../utility.js';
 
@@ -117,6 +117,7 @@ export default function PersistentDrawerLeft(props) {
     { text: "Partenaires", icon: GroupIcon, lien: [ {link:"/back/user", nom: ""}], dropdown: false },
     { text: "Droits d'accès", icon: AddCardIcon, lien: [ {link:"/back/accessRight", nom: ""}], dropdown: false },
     { text: "Réservation", icon: ShoppingBagIcon, lien: [ {link:"/back/reservation", nom: ""}], dropdown: false },
+    { text: "Modèle email", icon: EmailIcon, lien: [ {link:"/back/modelemail", nom: ""}], dropdown: false },
   ];
 
   const handleDrawerOpen = () => {
