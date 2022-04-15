@@ -1,0 +1,44 @@
+.inline{
+    display: inline-block;
+}
+
+#logoHotel {
+    width: 150px;
+}
+
+#second{
+    margin-left: 40px;
+}
+
+#third {
+    margin-left: 80px;
+}
+
+#card2 {
+    margin-top: 25px;
+}
+
+#global{
+    margin-left: 50px;
+    margin-top: 20px;
+}
+
+#hotelName{
+font-size: 17px;
+}
+
+#hotelAdress {
+    font-size: 17px;
+}
+
+#hotelMail {
+    font-size: 17px;
+}
+
+#hotelPhone{
+    font-size: 17px;
+}
+
+#titleH {
+    text-decoration: underline;
+}

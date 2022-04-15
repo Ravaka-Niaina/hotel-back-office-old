@@ -16,7 +16,10 @@ import  ListTypeChambre  from "./components/partenaire/chambre/ListTChambre.js";
 
 import  InsertHotel  from "./components/partenaire/hotel/createHotel.js";
 import  HotelList  from "./components/partenaire/hotel/listHotel.js";
+import  GetOneHotel  from "./components/partenaire/hotel/getOneHotel";
 import  Localisation  from "./components/partenaire/hotel/localisation";
+
+import  GetOnePartner from "./components/partenaire/User/getOnePartner";
 
 import  InsertTarif  from "./components/partenaire/Calendrier/tarif/InsertTarif.js";
 
@@ -112,6 +115,8 @@ export default function Routes() {
             <Route path="/back/accessRight/insert" exact component={InsertDroitAcces} />
             <Route path="/back/accessRight/update/:_id" exact component={InsertDroitAcces} />
 
+            <Route path="/back/partenaire" exact component={GetOnePartner} />     
+
             <Route path="/back" exact component={home} />
             <Route path="/back/login" exact component={Login} />
             <Route path="/back/Register" exact component={Register} />
@@ -145,6 +150,7 @@ export default function Routes() {
             <Route path="/localisation" exact component={Localisation} />
             <Route path="/back/hotel/detail/:_id" exact component={InsertHotel} />
             <Route path="/back/hotel" exact component={HotelList} />
+            <Route path="/back/hotel/detail" exact component={GetOneHotel} />
 
 
             <Route path="/" exact component={AppClient} />

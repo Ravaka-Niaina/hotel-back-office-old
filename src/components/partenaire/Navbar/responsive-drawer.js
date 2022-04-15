@@ -36,6 +36,7 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import GroupIcon from '@mui/icons-material/Group';
 import AddCardIcon from '@mui/icons-material/AddCard';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import HotelIcon from '@mui/icons-material/Hotel';
 
 import { useHistory } from 'react-router-dom';
 import callAPI from '../../../utility.js';
@@ -111,9 +112,10 @@ export default function PersistentDrawerLeft(props) {
     { text: "Politique", icon: GavelOutlinedIcon, lien: [ {link:"/back/politique/list", nom: ""}], dropdown: false },
     { text: "Historique", icon: DocumentScannerOutlinedIcon, lien: [{link:"/historique/TC", nom: "Type de chambre"}, {link:"/historique/MPL", nom: "Modification plan tarifaire"}, {link:"/#", nom: "Promotion"}], dropdown: true },
     { text: "Clients", icon: FormatListBulletedOutlinedIcon, lien: [ {link:"/front", nom: ""}], dropdown: false },
-    { text: "Mon compte", icon: PersonPinIcon, lien: [ {link:"/#", nom: ""}], dropdown: false },
+    { text: "Mon compte", icon: PersonPinIcon, lien: [ {link:"/back/partenaire", nom: ""}], dropdown: false },
     { text: "Partenaires", icon: GroupIcon, lien: [ {link:"/back/user", nom: ""}], dropdown: false },
-    { text: "Hotel", icon: GroupIcon, lien: [ {link:"/back/hotel", nom: ""}], dropdown: false },
+    { text: "Hotels", icon: HotelIcon, lien: [ {link:"/back/hotel", nom: ""}], dropdown: false },
+    { text: "Hotel", icon: HotelIcon,lien: [ {link:"/back/hotel/detail", nom: ""}], dropdown: false },
     { text: "Droits d'accès", icon: AddCardIcon, lien: [ {link:"/back/accessRight", nom: ""}], dropdown: false },
     { text: "Réservation", icon: ShoppingBagIcon, lien: [ {link:"/back/reservation", nom: ""}], dropdown: false },
   ];
