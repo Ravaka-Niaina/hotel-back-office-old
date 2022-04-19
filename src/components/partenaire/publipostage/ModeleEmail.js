@@ -81,7 +81,31 @@ function ModeleEmail(props){
     const changeLogo=(e) =>{
         setLogo(e)
     }
-
+    function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+    }
+    function replaceAll(str, find, replace) {
+        return str.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+    }
+   
+    function replaceFontStyle(html,fontName){
+        let query= "class=\"ql-font-"+fontName+"\"";
+     
+      
+        html= replaceAll(html,query,"style='font-family:"+fontName+"'");
+        // console.log("query");
+        // console.log(html);
+        return html;
+    }
+    function replaceFontStyleReverse(html,fontName){
+        let query= "class=\"ql-font-"+fontName+"\"";
+     
+      
+        html= replaceAll(html,"style='font-family:"+fontName+"'",query);
+        // console.log("query");
+        // console.log(html);
+        return html;
+    }
     // Get html and logo
     function handleResponse(res){
       
@@ -104,12 +128,22 @@ function ModeleEmail(props){
             // setAlertSuccess(res.message);
             console.log("res");
             let current = JSON.parse(JSON.stringify(res.data));
-            console.log(current);
+         
             if(current){
                 setLogo(current.logo_url);
-                setValueConfirmation(current.htmlConfirmation);
-                setValueHotelsInfos(current.htmlHotelsInfos);
-                setValueFooter(current.htmlFooter);
+                var htmlC=current.htmlConfirmation;
+                var htmlI=current.htmlHotelsInfos;
+                var htmlF=current.htmlFooter;
+                console.log(htmlF);
+                listFonts.forEach(font => {
+                    htmlC= replaceFontStyleReverse(htmlC,font);
+                    htmlI= replaceFontStyleReverse(htmlI,font);
+                    htmlF= replaceFontStyleReverse(htmlF,font);
+                });
+               
+                setValueConfirmation(htmlC);
+                setValueHotelsInfos(htmlI);
+                setValueFooter(htmlF);
             }
         }else{
             // setAlertError(res.errors[0].message);
@@ -123,9 +157,18 @@ function ModeleEmail(props){
     }, [])
 
     const valider=(e) =>{
-     
-
-        let content = {logo_url:logo,htmlConfirmation:valueConfirmation,htmlHotelsInfos:valueHotelInfos,htmlFooter:valueFooter}
+        var htmlC=valueConfirmation;
+        var htmlI=valueHotelInfos;
+        var htmlF=valueFooter;
+        listFonts.forEach(font => {
+            htmlC= replaceFontStyle(htmlC,font);
+            htmlI= replaceFontStyle(htmlI,font);
+            htmlF= replaceFontStyle(htmlF,font);
+        });
+        // console.log(htmlC);
+        // console.log(htmlI);
+        // console.log(htmlF);
+        let content = {logo_url:logo,htmlConfirmation:htmlC,htmlHotelsInfos:htmlI,htmlFooter:htmlF}
         const data = { content: content};
         callAPI('post', '/reservation/modeleEmail', data, handleResponse );
     }
