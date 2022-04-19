@@ -100,7 +100,6 @@ const Login = (props) => {
     }, []);
     
     const interpretResponse = (res) => {
-        console.log(res);
         const data = res.data;
         if(data.status === 200){
             localStorage.setItem("user_session", res.headers.user_session);
@@ -147,7 +146,6 @@ const Login = (props) => {
         object.idBrowser = id;
         object.isInsert = true;
         localStorage.setItem('idBrowser', id);
-        console.log(object);
         return object;
     }
     const login = (e) => {
@@ -235,6 +233,11 @@ const Login = (props) => {
            login(e);
         }
     }
+
+    function redirect(e){
+        e.preventDefault();
+        history.push("/back/research");
+    }
     
     return(
         <>
@@ -300,6 +303,13 @@ const Login = (props) => {
                                     >
                                             <span style={{color:'white'}}>Login</span>
                                     </LoadingButton>
+
+                                    <Link>
+                                        <h5 onClick ={(e) => redirect(e)}
+                                            style={{marginLeft: '45%' , color :'black'}} >Mot de passe oublié?
+                                        </h5>
+                                    </Link>
+
                                 </Form>
                                 </FormikProvider>
 

@@ -1,11 +1,6 @@
 {
   "compilerOptions": {
     "baseUrl": "./",
-    "paths": {
-      "crypto": [
-        "node_modules/crypto-js"
-      ]
-    },
     "target": "es5",
     "lib": [
       "dom",
@@ -27,6 +22,7 @@
     "jsx": "react-jsx"
   },
   "include": [
-    "src"
-, "src/components/partenaire/reservation/firebase-messaging-sw.js"  ]
+    "src",
+    "src/components/partenaire/reservation/firebase-messaging-sw.js"
+  ]
 }
