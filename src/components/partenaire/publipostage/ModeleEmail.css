@@ -14,6 +14,68 @@
     height: 150px;
     
   }
+  .ql-editor {
+    font-family: "Arial";
+  }
+  /* Set dropdown font-families Arial', 'Roboto','Verdana','Helvetica','Tahoma','Georgia','Times New Roman' */
+  .ql-font span[data-value="Ubuntu"]::before {
+    font-family: "Ubuntu";
+    content: "Ubuntu" !important;
+  }
+  .ql-font span[data-value="Roboto"]::before {
+    font-family: "Roboto" !important;
+    content: "Roboto" !important;
+  }
+  .ql-font span[data-value="Arial"]::before {
+    font-family: "Arial";
+    content: "Arial" !important;
+  }
+  .ql-font span[data-value="Verdana"]::before {
+    font-family: "Verdana" !important;
+    content: "Verdana" !important;
+  }
+  .ql-font span[data-value="Helvetica"]::before {
+    font-family: "Helvetica";
+    content: "Helvetica" !important;
+  }
+  .ql-font span[data-value="Tahoma"]::before {
+    font-family: "Tahoma" !important;
+    content: "Tahoma" !important;
+  }
+  .ql-font span[data-value="Georgia"]::before {
+    font-family: "Georgia";
+    content: "Georgia" !important;
+  }
+  .ql-font span[data-value="Times New Roman"]::before {
+    font-family: "Times New Roman" !important;
+    content: "Times New Roman" !important;
+  }
+
+
+
+  /* Set content font-families */
+  .ql-font-Arial {
+    font-family: "Arial";
+  }
+  .ql-font-Roboto {
+    font-family: "Roboto";
+  }
+  .ql-font-Verdana {
+    font-family: "Verdana";
+  }
+  .ql-font-Helvetica {
+    font-family: "Helvetica";
+  }
+  .ql-font-Tahoma {
+    font-family: "Tahoma";
+  }
+  .ql-font-Georgia {
+    font-family: "Georgia";
+  }
+  .ql-font-Ubuntu {
+    font-family: "Ubuntu";
+  }
+ 
 
   .wrapper-class {
    

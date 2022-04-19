@@ -26,7 +26,11 @@ function ModeleEmail(props){
     let confiramtionHeader=getHtmlConfirmation();
     let hotelsInfos=getHtmlHotelInfos();
     let htmlFooter=getHtmlFooter();
-
+    const Quill = ReactQuill.Quill
+    var Font = Quill.import('formats/font');
+    let listFonts=['Ubuntu', 'Arial', 'Roboto','Verdana','Helvetica','Tahoma','Georgia' ]
+    Font.whitelist = listFonts.sort();
+    Quill.register(Font, true);
     // const contentDataStateConfirmation = ContentState.createFromBlockArray(convertFromHTML(confiramtionHeader));
     // const editorDataStateConfirmation = EditorState.createWithContent(contentDataStateConfirmation);
     // const [editorStateConfirmation, setEditorStateConfirmation] = useState(editorDataStateConfirmation);
@@ -38,7 +42,7 @@ function ModeleEmail(props){
     let nbPhotoBefore = {value: 0};
     const  modules  = {
         toolbar: [
-            [{ font: [] }],
+            [{ font:Font.whitelist }],
             [{ header: [1, 2, 3, 4, 5, 6, false] }],
             ["bold", "italic", "underline", "strike"],
             [{ color: [] }, { background: [] }],
