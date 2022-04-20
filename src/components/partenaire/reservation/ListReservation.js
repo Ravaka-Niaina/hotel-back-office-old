@@ -45,7 +45,7 @@ import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import {getFCMToken} from './Notification.js';
+import {insertFCMTokenNotifReserv} from './Notification.js';
 
 const RootStyle = styled(Toolbar)(({ theme }) => ({
     height: 200,
@@ -284,6 +284,7 @@ function ListeReservation(props){
         setListResult(data.list);
     }
     function setResultNewReserv(data){
+        console.log(data);
         setListResult(data.list);
         let tmp = [];
         for(let i = 0; i < data.list.length; i++){
@@ -299,7 +300,8 @@ function ListeReservation(props){
             const regExp = new RegExp("/notif","i");
             if(regExp.test(window.location.href)){
                 setIsNotif(true);
-                callAPI('post', '/notifPartenaire/newReservations', {}, setResultNewReserv);
+                callAPI('post', '/notificationReservation', {}, setResultNewReserv);
+                //callAPI('post', '/notifPartenaire/newReservations', {}, setResultNewReserv);
             }else{
                 callAPI('post', '/reservation/partenaire', {}, setResult);
             }
@@ -318,12 +320,12 @@ function ListeReservation(props){
             {/* <Navbar currentPage={props.currentPage}/><br/> */}
             
             <Box sx={{ width: '100%', padding :"50px" }}>
-            <h1>{isNotif ? "Nouvelles réservations" : "Liste réservations"}</h1>
+            <h1>{isNotif ? "Notifications nouvelles réservations" : "Liste réservations"}</h1>
             
             
             <Paper sx={{ width: '100%', mb: 2, borderRadius: 5, mt:3  }}>
                 <Card sx={{ borderRadius: 5 }}>
-                    <button onClick={() => getFCMToken()}>Subscribe to browser notifications</button>
+                    <button onClick={() => insertFCMTokenNotifReserv()}>Subscribe to browser notifications</button>
                     <RootStyle>
                     <InputRecherche 
                         debut={debut} setDebut={setDebut} 
@@ -355,6 +357,7 @@ function ListeReservation(props){
                             headCells={headCells}
                         />
                         <TableBody>
+                        {console.log(listResult)}
                         {
                             stableSort(listResult, getComparator(order, orderBy))
                                 .slice(page * nbContent, page * nbContent + nbContent)

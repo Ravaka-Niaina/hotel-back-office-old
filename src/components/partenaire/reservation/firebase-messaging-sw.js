@@ -12,7 +12,7 @@ const firebaseConfig = {
     messagingSenderId: "65338018145",
     appId: "1:65338018145:web:4e99c0b84f44f905bf9d20",
     measurementId: "G-BQ95TXMFP0"
-  };
+};
 
 firebase.initializeApp(firebaseConfig);
 
@@ -36,10 +36,10 @@ self.addEventListener('notificationclick', (event) => {
 
                 if (!hadWindowToFocus)
                     self.clients
-                        .openWindow(url)
-                        .then((windowClient) =>
-                            windowClient ? windowClient.focus() : null
-                        )
+                .openWindow(url)
+                .then((windowClient) =>
+                    windowClient ? windowClient.focus() : null
+                )
             })
     )
 })

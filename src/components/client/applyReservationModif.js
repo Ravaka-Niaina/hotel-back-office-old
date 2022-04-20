@@ -140,7 +140,7 @@ function ApplyReservationModif(props){
             setConditionError(true);
             window.location.href = '#conditions';
         }
-     
+    
     }
 
     function setDetailReservation1(res){

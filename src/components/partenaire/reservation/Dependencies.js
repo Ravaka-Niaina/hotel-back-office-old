@@ -2,15 +2,8 @@ import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
 import { styled } from '@mui/material/styles';
 
 const tmpHeadCells = [
-    // [ "numItineraire", "Numero itineraire" ],
-    [ "infoReservateur", "Infos reservateur" ],
-    // [ "infoOccupant", "Infos occupant" ],
-    [ "dateReserv", "Date de reservation" ],
-    // [ "checkIn", "Date d'arrivee" ],
-    // [ "checkOut", "Date de depart" ],
-    // [ "nbNuitee", "Nombre de nuitee" ],
-    // [ "chambre", "Chambre" ],
-    // [ "tarifs", "Tarifs" ],
+    [ "NumeroITineraire", "numéro itinéraire" ],
+    [ "numeroConfirmation", "numéro de confirmation" ],
     [ "status", "Etat" ]
 ];
 export let headCells = [];
