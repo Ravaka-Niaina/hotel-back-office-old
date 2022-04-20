@@ -18,7 +18,7 @@ const messaging = getMessaging();
 
 export async function insertFCMTokenNotifReserv() {
     try {
-        const FCMToken = await getToken(messaging, { vapidKey: "BHtt96R6hyeAS4nyIzhD7ipUMG2JKCC6zdBXeBuxvNdl-LkdY_ZH8tIfOjcidt8GrFfkmYiJbfpmMT-9TkNfRmo" });
+        const FCMToken = await getToken(messaging, { vapidKey: process.env.VAPIDKEY });
         console.log(FCMToken);
         callAPI('post', '/notificationReservation/insertFCMTokenNotifReserv', {FCMToken: FCMToken}, (res) => {
             console.log(res);
@@ -29,8 +29,16 @@ export async function insertFCMTokenNotifReserv() {
     }
 }
 
+let listenersMessage = [];
+
+export function addListenerMessage(listener){
+    listenersMessage.push(listener);
+    console.log("listenersMessage = " + listenersMessage.length);
+}
+
 onMessage(messaging, (payload) => {
     console.log('Message received. ', payload);
+    console.log("listenersMessage = " + listenersMessage.length);
     let notifsReservation = localStorage.getItem("notifsReservation");
     try{
         notifsReservation = JSON.parse(notifsReservation);
@@ -39,4 +47,9 @@ onMessage(messaging, (payload) => {
         notifsReservation = [payload.data];
     }
     localStorage.setItem('notifsReservation', JSON.stringify(notifsReservation));
+    // window.dispatchEvent(new Event("newNotifReserv"));
+    // window.addEventListener("newNotifReserv", () => { console.log("Event detected from Notification.js ! :)") });
+    for(let i = 0; i < listenersMessage.length; i++){
+        listenersMessage[i](payload);
+    }
 });

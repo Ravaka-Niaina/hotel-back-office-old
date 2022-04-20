@@ -38,9 +38,11 @@ import AddCardIcon from '@mui/icons-material/AddCard';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
 
 import { useHistory } from 'react-router-dom';
+
 import callAPI from '../../../utility.js';
 
 import Grid from '@mui/material/Grid';
+import { addListenerMessage } from '../reservation/Notification.js';
 
 const drawerWidth = 280;
 
@@ -175,7 +177,10 @@ export default function PersistentDrawerLeft(props) {
   function seeNotifications(){
     history.push('/back/reservation/notif');
   }
-  
+
+  addListenerMessage((payload) => {
+    console.log("Mety, ita le izy");
+  });
 
   return (
     
