@@ -14,9 +14,9 @@ const firebaseConfig = {
     measurementId: "G-BQ95TXMFP0"
 };
 
-firebase.initializeApp(firebaseConfig);
+// firebase.initializeApp(firebaseConfig);
 
-const messaging = firebase.messaging();
+// const messaging = firebase.messaging();
 
 // Not necessary, but if you want to handle clicks on notifications
 self.addEventListener('notificationclick', (event) => {

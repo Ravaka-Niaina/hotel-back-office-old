@@ -77,6 +77,9 @@ import  InsertHotel  from "./components/partenaire/hotel/createHotel.js";
 import  HotelList  from "./components/partenaire/hotel/listHotel.js";
 import  Localisation  from "./components/partenaire/hotel/localisation";
 
+import  CompteOublier  from "./components/common/Authentification/CompteOublier";
+import  modifyPassword  from "./components/common/Authentification/modifyPassword";
+
 // ---------------------------------------------------------------------------------
 
 // layouts
@@ -118,6 +121,8 @@ export default function Routes() {
             <Route path="/back/Register" exact component={Register} />
             <Route path="/back/user" exact component={listeUser} />
             <Route path="/back/user/details/:_id" exact component={DetailsUser} />
+            <Route path="/back/research" exact component={CompteOublier} />
+            <Route path="/back/verifier/:_id" exact component={modifyPassword} />
 
             <Route path="/loginClient" exact component={LoginClient} />
             <Route path="/registerClient" exact component={registerClient} />
