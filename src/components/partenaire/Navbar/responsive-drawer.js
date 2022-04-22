@@ -36,6 +36,7 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import GroupIcon from '@mui/icons-material/Group';
 import AddCardIcon from '@mui/icons-material/AddCard';
 import ShoppingBagIcon from '@mui/icons-material/ShoppingBag';
+import HotelIcon from '@mui/icons-material/Hotel';
 import { components } from 'react-select';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -45,7 +46,39 @@ import { useHistory } from 'react-router-dom';
 import callAPI from '../../../utility.js';
 
 import Grid from '@mui/material/Grid';
-import { addListenerMessage } from '../reservation/Notification.js';
+
+import { initializeApp } from "firebase/app";
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+
+// DEBUT CODES NOTIFICATION
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDfb-Et0hcr9GJbXhFULgiquxYJTycUlls",
+  authDomain: "moteur-reservation-adrware.firebaseapp.com",
+  projectId: "moteur-reservation-adrware",
+  storageBucket: "moteur-reservation-adrware.appspot.com",
+  messagingSenderId: "65338018145",
+  appId: "1:65338018145:web:4e99c0b84f44f905bf9d20",
+  measurementId: "G-BQ95TXMFP0"
+};
+
+export const app = initializeApp(firebaseConfig);
+const messaging = getMessaging();
+
+async function insertFCMTokenNotifReserv() {
+  try {
+      const FCMToken = await getToken(messaging, { vapidKey: process.env.VAPIDKEY });
+      console.log(FCMToken);
+      callAPI('post', '/notificationReservation/insertFCMTokenNotifReserv', {FCMToken: FCMToken}, (res) => {
+          console.log(res);
+      });
+  } catch (e) {
+      console.log('getFCMToken error', e);
+      return undefined
+  }
+}
+
+// FIN CODES NOTIFICATION
 
 const drawerWidth = 280;
 
@@ -96,14 +129,49 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
+function test(){
+  console.log("TEST mset fonction OK");
+};
+
 export default function PersistentDrawerLeft(props) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const [nbNotifs, setNbNotifs] = React.useState(0);
 
   useEffect(() => {
+    if(props.setInsertFCMTokenNotifReserv){
+      props.setInsertFCMTokenNotifReserv(insertFCMTokenNotifReserv);
+    }
     
-  }, []);
+    const regExp = new RegExp("back/reservation/notif","i");
+    if(regExp.test(window.location.href)){
+        setNbNotifs(0);
+    }
+    
+    getNbNotifReservation();
+  }, []);;
+
+  function getNbNotifReservation(){
+    callAPI('post', '/notificationReservation/nbNotifReservation', {}, (data) => {
+      console.log(data);
+      if(data.status === 200){
+        setNbNotifs(data.nbNotifReserv)
+      }
+    });
+  }
+
+  onMessage(messaging, (payload) => {
+    console.log('Message received. ', payload);
+    let notifsReservation = localStorage.getItem("notifsReservation");
+    try{
+        notifsReservation = JSON.parse(notifsReservation);
+        notifsReservation.push(payload.data);
+    }catch(err){
+        notifsReservation = [payload.data];
+    }
+    localStorage.setItem('notifsReservation', JSON.stringify(notifsReservation));
+    setNbNotifs(nbNotifs + 1);
+  });
 
   var init = true;
 
@@ -116,9 +184,10 @@ export default function PersistentDrawerLeft(props) {
     { text: "Politique", icon: GavelOutlinedIcon, lien: [ {link:"/back/politique/list", nom: ""}], dropdown: false },
     { text: "Historique", icon: DocumentScannerOutlinedIcon, lien: [{link:"/historique/TC", nom: "Type de chambre"}, {link:"/historique/MPL", nom: "Modification plan tarifaire"}, {link:"/#", nom: "Promotion"}], dropdown: true },
     { text: "Clients", icon: FormatListBulletedOutlinedIcon, lien: [ {link:"/front", nom: ""}], dropdown: false },
-    { text: "Mon compte", icon: PersonPinIcon, lien: [ {link:"/#", nom: ""}], dropdown: false },
+    { text: "Mon compte", icon: PersonPinIcon, lien: [ {link:"/back/partenaire", nom: ""}], dropdown: false },
     { text: "Partenaires", icon: GroupIcon, lien: [ {link:"/back/user", nom: ""}], dropdown: false },
-    { text: "Hotel", icon: GroupIcon, lien: [ {link:"/back/hotel", nom: ""}], dropdown: false },
+    { text: "Hotels", icon: HotelIcon, lien: [ {link:"/back/hotel", nom: ""}], dropdown: false },
+    { text: "Hotel", icon: HotelIcon,lien: [ {link:"/back/hotel/detail", nom: ""}], dropdown: false },
     { text: "Droits d'accès", icon: AddCardIcon, lien: [ {link:"/back/accessRight", nom: ""}], dropdown: false },
     { text: "Réservation", icon: ShoppingBagIcon, lien: [ {link:"/back/reservation", nom: ""}], dropdown: false },
     { text: "Modèle email", icon: EmailIcon, lien: [ {link:"/back/modelemail", nom: ""}], dropdown: false },
@@ -182,9 +251,7 @@ export default function PersistentDrawerLeft(props) {
     history.push('/back/reservation/notif');
   }
 
-  addListenerMessage((payload) => {
-    console.log("Mety, ita le izy");
-  });
+  console.log("nbNotifs = " + nbNotifs);
 
   return (
     

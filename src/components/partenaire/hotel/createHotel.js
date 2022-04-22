@@ -57,10 +57,12 @@ function InsertHotel() {
     checkOut : "",
     adresse : "",
     nom : "",
+    isPartner:true,
 
     ageEnfant: { min: '', max: '' },
     ageBebe: { min: '', max: '' },
     preview: [noImage],
+    
 
   })
 

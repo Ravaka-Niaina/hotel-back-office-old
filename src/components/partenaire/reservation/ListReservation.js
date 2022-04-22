@@ -45,7 +45,6 @@ import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import {insertFCMTokenNotifReserv} from './Notification.js';
 
 const RootStyle = styled(Toolbar)(({ theme }) => ({
     height: 200,
@@ -183,6 +182,11 @@ function Rows(props){
             
             </TableRow>
         )}
+}
+
+let insertFCMTokenNotifReserv = () => {};
+function setInsertFCMTokenNotifReserv(parentInsertFCMTokenNotifReserv){
+    insertFCMTokenNotifReserv = parentInsertFCMTokenNotifReserv;
 }
 
 function ListeReservation(props){
@@ -501,9 +505,10 @@ function ListeReservation(props){
 
 export default function ListeReservation_(props){
     return(
-        <ResponsiveDrawer 
+        <ResponsiveDrawer
             // title = {props.title}
             getContent = {() => ListeReservation(props)} 
+            setInsertFCMTokenNotifReserv = {setInsertFCMTokenNotifReserv}
         />
         
     );
