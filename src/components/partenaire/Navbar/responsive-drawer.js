@@ -147,9 +147,9 @@ export default function PersistentDrawerLeft(props) {
     if(regExp.test(window.location.href)){
         setNbNotifs(0);
     }
-    
+
     getNbNotifReservation();
-  }, []);;
+  }, []);
 
   function getNbNotifReservation(){
     callAPI('post', '/notificationReservation/nbNotifReservation', {}, (data) => {
