@@ -100,6 +100,7 @@ const BaeCalendar = ({
         setMonthLater(secondMonth)
 
         let temp = { ...context.state }
+        console.log(context.state);
         const debut = getDate(checkIn);
         const fin = getDate(checkOut);
         temp.dateSejour.debut = debut;

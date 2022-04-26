@@ -142,7 +142,10 @@ class DChambre extends React.Component{
     //     this.props.context.setState(currentState);
     // }
 
-    addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre, tarif, toPay, setShowButton){
+    addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre, tarif, toPay, setShowButton,toPayEuro){
+
+        console.log(toPay);
+        console.log(toPayEuro);
         setShowButton(true);
         // if(props.context.state.itineraires.length === 0){
         //     let temp = {...props.context.state};
@@ -169,11 +172,6 @@ class DChambre extends React.Component{
             const Random = NumeroIntineraire(this.props.context.state.random , this.props.context.state.nameHotel,TChambre);
             //numero confirmation
             const numeroConfirm = numeroConfirmation(0, this.props.context.state.nameHotel, TChambre);
-            // console.log(numeroConfirm);
-          
-            // const data = {itineraires: itineraires , numeroIntineraire : Random };
-            //  callAPI("get" , "/TypeChambre/detailsChambre/"+idTypeChambre , {} , typeChambre);
-                
                 let headers = {
                     idsession: session.getInstance().getId(),
                     ispartner: session.getInstance().getIsPartner()
@@ -191,9 +189,6 @@ class DChambre extends React.Component{
                 })
                 .then(res => {                                           
                     let typeChambre = res.data.typeChambre;
-                    console.log("typeChambre");
-                    console.log(typeChambre);
-                    console.log(TChambre);
                     if(res.data.status==200){
                         itineraires[lastItineraire].NumeroITineraire =Random;
                         itineraires[lastItineraire].tarifReserves.push({
@@ -210,7 +205,8 @@ class DChambre extends React.Component{
                             politiqueAnnulAtrb:tarif.politiqueAnnulAtrb,
                             nomTarif:tarif.nom,
                             TarifName:tarif.name,
-                            toPay:{afterProm:toPay.prix,beforeProm:toPay.prixOriginal},
+                            toPayDevise:{afterProm:toPay.prix,beforeProm:toPay.prixOriginal},
+                            toPay: {afterProm:toPayEuro.prix,beforeProm:toPayEuro.prixOriginal}
                         });
                         
                         let reserv = this.props.context.state.reservationEnCours;

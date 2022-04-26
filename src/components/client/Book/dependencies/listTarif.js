@@ -32,6 +32,7 @@ const style = {
   };
 
 function ListTarif(props){
+    let devise = props.context.state.devise.toUpperCase();
     const [error, setError] = React.useState(null);
     const [showButton, setShowButton] = React.useState(false);
     const { t, i18n } = useTranslation();
@@ -103,7 +104,7 @@ function ListTarif(props){
                                     }
                                 </div>
                                 {
-                                    tarif.toPayStay.map(version => {
+                                    tarif.toPayStay.map((version , indice) => {
                                         return(
                                             <div className="row" style={{marginTop: "5px"}}>
                                                 <div>
@@ -112,13 +113,13 @@ function ListTarif(props){
                                                     {/*<ListServiceTarif services={tarif.services} />*/}
                                                 </div>
                                                 <div class="col"> 
-                                                    { version.prixOriginal ? <span className={styles.beforeProm}>&nbsp;{(version.prixOriginal) + " EUR "}</span> : null }
-                                                    <span className={styles.afterProm}>&nbsp;{(version.prix) + " EUR "}</span>
+                                                    { version.prixOriginal ? <span className={styles.beforeProm}>&nbsp;{(version.prixOriginal).toFixed(2) + " "+ devise}</span> : null }
+                                                    <span className={styles.afterProm}>&nbsp;{(version.prix).toFixed(2) + " "+ devise}</span>
                                                 </div>
                                                 <div className={styles.bookNow}>
                                                     <Button variant="contained"
                                                         onClick = {(e) => props.contextListChambre.addReservation(e,tarif._id, tarif.nom, props.idTypeChambre
-                                                            , version.nbPers , props.nameTC,tarif,version, setShowButton)}
+                                                            , version.nbPers , props.nameTC,tarif,version, setShowButton,tarif.toPayStayOriginal[indice])}
                                                         endIcon={<AddIcon/>}
                                                         className="bookNow"
                                                     >

@@ -22,6 +22,8 @@ import {session} from "../../common/utilitySession.js";
 import { useState } from 'react';
 import { useTranslation } from "react-i18next";
 
+import Dropdown from 'react-dropdown';
+
 import ButtonLoading from "./buttonLoading.js";
 
 function Navbar(props) {
@@ -60,7 +62,8 @@ function Navbar(props) {
                 if(props.urlRedirect){
                     window.location.href = props.urlRedirect;
                 }else{
-                    history.push('/front');
+                    // history.push('/front');
+                    alert("vous etes connecté");
                 }
             }else{
                 const setErrors = [
@@ -216,7 +219,9 @@ function Navbar(props) {
         </div>
       )}
     </PopupState>
-        <Button size="small">EUR</Button>
+        {/* <Button size="small">EUR</Button> */}
+        <Dropdown options={props.options} onChange={(e) => {props.changeDeviseRate(e.value)}}  value={props.to} placeholder="To" />
+
             <IconButton
                 size="large"
                 aria-label="show more"

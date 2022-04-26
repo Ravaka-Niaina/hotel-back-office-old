@@ -80,6 +80,8 @@ import  Localisation  from "./components/partenaire/hotel/localisation";
 import  CompteOublier  from "./components/common/Authentification/CompteOublier";
 import  modifyPassword  from "./components/common/Authentification/modifyPassword";
 
+import  TestFeuille  from "./components/client/testFeuille";
+
 // ---------------------------------------------------------------------------------
 
 // layouts
@@ -186,6 +188,8 @@ export default function Routes() {
 
             <Route path="/menu" exact component={Menu} />
             <Route path="/responsive" exact component={ResponsiveDrawer} />
+
+            <Route path="/feuille" exact component={TestFeuille} />
           </Router>
         </div> 
   );
