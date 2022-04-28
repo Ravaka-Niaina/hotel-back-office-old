@@ -76,12 +76,14 @@ import ResponsiveDrawer from "./components/menu/responsive-drawer.js";
 
 import  InsertHotel  from "./components/partenaire/hotel/createHotel.js";
 import  HotelList  from "./components/partenaire/hotel/listHotel.js";
+import  GetOneHotel  from "./components/partenaire/hotel/getOneHotel";
 import  Localisation  from "./components/partenaire/hotel/localisation";
+import  GetOnePartner from "./components/partenaire/User/getOnePartner";
 
 import  CompteOublier  from "./components/common/Authentification/CompteOublier";
 import  modifyPassword  from "./components/common/Authentification/modifyPassword";
 
-import RapportReservation from "./components/partenaire/rapportReservation.js";
+import RapportReservation from "./components/partenaire/rapportReservation/rapportReservation.js";
 
 // ---------------------------------------------------------------------------------
 
@@ -117,6 +119,7 @@ export default function Routes() {
 
             <Route path="/back/accessRight" exact component={ListeDroitAcces} />
             <Route path="/back/accessRight/insert" exact component={InsertDroitAcces} />
+            <Route path="/back/partenaire" exact component={GetOnePartner} />
             <Route path="/back/accessRight/update/:_id" exact component={InsertDroitAcces} />
 
             <Route path="/back" exact component={home} />
@@ -155,6 +158,7 @@ export default function Routes() {
             <Route path="/localisation" exact component={Localisation} />
             <Route path="/back/hotel/detail/:_id" exact component={InsertHotel} />
             <Route path="/back/hotel" exact component={HotelList} />
+            <Route path="/back/hotel/detail" exact component={GetOneHotel} />
             <Route path="/back/rapportReservation" exact component={RapportReservation} />
 
             <Route path="/" exact component={AppClient} />

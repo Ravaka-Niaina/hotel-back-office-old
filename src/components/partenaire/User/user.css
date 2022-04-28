@@ -1,0 +1,41 @@
+.inline {
+    display: inline-block;
+}
+
+#userPhoto {
+    width: 150px;
+}
+
+#second {
+    margin-left: 40px;
+}
+
+#third {
+    margin-left: 80px;
+}
+
+#card2 {
+    margin-top: 25px;
+}
+
+#global {
+    margin-left: 50px;
+    margin-top: 20px;
+}
+
+#userRole {
+    font-size: 17px;
+}
+
+#userMail {
+    font-size: 17px;
+}
+
+#userPhone {
+    font-size: 17px;
+}
+
+#username {
+    color: #008080;
+    font-size: 17px;
+}
