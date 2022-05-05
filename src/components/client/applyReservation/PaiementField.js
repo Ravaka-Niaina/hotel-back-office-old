@@ -30,7 +30,7 @@ function PaiementField(props){
     }
     return(
         <div class="paiement_field">
-            <p><span class="guest-payment_payNowAmount"><span>{props.reservation.toPay}&nbsp;€.</span></span> <span>Veuillez fournir un mode de paiement valide.</span></p>
+            <p><span class="guest-payment_payNowAmount"><span>{props.reservation.toPayDevise.toFixed(2)}&nbsp;{props.devise}.</span></span> <span>Veuillez fournir un mode de paiement valide.</span></p>
             <div class="logo_card">
                 <img src={process.env.PUBLIC_URL + '/Visa.png'} />
                 <img src={process.env.PUBLIC_URL + '/MasterCard.png'} />

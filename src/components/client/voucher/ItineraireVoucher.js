@@ -53,6 +53,7 @@ function ItinerairesVoucher(props){
                                     setShowModalchambre={props.setShowModalChambre}
                                     ShowModalAnnulation={props.ShowModalAnnulation}
                                     load ={props.load} 
+                                    devise={props.devise}
                                     /> 
 
                             </div>

@@ -25,6 +25,7 @@ import { is } from 'date-fns/locale';
 import ModalAnnulationChambre from '../common/ModalAnnulationChambre.js';
 import ConfirmationModif from '../common/ConfirmationModif.js'; 
 import NavBarStepper from "./NavbarClient/NavBar&Stepper.js";
+import Axios from 'axios';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -82,6 +83,8 @@ function ApplyReservationModif(props){
     const [showConfirmationModif , setConfModif] = useState(false);
     const[isVariableModif , setisVariableModif] = useState(false);
     const[ReservationNotUpdate , setReservationNotUpdate] = useState(null);
+
+    const[devise, setDevise] = useState("eur");
 
     function showConfModif(istrue){
         if(istrue){
@@ -176,14 +179,30 @@ function ApplyReservationModif(props){
     }
 
     function setDetailReservation(res){
-        console.log(res);
+        setDevise(localStorage.getItem("devise"));
         if(res.indiceI != null){
             setIndice(res.indiceI);
         }
         setOpenLoad(false);
         if(res.status == 200){
-            setReservation(res.reservation); 
-            setReservationNotUpdate(res.reservation);
+            let current = JSON.parse(JSON.stringify(res.reservation));
+            
+            Axios.get(`https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/eur.json`)
+                .then((resultat) => {
+                    let To = SetToDevise();
+                    let rate = resultat.data.eur;
+                    rate = rate[To];
+                    if(To == "eur"){
+                        current.toPayDevise = current.toPay; 
+                    }else{
+                        current.toPayDevise = current.toPay*rate; 
+                        setDevise(To);
+                    }
+                    console.log(current);
+                    setReservation(current); 
+                    setReservationNotUpdate(res.reservation);
+                });
+
         }else{
             console.log(res.errors[0].message);
             setAlertError(res.errors[0].message);
@@ -192,6 +211,41 @@ function ApplyReservationModif(props){
 
     function redirect(){
         history.push("/");
+    }
+
+    function changeDeviseRate(value ,info){
+        setDevise(value);
+        let current = {...reservation};
+        let rate = info[value];
+        current = changeToPay(current,rate,value);
+        localStorage.setItem("devise" , value);
+        setReservation(current);
+    }
+
+    function changeToPay(current,rate,value){
+        if(value == "eur"){
+            current.toPayDevise = current.toPay;
+        }else{
+            current.toPayDevise = current.toPay*rate;
+        }
+        for(let i = 0; i <  current.itineraires.length ; i++){
+            for(let j = 0; j <  current.itineraires[i].tarifReserves.length ; j++){
+                if(value == "eur"){
+                    current.itineraires[i].tarifReserves[j].toPayDevise.afterProm = current.itineraires[i].tarifReserves[j].toPay.afterProm;
+                }else{
+                    current.itineraires[i].tarifReserves[j].toPayDevise.afterProm = current.itineraires[i].tarifReserves[j].toPay.afterProm*rate;
+                }  
+            }
+        }
+        return current;
+    }
+
+    function SetToDevise(){
+        let devise = localStorage.getItem("devise");
+        if(!devise){
+            devise = "eur"
+        }
+        return devise;
     }
 
     useEffect(() => {
@@ -251,13 +305,8 @@ function ApplyReservationModif(props){
                 (reservation !== null) ? 
             <>
                 <NavBarStepper access = {localStorage.access} id = {_id} indice = {1} numeroItineraire = {numeroItineraire} isConnected={true}
-                    setConfModif={setConfModif} showConfModif={showConfModif} isVariableModif={isVariableModif}/><br/>
+                    setConfModif={setConfModif} showConfModif={showConfModif} isVariableModif={isVariableModif} changeDeviseRate={changeDeviseRate} /><br/>
                 <div id="content" style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
-                     
-                    {/* <NavBar /> */}
-                    {/* <div style={{display:'flex',flexDirection:'row',flexWrap:'no-wrap',justifyContent:'space-between'}}>
-                            <button  style={{minWidth:250,heigth:80}}  class="btn button_btn button_pink button_sm" variant="contained" onClick={(e) => ignoreReservation()}>IGNORER LES MODIFICATIONS</button>
-                        </div> */}
                     <Box sx={{ bgcolor: 'background.paper', maxWidth: 800, margin: "0 auto"
                     , padding: "15px 15px"}}>
                         {alertSuccess != null ? 
@@ -329,11 +378,12 @@ function ApplyReservationModif(props){
                             ShowModalAnnulation={ShowModalAnnulation} 
                             indiceI ={indiceI} variableAnnuler={variableAnnuler}
                             setisVariableUpdate={setisVariableUpdate}
+                            devise={devise}
                             />
                         <div class="infos_contact">
                             <h2 class="infos_heading">Paiement</h2>
-                            <PaiementField reservation={reservation} setReservation = {setReservation} setisVariableUpdate={setisVariableUpdate}/>
-                            <Total toPay={reservation.toPay} />
+                            <PaiementField reservation={reservation} setReservation = {setReservation} setisVariableUpdate={setisVariableUpdate} devise={devise}/>
+                            <Total toPay={reservation.toPayDevise} devise={devise}/>
                             
                         </div>
                         <div class="infos_contact" id="conditions">

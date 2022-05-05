@@ -30,36 +30,11 @@ const BookComponent = (props) => {
     const [regrouperResultatsPar, setRegrouperResultatsPar] = React.useState("typeChambre");
     const { t, i18n } = useTranslation();
     
-    //devise
-    const [info, setInfo] = useState([]);
-    const [input, setInput] = useState(0);
-    const [from, setFrom] = useState("eur");
-    const [to, setTo] = useState("eur");
-    const [options, setOptions] = useState([]);
-    const [cookies, setCookie] = useCookies(['reservation-real']);
-    const [Rate , setRate] = useState("");
-
-    // Calling the api whenever the dependency changes
-  useEffect(() => {
-    Axios.get(`https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${from}.json`)
-   .then((res) => {
-      setInfo(res.data[from]);
-    })
-  }, [from]);
-  
-  // Calling the convert function whenever
-  // a user switches the currency
-    useEffect(() => {
-        setOptions(Object.keys(info));
-    }, [info])
     
 
-    function changeDeviseRate(value){
-        console.log(props.context.state.reservationEnCours);
+    function changeDeviseRate(value,info){
         localStorage.setItem("devise" , value);
         var rate = info[value];
-            setTo(value);
-            console.log(props.context.state);
             let temp = {...props.context.state};
             let price = temp.listTypeChambre;
             temp.devise = value+"";
@@ -193,10 +168,10 @@ const BookComponent = (props) => {
         }
 
         let To = SetToDevise();
-        Axios.get(`https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${from}.json`)
+        Axios.get(`https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/eur.json`)
         .then((resultat) => {
             let currentState = {...props.context.state};
-            currentState = ResultatChangeDevise(currentState,res.list,To,resultat.data[from], res);
+            currentState = ResultatChangeDevise(currentState,res.list,To,resultat.data.eur, res);
             props.context.setState(currentState);
 
             setLoadingFilter(false);
@@ -209,10 +184,7 @@ const BookComponent = (props) => {
     function SetToDevise(){
         let devise = localStorage.getItem("devise");
         if(!devise){
-            setTo("eur");
             devise = "eur"
-        }else{
-            setTo(devise);
         }
         return devise;
     }
@@ -247,7 +219,10 @@ const BookComponent = (props) => {
     const [loadingFilter, setLoadingFilter] = React.useState(false);
   return(
     <div className={styles.Book}>
-        <Navbar currentPage={0} changeLanguageHandler={changeLanguageHandler} context = {props.context} bornes={props.bornes} setBornes={props.setBornes} options={options} changeDeviseRate ={changeDeviseRate} to={to} />
+        <Navbar currentPage={0} changeLanguageHandler={changeLanguageHandler} 
+            context = {props.context} bornes={props.bornes} setBornes={props.setBornes} 
+            changeDeviseRate ={changeDeviseRate}  />
+
         <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection:'column' }} className={styles.filter}>
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
             <BaeCalendar context = {props.context} applyFilter={applyFilter} dateSejour={props.context.state.dateSejour}
