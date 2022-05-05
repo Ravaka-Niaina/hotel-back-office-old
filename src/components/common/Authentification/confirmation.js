@@ -11,6 +11,7 @@ import FormControl from '@mui/material/FormControl';
 import callAPI from '../../../utility';
 import "./global.css";
 import Alert from '@mui/material/Alert';
+import ButtonLoading from "./buttonLoading.js";
 
 
 export default class Confirmation extends React.Component {
@@ -24,6 +25,7 @@ export default class Confirmation extends React.Component {
         codeR: "",
         hideShowBtn1:true,
         hideShowBtn2:false,
+        btnLoad:false
     };
 }
 
@@ -37,10 +39,14 @@ tryRedirect(res){
 
 search(e){
   e.preventDefault();
+  this.setState({btnLoad:true});
   callAPI('get', '/client/search/' + this.state.codeR, {}, (data) => {
     const client = {client : data.client};
     this.setState(client);
+    this.setState({btnLoad:false});
     this.tryRedirect(data);
+      localStorage.setItem('access',64);
+    
   });
 }
 
@@ -85,28 +91,32 @@ handleInputChange(event, inputName){
               fullWidth
               onChange={(e) => this.handleInputChange(e, "codeR")}/>
             </div>
-                      </div>
-                    </div>
-                    <div className="footer" style={{marginTop:'25px'}}>
-          <box> 
-
+          </div>
+        </div>
+          <div className="footer" style={{marginTop:'25px'}}>
+            <box> 
+                {
+          this.state.btnLoad
+          ? <ButtonLoading />
+          : 
             <Button 
             variant="contained" 
             color="success" 
             type='submit' 
             style={{fontWeight:'bold'}}
-            onClick={(e) => {this.search(e)}}>
+            onClick={(e) => {this.search(e)}}
+            disabled={this.state.codeR.trim() == '' ? true : false}>
             Envoyer
             </Button>
-
+          }
             <Link to={'/'} style={{textDecoration:'none',marginLeft: "10px"}}>
             <Button style={{backgroundColor: "gainsboro",color: "black",fontWeight: "bold"}}>
             Annuler
             </Button>
             </Link>
-          </box>
-                </div>
-        </form>  
+            </box>
+          </div>
+       </form>  
       </div>
     </div>
     )

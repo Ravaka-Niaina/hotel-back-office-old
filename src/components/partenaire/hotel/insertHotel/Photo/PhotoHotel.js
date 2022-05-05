@@ -10,6 +10,7 @@ export default function Photo({state, setState, noImage,setIsModifImg}){
         let currentState = JSON.parse(JSON.stringify(state));
         currentState.photo = [];
         currentState.preview = [];
+        currentState.error.photo = null;
         setIsModifImg(true);
         let finished = 0;
         for(let i = 0; i < e.target.files.length; i++){

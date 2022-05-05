@@ -9,6 +9,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import callAPI from '../../../utility';
+import ButtonLoading from "./buttonLoading.js";
 
 
 export default class RecoverPassword extends React.Component {
@@ -25,6 +26,7 @@ export default class RecoverPassword extends React.Component {
         error: {
           password: null,
         },
+        btnLoad:false
 
     };
 }
@@ -36,8 +38,16 @@ setDetailsClient(data){
     this.setState(currentState);
 }
 
+errorPage(){
+
+}
+
 componentDidMount(){
   console.log(this.state.client);
+  let access = localStorage.getItem('access');
+  if(access != '64' || access != 64){
+this.props.history.push('/confirmation');
+  }else{
     axios({
         method: 'get',
         url: process.env.REACT_APP_BACK_URL +
@@ -51,19 +61,22 @@ componentDidMount(){
     script.src = "./script.js";
     script.async = true;
     document.body.appendChild(script);
+  }
 }
 
 tryRedirect(res){
   let currentState = JSON.parse(JSON.stringify(this.state));
-
+  
   let keys = Object.keys(currentState.error);
   keys.map((k) => {
     currentState.error[k] = null;
   });
 
   if(res.status === 200){
+    localStorage.setItem('access',0);
     this.props.history.push('/');
   }else{
+    this.setState({btnLoad:false});
     currentState.errors = res.errors;
     keys = Object.keys(res.errors);
     keys.map((k) => {
@@ -71,6 +84,7 @@ tryRedirect(res){
     });
   }
   this.setState(currentState);
+  this.setState({btnLoad:false});
 }
 
 handleInputChange(event, inputName){
@@ -83,6 +97,7 @@ handleInputChange(event, inputName){
 update(e){
   e.preventDefault();
   let toSend = JSON.parse(JSON.stringify(this.state));
+  this.setState({btnLoad:true});
   axios({
       method: 'post',
       url: process.env.REACT_APP_BACK_URL + "/client/update",
@@ -97,13 +112,13 @@ update(e){
   render() {
     return (
       <div id="division">
-       <h5 id='grandTitre'>
-       Choisissez un nouveau mot de passe
-       </h5>
-       <hr/>
-       <p id='paragraphe'>
-       Créez un mot de passe d’au moins 5 caractères. Un mot de passe fort est une combinaison de lettres, de chiffres et de signes de ponctuation.
-       </p>
+        <h5 id='grandTitre'>
+        Choisissez un nouveau mot de passe
+        </h5>
+        <hr/>
+        <p id='paragraphe'>
+        Créez un mot de passe d’au moins 5 caractères. Un mot de passe fort est une combinaison de lettres, de chiffres et de signes de ponctuation.
+        </p>
        <form onSubmit={this.handleSubmit}>
         <div className="content">
           <div className="form">
@@ -134,19 +149,24 @@ update(e){
             helperText={this.state.error.password === null ? null : this.state.error.password}
             />
             </div>
-                      </div>
-                    </div>
-                    <div className="footer" style={{marginTop:'25px'}}> 
+          </div>
+        </div>
+          <div className="footer" style={{marginTop:'25px'}}> 
+          {
+          this.state.btnLoad
+          ? <ButtonLoading />
+          : 
             <Button variant="contained" color="success" onClick={(e) => this.update(e)}>
             continuer
             </Button>
+          }
             <Link to={'/'} style={{textDecoration:'none',marginLeft: "10px"}}>
             <Button style={{backgroundColor: "gainsboro",color: "black",fontWeight: "bold"}}>
             Annuler
             </Button>
             </Link>
-        </div>
-        </form>  
+          </div>
+       </form>  
       </div>
     )
   }
