@@ -32,6 +32,8 @@ function Voucher(props){
     const [isConnected , setIsConnected] = useState(null);
     const [run , setRun] = useState(true);
 
+    const [devise , setDevise] = useState("eur");
+
     function ShowModalAnnulation(isTrue,ObjectChambreAnnuler){
         if(isTrue){
             setShowModal(!showModal);
@@ -75,6 +77,8 @@ function Voucher(props){
 
 
     function setDetailReservation(res){
+        setDevise(localStorage.getItem("devise"));
+
         if(res.reservation == null){
             setIsReservation(false);
         }
@@ -139,8 +143,10 @@ function Voucher(props){
     function ControllerAcces(){
         if(localStorage.access == "1"){
             setIsConnected(true);
+            return true;
         }else{
             setIsConnected(false);
+            return false;
         }
     }
     function ModificationReservation(id){
@@ -150,14 +156,51 @@ function Voucher(props){
     }
     
     useEffect(() => {
-        ControllerAcces();
-        callAPI('get', '/reservation/details/' + _id, {}, setDetailReservation);
+        let access = ControllerAcces();
+        if(access){
+            callAPI('get', '/reservation/details/' + _id, {}, setDetailReservation);
+        }
+        
     }, [_id]);
 
+    function changeDeviseRate(value ,info){
+        setDevise(value);
+        let current = {...reservation};
+        let rate = info[value];
+        current = changeToPay(current,rate,value);
+        localStorage.setItem("devise" , value);
+        setReservation(current);
+    }
+
+    function changeToPay(current,rate,value){
+        if(value == "eur"){
+            current.toPayDevise = current.toPay;
+        }else{
+            current.toPayDevise = current.toPay*rate;
+        }
+        for(let i = 0; i <  current.itineraires.length ; i++){
+            for(let j = 0; j <  current.itineraires[i].tarifReserves.length ; j++){
+                if(value == "eur"){
+                    current.itineraires[i].tarifReserves[j].toPayDevise.afterProm = current.itineraires[i].tarifReserves[j].toPay.afterProm;
+                }else{
+                    current.itineraires[i].tarifReserves[j].toPayDevise.afterProm = current.itineraires[i].tarifReserves[j].toPay.afterProm*rate;
+                }  
+            }
+        }
+        return current;
+    }
+
+    function SetToDevise(){
+        let devise = localStorage.getItem("devise");
+        if(!devise){
+            devise = "eur"
+        }
+        return devise;
+    }
 
     return(
         <>
-        <NavBarStepper access = {localStorage.access} id = {_id} indice = {2}  numeroItineraire={"1"} isConnected={isConnected} />
+        <NavBarStepper access = {localStorage.access} id = {_id} indice = {2}  numeroItineraire={"1"} isConnected={isConnected} changeDeviseRate={changeDeviseRate}/>
         <div class="voucher_container">
             <div class="voucher_infos">
                 <div class="voucher_border voucher_bravo">
@@ -191,6 +234,7 @@ function Voucher(props){
                                 setShowModalchambre={setShowModalChambre}
                                 ShowModalAnnulation={ShowModalAnnulation}
                                 load ={load}
+                                devise={devise}
                             />  :  "" 
                     }
                     

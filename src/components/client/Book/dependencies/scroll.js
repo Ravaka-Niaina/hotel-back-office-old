@@ -20,6 +20,7 @@ import Promotions from "./promotion";
 
 import styles from '../Book.module.css';
 import Footer from "./Footer.js";
+import Axios from 'axios';
 
 const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
@@ -56,7 +57,7 @@ function getDateCreationPanier(){
     return{date: dateString, timeZoneOffset: d.getTimezoneOffset()};
 }
 
-const name_cookies='reservation-real';
+const name_cookies='reservation_real';
 const empty_reservation={_id:"62026a7908b6947750fba0ff",idUtilisateur: "SIl56KMCom4UdHRpGrpsbooTKW8Lw5IJ",dateValidation: null,etat: 1,itineraires:[{ edit: false,
     dateSejour: {debut: "", fin: ""},
     tarifReserves: []}]
@@ -111,7 +112,9 @@ class Scroll extends React.Component{
             pagination: {
                 currentNumPage: 1,
                 nbPage: 5,
-            }
+            },
+
+            devise : "eur"
         };
         this.setReservationEnCours = this.setReservationEnCours.bind(this);
         this.setResult = this.setResult.bind(this);
@@ -158,6 +161,7 @@ class Scroll extends React.Component{
     }
     
     handleChangeCookies(reservation,expirationTime) {
+        console.log(reservation);
         const { cookies } = this.props;
         cookies.set(name_cookies, reservation, { path: '/' ,expires:new Date(expirationTime)});
         
@@ -296,15 +300,16 @@ class Scroll extends React.Component{
     
     setReservationEnCours(reservation, isFactureReceived,isFirstTarif){
         let currentState = JSON.parse(JSON.stringify(this.state));
+        let expiration = currentState.expirationCookie;
         currentState.reservationEnCours = reservation;
-    
-        currentState.reload = true;
-        let expiration=currentState.expirationCookie;
-        if(isFactureReceived){
-            currentState.isFactureReceived = true;
-        }
-        
+            currentState.reload = true;
+            if(isFactureReceived){
+                currentState.isFactureReceived = true;
+            }
+
         if(reservation === null){
+            console.log("madalo cookie");
+
             const { cookies } = this.props;
             let reservationCookies=cookies.get(name_cookies);
             
@@ -322,10 +327,43 @@ class Scroll extends React.Component{
                 expiration = new Date(datenow + duree_cookie*60000);
                 currentState.expirationCookie = expiration;
             }
-            currentState.reservationEnCours=reservationCookies;
-            currentState.itineraires = reservationCookies.itineraires;
+
+            //changeDevise
+            if(reservationCookies.itineraires[0].tarifReserves.length > 0){
+                    Axios.get(`https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/eur.json`)
+                    .then((resultat) => {
+                        let devise = localStorage.getItem("devise");
+                        console.log(devise);
+                        console.log(resultat);
+                        let rate = resultat.data.eur;
+                        rate = rate[devise];
+                    console.log(rate);
+                    for(let i = 0; i <  reservationCookies.itineraires.length ; i++){
+                        for(let j = 0; j <  reservationCookies.itineraires[i].tarifReserves.length ; j++){
+                            if(devise === "eur"){
+                                reservationCookies.itineraires[i].tarifReserves[j].toPayDevise.afterProm = reservationCookies.itineraires[i].tarifReserves[j].toPay.afterProm;
+                            }else{
+                                reservationCookies.itineraires[i].tarifReserves[j].toPayDevise.afterProm = rate*reservationCookies.itineraires[i].tarifReserves[j].toPay.afterProm;
+                            }
+                        } 
+                    }
+                    currentState.reservationEnCours=reservationCookies; 
+                    currentState.itineraires = reservationCookies.itineraires;
+                    this.handleChangeCookies(currentState.reservationEnCours,expiration);
+                    this.setState(currentState);
+                });  
+            }else{
+                currentState.reservationEnCours=reservationCookies;
+                currentState.itineraires = reservationCookies.itineraires;
+                this.handleChangeCookies(currentState.reservationEnCours,expiration);
+                this.setState(currentState);
+            }
+            
             
         }else{
+            console.log(" jfezblfebzhlfe");
+            console.log(currentState.isFactureReceived);
+
             if(isFirstTarif){
                 
                 currentState.err="Votre réservation expirera dans "+duree_cookie+ " minutes";
@@ -333,12 +371,12 @@ class Scroll extends React.Component{
         
                 expiration = new Date(datenow + duree_cookie*60000);
             }
+
             currentState.itineraires = reservation.itineraires;
             currentState.expirationCookie = expiration;
+            this.handleChangeCookies(currentState.reservationEnCours,expiration);
+            this.setState(currentState);
         }
-        
-        this.handleChangeCookies(currentState.reservationEnCours,expiration);
-        this.setState(currentState);
     }
 
     validerReservation(){
@@ -362,7 +400,7 @@ class Scroll extends React.Component{
         return(
             <div>
                 <div style={{filter: "blur(" + (this.state.openLoad ? "2" : "0") + "px)"}}>
-                    <NavBarClient context={this} />
+                    <NavBarClient context={this} handleChange={this.handleChangeCookies} />
                     <Box sx={{ flexGrow: 1, padding :"5px" }}>
                         <Grid container spacing={2}>
                             <Grid item xs={3}>

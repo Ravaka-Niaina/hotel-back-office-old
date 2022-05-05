@@ -76,7 +76,13 @@ function TarifsVoucher(props){
                         <span class="voucher_title2" style={{marginLeft:'1.5rem'}}>CONFIRMER #{props.reservation.itineraires[props.indexItineraire].tarifReserves[i].numeroConfirmation}</span>
                         {infoEtat === null ? null : <p><strong>Statut tarif: {infoEtat.label} le {infoEtat.date}</strong></p>}
                     </div>
-                    <div class="flex_voucher_tarif" style={{marginTop:'0.8rem'}}><strong class="voucher_bold">{tarif.nomTypeChambre}</strong><div class="booking-summary-reservations_roomTotal"><span class="sr-only"><span>Prix de la chambre</span> </span><span class="voucher_bold">{tarif.toPay.afterProm}&nbsp;€</span></div></div>
+                    <div class="flex_voucher_tarif" style={{marginTop:'0.8rem'}}><strong class="voucher_bold">{tarif.nomTypeChambre}</strong>
+                        <div class="booking-summary-reservations_roomTotal">
+                            <span class="sr-only"><span>Prix de la chambre</span> 
+                            </span><span class="voucher_bold">{tarif.toPayDevise.afterProm.toFixed(2)}&nbsp; {props.devise}</span>
+                        </div>
+                    </div>
+
                     <div style={{display:'flex',flexDirection:'row'}}>
                         <div >{tarif.nomTarif}</div> <span  style={{marginLeft:'0.8rem',fontSize:12}}>{getDiffDays(datedebut,datefin)} nuit(s)</span>
                     </div>
@@ -114,7 +120,8 @@ function TarifsVoucher(props){
                     <button  style={{marginTop:'0.8rem'}} class="voucher_link" datatest="Button"  
                         onClick={(e) => props.ShowModalAnnulation(false , object)}><span style={{fontSize : "12px"}}>annuler la réservation de la chambre</span></button>
                     <hr style={{marginTop:-2}}></hr>
-                    <div style={{textAlign:'right',fontWeight:700,marginTop:'0.8rem'}}><span>Total de la réservation&nbsp;:</span> <span class="booking-summary-reservations_amount"><span>{tarif.toPay.afterProm}&nbsp;€</span></span></div>
+                    <div style={{textAlign:'right',fontWeight:700,marginTop:'0.8rem'}}><span>Total de la réservation&nbsp;:</span> 
+                        <span class="booking-summary-reservations_amount"><span>{tarif.toPayDevise.afterProm.toFixed(2)}&nbsp; {props.devise} </span></span></div>
                     
                 </div>
                 

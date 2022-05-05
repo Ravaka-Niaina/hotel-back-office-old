@@ -84,6 +84,7 @@ import  CompteOublier  from "./components/common/Authentification/CompteOublier"
 import  modifyPassword  from "./components/common/Authentification/modifyPassword";
 
 import RapportReservation from "./components/partenaire/rapportReservation/rapportReservation.js";
+import  TestFeuille  from "./components/client/testFeuille";
 
 // ---------------------------------------------------------------------------------
 
@@ -195,6 +196,8 @@ export default function Routes() {
 
             <Route path="/menu" exact component={Menu} />
             <Route path="/responsive" exact component={ResponsiveDrawer} />
+
+            <Route path="/feuille" exact component={TestFeuille} />
           </Router>
         </div> 
   );

@@ -23,6 +23,7 @@ import PaiementField from './applyReservation/PaiementField';
 import { is } from 'date-fns/locale';
 import ModalAnnulationChambre from '../common/ModalAnnulationChambre.js';
 import NavBar from "./NavbarClient/Navbar.js" 
+import Axios from 'axios';
 
 import NavBarStepper from "./NavbarClient/NavBar&Stepper.js"; 
 
@@ -79,6 +80,8 @@ function ApplyReservation(props){
     const[ variableAnnuler , setVariableAnnuler] = useState({idReservation:'', indexItineraire :'',indexTarifsReserve : ''});
     const [indiceI , setIndice] = useState(null);
     const [isCompte , setisCompte] = useState(false);
+
+    const[devise, setDevise] = useState("eur");
 
 
     const interpretResponse = (data) => {
@@ -171,8 +174,6 @@ function ApplyReservation(props){
     }
 
     function setDetailReservation(res){
-        console.log("details reservation");
-        //
         setOpenLoad(false);
         if(res.reservation == null){
             setOpenLoad(false);
@@ -205,8 +206,27 @@ function ApplyReservation(props){
                         }
                     }
                 }
-                setReservation(current);
-                setAffilie(tempAffilie);
+                //ilai function rate 
+                console.log(current);
+
+                Axios.get(`https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/eur.json`)
+                .then((resultat) => {
+                    let To = SetToDevise();
+                    let rate = resultat.data.eur;
+                    rate = rate[To];
+                    if(To == "eur"){
+                        current.toPayDevise = current.toPay; 
+                    }else{
+                        console.log(current);
+                        current = changeToPay(current,rate,To,false);
+                        setDevise(To);
+                    }
+                      
+                    setReservation(current);
+                    setAffilie(tempAffilie); 
+                });
+              
+                
 
                 if(res.reservation.reservateur != undefined){
                     setisCompte(true);
@@ -237,16 +257,63 @@ function ApplyReservation(props){
     function ControllerAcces(){
         if(localStorage.access !== "2"){
             history.push("/");
+            return false;
+        }else{
+            return true;
         }
+        
     }
 
     function GetDetails(){
        return callAPI('get', '/reservation/details/' + _id, {}, setDetailReservation);
     }
 
+    function changeDeviseRate(value ,info){
+        setDevise(value);
+        let current = {...reservation};
+        let rate = info[value];
+        if(value == "eur"){
+            current = changeToPay(current,rate,value,true);
+        }else{
+            current = changeToPay(current,rate,value,false);
+        }
+        console.log(current);
+        localStorage.setItem("devise" , value);
+        setReservation(current);
+    }
+
+    function changeToPay(current,rate,value,isEuro){
+        console.log(current);
+        for(let i = 0; i <  current.itineraires.length ; i++){
+            for(let j = 0; j <  current.itineraires[i].tarifReserves.length ; j++){
+                if(isEuro){
+                    current.toPayDevise = current.toPay;
+                    current.itineraires[i].tarifReserves[j].toPayDevise.afterProm = current.itineraires[i].tarifReserves[j].toPay.afterProm;
+                }else{
+                    current.toPayDevise = current.toPay*rate;
+                    current.itineraires[i].tarifReserves[j].toPayDevise.afterProm = current.itineraires[i].tarifReserves[j].toPay.afterProm*rate;
+                }
+            }
+        }
+        console.log(current);
+
+        return current;
+    }
+
+    function SetToDevise(){
+        let devise = localStorage.getItem("devise");
+        if(!devise){
+            devise = "eur"
+        }
+        return devise;
+    }
+
+
     useEffect(() => {
-        ControllerAcces();
-        GetDetails();
+        let acceSs = ControllerAcces();
+        if(acceSs){
+            GetDetails();
+        }
     }, [_id]);
 
     function generatePDF(){
@@ -302,7 +369,7 @@ function ApplyReservation(props){
         <>
             {(reservation !== null) ? 
                 <div id="content" style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
-                    <NavBarStepper access = {localStorage.access} id = {_id} indice = {1} /><br/>
+                    <NavBarStepper access = {localStorage.access} id = {_id} indice = {1} changeDeviseRate={changeDeviseRate}/><br/>
                     <Box sx={{ bgcolor: 'background.paper', maxWidth: 800, margin: "0 auto"
                     , padding: "15px 15px"}}>
                         {alertSuccess != null ? 
@@ -463,11 +530,12 @@ function ApplyReservation(props){
                             isEditEnabled={isEditEnabled}
                             openLoad={openLoad}
                             setOpenLoad={setOpenLoad} 
-                            ShowModalAnnulation={ShowModalAnnulation} />
+                            ShowModalAnnulation={ShowModalAnnulation}
+                            devise={devise} />
                         <div class="infos_contact">
                             <h2 class="infos_heading">Paiement</h2>
-                            <PaiementField reservation={reservation} reservateur={reservateur} setReservateur ={setReservateur} />
-                            <Total toPay={reservation.toPay} />
+                            <PaiementField reservation={reservation} reservateur={reservateur} setReservateur ={setReservateur} devise={devise}/>
+                            <Total toPay={reservation.toPayDevise} devise={devise}/>
                             
                         </div>
                         <div class="infos_contact" id="conditions">

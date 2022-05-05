@@ -14,7 +14,7 @@ const css = {
 function NavBarStepper (props){
     return (
         <> 
-             <NavBar access = {props.access} id = {props.id} />
+             <NavBar access = {props.access} id = {props.id} changeDeviseRate={props.changeDeviseRate} />
              <Box sx={{ display: { xs: 'none', md: 'flex'}}} style={css}>
                 <Stepper indice = {props.indice} id = {props.id} numeroItineraire={props.numeroItineraire} isConnected={props.isConnected}
                     setConfModif={props.setConfModif} showConfModif={props.showConfModif} isVariableModif={props.isVariableModif} />

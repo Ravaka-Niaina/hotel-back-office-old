@@ -79,7 +79,7 @@ function TarifReserves(props){
                     <Politiques politiques={props.reservation.itineraires[props.indexItineraire].tarifReserves[i].infoTarif.infoPolitique} tarif={tarif} />
                     <div class="prix_tarif">
                         <p class="prix">Prix:</p>
-                        <p class="prix">{tarif.toPay.afterProm} € </p>
+                        <p class="prix">{tarif.toPayDevise.afterProm.toFixed(2) +"  "+ props.devise}  </p>
                     </div>
                     <button style={{marginLeft:'0.8em'}} class="btn button_btn button_secondary button_sm" datatest="Button" onClick={(e) => props.ShowModalAnnulation(false , object)}><span>Annuler</span></button>
                     

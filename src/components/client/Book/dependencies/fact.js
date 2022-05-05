@@ -113,7 +113,7 @@ function Reservations(props){
                                 <span></span>
                             </div>
                         </CardContent>
-                        <div><span>Prix : {tarif.toPay.afterProm.toFixed(2)} EUR</span></div>
+                        <div><span>Prix : {tarif.toPayDevise.afterProm.toFixed(2) +" "+props.context.state.devise} </span></div>
                         <CardActions>
                             <Button size="small">{t('Modify')}</Button>
                             <Button size="small" onClick={(e) => props.annulerReservation(props.context, props.context.state.reservationEnCours._id, props.indexItineraire, u)}>
@@ -137,7 +137,7 @@ function Itineraires(props){
         let itineraire=props.context.state.itineraires[i];
         let toPay=0;
         for(let u = 0; u < itineraire.tarifReserves.length; u++){
-            toPay += itineraire.tarifReserves[u].toPay.afterProm;
+            toPay += itineraire.tarifReserves[u].toPayDevise.afterProm;
         }
         itineraires.push(
             <Box className={styles.sidetitle}>
@@ -151,7 +151,7 @@ function Itineraires(props){
                 <Reservations context={props.context} indexItineraire={i} annulerReservation={props.annulerReservation} />
                 <Card>
                     <p>
-                    Total : <span>{toPay} EUR</span>
+                    Total : <span>{toPay.toFixed(2) +" " +props.context.state.devise} </span>
                     </p>
                 </Card>
             </Box>
@@ -203,6 +203,7 @@ class Fact extends React.Component{
             if(this.props.context.state.reservationEnCours._id != ""){
                 idVide = false;
                 const itineraires =  this.props.context.state.itineraires;
+                
                 const data = {itineraires: itineraires, dateCreationPanier: this.props.context.state.reservationEnCours.dateCreationPanier};
                 console.log(data);
                 callAPI("post" , "/reservation/insertReservationPanier" , data , (res)=>{
@@ -263,7 +264,7 @@ class Fact extends React.Component{
         for(let i = 0; i < this.props.context.state.itineraires.length; i++){
             let toPayItineraire =0;
             for(let u = 0; u < this.props.context.state.itineraires[i].tarifReserves.length; u++){
-                toPayItineraire += this.props.context.state.itineraires[i].tarifReserves[u].toPay.afterProm;
+                toPayItineraire += this.props.context.state.itineraires[i].tarifReserves[u].toPayDevise.afterProm;
               
             }
            
@@ -276,8 +277,9 @@ class Fact extends React.Component{
             <div className={styles.printFacture}>
                 <div style={{textAlign:'center'}}>
                     <Itineraires context={this.props.context} annulerReservation={this.annulerReservation} />
-                    <p id='bigLabel'>TOTAL : {toPay}</p>
-                    <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()} endIcon={<CallMissedOutgoingIcon/>}>{this.props.context.state.traduction ? "Add itinerary" : "Ajouter itinéraire" }</Button></p>
+                    <p id='bigLabel'>TOTAL : {toPay.toFixed(2) +' '+this.props.context.state.devise}</p>
+                    <p><Button size='small' variant="contained" onClick={(e) => this.props.context.addNewItineraire()} 
+                        endIcon={<CallMissedOutgoingIcon/>}>{this.props.context.state.traduction ? "Add itinerary" : "Ajouter itinéraire" }</Button></p>
                 </div>
                 <Modal
                     open={this.props.context.state.open}

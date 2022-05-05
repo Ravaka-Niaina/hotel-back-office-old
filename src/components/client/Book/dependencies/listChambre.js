@@ -135,8 +135,11 @@ class DChambre extends React.Component{
         currentState.listTypeChambre = data.list;                                         
         this.setState(currentState);               
     }
-    
-    addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre, tarif, toPay, setShowButton, listPrix){
+
+    addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre, tarif, toPay, setShowButton,toPayEuro){
+
+        console.log(toPay);
+        console.log(toPayEuro);
         setShowButton(true);
         let isFirstTarif=false;
         if(this.props.context.state.itineraires.length > 0){
@@ -174,9 +177,6 @@ class DChambre extends React.Component{
                 })
                 .then(res => {                                           
                     let typeChambre = res.data.typeChambre;
-                    console.log("typeChambre");
-                    console.log(typeChambre);
-                    console.log(TChambre);
                     if(res.data.status==200){
                         itineraires[lastItineraire].NumeroITineraire =Random;
                         itineraires[lastItineraire].tarifReserves.push({
@@ -193,8 +193,8 @@ class DChambre extends React.Component{
                             politiqueAnnulAtrb:tarif.politiqueAnnulAtrb,
                             nomTarif:tarif.nom,
                             TarifName:tarif.name,
-                            toPay:{afterProm:toPay.prix,beforeProm:toPay.prixOriginal},
-                            listPrix: JSON.parse(JSON.stringify(listPrix))
+                            toPayDevise:{afterProm:toPay.prix,beforeProm:toPay.prixOriginal},
+                            toPay: {afterProm:toPayEuro.prix,beforeProm:toPayEuro.prixOriginal}
                         });
                         
                         let reserv = this.props.context.state.reservationEnCours;

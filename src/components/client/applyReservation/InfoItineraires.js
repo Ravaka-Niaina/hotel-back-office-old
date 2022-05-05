@@ -11,7 +11,6 @@ import {StyledTableCell, StyledTableRow,
 import TarifReserves from './TarifReserves.js';
 import './Itineraires.css';
 function InfoItineraires(props){
-    console.log(props.reservation);
     let itineraires = [];
     let x = 0;
     if(props.reservation != null){
@@ -32,7 +31,8 @@ function InfoItineraires(props){
                             setAffilie={props.setAffilie}
                             openLoad={props.openLoad}
                             setOpenLoad={props.setOpenLoad}
-                            ShowModalAnnulation={props.ShowModalAnnulation} />
+                            ShowModalAnnulation={props.ShowModalAnnulation} 
+                            devise={props.devise}/>
                     </div>
                 ); 
         }

@@ -15,6 +15,7 @@ import PhotoTypeChambre from './photoTypeChambre.js';
 import styles from './ResultatGroupeParTypeChambre.css';
 
 const ResultatGroupeParTypeChambre = (props) => {
+    console.log(props.context.state);
     const { t, i18n } = useTranslation();
     let tarifs = props.context.state.listTypeChambre;
     return(
@@ -53,8 +54,8 @@ const ResultatGroupeParTypeChambre = (props) => {
                                         return(
                                             <div>
                                                 <span>X {version.nbPers}</span>
-                                                <span>{version.prixOriginal}EUR</span>
-                                                <span>{version.prix} EUR</span>
+                                                <span>{version.prixOriginal}{props.context.state.devise.toUpperCase()}</span>
+                                                <span>{version.prix} {props.context.state.devise.toUpperCase()}</span>
                                                 <Button variant="contained"
                                                 onClick = {(e) => props.contextListChambre.addReservation(e,tarif._id, tarif.nom, typeChambre._id, version.nbPers , typeChambre.nom, tarif,version, () => {})}
                                                     endIcon={<AddIcon/>}

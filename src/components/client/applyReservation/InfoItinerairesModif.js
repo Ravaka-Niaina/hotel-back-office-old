@@ -23,7 +23,8 @@ function InfoItineraires(props){
                             openLoad={props.openLoad}
                             setOpenLoad={props.setOpenLoad}
                             ShowModalAnnulation={props.ShowModalAnnulation}
-                            indiceI = {props.indiceI} setisVariableUpdate={props.setisVariableUpdate}/>
+                            indiceI = {props.indiceI} setisVariableUpdate={props.setisVariableUpdate}
+                            devise={props.devise}/>
                     </div>
                 );  
         }

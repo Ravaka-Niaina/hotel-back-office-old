@@ -1,5 +1,8 @@
 import './Navbar.css';
 import * as React from 'react';
+import { useEffect,useState } from 'react';
+import { useCookies } from 'react-cookie';
+import Axios from 'axios';
 import {Language, AccountCircle, LiveHelp, Login} from '@mui/icons-material';
 import {Button, IconButton, Typography, Toolbar, AppBar, Avatar} from '@mui/material';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -19,11 +22,93 @@ import axios from "axios";
 import LoadingButton from '@mui/lab/LoadingButton';
 
 import {session} from "../../common/utilitySession.js";
-import { useState } from 'react';
 import { useTranslation } from "react-i18next";
+
+import Dropdown from 'react-dropdown';
 
 import ButtonLoading from "./buttonLoading.js";
 
+let deviseOriginal = [
+    {label:"USD" , value :'United States Dollars'},
+	{label:"EUR", value :'Euro'},
+	{label:"GBP", value :'United Kingdom Pounds'},
+	{label:"DZD", value :'Algeria Dinars'},
+	{label:"ARP", value :'Argentina Pesos'},
+	{label:"AUD", value :'Australia Dollars'},
+	{label:"ATS", value :'Austria Schillings'},
+	{label:"BSD", value :'Bahamas Dollars'},
+	{label:"BBD", value :'Barbados Dollars'},
+	{label:"BEF", value :'Belgium Francs'},
+	{label:"BMD", value :'Bermuda Dollars'},
+	{label:"BRR", value :'Brazil Real'},
+	{label:"BGL", value :'Bulgaria Lev'},
+	{label:"CAD", value :'Canada Dollars'},
+	{label:"CLP", value :'Chile Pesos'},
+	{label:"CNY", value :'China Yuan Renmimbi'},
+	{label:"CYP", value :'Cyprus Pounds'},
+	{label:"CSK", value :'Czech Republic Koruna'},
+	{label:"DKK", value :'Denmark Kroner'},
+	{label:"NLG", value :'Dutch Guilders'},
+	{label:"XCD", value :'Eastern Caribbean Dollars'},
+	{label:"EGP", value :'Egypt Pounds'},
+	{label:"FJD", value :'Fiji Dollars'},
+	{label:"FIM", value :'Finland Markka'},
+	{label:"FRF", value :'France Francs'},
+	{label:"DEM", value :'Germany Deutsche Marks'},
+	{label:"XAU", value :'Gold Ounces'},
+	{label:"GRD", value :'Greece Drachmas'},
+	{label:"HKD", value :'Hong Kong Dollars'},
+	{label:"HUF", value :'Hungary Forint'},
+	{label:"ISK", value :'Iceland Krona'},
+	{label:"INR", value :'India Rupees'},
+	{label:"IDR", value :'Indonesia Rupiah'},
+	{label:"IEP", value :'Ireland Punt'},
+	{label:"ILS", value :'Israel New Shekels'},
+	{label:"ITL", value :'Italy Lira'},
+	{label:"JMD", value :'Jamaica Dollars'},
+	{label:"JPY", value :'Japan Yen'},
+	{label:"JOD", value :'Jordan Dinar'},
+	{label:"KRW", value :'Korea (South) Won'},
+	{label:"LBP", value :'Lebanon Pounds'},
+	{label:"LUF", value :'Luxembourg Francs'},
+	{label:"MYR", value :'Malaysia Ringgit'},
+	{label:"MXP", value :'Mexico Pesos'},
+	{label:"NLG", value :'Netherlands Guilders'},
+	{label:"NZD", value :'New Zealand Dollars'},
+	{label:"NOK", value :'Norway Kroner'},
+	{label:"PKR", value :'Pakistan Rupees'},
+	{label:"XPD", value :'Palladium Ounces'},
+	{label:"PHP", value :'Philippines Pesos'},
+	{label:"XPT", value :'Platinum Ounces'},
+	{label:"PLZ", value :'Poland Zloty'},
+	{label:"PTE", value :'Portugal Escudo'},
+	{label:"ROL", value :'Romania Leu'},
+	{label:"RUR", value :'Russia Rubles'},
+	{label:"SAR", value :'Saudi Arabia Riyal'},
+	{label:"XAG", value :'Silver Ounces'},
+	{label:"SGD", value :'Singapore Dollars'},
+	{label:"SKK", value :'Slovakia Koruna'},
+	{label:"ZAR", value :'South Africa Rand'},
+	{label:"KRW", value :'South Korea Won'},
+	{label:"ESP", value :'Spain Pesetas'},
+	{label:"XDR", value :'Special Drawing Right (IMF)'},
+	{label:"SDD", value :'Sudan Dinar'},
+	{label:"SEK", value :'Sweden Krona'},
+	{label:"CHF", value :'Switzerland Francs'},
+	{label:"TWD", value :'Taiwan Dollars'},
+	{label:"THB", value :'Thailand Baht'},
+	{label:"TTD", value :'Trinidad and Tobago Dollars'},
+	{label:"TRL", value :'Turkey Lira'},
+	{label:"VEB", value :'Venezuela Bolivar'},
+	{label:"ZMK", value :'Zambia Kwacha'},
+	{label:"EUR", value :'Euro'},
+	{label:"XCD", value :'Eastern Caribbean Dollars'},
+	{label:"XDR", value :'Special Drawing Right (IMF)'},
+	{label:"XAG", value :'Silver Ounces'},
+	{label:"XAU", value :'Gold Ounces'},
+	{label:"XPD", value :'Palladium Ounces'},
+	{label:"XPT", value :'Platinum Ounces'}
+]
 function Navbar(props) {
   const [email, setEmail] = React.useState("");
   const [errorEmail, setErrorEmail] = React.useState(null);
@@ -32,9 +117,45 @@ function Navbar(props) {
   const [ambiguousError, setAmbiguousError] = React.useState(null);
   const history = useHistory();
   const { t, i18n } = useTranslation();
-  const [btnLoad, setBtnLoad] = useState(false)
+  const [btnLoad, setBtnLoad] = useState(false);
 
-  function translation(){
+  //devise
+  const [info, setInfo] = useState([]);
+  const [from, setFrom] = useState("eur");
+  const [to, setTo] = useState("eur");
+  const [cookies, setCookie] = useCookies(['reservation-real']);
+  const [options, setOptions] = useState([]);
+
+  // Calling the api whenever the dependency changes
+useEffect(() => {
+  Axios.get(`https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${from}.json`)
+ .then((res) => {
+    setInfo(res.data[from]);
+  })
+}, [from]);
+
+// Calling the convert function whenever
+// a user switches the currency
+  useEffect(() => {
+      setOptions(Object.keys(info));
+        // setOptions(deviseOriginal);
+        SetToDevise();
+
+  }, [info])
+  
+
+function SetToDevise(){
+    let devise = localStorage.getItem("devise");
+    if(!devise){
+        setTo("eur");
+        devise = "eur"
+    }else{
+        setTo(devise);
+    }
+    return devise;
+}
+
+function translation(){
     let temp = {...props.context.state};
     temp.traduction= !temp.traduction;
     props.context.setState(temp);
@@ -60,7 +181,8 @@ function Navbar(props) {
                 if(props.urlRedirect){
                     window.location.href = props.urlRedirect;
                 }else{
-                    history.push('/front');
+                    // history.push('/front');
+                    alert("vous etes connecté");
                 }
             }else{
                 const setErrors = [
@@ -216,7 +338,10 @@ function Navbar(props) {
         </div>
       )}
     </PopupState>
-        <Button size="small">EUR</Button>
+        {/* <Button size="small">EUR</Button> */}
+        <Dropdown options={options} onChange={(e) => {setTo(e.value); props.changeDeviseRate(e.value,info)}}  
+            value={to} placeholder="To" />
+
             <IconButton
                 size="large"
                 aria-label="show more"
