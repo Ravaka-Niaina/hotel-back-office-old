@@ -159,7 +159,7 @@ export default function Routes() {
             <Route path="/back/hotel/detail/:_id" exact component={InsertHotel} />
             <Route path="/back/hotel" exact component={HotelList} />
             <Route path="/back/hotel/detail" exact component={GetOneHotel} />
-            <Route path="/back/rapportReservation" exact component={RapportReservation} />
+            <Route path="/back/reservation/rapport" exact component={RapportReservation} />
 
             <Route path="/" exact component={AppClient} />
             <Route path="/front" exact component={AppClient} />

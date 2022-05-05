@@ -2,11 +2,20 @@
     
 }
 
-.paramsChart > div {
+.paramsChart > div:first-child {
     display: inline-flex;
     width: 250px;
     margin-bottom: 5px;
     margin-right: 5px;
+}
+
+.reservEffectuees {
+    display: inline-block;
+    width: 240px;
+}
+.reservEffectuees > div {
+    display: block;
+    margin: 0 0;
 }
 
 .chart {

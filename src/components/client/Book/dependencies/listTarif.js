@@ -29,7 +29,7 @@ const style = {
     pt: 2,
     px: 4,
     pb: 3,
-  };
+};
 
 function ListTarif(props){
     const [error, setError] = React.useState(null);
@@ -118,7 +118,7 @@ function ListTarif(props){
                                                 <div className={styles.bookNow}>
                                                     <Button variant="contained"
                                                         onClick = {(e) => props.contextListChambre.addReservation(e,tarif._id, tarif.nom, props.idTypeChambre
-                                                            , version.nbPers , props.nameTC,tarif,version, setShowButton)}
+                                                            , version.nbPers , props.nameTC,tarif,version, setShowButton, tarif.listPrix)}
                                                         endIcon={<AddIcon/>}
                                                         className="bookNow"
                                                     >

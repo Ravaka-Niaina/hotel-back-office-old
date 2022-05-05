@@ -249,19 +249,16 @@ class Fact extends React.Component{
                     || this.props.context.state.itineraires[i].tarifReserves[u].etat == 1){
                     valider = (<p style={{textAlign:'center',paddingBottom:'12px'}}>
                         {
-                            this.state.load ?
-                        <Button size='medium' variant="contained"  onClick={(e) => this.validerReservation()} endIcon={<CallMissedOutgoingIcon/>}>
-                            {this.props.context.state.traduction ? "Validate" : "Valider réservation" }
-                        </Button>
-                        :
-                        <ButtonLoad/>
+                            this.state.load 
+                            ? <Button size='medium' variant="contained"  onClick={(e) => this.validerReservation()} endIcon={<CallMissedOutgoingIcon/>}>
+                                {this.props.context.state.traduction ? "Validate" : "Valider réservation" }
+                            </Button>
+                            : <ButtonLoad/>
                         }
                         </p>);
                     break;
                 }
             }
-           
-            
         }
         for(let i = 0; i < this.props.context.state.itineraires.length; i++){
             let toPayItineraire =0;

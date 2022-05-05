@@ -135,20 +135,9 @@ class DChambre extends React.Component{
         currentState.listTypeChambre = data.list;                                         
         this.setState(currentState);               
     }
-
-    // addReservation(e ,id, nom){
-    //     let currentState = JSON.parse(JSON.stringify(this.props.context.state));
-    //     currentState.reservation.push({idTarif : id , dateDebut : "2021-11-23" , datefin : "2021-11-29" });  
-    //     this.props.context.setState(currentState);
-    // }
-
-    addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre, tarif, toPay, setShowButton){
+    
+    addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre, tarif, toPay, setShowButton, listPrix){
         setShowButton(true);
-        // if(props.context.state.itineraires.length === 0){
-        //     let temp = {...props.context.state};
-        //     temp.err = "Veuillez d'abord choisir une date de sejour";
-        //     props.context.setState(temp);
-        // }
         let isFirstTarif=false;
         if(this.props.context.state.itineraires.length > 0){
 
@@ -165,14 +154,8 @@ class DChambre extends React.Component{
             if(this.props.context.state.itineraires.length == 1 && itineraires[lastItineraire].tarifReserves.length==0){
                     isFirstTarif=true;
             }
-            //numero itineraire
             const Random = NumeroIntineraire(this.props.context.state.random , this.props.context.state.nameHotel,TChambre);
-            //numero confirmation
             const numeroConfirm = numeroConfirmation(0, this.props.context.state.nameHotel, TChambre);
-            // console.log(numeroConfirm);
-          
-            // const data = {itineraires: itineraires , numeroIntineraire : Random };
-            //  callAPI("get" , "/TypeChambre/detailsChambre/"+idTypeChambre , {} , typeChambre);
                 
                 let headers = {
                     idsession: session.getInstance().getId(),
@@ -211,6 +194,7 @@ class DChambre extends React.Component{
                             nomTarif:tarif.nom,
                             TarifName:tarif.name,
                             toPay:{afterProm:toPay.prix,beforeProm:toPay.prixOriginal},
+                            listPrix: JSON.parse(JSON.stringify(listPrix))
                         });
                         
                         let reserv = this.props.context.state.reservationEnCours;

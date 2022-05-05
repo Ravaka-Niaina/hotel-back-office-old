@@ -5,15 +5,22 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
+import TextField from '@mui/material/TextField';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import TextField from '@mui/material/TextField';
+import Alert from '@mui/material/Alert';
+import LoadingButton from '@mui/lab/LoadingButton';
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
 
 import Chart from "react-apexcharts";
 
+import callAPI from '../../../utility.js';
 import styles from "./rapportReservation.module.css";
+import { getDate } from "../../partenaire/Calendrier/tarif/utility.js";
 
 const boxStyle = {
     display: 'flex',
@@ -33,65 +40,153 @@ const optReservEffectuees = [
     {value: "derniereSemaine", label: "Cette dernière semaine"}
 ];
 
+let annees = [];
+let annee = 1999;
+const anneeActuelle = new Date().getFullYear();
+while(annee < anneeActuelle){
+    annees.push(annee);
+    annee++;
+}
+
+function getRoundedNumber(number){
+    try{
+        return number.toFixed(2);
+    }catch(err){
+        return number;
+    }
+}
+
 function RapportReservation({}){
-    const [options, setOptions] = useState({
-        chart: {
-          id: "basic-bar"
-        },
-        labels: ["01 Jan 2021", "01 Fev 2022", "01 Mar 2022", "01 Apr 2022", "01 May 2022", "01 Jun 2022"],
-        legend: {position: 'top'},
-        xaxis: {
-          type: "date"
-        },
+
+    const [debutReservEffectuees, setDebutReservEffectuees] = useState(null);
+    const [finReservEffectuees, setFinReservEffectuees] = useState(null);
+    const [anneeComparaison, setAnneeComparaison] = useState(annees[annees.length - 1]);
+
+    const [labels, setLabels] = useState([]);
+    const [maxNbNuitee, setMaxNbNuitee] = useState([]);
+    const [prixMoyen, setPrixMoyen] = useState([]);
+    const [ maxPrixMoyen, setMaxPrixMoyen ] = useState(0);
+    const [colonneNuiteeLastYear, setColonneNuiteeLastYear] = useState([]);
+    const [revParChambre, setRevParChambre] = useState([5, 2, 3, 1, 4]);
+    const [revParChambreLastYear, setRevParChambreLastYear] = useState([]);
+
+    const [erreur, setErreur] = useState(null);
+    const [afficherChart, setAfficherChart] = useState(false);
+    const [rapportEnCours, setRapportEnCours] = useState(false);
+    
+    const options = {
+        chart: { id: "basic-bar" },
+        labels: labels,
+        legend: { position: 'top' },
+        xaxis: { type: "date" },
         yaxis: [
             {   // pour nuitee 
-                title: {text: "Nuitées"}
+                title: {text: "Nuitées"},
+                max: maxNbNuitee,
+                labels: {formatter: (value) => getRoundedNumber(value)}
             },{ // pour nuitee annee derniere
                 labels: {show: false}
-            },{ // pour prix moyen
+            },{ // pour revenue par chambre
+                seriesName: "Prix moyen",
                 min: 0,
-                max: 4,
                 labels: {show: false}
             },{
                 min: 0,
                 max: 4,
                 labels: {show: false}
             }, { // pour prix moyenne
+                seriesName: "Prix moyen",
                 opposite: true,
                 title: {text: "Prix moyenne en EUR"},
                 min: 0,
-                max: 800,
-                tickAmount: 3
+                labels: {formatter: (value) => getRoundedNumber(value)}
             }
         ]
-    });
+    };
 
-    const [series, setSeries] = useState(
-        [
-            {   // pour nuitees
-                name: "Nuitées",
-                type: "column",
-                data: [2, 1, 4, 1, 3, 2]
-            },{ // pour nuitees annee derniere
-                name: "Nuitées (L'année dernière)",
-                type: "column",
-                data: [0, 3, 2, 1, 4, 3]
-            },{
-                name: "Prix moyen",
-                type: "line",
-                data: [3, 2, 2, 0, 2, 2]
-            }, {
-                name: "Prix moyen (L'année dernière)",
-                type: "line",
-                data: [0, 1, 1, 0, 2, 3]
-            }
-        ]
-    );
+    const series = [
+        {   // pour nuitees
+            name: "Nuitée",
+            type: "column",
+            data: [],
+            labels: { show: false },
+            legend: { show: false }
+        },{ // pour nuitees annee derniere
+            name: "Nuitées (L'année dernière)",
+            type: "column",
+            data: colonneNuiteeLastYear
+        },{
+            name: "Revenue par chambre",
+            type: "line",
+            data: revParChambre,
+            stroke: { curve: "straight" }
+        }, {
+            name: "Prix moyen (L'année dernière)",
+            type: "line",
+            data: revParChambreLastYear
+        }, {
+            name: "Prix moyen",
+            type: "column",
+            data: prixMoyen
+        }
+    ];
 
     const [vue, setVue] = useState(optVues[0]);
-    const [reservEffectuees, setReservEffectuees] = useState(optReservEffectuees[0].value);
     const [reservCompar, setReservCompar] = useState(optReservEffectuees[0].value);
     const [afficherConseil, setAfficherConseil] = useState(true);
+
+    const obtenirRapport = (e) => {
+        e.preventDefault();
+        setErreur(null);
+        setRapportEnCours(true);
+        const data = {
+            vue,
+            debutPlage: getDate(debutReservEffectuees),
+            finPlage: getDate(finReservEffectuees),
+            anneeComparaison
+        };
+        
+        callAPI("post", "/reservation/rapport", data, (res) => {
+            console.log(res);
+            if(res.status === 200){
+                let tmpPrixMoyen = [];
+                let tmpMaxNbNuitee = 0;
+                let tmpMaxPrixMoyen = 0;
+                const mois = ["Jan", "Fev", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
+                let tmpLabels = [];
+                let tmpRevParChambre = [];
+                let tmpMaxRevParChambre = 0;
+                for(let i = 0; i < res.rapport.length; i++){
+                    tmpPrixMoyen.push(res.rapport[i].prixMoyen);
+                    if(res.rapport[i].nbNuitee > tmpMaxNbNuitee){
+                        tmpMaxNbNuitee = res.rapport[i].nbNuitee;
+                    }
+                    
+                    if(res.rapport[i].prixMoyen > tmpMaxPrixMoyen){
+                        tmpMaxPrixMoyen = getRoundedNumber(res.rapport[i].prixMoyen);
+                    }
+                    if(res.rapport[i].revParChambre > tmpMaxPrixMoyen){
+                        tmpMaxPrixMoyen = res.rapport[i].revParChambre;
+                    }
+
+                    const jour = new Date(res.rapport[i]._id);
+                    tmpLabels.push(jour.getDate() + " " + mois[jour.getMonth()] + "\n" + jour.getFullYear());
+                    tmpRevParChambre.push(getRoundedNumber(res.rapport[i].revParChambre));
+                }
+                setPrixMoyen(tmpPrixMoyen);
+                setMaxNbNuitee(tmpMaxNbNuitee);
+                setMaxPrixMoyen(tmpMaxPrixMoyen);
+                setLabels(tmpLabels);
+                console.log(tmpRevParChambre);
+                setRevParChambre(tmpRevParChambre);
+                setAfficherChart(true);
+            }else{
+                setErreur(res.message);
+                setAfficherChart(false);
+            }
+            setRapportEnCours(false);
+        });
+    };
 
     return (
         <div className="app">
@@ -117,6 +212,7 @@ function RapportReservation({}){
                     elevation={0}
                     children={
                         <>
+                            { erreur === null ? null : <Alert severity="error">{erreur}</Alert> }
                             <div className={styles.paramsChart}>
                                 <div>
                                     <FormControl>
@@ -141,45 +237,58 @@ function RapportReservation({}){
                                     </FormControl>
                                 </div>
 
-                                <div>
-                                    <FormControl fullWidth>
-                                        <span><strong>Réservations effectuées: </strong></span>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            defaultValue={optReservEffectuees[0].value}
-                                            value={reservEffectuees}
-                                            label="Réservations effectuées"
-                                            onChange={(e) => {setReservEffectuees(e.target.value)}}
-                                        >
-                                            {optReservEffectuees.map(opt => {
-                                                return(
-                                                    <MenuItem value={opt.value}>{opt.label}</MenuItem>
-                                                );
-                                            })}
-                                        </Select>
-                                    </FormControl>
+                                <div className="reservEffectuees">
+                                    <span><strong>Réservations effectuées: </strong></span>
+                                    <div>
+                                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                            <DatePicker
+                                                label="Début"
+                                                value={debutReservEffectuees}
+                                                onChange={(newValue) => {setDebutReservEffectuees(newValue)}}
+                                                renderInput={(params) => <TextField {...params} />}
+                                            />
+                                        </LocalizationProvider>
+                                    </div>
+                                    <div>
+                                        <LocalizationProvider dateAdapter={AdapterDateFns}>
+                                            <DatePicker
+                                                label="Fin"
+                                                value={finReservEffectuees}
+                                                onChange={(newValue) => {setFinReservEffectuees(newValue)}}
+                                                renderInput={(params) => <TextField {...params} />}
+                                            />
+                                        </LocalizationProvider>
+                                    </div>
                                 </div>
 
-                                <div>
+                                <div className="reservEffectuees">
+                                    <span><strong>Comparaison avec: </strong></span>
                                     <FormControl fullWidth>
-                                        <span><strong>Comparaison avec: </strong></span>
+                                        <InputLabel id="demo-simple-select-label">Année</InputLabel>
                                         <Select
                                             labelId="demo-simple-select-label"
                                             id="demo-simple-select"
-                                            defaultValue={optReservEffectuees[0].value}
-                                            value={reservCompar}
-                                            label="Réservations effectuées"
-                                            onChange={(e) => {setReservCompar(e.target.value)}}
+                                            value={anneeComparaison}
+                                            label="Age"
+                                            onChange={(e) => setAnneeComparaison(e.target.value)}
                                         >
-                                            {optReservEffectuees.map(opt => {
+                                            {annees.map(annee => {
                                                 return(
-                                                    <MenuItem value={opt.value}>{opt.label}</MenuItem>
-                                                );
+                                                    <MenuItem value={annee}>{annee}</MenuItem>
+                                                )
                                             })}
                                         </Select>
                                     </FormControl>
                                 </div>
+                                <LoadingButton
+                                    onClick={(e) => obtenirRapport(e)}
+                                    loading={rapportEnCours}
+                                    loadingPosition="start"
+                                    startIcon={<QueryStatsIcon />}
+                                    variant="contained"
+                                >
+                                    Obtenir rapport
+                                </LoadingButton>
                             </div>
                             <Paper 
                                 variant="outlined"
@@ -201,11 +310,15 @@ function RapportReservation({}){
                                 }
                             />
                             <div className={styles.chart}>
-                                <Chart
-                                    options={options}
-                                    series={series}
-                                    width="800"
-                                />
+                                {
+                                    afficherChart 
+                                    ? <Chart
+                                        options={options}
+                                        series={series}
+                                        width="800"
+                                    />
+                                    : null
+                                }
                             </div>
                         </>
                     }
