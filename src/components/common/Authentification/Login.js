@@ -76,7 +76,6 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-
 const Login = (props) => {
     const [isPartner, setIsPartner] = React.useState(false);
     const [email, setEmail] = React.useState("");
@@ -98,6 +97,8 @@ const Login = (props) => {
             setIsPartner(true);
         }
     }, []);
+ 
+
     
     const interpretResponse = (res) => {
         const data = res.data;
@@ -158,7 +159,6 @@ const Login = (props) => {
 
         setLoading(true);
         setAmbiguousError(null);
-
         const data = {
             isPartner: isPartner,
             email: email.trim(),

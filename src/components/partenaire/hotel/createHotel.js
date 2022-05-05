@@ -12,6 +12,8 @@ import {Link} from 'react-router-dom';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 
+import {session} from '../../common/utilitySession.js';
+
 import callAPI from '../../../utility.js';
 import ButtonLoading from "../buttonLoading.js";
 import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
@@ -19,10 +21,12 @@ import  ResponsiveDrawer  from "../Navbar/responsive-drawer.js";
 import PhotoHotel from './insertHotel/Photo/PhotoHotel.js';
 
 import MapPicker from "react-google-map-picker";
+import NotEnoughAccessRight from '../../common/NotEnoughAccessRight';
 
 const DefaultLocation = { lat: -18.903233, lng: 47.520430 };
 const DefaultZoom = 17;
 
+let isFirstRender = true;
 function InsertHotel() {
 
   const noImage = '/no-image.jpg';
@@ -90,6 +94,9 @@ function InsertHotel() {
   const [isModifImg, setIsModifImg]= useState(false);
 
   const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
+  const hasARInsert = session.getInstance().hasOneOfTheseAccessRights(["insertHotel", "superAdmin"]);
+  const hasARGet = session.getInstance().hasOneOfTheseAccessRights(["getHotel", "superAdmin"]);
+  const hasARUpdate = session.getInstance().hasOneOfTheseAccessRights(["updateHotel", "superAdmin"]);
 
   const history = useHistory();
 
@@ -100,6 +107,13 @@ function InsertHotel() {
   function setDetailsHotel(data){
     let error = {...state.error};
     let current = JSON.parse(JSON.stringify(state));
+
+    if(data.status === 401){//Unauthorized
+      history.push('/back/login');
+    }else if(data.status === 403){
+      history.push('/notEnoughAccessRight');
+    }
+
     current = data.hotel;
     current.error = error;
     
@@ -120,11 +134,40 @@ function InsertHotel() {
     setSkeleton(false);
   }
 
+
   useEffect(() => {
-    if(!isInsert){
-      callAPI('get', '/hotel/details/' + _id, {}, setDetailsHotel);
+    if(isFirstRender){
+      isFirstRender = false;
+      if(isInsert && hasARInsert){
+        setSkeleton(false);
+      }else if(hasARGet || hasARUpdate){
+        callAPI('get', '/hotel/details/' + _id, {}, setDetailsHotel);
+       }
     }
+    
+    // if(!isInsert){
+    //   callAPI('get', '/hotel/details/' + _id, {}, setDetailsHotel);
+    // }else{
+    // setSkeleton(false);
+    // }
   }, [])
+
+  useEffect(() => {
+    return () => {
+      isFirstRender = true;
+    }
+  }, []);
+
+  if(isInsert && !hasARInsert){
+    return(
+      <NotEnoughAccessRight />
+    );
+  }
+  if(!isInsert && !hasARGet && !hasARUpdate){
+    return(
+      <NotEnoughAccessRight />
+    );
+  }
 
 
   function tryRedirect(res) {
@@ -180,7 +223,36 @@ function InsertHotel() {
   function handleInputChange1(event, inputName1,inputName2) {
     const currentState = JSON.parse(JSON.stringify(state))
     currentState[inputName1][inputName2] = event.target.value
+    currentState.error.leadMin = null;
     setState(currentState)
+  }
+
+  function handleAgeBebeMinChange(value){
+    let current = JSON.parse(JSON.stringify(state));
+    current.ageBebe.min = value;
+    current.error.ageBebeMin = null;
+    setState(current);
+  }
+
+  function handleAgeBebeMaxChange(value){
+    let current = JSON.parse(JSON.stringify(state));
+    current.ageBebe.max = value;
+    current.error.ageBebeMax = null;
+    setState(current);
+  }
+
+  function handleAgeEnfantMinChange(value){
+    let current = JSON.parse(JSON.stringify(state));
+    current.ageEnfant.min = value;
+    current.error.ageEnfantMin = null;
+    setState(current);
+  }
+
+  function handleAgeEnfantMaxChange(value){
+    let current = JSON.parse(JSON.stringify(state));
+    current.ageEnfant.max = value;
+    current.error.ageEnfantMax = null;
+    setState(current);
   }
 
   function handleInputChangeInput2(e , fieldname){
@@ -211,38 +283,6 @@ function InsertHotel() {
           />
 
           <box>
-            <TextField
-                id="outlined-basic"
-                InputLabelProps={{
-                  shrink: true,
-                  }}
-                label="Latitute"
-                variant="outlined"
-                className="form-control"
-                style={{width:"250px",marginTop:"15px"}}
-                size="small"
-                type="text"
-                value={location.lat}
-                onChange={e => handleInputChangeInput2(e)}
-                disabled
-            />
-
-            <TextField
-                id="outlined-basic"
-                InputLabelProps={{
-                  shrink: true,
-                  }}
-                label="Longitute"
-                variant="outlined"
-                className="form-control"
-                style={{width:"250px",marginTop:"15px",marginLeft:"30px"}}
-                size="small"
-                type="text"
-                value={location.lng}
-                onChange={e => handleInputChangeInput2(e)}
-                disabled
-            />
-
           <TextField
                 id="outlined-basic"
                 InputLabelProps={{
@@ -269,12 +309,15 @@ function InsertHotel() {
               </Button>
           </box>
 
-        </div>
+      </div>
 :
-      <div className="block">
+       <div className="block">
+        <div className="center">
+        {
+          skeletonAffiche ? <SkelettonForm  heigth = {300} />  : <>
           <h4 id="title1">{isInsert ? "Ajouter une nouvelle hotel" : "Modifier une hotel"}</h4><br/>
 
-        <div className="form-group" style={{}}>
+        <div className="form-group">
 
         <TextField
                 id="outlined-basic"
@@ -324,7 +367,7 @@ function InsertHotel() {
 
         </div>
 
-        <div className="form-group" style={{}}>
+        <div className="form-group">
             <TextField
                 id="outlined-basic"
                 label="email"
@@ -342,7 +385,7 @@ function InsertHotel() {
 
         </div>
 
-        <div className="form-group" style={{}}>
+        <div className="form-group">
             <TextField
                 id="outlined-basic"
                 label="adresse"
@@ -359,7 +402,7 @@ function InsertHotel() {
             />
         </div>
 
-        <div className="form-group" style={{}}>
+        <div className="form-group">
             <TextField
                 id="outlined-basic"
                 label="vignette touristique"
@@ -377,7 +420,9 @@ function InsertHotel() {
 
         </div>
 
+        <div className="photoHotel">
         <PhotoHotel state={state} setState={setState} noImage={noImage} setIsModifImg={setIsModifImg}/>
+        </div>
 
         <div className="form-group" style={{marginTop:'15px'}}>
         <label style={{textDecoration:'underline'}} id='bigLabel'>Horaire</label><br/>
@@ -427,7 +472,7 @@ function InsertHotel() {
       defaultValue="oui"
       name="radio-buttons-group"
     >
-      <div className ="" style={{marginTop:'15px'}}>
+      <div className ="form-group" style={{marginTop:'15px'}}>
       <label style={{textDecoration:'underline'}} id='bigLabel'>Votre tarifs inclus déjà la TVA ?</label>
         <div className="">
           <FormControlLabel
@@ -450,7 +495,7 @@ function InsertHotel() {
       </div>
     </RadioGroup>
 
-    <div className ="" style={{marginTop:'15px'}}>
+      <div className ="form-group" style={{marginTop:'15px'}}>
         { state.TVA ?
          <div>
           { taxe ?
@@ -482,90 +527,126 @@ function InsertHotel() {
         <br/>
          <div style={{marginTop:'15px'}}>
           <box>
-            <span>Bébé a partir de</span>
+            <span style={{position:'relative',top:'9px'}}>Bébé a partir de</span>
             <TextField
                 id="outlined-basic"
                 label="min"
                 variant="outlined"
                 className="form-control"
-                style={{width:"200px"}}
+                style={{width:"100px",marginLeft:'5px'}}
                 size="small"
                 type="number"
                 name="ageBebe"
-                onChange={(e) => handleInputChange1(e , "ageBebe" ,"min")}
+                onChange={(e) => {handleAgeBebeMinChange(e.target.value)}}
                 value={state.ageBebe.min}
                 error={state.error.ageBebeMin === null ? false : true}
-                helperText={state.error.ageBebeMin === null ? null : state.error.ageBebeMin}
+                helperText={ state.error.ageBebeMin === null ? null : state.error.ageBebeMin }
             />
-            <span>jusqu'à</span>
+            <span style={{marginTop:'15px',position:'relative',top:'9px',marginLeft:'5px'}}>jusqu'à</span>
             <TextField
                 id="outlined-basic"
                 label="max"
                 variant="outlined"
                 className="form-control"
-                style={{width:"200px"}}
+                style={{width:"100px",marginLeft:'5px'}}
                 size="small"
                 type="number"
                 name="ageBebe"
-                onChange={(e) => handleInputChange1(e , "ageBebe","max" )}
+                onChange={(e) => handleAgeBebeMaxChange(e.target.value)}
                 value={state.ageBebe.max}
                 error={state.error.ageBebeMax === null ? false : true}
-                helperText={state.error.ageBebeMax === null ? null : state.error.ageBebeMax}
+                helperText={ state.error.ageBebeMax === null ? null : state.error.ageBebeMax }
             />
           </box>
          </div>
 
         </div>
-
-        <div className="form-group" style={{marginTop:'15px'}}>
+        <div className="form-group" style={{marginTop:'30px'}}>
           <box>
-          <span>Enfant a partir de</span>
+          <span style={{position:'relative',top:'9px'}}>Enfant a partir de</span>
             <TextField
                 id="outlined-basic"
                 label="min"
                 variant="outlined"
                 className="form-control"
-                style={{width:"200px"}}
+                style={{width:"100px",marginLeft:'5px'}}
                 size="small"
                 type="number"
                 name="ageEnfant"
-                onChange={(e) => handleInputChange1(e,"ageEnfant","min")}
+                onChange={(e) => handleAgeEnfantMinChange(e.target.value)}
                 value={state.ageEnfant.min}
-                error={state.error.ageEnfantMin=== null ? false : true}
-                helperText={state.error.ageEnfantMin === null ? null : state.error.ageEnfantMin}
+                error={state.error.ageEnfantMin === null ? false : true}
+                helperText={ state.error.ageEnfantMin === null ? null : state.error.ageEnfantMin }
             />
-            <span>jusqu'à</span>
+            <span style={{marginTop:'15px',position:'relative',top:'9px',marginLeft:'5px'}}>jusqu'à</span>
             <TextField
                 id="outlined-basic"
                 label="max"
                 variant="outlined"
                 className="form-control"
-                style={{width:"200px"}}
+                style={{width:"100px",marginLeft:'5px'}}
                 size="small"
                 type="number"
                 name="ageEnfant"
-                onChange={(e) => handleInputChange1(e , "ageEnfant" , "max" )}
+                onChange={(e) => handleAgeEnfantMaxChange(e.target.value)}
                 value={state.ageEnfant.max}
                 error={state.error.ageEnfantMax === null ? false : true}
-                helperText={state.error.ageEnfantMax === null ? null : state.error.ageEnfantMax}
+                helperText={ state.error.ageEnfantMax === null ? null : state.error.ageEnfantMax }
             />
           </box>
 
         </div>
 
-              <div style={{marginTop:"15px"}}>
-              <Button
-                variant="contained"
-                type="submit"
-                style={{ textDecoration: 'none', backgroundColor: '#2ac4ea' }}
-                onClick={(e) => setMaps(true)}
-              >
-              <span style={{ color: 'white' }}>Coordonnées gps</span>
-              </Button>
-              </div>
+        <div style={{marginTop:"20px"}} class='form-group'>
+        <p style={{textDecoration:'underline'}} id='bigLabel'>Coordonnées gps</p>
+         <div style={{marginTop:"15px"}}>
+          <Button
+            variant="contained"
+            type="submit"
+            style={{ textDecoration: 'none', backgroundColor: '#2ac4ea' }}
+            onClick={(e) => setMaps(true)}
+          >
+          <span style={{ color: 'white' }}>Coordonnées gps</span>
+          </Button>
+         </div>
+         <div style={{marginTop:"10px"}}>
+          <box>
+            <TextField
+                id="outlined-basic"
+                InputLabelProps={{
+                  shrink: true,
+                  }}
+                label="Latitute"
+                variant="outlined"
+                className="form-control"
+                style={{width:"220px",marginTop:"15px"}}
+                size="small"
+                type="number"
+                value={location.lat}
+                onChange={e => handleInputChangeInput2(e)}
+            />
+
+            <TextField
+                id="outlined-basic"
+                InputLabelProps={{
+                  shrink: true,
+                  }}
+                label="Longitute"
+                variant="outlined"
+                className="form-control"
+                style={{width:"220px",marginTop:"15px",marginLeft:"30px"}}
+                size="small"
+                type="number"
+                value={location.lng}
+                onChange={e => handleInputChangeInput2(e)}
+            />
+          </box>
+         </div>
+        </div>
 
    <div>
     <div class="bouton-aligne" style={{marginTop:"20px"}}>
+      
       {
         btnLoad
           ? <ButtonLoading />
@@ -598,9 +679,12 @@ function InsertHotel() {
       </Link>
     </div>
    </div>
-</div>
+   </>
   }
-</>
+        </div>
+       </div>
+  }
+    </>
   );
 }
 

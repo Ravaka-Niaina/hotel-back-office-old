@@ -6,6 +6,11 @@ import callAPI from '../../../utility.js';
 
 import  './user.css';
 
+import Button from '@mui/material/Button';
+import {Link} from 'react-router-dom';
+
+import SkelettonForm from '../hotel/SkeletonFormulaire.js';
+
 
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -31,13 +36,17 @@ const Item = styled(Paper)(({ theme }) => ({
     prenom : "",
     email : "",
     telephone : "",
+    _id: "",
   })
+
+    const [skeletonAffiche, setSkeleton] = useState(true)
 
     function setDetailsPartner(data){
     let current = JSON.parse(JSON.stringify(state));
     current = data.partenaire;
     
     setState(current);
+    setSkeleton(false);
   }
 
   useEffect(() => {
@@ -46,7 +55,9 @@ const Item = styled(Paper)(({ theme }) => ({
 
   return (
   <div style={{marginTop:'50px'}}>
-    <Card sx={{ maxWidth: 700 ,height : '200px'}} id='card1'>
+            {
+          skeletonAffiche ? <SkelettonForm  heigth = {300} />  : <>
+    <Card sx={{ maxWidth: 730 ,height : '301px'}} id='card1'>
       <div id='global'> 
           <div class='inline' id='first'>
           <img id='userPhoto' src='/user2.png'/>
@@ -63,9 +74,19 @@ const Item = styled(Paper)(({ theme }) => ({
           </div>
       </div>
 
-          
+            <Link to={'/back/user/details/'+ state._id} style={{textDecoration:'none',float: 'right',marginRight: '120px'}}>
+              <Button
+                variant="contained"
+                type="submit"
+                style={{ textDecoration: 'none', backgroundColor: '#2F4050',marginLeft : "30px",marginTop:"15px"}}
+              >
+              <span style={{ color: 'white' }}>Edit</span>
+              </Button>
+            </Link>    
 
     </Card>
+       </>
+  }
   </div>
   );
 }

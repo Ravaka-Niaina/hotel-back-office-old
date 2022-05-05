@@ -14,6 +14,13 @@ import  DetailsUser from "./components/partenaire/User/DetailsUser.js";
 import  InsertTypeChambre  from "./components/partenaire/chambre/InsertTypeChambre.js";
 import  ListTypeChambre  from "./components/partenaire/chambre/ListTChambre.js";
 
+import  InsertHotel  from "./components/partenaire/hotel/createHotel.js";
+import  HotelList  from "./components/partenaire/hotel/listHotel.js";
+import  GetOneHotel  from "./components/partenaire/hotel/getOneHotel";
+import  Localisation  from "./components/partenaire/hotel/localisation";
+
+import  GetOnePartner from "./components/partenaire/User/getOnePartner";
+
 import  InsertTarif  from "./components/partenaire/Calendrier/tarif/InsertTarif.js";
 
 import Tarif from "./components/partenaire/Calendrier/tarif/Tarif.js";
@@ -74,12 +81,6 @@ import RechercheReservation from "./components/client/RechercheReseravation.js";
 import Menu from "./components/menu/sidebar.js";
 import ResponsiveDrawer from "./components/menu/responsive-drawer.js";
 
-import  InsertHotel  from "./components/partenaire/hotel/createHotel.js";
-import  HotelList  from "./components/partenaire/hotel/listHotel.js";
-import  GetOneHotel  from "./components/partenaire/hotel/getOneHotel";
-import  Localisation  from "./components/partenaire/hotel/localisation";
-import  GetOnePartner from "./components/partenaire/User/getOnePartner";
-
 import  CompteOublier  from "./components/common/Authentification/CompteOublier";
 import  modifyPassword  from "./components/common/Authentification/modifyPassword";
 
@@ -122,6 +123,8 @@ export default function Routes() {
             <Route path="/back/accessRight/insert" exact component={InsertDroitAcces} />
             <Route path="/back/partenaire" exact component={GetOnePartner} />
             <Route path="/back/accessRight/update/:_id" exact component={InsertDroitAcces} />
+
+            <Route path="/back/partenaire" exact component={GetOnePartner} />     
 
             <Route path="/back" exact component={home} />
             <Route path="/back/login" exact component={Login} />
