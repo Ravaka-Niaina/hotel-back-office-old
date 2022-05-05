@@ -119,7 +119,7 @@ function ListTarif(props){
                                                 <div className={styles.bookNow}>
                                                     <Button variant="contained"
                                                         onClick = {(e) => props.contextListChambre.addReservation(e,tarif._id, tarif.nom, props.idTypeChambre
-                                                            , version.nbPers , props.nameTC,tarif,version, setShowButton,tarif.toPayStayOriginal[indice])}
+                                                            , version.nbPers , props.nameTC,tarif,version, setShowButton, tarif.toPayStayOriginal[indice], tarif.listPrix)}
                                                         endIcon={<AddIcon/>}
                                                         className="bookNow"
                                                     >

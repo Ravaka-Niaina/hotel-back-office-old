@@ -136,7 +136,7 @@ class DChambre extends React.Component{
         this.setState(currentState);               
     }
 
-    addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre, tarif, toPay, setShowButton,toPayEuro){
+    addReservation(e ,id, nom, idTypeChambre, nbPers, TChambre, tarif, toPay, setShowButton, toPayEuro, listPrix){
 
         console.log(toPay);
         console.log(toPayEuro);
@@ -193,8 +193,9 @@ class DChambre extends React.Component{
                             politiqueAnnulAtrb:tarif.politiqueAnnulAtrb,
                             nomTarif:tarif.nom,
                             TarifName:tarif.name,
-                            toPayDevise:{afterProm:toPay.prix,beforeProm:toPay.prixOriginal},
-                            toPay: {afterProm:toPayEuro.prix,beforeProm:toPayEuro.prixOriginal}
+                            toPayDevise:{afterProm: toPay.prix,beforeProm:toPay.prixOriginal},
+                            toPay: {afterProm:toPayEuro.prix,beforeProm:toPayEuro.prixOriginal},
+                            listPrix: JSON.parse(JSON.stringify(listPrix))
                         });
                         
                         let reserv = this.props.context.state.reservationEnCours;

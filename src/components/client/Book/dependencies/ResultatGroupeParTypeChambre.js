@@ -57,7 +57,7 @@ const ResultatGroupeParTypeChambre = (props) => {
                                                 <span>{version.prixOriginal}{props.context.state.devise.toUpperCase()}</span>
                                                 <span>{version.prix} {props.context.state.devise.toUpperCase()}</span>
                                                 <Button variant="contained"
-                                                onClick = {(e) => props.contextListChambre.addReservation(e,tarif._id, tarif.nom, typeChambre._id, version.nbPers , typeChambre.nom, tarif,version, () => {})}
+                                                onClick = {(e) => props.contextListChambre.addReservation(e,tarif._id, tarif.nom, typeChambre._id, version.nbPers , typeChambre.nom, tarif,version, () => {}, undefined, tarif.listPrix)}
                                                     endIcon={<AddIcon/>}
                                                     className="bookNow"
                                                 >
