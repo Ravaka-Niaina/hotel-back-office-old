@@ -1,12 +1,14 @@
 import React , { useState , useEffect} from 'react';
 import {Button,Stack,TextField,Box,Radio,RadioGroup,FormControl,FormControlLabel,InputAdornment,Modal,Checkbox,InputLabel,MenuItem,Select, FormLabel} from '@mui/material';
-import DateRangePicker from '@mui/lab/DateRangePicker';
+// import DateRangePicker from '@mui/lab/DateRangePicker';
+import { DateRangePicker } from 'rsuite';
 import AdapterMoment from '@mui/lab/AdapterMoment';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import moment from 'moment';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 
 import styles from '../CalendarComponent.module.css';
+import "./DateRangePicker.css";
 
 import callAPI from '../../../../../utility';
 import { useHistory } from 'react-router-dom';
@@ -23,44 +25,6 @@ const getDaysBetweenDates = function(startDate, endDate) {
     }
     return dates;
 };
-
-const DatePicker = (props) => {
-    const removeError = () => {
-        console.log("arrrrrrghh");
-        let temp = {...props.error};
-        temp.dateDebut = null;
-        temp.dateFin = null;
-        props.setError(temp);
-    };
-    return(
-        <LocalizationProvider dateAdapter={AdapterMoment}>
-            <span>Tokony eto izy</span>
-        <DateRangePicker
-            startText="From"
-            endText="To"
-            value={props.interval}
-            onChange={(newValue) => {
-                props.setInterval(newValue);
-            }}
-            renderInput={(startProps, endProps) => (
-            <React.Fragment>
-                <TextField 
-                    {...startProps} 
-                    error={props.error.dateDebut === null ? false : true}
-                    helperText={props.error.dateDebut === null ? null : props.error.dateDebut}
-                    onChange={(e) => removeError()} />
-                <Box sx={{ mx: 2 }}> to </Box>
-                <TextField 
-                    {...endProps} 
-                    error={props.error.dateFin === null ? false : true}
-                    helperText={props.error.dateFin === null ? null : props.error.dateFin}
-                    onChange={(e) => removeError()} />
-            </React.Fragment>
-            )}
-        />
-        </LocalizationProvider>
-    )
-}
 
 function InputPrix(props){
     let inputPrix = [];
@@ -186,7 +150,6 @@ const FullPriceEditor = (props) => {
     const [rate,setRate] = useState(1);
 
     function handleChangePrix(i, value){
-        console.log("niova ny prix");
         let temp = JSON.parse(JSON.stringify(prix));
         temp[i] = value;
         setPrix(temp);
@@ -221,7 +184,6 @@ const FullPriceEditor = (props) => {
             props.getPrix(props.value);
             removeErrorConfigPrix(error, setError)
         }else{
-            console.log("prix non configuré");
             handleErrorConfigPrix(res.errors, error, setError);
             props.setOpenLoad(false);
         }
@@ -275,7 +237,6 @@ const FullPriceEditor = (props) => {
                 forTypeChambre: forTypeChambre,
                 forTarif: forTarif
             };
-            console.log(data);
             callAPI('post', '/TCTarif/configPrix', data, refresh);
         }
     }
@@ -312,13 +273,11 @@ const FullPriceEditor = (props) => {
                     onChange={(e) => handleDayChange(a, e.target.checked)}
                     control={<Checkbox checked={days[i].checked} />}
                 />
-                {/*<Checkbox checked={days[i].checked} onChange={(e) => console.log(e)} /><span>{days[i].label}</span>*/}
             </>
         );
     }
 
     function loadPrix(result){
-        console.log(result);
         if(result.status === 200){
             let temp = [];
             //setToSell(result.prixTarif.toSell);
@@ -326,13 +285,10 @@ const FullPriceEditor = (props) => {
                 temp.push(result.prixTarif.versions[i].prix);
             }
             setPrix(temp);
-        }else{
-            console.log("On n'a pas pu charger les prix");
         }
     }
 
     function getPrix(newValue){
-        console.log("rate = " + newValue);
         if(newValue > 1){
             const data = {
                 idTarif: tarifs[newValue - 1]._id,
@@ -358,6 +314,7 @@ const FullPriceEditor = (props) => {
 
     return(
         <>
+        
         <Modal
             open={props.showme}
             aria-labelledby="modal-modal-title"
@@ -367,12 +324,16 @@ const FullPriceEditor = (props) => {
             <Box sx={style}
                 className={styles.fullpopper}
             >   
-                <DatePicker 
-                    interval={interval} 
-                    setInterval={handleIntervalChange} 
-                    minDate={minDate}
-                    error={error}
-                    setError={setError} />
+                <DateRangePicker
+                    disabledDate={DateRangePicker.beforeToday()}
+                    value={[interval[0].toDate(), interval[1].toDate()]}
+                    onChange={(val) => {
+                        let newValue = {...val};
+                        newValue[0] = moment(newValue[0]);
+                        newValue[1] = moment(newValue[1]);
+                        setInterval(newValue);
+                    }}
+                />
                 <br/>
                 <div>
                     {inputDays}

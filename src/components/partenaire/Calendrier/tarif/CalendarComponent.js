@@ -1,8 +1,6 @@
 import React , { useState, useEffect } from 'react';
 import {Container,Button,TextField,Box} from '@mui/material';
-import DateRangePicker from '@mui/lab/DateRangePicker';
-import AdapterMoment from '@mui/lab/AdapterMoment';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { DateRangePicker } from 'rsuite';
 import styles from '../tarif/CalendarComponent.module.css';
 import moment from 'moment';
 import RateLine from './dependancies/RateLine.js';
@@ -12,6 +10,8 @@ import Backdrop from '@mui/material/Backdrop';
 import  Navbar  from "../../Navbar/Navbar";
 import  ResponsiveDrawer  from "../../Navbar/responsive-drawer.js";
 import {session} from '../../../common/utilitySession.js';
+
+import "rsuite/dist/rsuite.min.css";
 
 const getDaysBetweenDates = function(startDate, endDate) {
     var now = startDate.clone(), dates = [];
@@ -74,7 +74,6 @@ const CalendarComponent = () => {
                 data: data
             })
             .then(res => {
-                console.log(res.data.typeChambre);
                 const alldays = getDaysBetweenDates(dates[0],dates[1]);
                 let tmp = [];
                 for(var i = 0; i < res.data.typeChambre.length; i++) {
@@ -120,7 +119,21 @@ const CalendarComponent = () => {
         <>
             {/* <Navbar currentPage={1}/> */}
             <Container className={styles.container} style={{filter: "blur(" + (openLoad ? "2" : "0") + "px)"}}>
-                <LocalizationProvider dateAdapter={AdapterMoment}>
+                <DateRangePicker
+                    value={[value[0].toDate(), value[1].toDate()]}
+                    onChange={(val) => {
+                        let newValue = JSON.parse(JSON.stringify(val));
+                        for(let i = 0; i < newValue.length; i++){
+                            newValue[i] = moment(new Date(newValue[i]));
+                        }
+                        setValue(newValue);
+                        if(newValue != undefined && newValue[0] != null && newValue[1] != null){
+                            getPrix(newValue);
+                        }
+                    }}
+                />
+                {/* <LocalizationProvider dateAdapter={AdapterMoment}>
+                
                 <DateRangePicker
                     open={open}
                     onAccept={() => {
@@ -177,7 +190,7 @@ const CalendarComponent = () => {
                     </React.Fragment>
                     )}
                 />
-                </LocalizationProvider>
+                </LocalizationProvider> */}
                 {rateLine}
             </Container>
             <Backdrop

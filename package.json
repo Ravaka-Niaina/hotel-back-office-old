@@ -92,6 +92,7 @@
     "react-select": "^5.2.0",
     "react-simple-image-slider": "^2.3.0",
     "react-swipeable-views": "^0.13.3",
+    "rsuite": "^5.11.0",
     "sass": "^1.44.0",
     "simplebar-react": "^2.3.6",
     "styled-components": "^5.3.1",

@@ -101,6 +101,7 @@ const Login = (props) => {
 
     
     const interpretResponse = (res) => {
+        console.log(res);
         const data = res.data;
         if(data.status === 200){
             localStorage.setItem("user_session", res.headers.user_session);
