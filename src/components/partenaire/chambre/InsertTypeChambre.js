@@ -89,6 +89,7 @@ function InsertTypeCHambre(){
   const [photo, setPhoto] = useState([]);
   const [preview, setPreview] = useState([]);
   
+  console.log(window.location.href);
   const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
   const hasARInsert = session.getInstance().hasOneOfTheseAccessRights(["insertTypeChambre", "superAdmin"]);
   const hasARGet = session.getInstance().hasOneOfTheseAccessRights(["getTypeChambre", "superAdmin"]);
@@ -188,9 +189,17 @@ function InsertTypeCHambre(){
   });
 
   useEffect(() => {
+    let href = window.location.href;
+    const isHttp = new RegExp("http://", "i").exec(href);
+    if(isHttp){
+      let https = href.replace(/^http/, "https");
+      window.location.href = https;
+    }
+
     return () => {
       isFirstRender = true;
     }
+
   }, []);
   
   const history = useHistory();
