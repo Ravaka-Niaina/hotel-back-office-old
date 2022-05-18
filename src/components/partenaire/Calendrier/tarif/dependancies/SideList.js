@@ -92,14 +92,18 @@ const SideList = (props) => {
             className={sideList_css.sidelist}>
             <span className={styles.sidetitle}>{props.typechambre.nom}</span>
             <ul>
-                { props.customize ?
-                <li>
-                    
-                    <Button size="small" variant="outlined" onClick={() => setOpenModal(true)} startIcon={<ModeEditOutlinedIcon />}>
+                { 
+                    props.customize 
+                    ? <li>
+                        
+                        <Button size="small" variant="outlined" onClick={() => setOpenModal(true)} startIcon={<ModeEditOutlinedIcon />}>
+                            Customize
+                        </Button>
+                    </li>
+                    : <Button size="small" variant="outlined" disabled startIcon={<ModeEditOutlinedIcon />}>
                         Customize
                     </Button>
-                </li>
-                : null}
+                }
                 <li>
                     <span>Room status</span>
                 </li>
