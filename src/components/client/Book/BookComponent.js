@@ -22,7 +22,7 @@ import 'react-dropdown/style.css';
 import { useCookies } from 'react-cookie';
 import Cookies from 'universal-cookie';
 
-let regrouperResultatsParChanged = false;
+let regrouperResultatsParChanged = true;
 const BookComponent = (props) => {
     const [groupby, setGroupBy] = React.useState('a');
     const [priceCheapestRate, setPriceCheapestRate] = React.useState(null);
