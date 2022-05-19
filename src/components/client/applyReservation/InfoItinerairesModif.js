@@ -6,6 +6,7 @@ function InfoItineraires(props){
     let number = 0;
     if(props.reservation != null){
         for(let i = 0; i < props.reservation.itineraires.length; i++){
+            console.log(props.reservation.itineraires);
                 number = number + 1;
                 const u = i;
                 itineraires.push(

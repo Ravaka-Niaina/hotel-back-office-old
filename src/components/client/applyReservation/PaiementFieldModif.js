@@ -28,9 +28,16 @@ function PaiementField(props){
            
         setErrorEmpty(current);
     }
+    console.log(props.reservation);
     return(
         <div class="paiement_field">
-            <p><span class="guest-payment_payNowAmount"><span>{props.reservation.toPayDevise.toFixed(2)}&nbsp; {props.devise}.</span></span> <span>Veuillez fournir un mode de paiement valide.</span></p>
+            <p>
+                <span class="guest-payment_payNowAmount"><span>
+                    {/* FIX ME: toPayDevise est undefined, ne peut appelet toFixed sur undefined */}
+                    {props.reservation.toPayDevise ? props.reservation.toPayDevise.toFixed(2) : props.reservation.toPayDevise}&nbsp; {props.devise}.
+                </span></span> 
+                <span>Veuillez fournir un mode de paiement valide.</span>
+            </p>
             <div class="logo_card">
                 <img src={process.env.PUBLIC_URL + '/Visa.png'} />
                 <img src={process.env.PUBLIC_URL + '/MasterCard.png'} />

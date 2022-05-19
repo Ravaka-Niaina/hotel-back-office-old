@@ -147,9 +147,8 @@ function ApplyReservationModif(props){
     }
 
     function setDetailReservation1(res){
-        console.log(res);
         if(numeroItineraire == "1"){
-            if(res.reservation == null){
+            if(res.reservation === null){
                 setShowModalChambre(!showModalChambre);
                 setAlertError(res.message);
                 setReservation(res.reservation);
@@ -157,12 +156,13 @@ function ApplyReservationModif(props){
             }else{
                 setOpenLoad(false);
                 setLoad(false);
-                if(res.status == 200){
-                    setReservation(res.reservation); 
-                    setShowModalChambre(!showModalChambre);
-                    if(res.errors.length != 0){
-                        setAlertError(res.errors[0].message);
-                    }
+                if(res.status === 200){
+                    window.location.reload()
+                    // setReservation(res.reservation); 
+                    // setShowModalChambre(!showModalChambre);
+                    // if(res.errors.length != 0){
+                    //     setAlertError(res.errors[0].message);
+                    // }
                    
                 }else{
                     console.log(res.errors[0].message);
@@ -323,7 +323,20 @@ function ApplyReservationModif(props){
                                 </Stack>
                             </div> : null
                         }
-                        {reservation.infoEtat === null ? null : <strong>Statut réservation: {reservation.infoEtat.label} le {reservation.infoEtat.date}</strong>}
+
+                        {
+                            reservation.infoEtat.length > 0
+                            ? <>
+                                <h3>Statut réservation:</h3>
+                                {reservation.infoEtat.map((etat) => {
+                                    return <p key={`${etat.label} ${etat.date}`}>
+                                        <strong>{etat.label} le {etat.date}</strong>
+                                    </p>
+                                })}
+                            </>
+                            : null 
+                        }
+                        
                         <div class="infos_contact">
                             <div class="infos_contact_header">
                                 <h2 class="infos_heading">Informations de contact</h2>
@@ -366,7 +379,7 @@ function ApplyReservationModif(props){
                                    
                             </Box>
                         </div>
-                        <InfoItineraires 
+                        <InfoItineraires
                             reservation={reservation} 
                             setReservation={setReservation}
                             reservateur={reservateur}

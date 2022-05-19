@@ -198,6 +198,8 @@ function Voucher(props){
         return devise;
     }
 
+    console.log(reservation);
+
     return(
         <>
         <NavBarStepper access = {localStorage.access} id = {_id} indice = {2}  numeroItineraire={"1"} isConnected={isConnected} changeDeviseRate={changeDeviseRate}/>
@@ -219,7 +221,20 @@ function Voucher(props){
                 </div>
                 <div class="voucher_itineraires">
                     {
-                        isReservation ?
+                        isReservation 
+                        ? <>
+                            {
+                                reservation != null && reservation.infoEtat.length > 0
+                                ? <>
+                                    <h3>Statut réservation:</h3>
+                                    {reservation.infoEtat.map((etat) => {
+                                        return <p key={`${etat.label} ${etat.date}`}>
+                                            <strong>{etat.label} le {etat.date}</strong>
+                                        </p>
+                                    })}
+                                </>
+                                : null 
+                            }
                             <ItinerairesVoucher 
                                 reservation={reservation} 
                                 setReservation={setReservation}
@@ -236,6 +251,8 @@ function Voucher(props){
                                 load ={load}
                                 devise={devise}
                             />  :  "" 
+                        </>
+                        : null
                     }
                     
                 </div>

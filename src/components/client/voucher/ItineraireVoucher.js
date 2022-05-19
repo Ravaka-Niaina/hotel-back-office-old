@@ -3,9 +3,10 @@ import TarifsVoucher from "./TarifsVoucher";
 
 function ItinerairesVoucher(props){
     let itineraires = [];
-    
+
     if(props.reservation != null){
         for(let i = 0; i < props.reservation.itineraires.length; i++){
+            console.log( props.reservation ? props.reservation.itineraires[i].infoEtat : null);
             const u = i;
             let chambres_number = [];
             let nbr = 0;
@@ -32,9 +33,18 @@ function ItinerairesVoucher(props){
                             <div class=" voucher_border voucher_numeros">
                                 <h2 class="voucher_title"><span>Merci.</span> <span>Votre numéro d'itinéraire {nbr} est {props.reservation.itineraires[i].NumeroITineraire}</span></h2>
                                 {chambres_number}
-                                {props.reservation.itineraires[i].infoEtat === null 
+                                {
+                                    props.reservation.itineraires[i].infoEtat.length === 0
                                     ? null 
-                                    : <p><strong>Statut itinéraire: {props.reservation.itineraires[i].infoEtat.label} le {props.reservation.itineraires[i].infoEtat.date}</strong></p>}
+                                    : <>
+                                        <h3>Statut itinéraire ie:</h3>
+                                        {props.reservation.itineraires[i].infoEtat.map((etat) => {
+                                            return <p key={`${etat.label} ${etat.date}`}>
+                                                <strong>{etat.label} le {etat.date}</strong>
+                                            </p>
+                                        })}
+                                    </>
+                                }
                             </div>
 
                             <div class="voucher_border voucher_tarifs">

@@ -7,7 +7,8 @@ function Total(props){
             <p class="prix">
                 Total à payer
             </p>
-            <p class="prix"> {  props.toPay.toFixed(2)+ "  " + props.devise}</p>
+            {/* FIX ME: toPay est undefined, ne peut appelet toFixed sur undefined */}
+            <p class="prix"> {  props.toPay ? props.toPay.toFixed(2) : props.toPay+ "  " + props.devise}</p>
         </div>
     ); 
 }

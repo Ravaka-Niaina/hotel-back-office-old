@@ -212,10 +212,20 @@ function Voucher(props){
                     </div>
 
                 </div>
-                {reservation == null || reservation.infoEtat === null 
-                    ? null 
-                    : <span class="confirmation-message_Confirmed"><span>Statut réservation: {reservation.infoEtat.label} le {reservation.infoEtat.date}</span></span>
+
+                {
+                    reservation !== null && reservation.infoEtat.length > 0
+                    ? <>
+                        <h3>Statut réservation:</h3>
+                        {reservation.infoEtat.map((etat) => {
+                            return <p key={`${etat.label} ${etat.date}`}>
+                                <strong>{etat.label} le {etat.date}</strong>
+                            </p>
+                        })}
+                    </>
+                    : null 
                 }
+                
                 <div class="voucher_itineraires">
                     {
                         isReservation ?

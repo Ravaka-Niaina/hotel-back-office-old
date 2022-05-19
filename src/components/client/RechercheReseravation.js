@@ -71,7 +71,6 @@ function ReponseListFalse(props){
                 {
                     props.skeleton ? <SkeletonForm /> : <>
                     <img src="/hotel.jpg" style={photo}/> 
-                    {props.list.reservation.infoEtat === null ? null : <p><strong>Statut réservation: {props.list.reservation.infoEtat.label} le {props.list.reservation.infoEtat.date}</strong></p>}
                     <span
                         component="div"
                         sx={{ display: {xs : "none" ,  sm: 'block' }, padding : "10px" }}
@@ -81,10 +80,20 @@ function ReponseListFalse(props){
                     <span>{props.list.client.nom} , {props.list.client.prenom}</span><br/>
                     <span>{props.list.client.email} </span><br/><br/>
                     <strong>N° itineraire : </strong><span>{props.list.reservation.NumeroITineraire}</span><br/><br/>
-                    {props.list.reservation.infoEtat === null 
+                    
+                    {
+                        props.list.reservation.infoEtat.length === 0
                         ? null 
-                        : <p><strong>Statut itinéraire: {props.list.reservation.infoEtat.label} le {props.list.reservation.infoEtat.date}</strong></p>
+                        : <>
+                            <h3>Statut itinéraire:</h3>
+                            {props.list.reservation.infoEtat.map((etat) => {
+                                return <p key={`${etat.label} ${etat.date}`}>
+                                    <strong>{etat.label} le {etat.date}</strong>
+                                </p>
+                            })}
+                        </>
                     }
+                    
                     <ItineraireLogFalse tarifReserves = {props.list.reservation.tarifReserves}/>
                     <div style={{float : 'right'}}>
                         <button style={{minWidth:250}} class="btn button_btn button_secondary button_sm" 
@@ -538,7 +547,7 @@ function RechercheReservation (){
                         {
                             responseLogTrue ? <>
                             <h1 id="pageTitle">
-                                <span> Liste des reservations ito</span>
+                                <span> Liste des reservations</span>
                             </h1> 
                             <Box sx={{ display: { xs: 'none', md: 'flex'  }, gap : 1 , padding : "30px"}}>
                                 {
