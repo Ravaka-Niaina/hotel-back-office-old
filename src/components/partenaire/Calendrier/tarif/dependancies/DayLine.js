@@ -209,16 +209,17 @@ const DayLine = (props) => {
                 data={props.typechambre.booked[i].value} />
         </td>);
     }
-
+    console.log(props.typechambre.statusDays);
     for(let i = 0; i < props.typechambre.statusDays.length; i++){
         closelines.push(
             <td>
                 <CloseLine 
-                    closed={props.typechambre.statusDays[i].closed} 
+                    closed={props.typechambre.statusDays[i].closed}
                     statusDay={props.typechambre.statusDays[i]}
                     idTypeChambre={props.typechambre._id}
                     setOpenLoad={props.setOpenLoad}
-                    getPrix={props.getPrix} />
+                    getPrix={props.getPrix}
+                />
             </td>
         )
     }

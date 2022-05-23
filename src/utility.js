@@ -1,7 +1,7 @@
 import axios from "axios";
 import {session} from "./components/common/utilitySession.js"; 
 
-export default function callAPI(method, url, data, callback){
+export default function callAPI(method, url, data, callback, errorHandler){
     let headers = {
         idsession: session.getInstance().getId(),
         ispartner: session.getInstance().getIsPartner(),
@@ -20,5 +20,11 @@ export default function callAPI(method, url, data, callback){
     })
     .then(res => {                                           
         callback(res.data, res.headers)})
-    .catch(err =>{console.log(err); console.log("erreur");} );
+    .catch(err =>{
+        console.log(err);
+        if(errorHandler){
+           return errorHandler();
+        }
+        throw(err);
+    } );
 }

@@ -7,6 +7,7 @@ const utility = require('../utility.js');
 
 const CloseLine = (props) => {
     const [opened, setOpened] = useState(props.closed ? false : true);
+
     const theme = createTheme({
         palette: {
             primary: {
@@ -15,6 +16,14 @@ const CloseLine = (props) => {
             },
         },
     })
+
+    useEffect(() => {
+        let tmpOpened = props.closed ? false : true;
+        if (opened !== tmpOpened) {
+            setOpened(!opened);
+        }
+    });
+
 
     function callbackCloseTypeChambre(res){
         if(res.status === 200){
@@ -32,6 +41,11 @@ const CloseLine = (props) => {
         };
         callAPI('post', '/typeChambre/close', data, callbackCloseTypeChambre );
     }
+    
+    if(opened){
+        console.log(`${opened} ${props.day}`);
+    }
+
     return (
         <>
 
@@ -50,7 +64,6 @@ const CloseLine = (props) => {
                 }}
                 onClick={closeTypeChambre}
             >
-                {props.day}
             </Box>
         </ThemeProvider>
         </>

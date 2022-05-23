@@ -10,6 +10,7 @@ import Backdrop from '@mui/material/Backdrop';
 import  Navbar  from "../../Navbar/Navbar";
 import  ResponsiveDrawer  from "../../Navbar/responsive-drawer.js";
 import {session} from '../../../common/utilitySession.js';
+import callAPI from '../../../../utility';
 
 import "rsuite/dist/rsuite.min.css";
 
@@ -53,35 +54,30 @@ const CalendarComponent = () => {
     const [rateLine, setRateLine] = useState([]);
     const [openLoad, setOpenLoad] = useState(false);
     const [dateMin, setDateMin] = useState(null);
-    const [open, setOpen] = React.useState(false);
-    const [isFirst, setIsFirst] = useState(true);
-    const [isAccept, setIsAccept] = React.useState(false);
-    const [isTextField, setIsTextField] = React.useState(false);
     
     function getPrix(dates, startLoad, endLoad){
         startLoad ? startLoad() : setOpenLoad(true);
         let data = {};
+        
         try{
             data = {dateDebut: getDate(dates[0].format()), dateFin: getDate(dates[1].format())}
         }catch(err){
             data = {dateDebut: dates, dateFin: dates};
         }
-        try{
-            axios({
-                method: 'post',
-                url: process.env.REACT_APP_BACK_URL + "/TCTarif/prix",
-                withCredentials: true,
-                data: data
-            })
-            .then(res => {
+
+        callAPI(
+            'post', 
+            '/TCTarif/prix', 
+            data, 
+            (res) => {
                 const alldays = getDaysBetweenDates(dates[0],dates[1]);
                 let tmp = [];
-                for(var i = 0; i < res.data.typeChambre.length; i++) {
+                for(var i = 0; i < res.typeChambre.length; i++) {
                     tmp.push(
                         <>
                         <div className={styles.dividerline}></div>
                         <RateLine 
-                            typechambre={res.data.typeChambre[i]} 
+                            typechambre={res.typeChambre[i]} 
                             indice={i} 
                             fromto={dates} 
                             daterange={alldays}
@@ -98,14 +94,12 @@ const CalendarComponent = () => {
                 }
                 setRateLine(tmp);
                 endLoad ? endLoad() : setOpenLoad(false);
-            })
-            .catch(err => {
+            },
+            (err) => {
                 console.log(err);
                 endLoad ? endLoad() : setOpenLoad(false);
-            });
-        }catch(err){
-            console.error(err);
-        }
+            }
+        );
     }
 
     useEffect(() => {
