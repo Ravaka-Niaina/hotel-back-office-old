@@ -108,6 +108,17 @@ function getDate(date){
     return date;
 }
 
+function Equipements (equipements) {
+    try {
+        if (equipements) {
+            let htmlEquipements = equipements.map(equipement => <div>{React.createElement(MuiIcons[equipement.tag])}</div>)
+            return htmlEquipements;
+        }
+    } catch (err) {
+        return null;
+    }
+}
+
 class DChambre extends React.Component{
     constructor(props){
         super(props);
@@ -268,15 +279,7 @@ class DChambre extends React.Component{
                                         
                                         <DetailsTypeChambre context={this.props.context} typeChambre={typeChambre} indexTypeChambre={u} />
                                             <div className={styles.equipements}>
-                                            {
-                                                typeChambre.equipements.map(equipement => {
-                                                    return(
-                                                        <div>
-                                                            {React.createElement(MuiIcons[equipement.tag])}
-                                                        </div>
-                                                    );
-                                                })
-                                            }
+                                            <Equipements equipements = { typeChambre.equipements } />
                                         </div>
                                     </div>
                                 </div>
@@ -313,7 +316,7 @@ class DChambre extends React.Component{
         if(this.props.context.state.guests.nbEnfant == 0 
             && this.props.context.state.guests.nbAdulte == 0){
                 listChambre = null;
-            } 
+            }
         return (
             <div>
                 {listChambre}
