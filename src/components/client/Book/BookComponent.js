@@ -205,6 +205,7 @@ const BookComponent = (props) => {
                 numPage: numPage ? numPage : 1,
                 regrouperParTypeChambre: regrouperResultatsPar == "planTarifaire" ? false : true
             }
+            console.log(data);
             props.context.handleChange("isListTarifDispoReceived", false);
             callAPI('post', '/TCTarif/', data, setResult);
         }

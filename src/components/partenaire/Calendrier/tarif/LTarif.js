@@ -12,6 +12,7 @@ const fieldsToSearch = [
     {name: "dateReservation.fin", type: "DateTime"},
     {name: "politiqueAnnulAtrb", type: "Array"}
 ];
+
 const fieldsToPrint = [
     {field: "_id", label: null},
     {field: "nom", label: "Nom"},
@@ -21,14 +22,18 @@ const fieldsToPrint = [
     {field: "dateReservation.debut", label: "Debut date reservation", type: "Date"},
     {field: "dateReservation.fin", label: "Fin date reservation", type: "Date"},
     {field: "politiqueAnnulAtrb", label: "Politiques d'annulation attribuees", type: "Array"},
+    {field: "isActif", type: "Boolean"}
 ];
+
 const nbContent = 5;
 const urlEdit = '/back/tarif/details/';
+const urlSwitchActivation = "/TCTarif/switchIsTarifActif";
 const rowsPerPageOptions = [5, 10, 20];
 const accessRightToViewInsert = ["superAdmin", "insertPlanTarifaire"];
 const accessRightToDelete = ["superAdmin", "deletePlanTarifaire"];
 const accessRightToViewDetails = ["superAdmin", "getPlanTarifaire", "updatePlanTarifaire"];
 const accessRightToViewList = ["superAdmin", "getListTarif"];
+const accessRightToSwitchActivation = ["superAdmin", "switchActivationRatePlan"];
 
 export default function ListTarif(){
     return(
@@ -46,7 +51,9 @@ export default function ListTarif(){
             accessRightToViewDetails={accessRightToViewDetails}
             accessRightToDelete={accessRightToDelete}
             accessRightToViewList={accessRightToViewList}
+            accessRightToSwitchActivation={accessRightToSwitchActivation}
             title = "Liste des tarifs"
+            urlSwitchActivation = {urlSwitchActivation}
         />
     );
 }

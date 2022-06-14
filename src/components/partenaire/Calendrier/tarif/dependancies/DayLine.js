@@ -7,6 +7,7 @@ import Draggable from './Draggable.js';
 import PriceEditor from './PriceEditor.js'
 import CloseLine from './CloseLine.js';
 import DateRangeLine from './DateRangeLine.js';
+import RateCells from './RateCells';
 
 import { useEffect } from 'react';
 
@@ -21,42 +22,6 @@ function getMin2(arr){
         }
     }
     return min;
-}
-
-function RateCells(props){
-    let ratecells = [];
-    const nbOccupants = props.typechambre.nbAdulte + props.typechambre.nbEnfant;
-    let y = 1;
-    for(let i = 0; i < props.typechambre.planTarifaire.length; i++){
-        for(let v = 0; v < nbOccupants; v++){
-            let row = [];
-            y++;
-            for(let u = 0; u < props.typechambre.planTarifaire[i].prixTarif.length; u++){
-                const minPrix = props.typechambre.planTarifaire[i].prixTarif[u].versions[v];
-                row.push(
-                    <td>
-                        <DayCell
-                            customize="toSell"
-                            isprice={true} 
-                            highlight={props.selecteds.indexOf(u) >= 0 && props.selectedY == y} 
-                            key={u.toString()}
-                            x={u}
-                            y={y}
-                            deselectDay={props.rmSelection.bind(props.context)} 
-                            selectDay={props.addSelection.bind(props.context)} 
-                            selectOneDay={props.oneSelection.bind(props.context)} 
-                            data={minPrix.prix}
-                            nbPers={minPrix.nbPers}
-                            closed={props.typechambre.planTarifaire[i].prixTarif[u].closed} />
-                    </td>
-                );
-            }
-            ratecells.push(<tr>{row}</tr>);
-        }
-        
-    }
-
-    return ratecells;
 }
 
 const DayLine = (props) => {
