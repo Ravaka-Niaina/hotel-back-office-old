@@ -126,65 +126,6 @@ const CalendarComponent = () => {
                         }
                     }}
                 />
-                {/* <LocalizationProvider dateAdapter={AdapterMoment}>
-                
-                <DateRangePicker
-                    open={open}
-                    onAccept={() => {
-                        setIsAccept(true);
-                    }}
-                    onClose={() => {
-                        setIsAccept(false);
-                        if (!isTextField) {
-                            setOpen(false);
-                            setIsTextField(false);
-                        }
-                    }}
-                    onOpen={() => {
-                        if (!isAccept) {
-                            setOpen(true);
-                        }
-                    }}
-                    startText="Depuis"
-                    endText="Jusqu'à"
-                    value={value}
-                    onChange={(newValue) => {
-                        setValue(newValue);
-                        if(newValue != undefined && newValue[0] != null && newValue[1] != null){
-                            getPrix(newValue);
-                        }
-                    }}
-                    renderInput={(startProps, endProps) => (
-                    <React.Fragment>
-                        <TextField
-                        {...startProps}
-                        onFocus={() => {
-                            setIsTextField(true);
-                        }}
-                        onBlur={() => {
-                            setIsTextField(false);
-                        }}
-                        onClick={() => {
-                            setOpen(true);
-                        }}
-                        />
-                        <Box sx={{ mx: 2 }}> to </Box>
-                        <TextField
-                        {...endProps}
-                        onFocus={() => {
-                            setIsTextField(true);
-                        }}
-                        onBlur={() => {
-                            setIsTextField(false);
-                        }}
-                        onClick={() => {
-                            setOpen(true);
-                        }}
-                        />
-                    </React.Fragment>
-                    )}
-                />
-                </LocalizationProvider> */}
                 {rateLine}
             </Container>
             <Backdrop

@@ -61,17 +61,22 @@ function ListTarifs(props){
 
     for(let i = 0; i < props.planTarifaire.length; i++){
         let nbOccupants = props.typechambre.nbAdulte + props.typechambre.nbEnfant;
+        list.push(
+            <li className={sideList_css.ratePlanName}>
+                <span>{ props.planTarifaire[i].nom }</span>
+            </li>
+        );
         for(let u  = 0; u < nbOccupants; u++){
             list.push(
                 <li className={sideList_css.sideElt}>
-                    <span>{props.planTarifaire[i].nom} x{u + 1} <PersonOutline size={12} /></span>
-                    <LoadingButton
+                    <span> x{u + 1} <PersonOutline size={12} /> </span>
+                    {/* <LoadingButton
                         onClick={(e) => switchIsActif(i, props.typechambre._id, props.planTarifaire[i]._id)}
                         loading={isLoading[i]}
                         color={isActif[i] ? "success" : "error"}
                     >
                         <PowerSettingsNewIcon />
-                    </LoadingButton>
+                    </LoadingButton> */}
                 </li>
             );
         }
@@ -95,7 +100,6 @@ const SideList = (props) => {
                 { 
                     props.customize 
                     ? <li>
-                        
                         <Button size="small" variant="outlined" onClick={() => setOpenModal(true)} startIcon={<ModeEditOutlinedIcon />}>
                             Customize
                         </Button>

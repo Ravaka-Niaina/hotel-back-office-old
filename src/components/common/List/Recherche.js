@@ -598,6 +598,5 @@ export default function recherche_(props) {
           title = {props.title}
           getContent = {() => Recherche(props)} 
       />
-      
   );
 }

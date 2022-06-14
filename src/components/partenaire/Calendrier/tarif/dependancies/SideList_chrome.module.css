@@ -34,6 +34,11 @@
     margin-top: -12px;
 }
 
+.ratePlanName {
+    height: 22px !important;
+    padding: 0 !important;
+}
+
 .sideElt{
     padding-top: 0px;
     height: 51px !important;

@@ -22,7 +22,7 @@ const RateLine = (props) => {
             }}
             className={styles.sideline}
         >
-            <SideList 
+            <SideList
                 typechambre={props.typechambre} 
                 dateRange={props.fromto} 
                 getPrix={props.getPrix} 
