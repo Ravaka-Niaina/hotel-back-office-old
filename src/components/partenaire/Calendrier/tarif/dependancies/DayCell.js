@@ -42,7 +42,7 @@ const DayCell = (props) => {
                 onClick={() => {props.selectOneDay(props.x, props.y)}}
                 onDragEnter={() => select(true)}
             >
-                { props.data != null ? props.data + ((props.isprice) ? ' Є' : '') : '' }
+                { props.data ? props.data + ((props.isprice) ? ' Є' : '') : '' }
             </Box>
         </ThemeProvider>
         </>
