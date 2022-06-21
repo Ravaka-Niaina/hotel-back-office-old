@@ -73,6 +73,7 @@ function RapportReservation({}){
     const [erreur, setErreur] = useState(null);
     const [afficherChart, setAfficherChart] = useState(false);
     const [rapportEnCours, setRapportEnCours] = useState(false);
+    const [reservPerDay, setReservPerDay] = useState([]);
     
     const options = {
         chart: { id: "basic-bar" },
@@ -134,7 +135,7 @@ function RapportReservation({}){
     const [vue, setVue] = useState(optVues[0]);
     const [reservCompar, setReservCompar] = useState(optReservEffectuees[0].value);
     const [afficherConseil, setAfficherConseil] = useState(true);
-
+    
     const obtenirRapport = (e) => {
         e.preventDefault();
         setErreur(null);
@@ -147,7 +148,6 @@ function RapportReservation({}){
         };
         
         callAPI("post", "/reservation/rapport", data, (res) => {
-            console.log(res);
             if(res.status === 200){
                 let tmpPrixMoyen = [];
                 let tmpMaxNbNuitee = 0;
@@ -155,30 +155,32 @@ function RapportReservation({}){
                 const mois = ["Jan", "Fev", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sept", "Oct", "Nov", "Dec"];
                 let tmpLabels = [];
                 let tmpRevParChambre = [];
-                let tmpMaxRevParChambre = 0;
-                for(let i = 0; i < res.rapport.length; i++){
-                    tmpPrixMoyen.push(res.rapport[i].prixMoyen);
-                    if(res.rapport[i].nbNuitee > tmpMaxNbNuitee){
-                        tmpMaxNbNuitee = res.rapport[i].nbNuitee;
-                    }
-                    
-                    if(res.rapport[i].prixMoyen > tmpMaxPrixMoyen){
-                        tmpMaxPrixMoyen = getRoundedNumber(res.rapport[i].prixMoyen);
-                    }
-                    if(res.rapport[i].revParChambre > tmpMaxPrixMoyen){
-                        tmpMaxPrixMoyen = res.rapport[i].revParChambre;
-                    }
+                const { stats, reservPerDay } = res;
 
-                    const jour = new Date(res.rapport[i]._id);
-                    tmpLabels.push(jour.getDate() + " " + mois[jour.getMonth()] + "\n" + jour.getFullYear());
-                    tmpRevParChambre.push(getRoundedNumber(res.rapport[i].revParChambre));
+                for(let i = 0; i < stats.length; i++){
+                  tmpPrixMoyen.push(stats[i].prixMoyen);
+                  if(stats[i].nbNuitee > tmpMaxNbNuitee){
+                      tmpMaxNbNuitee = stats[i].nbNuitee;
+                  }
+                  
+                  if(stats[i].prixMoyen > tmpMaxPrixMoyen){
+                      tmpMaxPrixMoyen = getRoundedNumber(stats[i].prixMoyen);
+                  }
+                  if(stats[i].revParChambre > tmpMaxPrixMoyen){
+                      tmpMaxPrixMoyen = stats[i].revParChambre;
+                  }
+                
+                  const jour = new Date(stats[i]._id);
+                  tmpLabels.push(jour.getDate() + " " + mois[jour.getMonth()] + "\n" + jour.getFullYear());
+                  tmpRevParChambre.push(getRoundedNumber(stats[i].revParChambre));
                 }
+
                 setPrixMoyen(tmpPrixMoyen);
                 setMaxNbNuitee(tmpMaxNbNuitee);
                 setMaxPrixMoyen(tmpMaxPrixMoyen);
                 setLabels(tmpLabels);
-                console.log(tmpRevParChambre);
                 setRevParChambre(tmpRevParChambre);
+                setReservPerDay(reservPerDay); // itineraires , tarifReserves, listPrix ont tous une taille 1
                 setAfficherChart(true);
             }else{
                 setErreur(res.message);
@@ -187,6 +189,8 @@ function RapportReservation({}){
             setRapportEnCours(false);
         });
     };
+
+    console.log(reservPerDay);
 
     return (
         <div className="app">
