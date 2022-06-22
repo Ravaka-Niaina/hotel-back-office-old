@@ -1,4 +1,3 @@
-import React , { useState, useEffect } from 'react';
 import styles from '../CalendarComponent.module.css';
 import {Box} from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -6,7 +5,7 @@ import callAPI from '../../../../../utility';
 const utility = require('../utility.js');
 
 const CloseLine = (props) => {
-    const [opened, setOpened] = useState(props.closed ? false : true);
+    const { typeChambres, setTypeChambres, indice, indexStatus, } = props;
 
     const theme = createTheme({
         palette: {
@@ -17,23 +16,18 @@ const CloseLine = (props) => {
         },
     })
 
-    useEffect(() => {
-        let tmpOpened = props.closed ? false : true;
-        if (opened !== tmpOpened) {
-            setOpened(!opened);
-        }
-    });
-
-
     function callbackCloseTypeChambre(res){
+        console.log(res);
         if(res.status === 200){
             props.setOpenLoad(false);
+            const statusDay = typeChambres[indice].statusDays[indexStatus];
+            statusDay.closed = !statusDay.closed;
+            setTypeChambres([ ...typeChambres ]);
         }
     }
 
     function closeTypeChambre(){
-        setOpened(!opened);
-        props.setOpenLoad(true);
+        // props.setOpenLoad(true);
         const data = {
             _id: props.idTypeChambre, 
             dateDebut: utility.getDate(props.statusDay.date),
@@ -41,31 +35,26 @@ const CloseLine = (props) => {
         };
         callAPI('post', '/typeChambre/close', data, callbackCloseTypeChambre );
     }
-    
-    if(opened){
-        console.log(`${opened} ${props.day}`);
-    }
 
     return (
         <>
-
-        <ThemeProvider
-            theme={theme}
-            >
-            <Box
-                className={styles.closedline}
-                sx={{
-                width: 59,
-                bgcolor: opened ? 'primary.opened' : 'primary.main',
-                '&:hover': {
-                    opacity: [0.9, 0.8, 0.7],
-                },
-                position: 'relative',
-                }}
-                onClick={closeTypeChambre}
-            >
-            </Box>
-        </ThemeProvider>
+          <ThemeProvider
+              theme={theme}
+              >
+              <Box
+                  className={styles.closedline}
+                  sx={{
+                  width: 59,
+                  bgcolor: typeChambres[indice].statusDays[indexStatus].closed ? 'primary.main' : 'primary.opened',
+                  '&:hover': {
+                      opacity: [0.9, 0.8, 0.7],
+                  },
+                  position: 'relative',
+                  }}
+                  onClick={closeTypeChambre}
+              >
+              </Box>
+          </ThemeProvider>
         </>
     );
 }
