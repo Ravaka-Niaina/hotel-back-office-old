@@ -50,7 +50,7 @@ function home() {
             </Box>
             <Grid container spacing={3}>
               <RapportReservation />
-              <Grid item xs={12} sm={6} md={3}>
+              {/* <Grid item xs={12} sm={6} md={3}>
                   <AppWeeklySales />
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
@@ -69,7 +69,7 @@ function home() {
 
               <Grid item xs={12} md={6} lg={4}>
                   <AppCurrentVisits />
-              </Grid>
+              </Grid> */}
 
               {/* <Grid item xs={12} md={6} lg={8}>
                   <AppConversionRates />
