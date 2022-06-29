@@ -49,6 +49,7 @@ import Grid from '@mui/material/Grid';
 
 import { initializeApp } from "firebase/app";
 import { getMessaging, getToken, onMessage } from 'firebase/messaging';
+import {session} from '../../common/utilitySession.js';
 
 // DEBUT CODES NOTIFICATION
 
@@ -177,21 +178,245 @@ export default function PersistentDrawerLeft(props) {
 
   // list of options
   const optionlist = [
-    { text: "Accueil", icon: HomeOutlinedIcon, lien: [ {link:"/back", nom: ""}], dropdown: false },
-    { text: "Plan tarifaire", icon: DocumentScannerOutlinedIcon, lien: [{link:"/back/tarif", nom: "Tarif"}, {link:"/back/tarif/calendar", nom: "Calendrier"}], dropdown: true },
-    { text: "Type de chambre", icon: BedroomChildOutlinedIcon, lien: [ {link:"/back/typeChambre", nom: ""}], dropdown: false },
-    { text: "Promotion", icon: PushPinOutlinedIcon, lien: [ {link:"/back/promotion", nom: ""}], dropdown: false },
-    { text: "Politique", icon: GavelOutlinedIcon, lien: [ {link:"/back/politique/list", nom: ""}], dropdown: false },
-    { text: "Historique", icon: DocumentScannerOutlinedIcon, lien: [{link:"/historique/TC", nom: "Type de chambre"}, {link:"/historique/MPL", nom: "Modification plan tarifaire"}, {link:"/#", nom: "Promotion"}], dropdown: true },
-    { text: "Clients", icon: FormatListBulletedOutlinedIcon, lien: [ {link:"/front", nom: ""}], dropdown: false },
+    { 
+      text: "Accueil",
+      icon: HomeOutlinedIcon,
+      lien: [{ link:"/back", nom: "", }],
+      dropdown: false
+    },
+    {
+      text: "Plan tarifaire",
+      icon: DocumentScannerOutlinedIcon,
+      lien: [
+        {
+          link:"/back/tarif",
+          nom: "Tarif",
+          requireOneOfTheseAccessRights: [
+            "superAdmin",
+            "insertPlanTarifaire",
+            "deletePlanTarifaire",
+            "getPlanTarifaire",
+            "updatePlanTarifaire",
+            "getListTarif",
+            "switchActivationRatePlan",
+          ],
+        },
+        {
+          link:"/back/tarif/calendar",
+          nom: "Calendrier",
+          requireOneOfTheseAccessRights: [
+            "superAdmin",
+            "voirCalendrier",
+          ],
+        },
+      ],
+      dropdown: true
+    },
+    {
+      text: "Type de chambre",
+      icon: BedroomChildOutlinedIcon,
+      lien: [
+        {
+          link:"/back/typeChambre",
+          nom: "",
+          requireOneOfTheseAccessRights: [
+            "superAdmin",
+            "getListTypeChambre",
+            "insertTypeChambre",
+            "deleteTypeChambre",
+            "getTypeChambre",
+            "updateTypeChambre",
+          ]
+        }
+      ],
+      dropdown: false
+    },
+    {
+      text: "Promotion",
+      icon: PushPinOutlinedIcon,
+      lien: [
+        {
+          link:"/back/promotion",
+          nom: "",
+          requireOneOfTheseAccessRights: [
+            "superAdmin",
+            "insertPlanTarifaire",
+            "deletePlanTarifaire",
+            "getPlanTarifaire",
+            "updatePlanTarifaire",
+            "getListPromotion",
+            "activatePromotion",
+          ],
+        }
+      ],
+      dropdown: false
+    },
+    {
+      text: "Politique",
+      icon: GavelOutlinedIcon,
+      lien: [
+        {
+          link:"/back/politique/list",
+          nom: "",
+          requireOneOfTheseAccessRights: [
+            "superAdmin",
+            "insertPolitique",
+            "modifierPolitique",
+          ]
+        }
+      ],
+      dropdown: false
+    },
+    {
+      text: "Historique",
+      icon: DocumentScannerOutlinedIcon,
+      lien: [
+        {
+          link:"/historique/TC",
+          nom: "Type de chambre",
+          requireOneOfTheseAccessRights: [
+            "superAdmin",
+            "getListHistoRoomType"
+          ],
+        },
+        {
+          link:"/historique/MPL",
+          nom: "Modification plan tarifaire",
+          requireOneOfTheseAccessRights: [
+            "superAdmin",
+            "getListHistoUpdateRatePlan"
+          ],
+        },
+      ],
+      dropdown: true
+    },
+    {
+      text: "Clients",
+      icon: FormatListBulletedOutlinedIcon,
+      lien: [ 
+        {
+          link:"/front",
+          nom: "",
+          requireOneOfTheseAccessRights: [
+            "superAdmin",
+            "getListClient"
+          ],
+        }
+      ],
+      dropdown: false,
+    },
     { text: "Mon compte", icon: PersonPinIcon, lien: [ {link:"/back/partenaire", nom: ""}], dropdown: false },
-    { text: "Partenaires", icon: GroupIcon, lien: [ {link:"/back/user", nom: ""}], dropdown: false },
-    { text: "Hotels", icon: HotelIcon, lien: [ {link:"/back/hotel", nom: ""}], dropdown: false },
-    { text: "Hotel", icon: HotelIcon,lien: [ {link:"/back/hotel/detail", nom: ""}], dropdown: false },
-    { text: "Droits d'accès", icon: AddCardIcon, lien: [ {link:"/back/accessRight", nom: ""}], dropdown: false },
-    { text: "Réservation", icon: ShoppingBagIcon, lien: [ {link:"/back/reservation", nom: ""}], dropdown: false },
-    { text: "Modèle email", icon: EmailIcon, lien: [ {link:"/back/modelemail", nom: ""}], dropdown: false },
+    {
+      text: "Partenaires",
+      icon: GroupIcon,
+      lien: [
+        {
+          link:"/back/user",
+          nom: "",
+          requireOneOfTheseAccessRights: [
+            "superAdmin",
+            "insertPartenaire",
+            "deletePartenaire",
+            "getPartenaire",
+            "updatePartenaire",
+            "assocPartnerWithAR",
+            "disocPartnerWithAR",
+            "getListPartenaire",
+          ],
+        },
+      ],
+      dropdown: false,
+    },
+    { 
+      text: "Hotel",
+      icon: HotelIcon,
+      lien: [
+        {
+          link: "/back/hotel",
+          nom: "",
+        },
+        // {
+        //   link: "/back/hotel/detail",
+        //   nom: "",
+        //   requireOneOfTheseAccessRights: [
+        //     "superAdmin",
+
+        //   ]
+        // }
+      ],
+      dropdown: false,
+    },
+    {
+      text: "Droits d'accès",
+      icon: AddCardIcon,
+      lien: [
+        {
+          link:"/back/accessRight",
+          nom: "",
+          requireOneOfTheseAccessRights: [
+            "superAdmin",
+            "insertDroitAcces",
+            "updateDroitAcces",
+            "deleteDroitAcces",
+            "getListDroitAcces",
+          ],
+        }
+      ],
+      dropdown: false
+    },
+    {
+      text: "Réservation",
+      icon: ShoppingBagIcon,
+      lien: [
+        {
+          link:"/back/reservation",
+          nom: "",
+          requireOneOfTheseAccessRights: [
+            "superAdmin",
+            "listeReservation"
+          ]
+        }
+      ],
+      dropdown: false
+    },
+    {
+      text: "Modèle email",
+      icon: EmailIcon,
+      lien: [
+        {
+          link:"/back/modelemail",
+          nom: "",
+          requireOneOfTheseAccessRights: [
+            "superAdmin",
+            "updateEmailModel"
+          ]
+        }
+      ],
+      dropdown: false
+    },
   ];
+
+  for (let i = 0; i < optionlist.length; i++) {
+    for (let u = 0; u < optionlist[i].lien.length; u++) {
+      const lienElt = optionlist[i].lien[u];
+      if (!(
+        !lienElt.requireOneOfTheseAccessRights
+        || (
+          lienElt.requireOneOfTheseAccessRights 
+          && lienElt.requireOneOfTheseAccessRights.length > 0 
+          && session.getInstance().hasOneOfTheseAccessRights(lienElt.requireOneOfTheseAccessRights)
+        )
+      )) {
+        optionlist[i].lien.splice(u, 1);
+        u = u - 1;
+      }
+    }
+    
+    if (optionlist[i].lien.length === 0) {
+      optionlist.splice(i, 1);
+      i = i - 1;
+    }
+  }
 
   const handleDrawerOpen = () => {
     setOpen(true);

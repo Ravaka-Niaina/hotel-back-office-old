@@ -121,7 +121,6 @@ export default function Routes() {
 
             <Route path="/back/accessRight" exact component={ListeDroitAcces} />
             <Route path="/back/accessRight/insert" exact component={InsertDroitAcces} />
-            <Route path="/back/partenaire" exact component={GetOnePartner} />
             <Route path="/back/accessRight/update/:_id" exact component={InsertDroitAcces} />
 
             <Route path="/back/partenaire" exact component={GetOnePartner} />     
@@ -154,15 +153,18 @@ export default function Routes() {
             <Route path="/back/politique/detail/:_id" exact component={Global} />
             <Route path="/back/politique/list" exact component={ListPolitique} />
             <Route path="/back/politique/testData" exact component={testData} />
+
             <Route path="/back/reservation" exact component={ListeReservation} />
             <Route path="/back/reservation/notif" exact component={ListeReservation} />
+            
             <Route path="/back/modelemail" exact component={ModeleEmail} />
 
             <Route path="/back/hotel/insert" exact component={InsertHotel} />
-            <Route path="/localisation" exact component={Localisation} />
-            <Route path="/back/hotel/detail/:_id" exact component={InsertHotel} />
             <Route path="/back/hotel" exact component={HotelList} />
-            <Route path="/back/hotel/detail" exact component={GetOneHotel} />
+            <Route path="/back/hotel/detail/:_id" exact component={GetOneHotel} />
+
+            <Route path="/localisation" exact component={Localisation} />
+            
             <Route path="/back/reservation/rapport" exact component={RapportReservation} />
 
             <Route path="/" exact component={AppClient} />

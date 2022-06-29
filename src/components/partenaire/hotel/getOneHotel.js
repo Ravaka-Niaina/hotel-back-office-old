@@ -72,9 +72,9 @@ function InsertHotel() {
   const [defaultLocation, setDefaultLocation] = useState(DefaultLocation);
   const [location, setLocation] = useState({lat: '', lng: ''});
   const [zoom, setZoom] = useState(DefaultZoom);
+  const { _id } = useParams();
 
   const hasARGet = session.getInstance().hasOneOfTheseAccessRights(["getOneHotel", "superAdmin"]);
-  console.log('hasARGet ='+hasARGet);
 
   function handleChangeLocation(lat, lng) {
     setLocation({ lat: lat, lng: lng });
@@ -137,7 +137,7 @@ function InsertHotel() {
      isFirstRender = false;
      if(variable !== null){
     if(variable.id !== null && variable.isPartner == true && hasARGet){
-    callAPI('get', '/hotel/details', {}, setDetailsHotel);
+    callAPI('get', '/hotel/details/' + _id, {}, setDetailsHotel);
       }
      }else{
       history.push('/back/login');

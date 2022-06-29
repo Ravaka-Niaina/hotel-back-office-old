@@ -2,7 +2,10 @@ import * as React from 'react';
 import Card from '@mui/material/Card';
 import { useState } from 'react';
 import {useEffect} from "react";
+import { useHistory } from 'react-router-dom';
+
 import callAPI from '../../../utility.js';
+import {session} from '../../common/utilitySession.js';
 
 import  './user.css';
 
@@ -37,11 +40,11 @@ const Item = styled(Paper)(({ theme }) => ({
     email : "",
     telephone : "",
     _id: "",
-  })
+  });
 
-    const [skeletonAffiche, setSkeleton] = useState(true)
+  const [skeletonAffiche, setSkeleton] = useState(true);
 
-    function setDetailsPartner(data){
+  function setDetailsPartner(data){
     let current = JSON.parse(JSON.stringify(state));
     current = data.partenaire;
     
@@ -49,8 +52,14 @@ const Item = styled(Paper)(({ theme }) => ({
     setSkeleton(false);
   }
 
+  const history = useHistory();
+
   useEffect(() => {
-      callAPI('get', '/user/partenaire', {}, setDetailsPartner);
+      if (session.getInstance().isConnected()) {
+        callAPI('get', '/user/partenaire', {}, setDetailsPartner);
+      } else {
+        history.push('/back/login');
+      }
   }, [])
 
   return (

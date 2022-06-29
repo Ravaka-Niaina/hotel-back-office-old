@@ -27,8 +27,9 @@ const InsertDroitAcces = () => {
     useEffect(() => {
         const isConnected = session.getInstance().isConnected();
         const hasAR = session.getInstance().hasOneOfTheseAccessRights(["superAdmin"]);
+        console.log(isConnected + ' ' + hasAR);
         if(!isConnected){
-            return(<Login urlRedirect={window.location.href} />);
+            return history.push('/back/login');
         }
         if(!hasAR){
             return(<NotEnoughAccessRight />);
