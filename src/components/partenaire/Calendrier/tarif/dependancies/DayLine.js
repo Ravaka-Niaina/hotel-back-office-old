@@ -241,8 +241,9 @@ const DayLine = ({
             break;
           }
         }
-        console.log(r);
-        r += isIndexPlanTarifaire ? 7 : 38;
+        console.log(indexStartCompare);
+        r = r - 3 * indexStartCompare;
+        r += isIndexPlanTarifaire ? 22 : 38;
         // r += y > 1 ? 6 : 0;
         return r;
     }
