@@ -5,13 +5,14 @@ import styles from '../CalendarComponent.module.css';
 import DayCell from './DayCell.js';
 
 function AvailabilityCell ({
-    selectDay,
-    deselectDay,
-    highlight,
+    selectDay = () => {},
+    deselectDay = () => {},
+    highlight = () => {},
     selectOneDay = () => {},
     x,
     y,
     closed,
+    heightAvailabilityCell,
 }) {
     const [selected, setSelected] = useState(false);
     const theme = createTheme({
@@ -41,7 +42,7 @@ function AvailabilityCell ({
                 className={styles.daycell}
                 sx={{
                 width: 59,
-                height: 22,
+                height: heightAvailabilityCell,
                 bgcolor: selected ? 'primary.selected' : 'primary.main',
                 '&:hover': {
                     opacity: [0.9, 0.8, 0.7],
@@ -70,15 +71,17 @@ function RateCells({
     selecteds,
     selectedY,
     context,
+    heightAvailabilityCell,
 }) {
     let ratecells = [];
     const nbOccupants = nbAdulte + nbEnfant;
     let y = 1;
     for(let i = 0; i < planTarifaire.length; i++){
+        y++;
         const { prixTarif } = planTarifaire[i];
         ratecells.push(
             <tr>
-                { Array(prixTarif.length).fill(<td><AvailabilityCell closed={true} data="temp" /></td>) }
+                { Array(prixTarif.length).fill(<td><AvailabilityCell closed={true} data="temp" heightAvailabilityCell={heightAvailabilityCell} /></td>) }
             </tr>
         );
 

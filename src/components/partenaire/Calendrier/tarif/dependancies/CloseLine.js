@@ -41,10 +41,6 @@ const CloseLine = (props) => {
         };
         callAPI('post', '/typeChambre/close', data, callbackCloseTypeChambre );
     }
-    
-    if(opened){
-        console.log(`${opened} ${props.day}`);
-    }
 
     return (
         <>

@@ -14,6 +14,12 @@ const PriceEditor = (props) => {
         let y = 1;
         const nbOccupants = props.typechambre.nbAdulte + props.typechambre.nbEnfant;
         for(let i = 0; i < props.typechambre.planTarifaire.length; i++){
+
+            y++;
+            if (y === selectedY) {
+              return {indicePlanTarifaire: i, nbPers: 0}; 
+            }
+            
             for(let u = 0; u < nbOccupants; u++){
                 y++;
                 if(y === selectedY){

@@ -11,6 +11,9 @@ import RateCells from './RateCells';
 
 import { useEffect } from 'react';
 
+const heightAvailabilityCell = 22;
+const heightPriceCell = 50;
+
 function getMin2(arr){
     var min = arr[0];
     for(var i = 1; i < arr.length; i++) {
@@ -24,7 +27,15 @@ function getMin2(arr){
     return min;
 }
 
-const DayLine = (props) => {
+const DayLine = ({
+  typechambre,
+  daterange,
+  indice,
+  setOpenLoad,
+  getPrix,
+  alldays,
+  value
+}) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [min,setMin] = useState(0);
     const [max,setMax] = useState(0);
@@ -63,7 +74,7 @@ const DayLine = (props) => {
         setTypeSelected(type);
         var min = getMin(selecteds);
         var max = getMax(selecteds);
-       // console.log('from : ' + min + ' => ' + max);
+        // console.log('from : ' + min + ' => ' + max);
         if((i <= min || (i > min && i <= max)) && from === 'left'){
             min = i;
         }
@@ -75,15 +86,14 @@ const DayLine = (props) => {
         for(var j = min; j <= max; j++) {
             tmp.push(j);
         }
-        console.log(tmp);
         setSelecteds(tmp);
         setSelectedY(y);
-        if(props.daterange[i] < bornesEditDate[0]){
-            setBornesEditDate([ props.daterange[i] , bornesEditDate[0] ]);
+        if(daterange[i] < bornesEditDate[0]){
+            setBornesEditDate([ daterange[i] , bornesEditDate[0] ]);
         }else{
-            setBornesEditDate([ bornesEditDate[0] , props.daterange[i] ]);
+            setBornesEditDate([ bornesEditDate[0] , daterange[i] ]);
         }
-    } 
+    }
     const rmSelection = (i, y) => {
         // const tmp = [...selecteds];
         // const r = selecteds.indexOf(i);
@@ -106,9 +116,9 @@ const DayLine = (props) => {
     }
     const oneSelection = (i, y) => {
         setSelecteds([i]);
-        setBornesEditDate([props.daterange[i]]);
+        setBornesEditDate([daterange[i]]);
         setSelectedY(y);
-        let anchorEl = document.getElementById('anchorEl' + props.indice);
+        let anchorEl = document.getElementById('anchorEl' + indice);
         openPopper(anchorEl);
     }
     const leftSelected = () => {
@@ -146,7 +156,21 @@ const DayLine = (props) => {
         
     }, []);
 
-    for(var i = 0; i < props.typechambre.statusDays.length ; i++){
+    for(let i = 0; i < typechambre.statusDays.length; i++){
+      closelines.push(
+          <td>
+              <CloseLine 
+                  closed={typechambre.statusDays[i].closed}
+                  statusDay={typechambre.statusDays[i]}
+                  idTypeChambre={typechambre._id}
+                  setOpenLoad={setOpenLoad}
+                  getPrix={getPrix}
+              />
+          </td>
+      )
+  }
+
+    for(var i = 0; i < typechambre.statusDays.length ; i++){
         daycells.push(
         <td>
             <DayCell 
@@ -158,7 +182,7 @@ const DayLine = (props) => {
                 deselectDay={rmSelection.bind(this)} 
                 selectDay={addSelection.bind(this)} 
                 selectOneDay={oneSelection.bind(this)}
-                data={props.typechambre.statusDays[i].toSell} />
+                data={typechambre.statusDays[i].toSell} />
         </td>);
         bookedcell.push(
         <td>
@@ -171,23 +195,10 @@ const DayLine = (props) => {
                 deselectDay={rmSelection.bind(this)} 
                 selectDay={addSelection.bind(this)} 
                 selectOneDay={oneSelection.bind(this)} day={i}
-                data={props.typechambre.booked[i].value} />
+                data={typechambre.booked[i].value} />
         </td>);
     }
-    console.log(props.typechambre.statusDays);
-    for(let i = 0; i < props.typechambre.statusDays.length; i++){
-        closelines.push(
-            <td>
-                <CloseLine 
-                    closed={props.typechambre.statusDays[i].closed}
-                    statusDay={props.typechambre.statusDays[i]}
-                    idTypeChambre={props.typechambre._id}
-                    setOpenLoad={props.setOpenLoad}
-                    getPrix={props.getPrix}
-                />
-            </td>
-        )
-    }
+
     const calculateTopAnchor = (y) => {
         let r = (y * 50);
         if(y > 1){
@@ -196,12 +207,46 @@ const DayLine = (props) => {
         return r;
     }
     const calculateTop = (y) => {
-        let r = 38 + (y * 50);
-        if(y > 1){
-            r += 6;
+        const { nbAdulte, nbEnfant, planTarifaire } = typechambre;
+
+        const occupantNum = nbAdulte + nbEnfant;
+        const indexesPlanTarifaire = [];
+        let tmpIndexPlanTarifaire = 2;
+        for (let i = 0; i < planTarifaire.length; i++) {
+          indexesPlanTarifaire.push(tmpIndexPlanTarifaire);
+          tmpIndexPlanTarifaire += occupantNum + 1;
         }
+        console.log(indexesPlanTarifaire);
+
+        let r = 0;
+        // calculate height sum of cells above
+        let indexStartCompare = 0;
+        for (let i = 0; i < y; i++) {
+          let isIndexPlanTarifaire = false;
+          for (let u = indexStartCompare; u < indexesPlanTarifaire.length; u++) {
+            if (i === indexesPlanTarifaire[u]) {
+              isIndexPlanTarifaire = true;
+              indexStartCompare = u + 1;
+              break;
+            }
+          }
+          r += isIndexPlanTarifaire ? heightAvailabilityCell : heightPriceCell;
+        }
+
+        // add height to center vertically the draggable button
+        let isIndexPlanTarifaire = false;
+        for (let i = indexStartCompare; i < indexesPlanTarifaire.length; i++) {
+          if (y === indexesPlanTarifaire[i]) {
+            isIndexPlanTarifaire = true;
+            break;
+          }
+        }
+        console.log(r);
+        r += isIndexPlanTarifaire ? 7 : 38;
+        // r += y > 1 ? 6 : 0;
         return r;
     }
+
     return(
         <>
             <Popper
@@ -216,20 +261,41 @@ const DayLine = (props) => {
                     isPrice={selectedY > 1} 
                     selected={selectedY - 2} 
                     selectedY={selectedY} 
-                    typechambre={props.typechambre} 
+                    typechambre={typechambre} 
                     fromto={bornesEditDate} 
                     closePopper={closePopper.bind(this)}
-                    alldays={props.alldays}
+                    alldays={alldays}
                     selecteds={selecteds}
-                    getPrix={props.getPrix}
-                    value={props.value} />
+                    getPrix={getPrix}
+                    value={value} />
             </Popper>
             <div className={styles.dayline}>
-                <DateRangeLine daterange={props.daterange} />
+                <DateRangeLine daterange={daterange} />
                 
                 <div className={styles.tablelinediv}>
-                    <div id={"anchorEl" + props.indice} style={{ height: '10px', backgroundColor: 'transparent', position: 'absolute', top: (calculateTopAnchor(selectedY)) + 'px', left: (min * 60) + 'px' ,width: ((max - min + 1) * 60) + 'px' }}></div>
-                    { (selecteds.length > 0 && selectedY != -1) ? <Draggable top={calculateTop(selectedY)} pos={'left'} dragStart={dragStart.bind(this)} rightSelected={rightSelected.bind(this)} leftSelected={leftSelected.bind(this)} /> : null }
+                    <div 
+                      id={"anchorEl" + indice}
+                      style={{
+                        height: '10px',
+                        backgroundColor: 'transparent',
+                        position: 'absolute',
+                        top: (calculateTopAnchor(selectedY)) + 'px',
+                        left: (min * 60) + 'px',
+                        width: ((max - min + 1) * 60) + 'px'
+                      }}
+                    ></div>
+
+                    { 
+                      (selecteds.length > 0 && selectedY != -1)
+                      ? <Draggable 
+                          top={calculateTop(selectedY)}
+                          pos={'left'}
+                          dragStart={dragStart.bind(this)}
+                          rightSelected={rightSelected.bind(this)}
+                          leftSelected={leftSelected.bind(this)}
+                        />
+                      : null
+                    }
                     <table className={styles.table}>
                         <thead>
 
@@ -244,14 +310,16 @@ const DayLine = (props) => {
                             <tr>
                                 {bookedcell}
                             </tr>
-                            <RateCells 
-                                typechambre={props.typechambre} 
+                            <RateCells
+                                typechambre={typechambre} 
                                 context={this}
                                 selecteds={selecteds}
                                 selectedY={selectedY}
                                 rmSelection={rmSelection}
                                 addSelection={addSelection}
-                                oneSelection={oneSelection} />
+                                oneSelection={oneSelection}
+                                heightAvailabilityCell={heightAvailabilityCell}
+                            />
                         </tbody>
                     </table>
                     { (selecteds.length > 0 && selectedY != -1) ? <Draggable top={calculateTop(selectedY)} pos={'right'} dragStart={dragStart.bind(this)} rightSelected={rightSelected.bind(this)} leftSelected={leftSelected.bind(this)} /> : null }
