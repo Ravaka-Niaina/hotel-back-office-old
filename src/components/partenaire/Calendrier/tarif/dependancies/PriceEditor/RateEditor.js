@@ -66,21 +66,27 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
         <FormControl component="fieldset">
             <span>{nomPlanTarifaire}</span>
             <span>{moment(fromto[0]).format('ll') + ((fromto[1] != undefined) ?  ' - ' + moment(fromto[1]).format('ll') : "")}</span>
-            <FormControlLabel
-                checked={changeStatusRate}
-                control={<Radio />} label="Modifier disponibilité tarif"
-                onClick={() => switchChangeStatusRate()}
-            />
-            <RadioGroup
-                aria-label="gender"
-                name="controlled-radio-buttons-group"
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                row
-            >
-                <FormControlLabel value="open" control={<Radio />} label="Open" disabled={!changeStatusRate} />
-                <FormControlLabel value="close" control={<Radio />} label="Close" disabled={!changeStatusRate} />
-            </RadioGroup>
+            {
+              nbPers > 0
+              ? null
+              : <>
+                <FormControlLabel
+                  checked={changeStatusRate}
+                  control={<Radio />} label="Modifier disponibilité tarif"
+                  onClick={() => switchChangeStatusRate()}
+                />
+                <RadioGroup
+                    aria-label="gender"
+                    name="controlled-radio-buttons-group"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    row
+                >
+                    <FormControlLabel value="open" control={<Radio />} label="Open" disabled={!changeStatusRate} />
+                    <FormControlLabel value="close" control={<Radio />} label="Close" disabled={!changeStatusRate} />
+                </RadioGroup>
+              </>
+            }
 
             {error === null 
             ? null 
@@ -89,7 +95,10 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
             </Stack>}
 
             <br/>
-            <TextField
+            {
+              nbPers === 0
+              ? null
+              : <TextField
                 size="small"
                 id="outlined-number"
                 label={"x " + nbPers} 
@@ -103,7 +112,9 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
                 }}
                 value={prix}
                 onChange={(e) => setPrix(e.target.value)}
-            />
+              />
+            }
+            
             <br/>
 
             <Stack direction="row" spacing={2}>
