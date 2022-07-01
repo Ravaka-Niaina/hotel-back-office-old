@@ -2,32 +2,31 @@ import { useState, useRef } from 'react';
 import CustomError from '../../../CustomError';
 import {useEffect} from "react";
 // import Navbar from "../Navbar/Navbar";
-
+import ResponsiveDrawer from "../Navbar/responsive-drawer.js";
 import { Checkbox } from "@mui/material";
 import './typeChambre.css';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import {Link} from 'react-router-dom';
-import Alert from '@mui/material/Alert';
-import Stack from '@mui/material/Stack';
 
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { useParams, useHistory } from 'react-router-dom';
 
 import callAPI from '../../../utility';
-import {session} from '../../common/utilitySession';
+import {session} from '../../common/utilitySession.js';
 import NotEnoughAccessRight from '../../common/NotEnoughAccessRight';
 
-import ResponsiveDrawer from "../Navbar/responsive-drawer";
-import ButtonLoading from "../buttonLoading"
-import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire';
-import PhotoChambre from './InsertTypeChambre/Photo/PhotoChambre';
-import VideoChambre from './InsertTypeChambre/Video/VideoChambre';
+import ButtonLoading from "../buttonLoading.js"
+import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
+import PhotoChambre from './InsertTypeChambre/Photo/PhotoChambre.js';
+import VideoChambre from './InsertTypeChambre/Video/VideoChambre.js';
 import Equipement from './InsertTypeChambre/Equipement.js';
 import Galerie from '../Galerie/Galerie.js';
 import ImageCrop from '../Galerie/ImageCrop.js';
-import Login from '../../common/Authentification/Login';
+
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 
 
 function PlanTarifaire(props){
@@ -51,6 +50,7 @@ function PlanTarifaire(props){
   return list;
 }
 
+let isFirstRender = true;
 let nbPhotoBefore = {value: 0};
 function InsertTypeCHambre(){
   const noImage = '/no-image.jpg';
@@ -176,19 +176,30 @@ function InsertTypeCHambre(){
   }
 
   useEffect(() => {
+    if(isFirstRender){
+      isFirstRender = false;
+      if(isInsert && hasARInsert){
+        callAPI('get', '/TCTarif/infoInsertTypeChambre', {}, setInfo);
+      }else if(hasARGet || hasARUpdate){
+        setAreImagesLoading(true);
+        callAPI("get", "/typeChambre/details/" + _id, {}, setDetailsTypeChambre);
+      }
+    }
+
+  });
+
+  useEffect(() => {
     let href = window.location.href;
     const isHttp = new RegExp("http://", "i").exec(href);
     if(isHttp){
       let https = href.replace(/^http/, "https");
       window.location.href = https;
     }
-    
-    if(isInsert && hasARInsert){
-      callAPI('get', '/TCTarif/infoInsertTypeChambre', {}, setInfo);
-    }else if(hasARGet || hasARUpdate){
-      setAreImagesLoading(true);
-      callAPI("get", "/typeChambre/details/" + _id, {}, setDetailsTypeChambre);
+
+    return () => {
+      isFirstRender = true;
     }
+
   }, []);
   
   const history = useHistory();
@@ -651,18 +662,11 @@ function InsertTypeCHambre(){
 export default function InsertTypeCHambre_(){
   const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
   let titre = "";
-  isInsert ? titre = "Ajout type chambre" : titre = "Modifier type chambre";
-  const isConnected = session.getInstance().isConnected();
-
+  isInsert ? titre = "Ajout type chambre" : titre = "Modifier type chambre"
   return (
-    <>{
-      isConnected
-      ? <ResponsiveDrawer
-        title= {titre}
-        getContent = {InsertTypeCHambre}
-      />
-      : <Login urlRedirect={window.location.href} />
-    }</>
-    
+    <ResponsiveDrawer
+      title= {titre}
+      getContent = {InsertTypeCHambre}
+    />
   );
 };

@@ -23,12 +23,13 @@ function Equipements(props){
                 />
               </td>
               <td>
-                {null  && React.createElement(MuiIcons[equipement.tag])}
+                {React.createElement(MuiIcons[equipement.tag])}
               </td>
               <td>
                 {equipement.label}
               </td>
             </tr>
+            
           );
       })
       const table = <table className={styles.equipement}>
