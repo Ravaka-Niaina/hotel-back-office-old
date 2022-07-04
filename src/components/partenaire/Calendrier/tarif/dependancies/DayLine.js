@@ -216,7 +216,6 @@ const DayLine = ({
           indexesPlanTarifaire.push(tmpIndexPlanTarifaire);
           tmpIndexPlanTarifaire += occupantNum + 1;
         }
-        console.log(indexesPlanTarifaire);
 
         let r = 0;
         // calculate height sum of cells above
@@ -241,7 +240,7 @@ const DayLine = ({
             break;
           }
         }
-        console.log(indexStartCompare);
+        
         r = r - 3 * indexStartCompare;
         r += isIndexPlanTarifaire ? 22 : 38;
         // r += y > 1 ? 6 : 0;

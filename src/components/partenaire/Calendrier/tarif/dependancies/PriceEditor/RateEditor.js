@@ -43,22 +43,20 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
     const savePrixTarif = (e) => {
         e.preventDefault();
         setLoading(true);
-        console.log(fromto);
+
         const data = {
             dateDebut: getDateYYYYMMDD(fromto[0]),
             dateFin: getDateYYYYMMDD(fromto[1]),
             days: days,
             forTypeChambre: false,
             forTarif: true,
-            isTarifOpen: value === "open" ? true : false,
             idTypeChambre: idTypeChambre,
             idTarif: idPlanTarifaire,
-            modifierOuvertureTarif: changeStatusRate,
             nbPers: nbPers,
             prix: Number.parseFloat(prix),
             minSejour: 1
         };
-        console.log(data);
+        
         callAPI('post', '/TCTarif/configPrixXPers', data, refresh);
     };
 
@@ -67,9 +65,8 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
             <span>{nomPlanTarifaire}</span>
             <span>{moment(fromto[0]).format('ll') + ((fromto[1] != undefined) ?  ' - ' + moment(fromto[1]).format('ll') : "")}</span>
             {
-              nbPers > 0
-              ? null
-              : <>
+              nbPers === 0
+              ? <>
                 <FormControlLabel
                   checked={changeStatusRate}
                   control={<Radio />} label="Modifier disponibilité tarif"
@@ -86,6 +83,7 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
                     <FormControlLabel value="close" control={<Radio />} label="Close" disabled={!changeStatusRate} />
                 </RadioGroup>
               </>
+              : null
             }
 
             {error === null 
