@@ -11,20 +11,8 @@ import RateCells from './RateCells';
 
 import { useEffect } from 'react';
 
-function getMin2(arr){
-    var min = arr[0];
-    for(var i = 1; i < arr.length; i++) {
-        //console.log(arr[i]);
-        if(arr[i].nbPers === 2 && arr[i].prix !== "" && arr[i].prix > 0){
-            return arr[i];
-        }else if(min > arr[i]){
-            min = arr[i];
-        }
-    }
-    return min;
-}
-
 const DayLine = (props) => {
+    const { typeChambres, setTypeChambres, indice } = props;
     const [anchorEl, setAnchorEl] = useState(null);
     const [min,setMin] = useState(0);
     const [max,setMax] = useState(0);
@@ -148,7 +136,7 @@ const DayLine = (props) => {
 
     for(var i = 0; i < props.typechambre.statusDays.length ; i++){
         daycells.push(
-        <td>
+        <td key={`${i} 0`}>
             <DayCell 
                 isprice={false} 
                 highlight={selecteds.indexOf(i) >= 0 && selectedY == 0} 
@@ -161,7 +149,7 @@ const DayLine = (props) => {
                 data={props.typechambre.statusDays[i].toSell} />
         </td>);
         bookedcell.push(
-        <td>
+        <td key={`${i} $1`}>
             <DayCell 
                 isprice={false} 
                 highlight={selecteds.indexOf(i) >= 0 && selectedY == 1} 
@@ -177,13 +165,16 @@ const DayLine = (props) => {
     console.log(props.typechambre.statusDays);
     for(let i = 0; i < props.typechambre.statusDays.length; i++){
         closelines.push(
-            <td>
-                <CloseLine 
-                    closed={props.typechambre.statusDays[i].closed}
+            <td key={`${props.typechambre._id} ${indice}`}>
+                <CloseLine
                     statusDay={props.typechambre.statusDays[i]}
                     idTypeChambre={props.typechambre._id}
                     setOpenLoad={props.setOpenLoad}
                     getPrix={props.getPrix}
+                    indice={indice}
+                    indexStatus={i}
+                    typeChambres={typeChambres}
+                    setTypeChambres={setTypeChambres}
                 />
             </td>
         )

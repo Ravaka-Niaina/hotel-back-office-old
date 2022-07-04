@@ -14,7 +14,22 @@ function getCombinaisonAdulteEnfant(nbAdulte, nbEnfant){
     return combinaisons;
 }
 
-const RateLine = (props) => {
+const RateLine = ({
+  typeChambres,
+  setTypeChambres,
+  typechambre,
+  fromto,
+  getPrix,
+  openLoad,
+  dateMin,
+  setOpenLoad,
+  value,
+  setValue,
+  customize,
+  indice,
+  daterange,
+  alldays
+}) => {
     return(
         <Box
             sx={{
@@ -22,26 +37,29 @@ const RateLine = (props) => {
             }}
             className={styles.sideline}
         >
-            <SideList
-                typechambre={props.typechambre} 
-                dateRange={props.fromto} 
-                getPrix={props.getPrix} 
-                openLoad={props.openLoad}
-                dateMin={props.dateMin}
-                setOpenLoad={props.setOpenLoad}
-                value={props.value}
-                setValue={props.setValue}
-                customize={props.customize}
-                getCombinaisonAdulteEnfant={getCombinaisonAdulteEnfant} />
-            <DayLine 
-                typechambre={props.typechambre} 
-                indice={props.indice} 
-                fromto={props.fromto} 
-                daterange={props.daterange}
-                getPrix={props.getPrix}
-                alldays={props.alldays}
-                value={props.value}
-                setOpenLoad={props.setOpenLoad}
+          <SideList
+              typechambre={typechambre} 
+              dateRange={fromto} 
+              getPrix={getPrix} 
+              openLoad={openLoad}
+              dateMin={dateMin}
+              setOpenLoad={setOpenLoad}
+              value={value}
+              setValue={setValue}
+              customize={customize}
+              getCombinaisonAdulteEnfant={getCombinaisonAdulteEnfant}
+          />
+            <DayLine
+                typeChambres={typeChambres}
+                setTypeChambres={setTypeChambres}
+                typechambre={typechambre} 
+                indice={indice} 
+                fromto={fromto} 
+                daterange={daterange}
+                getPrix={getPrix}
+                alldays={alldays}
+                value={value}
+                setOpenLoad={setOpenLoad}
                 getCombinaisonAdulteEnfant={getCombinaisonAdulteEnfant} />
         </Box>
     )

@@ -84,7 +84,6 @@ import ResponsiveDrawer from "./components/menu/responsive-drawer.js";
 import  CompteOublier  from "./components/common/Authentification/CompteOublier";
 import  modifyPassword  from "./components/common/Authentification/modifyPassword";
 
-import RapportReservation from "./components/partenaire/rapportReservation/rapportReservation.js";
 import  TestFeuille  from "./components/client/testFeuille";
 
 // ---------------------------------------------------------------------------------
@@ -161,16 +160,12 @@ export default function Routes() {
 
             <Route path="/back/hotel/insert" exact component={InsertHotel} />
             <Route path="/back/hotel" exact component={HotelList} />
-            <Route path="/back/hotel/detail/:_id" exact component={GetOneHotel} />
-
-            <Route path="/localisation" exact component={Localisation} />
-            
-            <Route path="/back/reservation/rapport" exact component={RapportReservation} />
+            <Route path="/back/hotel/detail" exact component={GetOneHotel} />
 
             <Route path="/" exact component={AppClient} />
             <Route path="/front" exact component={AppClient} />
             <Route path="/front/login" exact component={Login} />
-            <Route path="/login/identify" exact component={SearchUser} />
+          <Route path="/login/identify" exact component={SearchUser} />
             <Route path="/confirmation" exact component={Confirmation} />
             <Route path="/recover/password/:_id" exact component={RecoverPassword} />
             <Route path="/result" exact component={result} />
