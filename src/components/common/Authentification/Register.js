@@ -106,12 +106,12 @@ const Register = () => {
         setLoading(true);
         const data = {
             isPartner: isPartner,
-            nom: nom.trim(),
-            prenom: prenom.trim(),
+            name: nom.trim(),
+            first_name: prenom.trim(),
             email: email.trim(),
-            mdp: mdp.trim(),
-            confirmMdp: confirmMdp.trim(),
-            telephone:telephone.trim()
+            password: mdp.trim(),
+            confirmed_password: confirmMdp.trim(),
+            phone:telephone.trim()
         };
         if(isPartner){
             data.companie = companie;

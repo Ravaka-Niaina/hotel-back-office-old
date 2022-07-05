@@ -43,44 +43,63 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
     const savePrixTarif = (e) => {
         e.preventDefault();
         setLoading(true);
-        console.log(fromto);
+
         const data = {
             dateDebut: getDateYYYYMMDD(fromto[0]),
             dateFin: getDateYYYYMMDD(fromto[1]),
             days: days,
             forTypeChambre: false,
             forTarif: true,
-            isTarifOpen: value === "open" ? true : false,
             idTypeChambre: idTypeChambre,
             idTarif: idPlanTarifaire,
-            modifierOuvertureTarif: changeStatusRate,
             nbPers: nbPers,
             prix: Number.parseFloat(prix),
             minSejour: 1
         };
+
         console.log(data);
+        
         callAPI('post', '/TCTarif/configPrixXPers', data, refresh);
+    };
+
+    const saveAvailability = (e) => {
+      e.preventDefault();
+      const data = {
+        dateDebut: getDateYYYYMMDD(fromto[0]),
+        dateFin: getDateYYYYMMDD(fromto[1]),
+        idTypeChambre: idTypeChambre,
+        idTarif: idPlanTarifaire,
+        isTarifOpen: value === "open" ? true : false,
+      };
+
+      callAPI('post', '/TCTarif/saveRatePlanAvailability', data, refresh);
     };
 
     return(
         <FormControl component="fieldset">
             <span>{nomPlanTarifaire}</span>
             <span>{moment(fromto[0]).format('ll') + ((fromto[1] != undefined) ?  ' - ' + moment(fromto[1]).format('ll') : "")}</span>
-            <FormControlLabel
-                checked={changeStatusRate}
-                control={<Radio />} label="Modifier disponibilité tarif"
-                onClick={() => switchChangeStatusRate()}
-            />
-            <RadioGroup
-                aria-label="gender"
-                name="controlled-radio-buttons-group"
-                value={value}
-                onChange={(e) => setValue(e.target.value)}
-                row
-            >
-                <FormControlLabel value="open" control={<Radio />} label="Open" disabled={!changeStatusRate} />
-                <FormControlLabel value="close" control={<Radio />} label="Close" disabled={!changeStatusRate} />
-            </RadioGroup>
+            {
+              nbPers === 0
+              ? <>
+                <FormControlLabel
+                  checked={changeStatusRate}
+                  control={<Radio />} label="Modifier disponibilité tarif"
+                  onClick={() => switchChangeStatusRate()}
+                />
+                <RadioGroup
+                    aria-label="gender"
+                    name="controlled-radio-buttons-group"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    row
+                >
+                    <FormControlLabel value="open" control={<Radio />} label="Open" disabled={!changeStatusRate} />
+                    <FormControlLabel value="close" control={<Radio />} label="Close" disabled={!changeStatusRate} />
+                </RadioGroup>
+              </>
+              : null
+            }
 
             {error === null 
             ? null 
@@ -89,7 +108,10 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
             </Stack>}
 
             <br/>
-            <TextField
+            {
+              nbPers === 0
+              ? null
+              : <TextField
                 size="small"
                 id="outlined-number"
                 label={"x " + nbPers} 
@@ -103,13 +125,15 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
                 }}
                 value={prix}
                 onChange={(e) => setPrix(e.target.value)}
-            />
+              />
+            }
+            
             <br/>
 
             <Stack direction="row" spacing={2}>
                 <LoadingButton
                     color="secondary"
-                    onClick={(e) => savePrixTarif(e)}
+                    onClick={ nbPers === 0 ? saveAvailability : savePrixTarif }
                     loading={loading}
                     loadingPosition="start"
                     startIcon={<SaveIcon />}

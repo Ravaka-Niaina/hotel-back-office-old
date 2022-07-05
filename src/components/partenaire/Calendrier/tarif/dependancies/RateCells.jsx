@@ -1,3 +1,4 @@
+/* eslint-disable no-loop-func */
 import React , { useState , useEffect} from 'react';
 import {Box} from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
@@ -5,13 +6,14 @@ import styles from '../CalendarComponent.module.css';
 import DayCell from './DayCell.js';
 
 function AvailabilityCell ({
-    selectDay,
-    deselectDay,
-    highlight,
+    selectDay = () => {},
+    deselectDay = () => {},
+    highlight = () => {},
     selectOneDay = () => {},
     x,
     y,
     closed,
+    heightAvailabilityCell,
 }) {
     const [selected, setSelected] = useState(false);
     const theme = createTheme({
@@ -41,7 +43,7 @@ function AvailabilityCell ({
                 className={styles.daycell}
                 sx={{
                 width: 59,
-                height: 22,
+                height: heightAvailabilityCell,
                 bgcolor: selected ? 'primary.selected' : 'primary.main',
                 '&:hover': {
                     opacity: [0.9, 0.8, 0.7],
@@ -70,43 +72,58 @@ function RateCells({
     selecteds,
     selectedY,
     context,
+    heightAvailabilityCell,
 }) {
     let ratecells = [];
     const nbOccupants = nbAdulte + nbEnfant;
     let y = 1;
     for(let i = 0; i < planTarifaire.length; i++){
-        const { prixTarif } = planTarifaire[i];
-        ratecells.push(
-            <tr>
-                { Array(prixTarif.length).fill(<td><AvailabilityCell closed={true} data="temp" /></td>) }
-            </tr>
-        );
+      y++;
+      const tmpY = y;
+      const { prixTarif } = planTarifaire[i];
+      ratecells.push(
+        <tr key={`${planTarifaire[i]._id} ${prixTarif.date}`}>
+          {
+            prixTarif.map((prix, i) => <td>
+              <AvailabilityCell
+                closed={prix.closed}
+                data="temp"
+                deselectDay={rmSelection.bind(context)} 
+                selectDay={addSelection.bind(context)} 
+                selectOneDay={oneSelection.bind(context)}
+                x={i}
+                y={tmpY}
+              />
+            </td>)
+          }
+        </tr>
+      );
 
-        for(let v = 0; v < nbOccupants; v++){
-            let row = [];
-            y++;
-            for(let u = 0; u < prixTarif.length; u++){
-                const minPrix = prixTarif[u].versions[v];
-                row.push(
-                    <td>
-                        <DayCell
-                            customize="toSell"
-                            isprice={true} 
-                            highlight={selecteds.indexOf(u) >= 0 && selectedY == y} 
-                            key={u.toString()}
-                            x={u}
-                            y={y}
-                            deselectDay={rmSelection.bind(context)} 
-                            selectDay={addSelection.bind(context)} 
-                            selectOneDay={oneSelection.bind(context)} 
-                            data={minPrix.prix}
-                            nbPers={minPrix.nbPers}
-                            closed={prixTarif[u].closed} />
-                    </td>
-                );
-            }
-            ratecells.push(<tr>{row}</tr>);
-        }
+      for(let v = 0; v < nbOccupants; v++){
+          let row = [];
+          y++;
+          for(let u = 0; u < prixTarif.length; u++){
+              const minPrix = prixTarif[u].versions[v];
+              row.push(
+                  <td>
+                      <DayCell
+                          customize="toSell"
+                          isprice={true} 
+                          highlight={selecteds.indexOf(u) >= 0 && selectedY == y} 
+                          key={u.toString()}
+                          x={u}
+                          y={y}
+                          deselectDay={rmSelection.bind(context)} 
+                          selectDay={addSelection.bind(context)} 
+                          selectOneDay={oneSelection.bind(context)} 
+                          data={minPrix.prix}
+                          nbPers={minPrix.nbPers}
+                          closed={prixTarif[u].closed} />
+                  </td>
+              );
+          }
+          ratecells.push(<tr>{row}</tr>);
+      }
     }
 
     return ratecells;
