@@ -56,8 +56,23 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
             prix: Number.parseFloat(prix),
             minSejour: 1
         };
+
+        console.log(data);
         
         callAPI('post', '/TCTarif/configPrixXPers', data, refresh);
+    };
+
+    const saveAvailability = (e) => {
+      e.preventDefault();
+      const data = {
+        dateDebut: getDateYYYYMMDD(fromto[0]),
+        dateFin: getDateYYYYMMDD(fromto[1]),
+        idTypeChambre: idTypeChambre,
+        idTarif: idPlanTarifaire,
+        isTarifOpen: value === "open" ? true : false,
+      };
+
+      callAPI('post', '/TCTarif/saveRatePlanAvailability', data, refresh);
     };
 
     return(
@@ -118,7 +133,7 @@ const RateEditor = ({nomPlanTarifaire, idPlanTarifaire, fromto, value, setValue,
             <Stack direction="row" spacing={2}>
                 <LoadingButton
                     color="secondary"
-                    onClick={(e) => savePrixTarif(e)}
+                    onClick={ nbPers === 0 ? saveAvailability : savePrixTarif }
                     loading={loading}
                     loadingPosition="start"
                     startIcon={<SaveIcon />}

@@ -111,7 +111,7 @@ const Register = () => {
             email: email.trim(),
             password: mdp.trim(),
             confirmed_password: confirmMdp.trim(),
-            telephone:telephone.trim()
+            phone:telephone.trim()
         };
         if(isPartner){
             data.companie = companie;
