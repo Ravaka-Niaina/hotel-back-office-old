@@ -87,12 +87,15 @@ const DayLine = ({
             tmp.push(j);
         }
         setSelecteds(tmp);
+        // setBornesEditDate([ daterange[tmp[0]], daterange[tmp.length - 1] ]);
         setSelectedY(y);
-        if(daterange[i] < bornesEditDate[0]){
-            setBornesEditDate([ daterange[i] , bornesEditDate[0] ]);
-        }else{
-            setBornesEditDate([ bornesEditDate[0] , daterange[i] ]);
-        }
+        console.log(tmp);
+        setBornesEditDate([ daterange[tmp[0]], daterange[tmp[tmp.length - 1]] ]);
+        // if(daterange[i] < bornesEditDate[0]){
+        //     setBornesEditDate([ daterange[i] , bornesEditDate[0] ]);
+        // }else{
+        //     setBornesEditDate([ bornesEditDate[0] , daterange[i] ]);
+        // }
     }
     const rmSelection = (i, y) => {
         // const tmp = [...selecteds];
