@@ -3,8 +3,16 @@ import {Box} from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import styles from '../CalendarComponent.module.css';
 
-const DayCell = (props) => {
-    const [selected, setSelected] = useState(false);
+const DayCell = ({
+  x,
+  y,
+  selectDay,
+  deselectDay,
+  highlight,
+  data,
+  selectOneDay,
+  isprice,
+}) => {
     const theme = createTheme({
         palette: {
             primary: {
@@ -15,14 +23,11 @@ const DayCell = (props) => {
     })
     const select = (next) => {
         if(next){
-            props.selectDay(props.x, props.y);
+            selectDay(x, y);
         }else{
-            props.deselectDay(props.x, props.y);
+            deselectDay(x, y);
         }
     }
-    useEffect( () => {
-        setSelected(props.highlight);
-    })
     return (
         <>
         <ThemeProvider
@@ -33,16 +38,16 @@ const DayCell = (props) => {
                 sx={{
                 width: 59,
                 height: 50,
-                bgcolor: selected ? 'primary.selected' : 'primary.main',
+                bgcolor: highlight ? 'primary.selected' : 'primary.main',
                 '&:hover': {
                     opacity: [0.9, 0.8, 0.7],
                 },
                 position: 'relative',
                 }}
-                onClick={() => {props.selectOneDay(props.x, props.y)}}
+                onClick={() => {selectOneDay(x, y)}}
                 onDragEnter={() => select(true)}
             >
-                { props.data ? props.data + ((props.isprice) ? ' Є' : '') : '' }
+                { data ? data + ((isprice) ? ' Є' : '') : '' }
             </Box>
         </ThemeProvider>
         </>

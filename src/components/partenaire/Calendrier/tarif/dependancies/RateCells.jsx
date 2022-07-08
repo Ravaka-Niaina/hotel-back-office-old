@@ -13,7 +13,6 @@ function AvailabilityCell ({
     x,
     y,
     closed,
-    heightAvailabilityCell,
 }) {
     const theme = createTheme({
         palette: {
@@ -40,8 +39,7 @@ function AvailabilityCell ({
                 className={styles.daycell}
                 sx={{
                 width: 59,
-                height: heightAvailabilityCell,
-                bgcolor: highlight ? 'primary.selected' : 'primary.main',
+                height: 22.25,
                 '&:hover': {
                     opacity: [0.9, 0.8, 0.7],
                 },
@@ -50,7 +48,11 @@ function AvailabilityCell ({
                 onClick={() => {selectOneDay(x, y)}}
                 onDragEnter={() => select(true)}
             >
-                <div style={{height: "15px", backgroundColor: ( highlight ? '#8ac0f5a8' : closed ? "#FF0000" : "#64E986"), marginTop: "-12px"}}></div>
+                <div style={ {
+                  height: "15px",
+                  backgroundColor: ( highlight ? closed ? '#eb8383' : '#96ebac' : closed ? '#FF0000' : '#64E986' ),
+                  marginTop: "-12px"
+                } }></div>
             </Box>
         </ThemeProvider>
         </>
