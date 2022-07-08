@@ -14,19 +14,6 @@ import { useEffect } from 'react';
 const heightAvailabilityCell = 22;
 const heightPriceCell = 50;
 
-function getMin2(arr){
-    var min = arr[0];
-    for(var i = 1; i < arr.length; i++) {
-        //console.log(arr[i]);
-        if(arr[i].nbPers === 2 && arr[i].prix !== "" && arr[i].prix > 0){
-            return arr[i];
-        }else if(min > arr[i]){
-            min = arr[i];
-        }
-    }
-    return min;
-}
-
 const DayLine = ({
   typechambre,
   daterange,
@@ -321,7 +308,6 @@ const DayLine = ({
                                 rmSelection={rmSelection}
                                 addSelection={addSelection}
                                 oneSelection={oneSelection}
-                                heightAvailabilityCell={heightAvailabilityCell}
                             />
                         </tbody>
                     </table>

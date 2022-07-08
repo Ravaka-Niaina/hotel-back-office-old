@@ -6,16 +6,15 @@ import styles from '../CalendarComponent.module.css';
 import DayCell from './DayCell.js';
 
 function AvailabilityCell ({
+    highlight,
     selectDay = () => {},
     deselectDay = () => {},
-    highlight = () => {},
     selectOneDay = () => {},
     x,
     y,
     closed,
     heightAvailabilityCell,
 }) {
-    const [selected, setSelected] = useState(false);
     const theme = createTheme({
         palette: {
             primary: {
@@ -31,9 +30,7 @@ function AvailabilityCell ({
             deselectDay(x, y);
         }
     }
-    useEffect( () => {
-        setSelected(highlight);
-    })
+
     return (
         <>
         <ThemeProvider
@@ -44,7 +41,7 @@ function AvailabilityCell ({
                 sx={{
                 width: 59,
                 height: heightAvailabilityCell,
-                bgcolor: selected ? 'primary.selected' : 'primary.main',
+                bgcolor: highlight ? 'primary.selected' : 'primary.main',
                 '&:hover': {
                     opacity: [0.9, 0.8, 0.7],
                 },
@@ -53,7 +50,7 @@ function AvailabilityCell ({
                 onClick={() => {selectOneDay(x, y)}}
                 onDragEnter={() => select(true)}
             >
-                <div style={{height: "15px", backgroundColor: (closed ? "#FF0000" : "#64E986"), marginTop: "-12px"}}></div>
+                <div style={{height: "15px", backgroundColor: ( highlight ? '#8ac0f5a8' : closed ? "#FF0000" : "#64E986"), marginTop: "-12px"}}></div>
             </Box>
         </ThemeProvider>
         </>
@@ -72,7 +69,6 @@ function RateCells({
     selecteds,
     selectedY,
     context,
-    heightAvailabilityCell,
 }) {
     let ratecells = [];
     const nbOccupants = nbAdulte + nbEnfant;
@@ -86,6 +82,7 @@ function RateCells({
           {
             prixTarif.map((prix, i) => <td>
               <AvailabilityCell
+                highlight={selecteds.indexOf(i) >= 0 && selectedY === tmpY} 
                 closed={prix.closed}
                 data="temp"
                 deselectDay={rmSelection.bind(context)} 
@@ -109,7 +106,7 @@ function RateCells({
                       <DayCell
                           customize="toSell"
                           isprice={true} 
-                          highlight={selecteds.indexOf(u) >= 0 && selectedY == y} 
+                          highlight={selecteds.indexOf(u) >= 0 && selectedY === y} 
                           key={u.toString()}
                           x={u}
                           y={y}
