@@ -87,6 +87,8 @@ import  modifyPassword  from "./components/common/Authentification/modifyPasswor
 import RapportReservation from "./components/partenaire/rapportReservation/rapportReservation.js";
 import  TestFeuille  from "./components/client/testFeuille";
 
+import IdleTimer from '../src/components/partenaire/IdleTimer';
+
 // ---------------------------------------------------------------------------------
 
 // layouts
@@ -107,102 +109,104 @@ export default function Routes() {
   return (
       <div className="App">
           <Router>
-            <Route path="/ListTC" exact component={ListTChambre} />
-            <Route path="/guest" exact component={guest} />
-            <Route path="/hideShow" exact component={hideShow} />
+            <IdleTimer>
+              <Route path="/ListTC" exact component={ListTChambre} />
+              <Route path="/guest" exact component={guest} />
+              <Route path="/hideShow" exact component={hideShow} />
 
-            <Route path="/Paiement" exact component={Paiement} />
+              <Route path="/Paiement" exact component={Paiement} />
+            
+              <Route path="/chambre" exact component={InsertChambre} />
+
+              <Route path="/calendrier" exact component={Calendrier} />
           
-            <Route path="/chambre" exact component={InsertChambre} />
+              <Route path="/cookie" exact component={test} />
 
-            <Route path="/calendrier" exact component={Calendrier} />
-        
-            <Route path="/cookie" exact component={test} />
+              <Route path="/back/accessRight" exact component={ListeDroitAcces} />
+              <Route path="/back/accessRight/insert" exact component={InsertDroitAcces} />
+              <Route path="/back/accessRight/update/:_id" exact component={InsertDroitAcces} />
 
-            <Route path="/back/accessRight" exact component={ListeDroitAcces} />
-            <Route path="/back/accessRight/insert" exact component={InsertDroitAcces} />
-            <Route path="/back/accessRight/update/:_id" exact component={InsertDroitAcces} />
+              <Route path="/back/partenaire" exact component={GetOnePartner} />     
 
-            <Route path="/back/partenaire" exact component={GetOnePartner} />     
+              <Route path="/back" exact component={home} />
+              <Route path="/back/login" exact component={Login} />
+              <Route path="/back/Register" exact component={Register} />
+              <Route path="/back/user" exact component={listeUser} />
+              <Route path="/back/user/details/:_id" exact component={DetailsUser} />
+              <Route path="/back/research" exact component={CompteOublier} />
+              <Route path="/back/verifier/:_id" exact component={modifyPassword} />
 
-            <Route path="/back" exact component={home} />
-            <Route path="/back/login" exact component={Login} />
-            <Route path="/back/Register" exact component={Register} />
-            <Route path="/back/user" exact component={listeUser} />
-            <Route path="/back/user/details/:_id" exact component={DetailsUser} />
-            <Route path="/back/research" exact component={CompteOublier} />
-            <Route path="/back/verifier/:_id" exact component={modifyPassword} />
+              <Route path="/loginClient" exact component={LoginClient} />
+              <Route path="/registerClient" exact component={registerClient} />
 
-            <Route path="/loginClient" exact component={LoginClient} />
-            <Route path="/registerClient" exact component={registerClient} />
+              <Route path="/back/tarif" exact component={LTarif} />
+              <Route path="/back/tarif/calendar" exact component={CalendarComponent} />
+              <Route path="/back/tarif/insert" exact component={InsertTarif}/>
+              <Route path="/back/tarif/details/:_id" exact component={InsertTarif} />
 
-            <Route path="/back/tarif" exact component={LTarif} />
-            <Route path="/back/tarif/calendar" exact component={CalendarComponent} />
-            <Route path="/back/tarif/insert" exact component={InsertTarif}/>
-            <Route path="/back/tarif/details/:_id" exact component={InsertTarif} />
+              <Route path="/back/typeChambre" exact component={ListTypeChambre} />
+              <Route path="/back/TypeChambre/insert" exact component={InsertTypeChambre} />
+              <Route path="/back/TypeChambre/details/:_id" exact component={InsertTypeChambre} />
 
-            <Route path="/back/typeChambre" exact component={ListTypeChambre} />
-            <Route path="/back/TypeChambre/insert" exact component={InsertTypeChambre} />
-            <Route path="/back/TypeChambre/details/:_id" exact component={InsertTypeChambre} />
+              <Route path="/back/promotion" exact component={PromotionList} />
+              <Route path="/back/promotion/insert" exact component={InsertPromotion} />
+              <Route path="/back/promotion/detail/:_id" exact component={InsertPromotion} />
 
-            <Route path="/back/promotion" exact component={PromotionList} />
-            <Route path="/back/promotion/insert" exact component={InsertPromotion} />
-            <Route path="/back/promotion/detail/:_id" exact component={InsertPromotion} />
+              <Route path="/back/politique" exact component={Global} />
+              <Route path="/back/politique/detail/:_id" exact component={Global} />
+              <Route path="/back/politique/list" exact component={ListPolitique} />
+              <Route path="/back/politique/testData" exact component={testData} />
 
-            <Route path="/back/politique" exact component={Global} />
-            <Route path="/back/politique/detail/:_id" exact component={Global} />
-            <Route path="/back/politique/list" exact component={ListPolitique} />
-            <Route path="/back/politique/testData" exact component={testData} />
+              <Route path="/back/reservation" exact component={ListeReservation} />
+              <Route path="/back/reservation/notif" exact component={ListeReservation} />
+              
+              <Route path="/back/modelemail" exact component={ModeleEmail} />
 
-            <Route path="/back/reservation" exact component={ListeReservation} />
-            <Route path="/back/reservation/notif" exact component={ListeReservation} />
-            
-            <Route path="/back/modelemail" exact component={ModeleEmail} />
+              <Route path="/back/hotel/insert" exact component={InsertHotel} />
+              <Route path="/back/hotel" exact component={HotelList} />
+              <Route path="/back/hotel/detail/:_id" exact component={GetOneHotel} />
 
-            <Route path="/back/hotel/insert" exact component={InsertHotel} />
-            <Route path="/back/hotel" exact component={HotelList} />
-            <Route path="/back/hotel/detail/:_id" exact component={GetOneHotel} />
+              <Route path="/localisation" exact component={Localisation} />
+              
+              <Route path="/back/reservation/rapport" exact component={RapportReservation} />
 
-            <Route path="/localisation" exact component={Localisation} />
-            
-            <Route path="/back/reservation/rapport" exact component={RapportReservation} />
+              <Route path="/" exact component={AppClient} />
+              <Route path="/front" exact component={AppClient} />
+              <Route path="/front/login" exact component={Login} />
+              <Route path="/login/identify" exact component={SearchUser} />
+              <Route path="/confirmation" exact component={Confirmation} />
+              <Route path="/recover/password/:_id" exact component={RecoverPassword} />
+              <Route path="/result" exact component={result} />
+              <Route path="/front/Register" exact component={Register} />
+              <Route path="/front/userList" exact component={listeUser} />
+              <Route path="/front/researchReservation" exact component={RechercheReservation} />
+              <Route path="/devis" exact component={Devis} />
 
-            <Route path="/" exact component={AppClient} />
-            <Route path="/front" exact component={AppClient} />
-            <Route path="/front/login" exact component={Login} />
-            <Route path="/login/identify" exact component={SearchUser} />
-            <Route path="/confirmation" exact component={Confirmation} />
-            <Route path="/recover/password/:_id" exact component={RecoverPassword} />
-            <Route path="/result" exact component={result} />
-            <Route path="/front/Register" exact component={Register} />
-            <Route path="/front/userList" exact component={listeUser} />
-            <Route path="/front/researchReservation" exact component={RechercheReservation} />
-            <Route path="/devis" exact component={Devis} />
+              <Route path="/reservation/:_id" exact component={Reservation} />
+              <Route path="/reservation/:_id/apply" exact component={ApplyReservation} />
+              <Route path="/reservation/:_id/apply/:numeroItineraire" exact component={ApplyReservationModif} />
+              <Route path="/reservation/:_id/voucher" exact component={Voucher} />
+              <Route path="/reservation/:_id/voucher/:numeroItineraire" exact component={Voucher1} />
+              <Route path="/drop" exact component={DropDown} />
 
-            <Route path="/reservation/:_id" exact component={Reservation} />
-            <Route path="/reservation/:_id/apply" exact component={ApplyReservation} />
-            <Route path="/reservation/:_id/apply/:numeroItineraire" exact component={ApplyReservationModif} />
-            <Route path="/reservation/:_id/voucher" exact component={Voucher} />
-            <Route path="/reservation/:_id/voucher/:numeroItineraire" exact component={Voucher1} />
-            <Route path="/drop" exact component={DropDown} />
+              <Route path="/CalendarClient" exact component={BasicDateRangePicker} />
 
-            <Route path="/CalendarClient" exact component={BasicDateRangePicker} />
+              <Route path="/historique" exact component={Historique} />
+              <Route path="/historique/TC" exact component={HistoriqueTC} />
+              <Route path="/historique/MPL" exact component={HistoriqueMPL} />
+              <Route path="/tooltip" exact component={Tooltip} />
 
-            <Route path="/historique" exact component={Historique} />
-            <Route path="/historique/TC" exact component={HistoriqueTC} />
-            <Route path="/historique/MPL" exact component={HistoriqueMPL} />
-            <Route path="/tooltip" exact component={Tooltip} />
+              <Route path="/404NotFound" exact component={NotFound} />
+              <Route path="/NotEnoughAccessRight" exact component={NotEnoughAccessRight} />
+              <Route path="/modal" exact component={Tooltip} />
 
-            <Route path="/404NotFound" exact component={NotFound} />
-            <Route path="/NotEnoughAccessRight" exact component={NotEnoughAccessRight} />
-            <Route path="/modal" exact component={Tooltip} />
+              <Route path="/navBarClient" exact component={Navbar} />
 
-            <Route path="/navBarClient" exact component={Navbar} />
+              <Route path="/menu" exact component={Menu} />
+              <Route path="/responsive" exact component={ResponsiveDrawer} />
 
-            <Route path="/menu" exact component={Menu} />
-            <Route path="/responsive" exact component={ResponsiveDrawer} />
-
-            <Route path="/feuille" exact component={TestFeuille} />
+              <Route path="/feuille" exact component={TestFeuille} />
+            </IdleTimer>
           </Router>
         </div> 
   );
