@@ -156,22 +156,22 @@ function RapportReservation({}){
                 let tmpLabels = [];
                 let tmpRevParChambre = [];
                 let tmpMaxRevParChambre = 0;
-                for(let i = 0; i < res.rapport.length; i++){
-                    tmpPrixMoyen.push(res.rapport[i].prixMoyen);
-                    if(res.rapport[i].nbNuitee > tmpMaxNbNuitee){
-                        tmpMaxNbNuitee = res.rapport[i].nbNuitee;
+                for(let i = 0; i < res.stats.length; i++){
+                    tmpPrixMoyen.push(res.stats[i].prixMoyen);
+                    if(res.stats[i].nbNuitee > tmpMaxNbNuitee){
+                        tmpMaxNbNuitee = res.stats[i].nbNuitee;
                     }
                     
-                    if(res.rapport[i].prixMoyen > tmpMaxPrixMoyen){
-                        tmpMaxPrixMoyen = getRoundedNumber(res.rapport[i].prixMoyen);
+                    if(res.stats[i].prixMoyen > tmpMaxPrixMoyen){
+                        tmpMaxPrixMoyen = getRoundedNumber(res.stats[i].prixMoyen);
                     }
-                    if(res.rapport[i].revParChambre > tmpMaxPrixMoyen){
-                        tmpMaxPrixMoyen = res.rapport[i].revParChambre;
+                    if(res.stats[i].revParChambre > tmpMaxPrixMoyen){
+                        tmpMaxPrixMoyen = res.stats[i].revParChambre;
                     }
 
-                    const jour = new Date(res.rapport[i]._id);
+                    const jour = new Date(res.stats[i]._id);
                     tmpLabels.push(jour.getDate() + " " + mois[jour.getMonth()] + "\n" + jour.getFullYear());
-                    tmpRevParChambre.push(getRoundedNumber(res.rapport[i].revParChambre));
+                    tmpRevParChambre.push(getRoundedNumber(res.stats[i].revParChambre));
                 }
                 setPrixMoyen(tmpPrixMoyen);
                 setMaxNbNuitee(tmpMaxNbNuitee);
