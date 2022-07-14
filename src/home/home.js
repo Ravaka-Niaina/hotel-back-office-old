@@ -102,9 +102,7 @@ export default function home_() {
     return(
         <ResponsiveDrawer 
             title = "Accueil"
-            getContent = {home} 
-            
+            getContent = {home}
         />
-        
     );
 }

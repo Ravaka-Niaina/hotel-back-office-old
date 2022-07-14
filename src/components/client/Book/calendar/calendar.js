@@ -43,7 +43,7 @@ const BaeCalendar = ({
   context,
   priceCheapestRate,
   check,
-  reloadSelectedDatePrices
+  reloadSelectedDatePrices,
 }) => {
   const [open, setOpen] = React.useState(false)
   const [firstTime, setFirstTime] = React.useState(true)
@@ -159,7 +159,9 @@ const BaeCalendar = ({
   }
   
   return (
+    
     <HtmlTooltip
+      leaveDelay={120000}
       title={
         <React.Fragment>
           <MonthIndicator

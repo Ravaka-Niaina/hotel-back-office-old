@@ -28,6 +28,7 @@ const BookComponent = (props) => {
     const [priceCheapestRate, setPriceCheapestRate] = React.useState(null);
     const [reloadSelectedDatePrices, setReloadSelectedDatePrices] = React.useState(false);
     const [regrouperResultatsPar, setRegrouperResultatsPar] = React.useState("typeChambre");
+    const [shouldPrintCalendar, setShouldPrintCalendar] = React.useState(false);
     const { t, i18n } = useTranslation();
     
     
@@ -227,7 +228,8 @@ const BookComponent = (props) => {
         <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection:'column' }} className={styles.filter}>
         <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
             <BaeCalendar context = {props.context} applyFilter={applyFilter} dateSejour={props.context.state.dateSejour}
-                priceCheapestRate={priceCheapestRate} reloadSelectedDatePrices={reloadSelectedDatePrices} 
+                priceCheapestRate={priceCheapestRate} reloadSelectedDatePrices={reloadSelectedDatePrices}
+                shouldPrintCalendar={shouldPrintCalendar}
                 check={
                 <Box sx={{ display: { xs: 'none', md: 'flex' }, flexDirection:'column' }} className={styles.filter2}>
                     <Box sx={{ display: { xs: 'none', md: 'flex' }, gap : 1 }}>
@@ -245,6 +247,7 @@ const BookComponent = (props) => {
                             InputLabelProps={{
                                 shrink: true
                             }}
+                            onClick={() => {setShouldPrintCalendar(!shouldPrintCalendar)}}
                         />
                         <TextField
                             fullwidth={false}
@@ -260,6 +263,7 @@ const BookComponent = (props) => {
                             InputLabelProps={{
                                 shrink: true
                             }}
+                            onClick={() => {setShouldPrintCalendar(!shouldPrintCalendar)}}
                         />
                     </Box>
                 </Box>} 
