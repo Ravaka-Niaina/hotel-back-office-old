@@ -43,6 +43,7 @@ import MenuItem from '@mui/material/MenuItem';
 import EmailIcon from '@mui/icons-material/Email';
 import { useHistory } from 'react-router-dom';
 
+import { useIdleTimerContext } from '../IdleTimer';
 import callAPI from '../../../utility.js';
 
 import Grid from '@mui/material/Grid';
@@ -135,6 +136,8 @@ function test(){
 };
 
 export default function PersistentDrawerLeft(props) {
+  const idleTimer = useIdleTimerContext();
+  const { logout } = idleTimer;
   const theme = useTheme();
   const [open, setOpen] = React.useState(true);
   const [nbNotifs, setNbNotifs] = React.useState(0);
@@ -461,15 +464,6 @@ export default function PersistentDrawerLeft(props) {
       init = false
     }
   }, [])
-
-  // deconnexion
-  function logout(e){
-      e.preventDefault();
-      localStorage.setItem("user_session", null);
-      callAPI('post', '/user/logout', {}, (data) => {
-          history.push('/back/login');
-      });
-  }
 
   // notifications
   function seeNotifications(){
