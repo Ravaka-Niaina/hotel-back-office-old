@@ -557,7 +557,6 @@ export default function PersistentDrawerLeft(props) {
           {
             optionlist.map((option, index) => 
             {
-              console.log(window.location.href.split(url)[1])
               return(
               option.dropdown === false ?
               // <Link to={option.lien[0]["link"]} className="nav-link">

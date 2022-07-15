@@ -6,6 +6,7 @@ import SmsIcon from '@mui/icons-material/Sms';
 import { LoadingButton } from '@mui/lab';
 import { styled } from '@mui/material/styles';
 import { Container, Typography } from '@mui/material';
+import BtnSendCodeBySMS from './BtnSendCodeBySMS';
 
 import { Form, } from 'formik';
 
@@ -37,12 +38,12 @@ const LoginVerifyNewBrowserComponent = ({
             <Grid item xs={12}>
                 <Container maxWidth="sm">
                     <ContentStyle>
-                    <Stack sx={{ mb: 5 }}>
-                        <Typography variant="h4" gutterBottom>
-                        <h3>Code de vérification</h3><br/>
-                        <h5>{ instructionMessage }</h5>
-                        </Typography>
-                    </Stack>
+                        <Stack sx={{ mb: 5 }}>
+                            <Typography variant="h4" gutterBottom>
+                            <h3>Code de vérification</h3><br/>
+                            <h5>{ instructionMessage }</h5>
+                            </Typography>
+                        </Stack>
 
                         <Stack spacing={3}>
                             <TextField
@@ -69,18 +70,10 @@ const LoginVerifyNewBrowserComponent = ({
                         </LoadingButton>
                         <br/>
 
-                        <LoadingButton
-                            fullWidth
-                            loading={isSendingSMSBtnLoading}
-                            loadingPosition="start"
-                            startIcon={<SmsIcon />}
-                            variant="outlined"
-                            color
-                            onClick={(e) => resendSMS(e)}
-                        >
-                            <span style={{color:'white'}}>Renvoyer code</span>
-                        </LoadingButton>
-
+                        <BtnSendCodeBySMS
+                            isSendingSMSBtnLoading={isSendingSMSBtnLoading}
+                            resendSMS={resendSMS}
+                        />
                     </ContentStyle>
                 </Container>
             </Grid>
