@@ -12,7 +12,6 @@ import RapportReservation from 'src/components/partenaire/rapportReservation/rap
 
 import ResponsiveDrawer from "../components/partenaire/Navbar/responsive-drawer.js";
 import DashboardLayout from '../layouts/dashboard';
-import RapportReservation from '../components/partenaire/rapportReservation/rapportReservation';
 // material
 import { Box, Grid, Typography } from '@mui/material';
 
