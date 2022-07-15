@@ -2,7 +2,7 @@ import { useState, } from 'react';
 import { useHistory ,useParams} from 'react-router-dom';
 
 import { session, } from "../utilitySession.js";
-import { submitLoginCode, submitResendSMS } from './LoginVerifyCodeAdapter';
+import { submitLoginCode } from './LoginVerifyCodeAdapter';
 import LoginVerifyNewBrowserComponent from './LoginVerifyNewBrowserComponent.jsx';
 
 export default function LoginVerifyCodeController () {
@@ -28,6 +28,7 @@ export default function LoginVerifyCodeController () {
       idUser,
       verificationCode,
     }).then((res) => {
+      console.log(res.data);
       const callback = {
         200: () => {
           localStorage.setItem("user_session", res.headers.user_session);
@@ -46,21 +47,7 @@ export default function LoginVerifyCodeController () {
 
   function resendSMS () {
     setIsSendingSMSBtnLoading(true);
-    submitResendSMS({
-      isPartner,
-      idUser,
-    }).then((res) => {
-      const callback = {
-        200: () => {
-          alert('Code envoyé');
-        },
-        201: () => {
-          alert('Une erreure est survenue');
-        }
-      };
-      callback[res.data.status]();
-      
-    });
+    console.log('resending SMS');
 
     setTimeout(() => {setIsSendingSMSBtnLoading(false)}, 2000);
   }
