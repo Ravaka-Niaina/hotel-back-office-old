@@ -73,6 +73,7 @@ function RapportReservation({}){
     const [erreur, setErreur] = useState(null);
     const [afficherChart, setAfficherChart] = useState(false);
     const [rapportEnCours, setRapportEnCours] = useState(false);
+    const [reservPerDay, setReservPerDay] = useState([]);
     
     const options = {
         chart: { id: "basic-bar" },
@@ -134,7 +135,7 @@ function RapportReservation({}){
     const [vue, setVue] = useState(optVues[0]);
     const [reservCompar, setReservCompar] = useState(optReservEffectuees[0].value);
     const [afficherConseil, setAfficherConseil] = useState(true);
-
+    
     const obtenirRapport = (e) => {
         e.preventDefault();
         setErreur(null);
@@ -147,7 +148,6 @@ function RapportReservation({}){
         };
         
         callAPI("post", "/reservation/rapport", data, (res) => {
-            console.log(res);
             if(res.status === 200){
                 let tmpPrixMoyen = [];
                 let tmpMaxNbNuitee = 0;
@@ -173,12 +173,13 @@ function RapportReservation({}){
                     tmpLabels.push(jour.getDate() + " " + mois[jour.getMonth()] + "\n" + jour.getFullYear());
                     tmpRevParChambre.push(getRoundedNumber(res.stats[i].revParChambre));
                 }
+
                 setPrixMoyen(tmpPrixMoyen);
                 setMaxNbNuitee(tmpMaxNbNuitee);
                 setMaxPrixMoyen(tmpMaxPrixMoyen);
                 setLabels(tmpLabels);
-                console.log(tmpRevParChambre);
                 setRevParChambre(tmpRevParChambre);
+                setReservPerDay(reservPerDay); // itineraires , tarifReserves, listPrix ont tous une taille 1
                 setAfficherChart(true);
             }else{
                 setErreur(res.message);
@@ -187,6 +188,8 @@ function RapportReservation({}){
             setRapportEnCours(false);
         });
     };
+
+    console.log(reservPerDay);
 
     return (
         <div className="app">

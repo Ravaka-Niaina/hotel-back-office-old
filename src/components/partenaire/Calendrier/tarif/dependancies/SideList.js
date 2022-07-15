@@ -86,6 +86,7 @@ function ListTarifs(props){
 
 const SideList = (props) => {
     const [openModal,setOpenModal] = useState(false);
+    console.log(props.typeChambre);
     return(
         <>
         <Box

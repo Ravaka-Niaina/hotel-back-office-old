@@ -11,6 +11,10 @@ import RateCells from './RateCells';
 
 import { useEffect } from 'react';
 
+<<<<<<< HEAD
+const DayLine = (props) => {
+    const { typeChambres, setTypeChambres, indice } = props;
+=======
 const heightAvailabilityCell = 22;
 const heightPriceCell = 50;
 
@@ -23,6 +27,7 @@ const DayLine = ({
   alldays,
   value
 }) => {
+>>>>>>> fix/insertTypeChambre
     const [anchorEl, setAnchorEl] = useState(null);
     const [min,setMin] = useState(0);
     const [max,setMax] = useState(0);
@@ -162,7 +167,7 @@ const DayLine = ({
 
     for(var i = 0; i < typechambre.statusDays.length ; i++){
         daycells.push(
-        <td>
+        <td key={`${i} 0`}>
             <DayCell 
                 isprice={false} 
                 highlight={selecteds.indexOf(i) >= 0 && selectedY == 0} 
@@ -175,7 +180,7 @@ const DayLine = ({
                 data={typechambre.statusDays[i].toSell} />
         </td>);
         bookedcell.push(
-        <td>
+        <td key={`${i} $1`}>
             <DayCell 
                 isprice={false} 
                 highlight={selecteds.indexOf(i) >= 0 && selectedY == 1} 
@@ -188,7 +193,6 @@ const DayLine = ({
                 data={typechambre.booked[i].value} />
         </td>);
     }
-
     const calculateTopAnchor = (y) => {
         let r = (y * 50);
         if(y > 1){

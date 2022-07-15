@@ -85,7 +85,6 @@ import ResponsiveDrawer from "./components/menu/responsive-drawer.js";
 import  CompteOublier  from "./components/common/Authentification/CompteOublier";
 import  modifyPassword  from "./components/common/Authentification/modifyPassword";
 
-import RapportReservation from "./components/partenaire/rapportReservation/rapportReservation.js";
 import  TestFeuille  from "./components/client/testFeuille";
 
 import IdleTimer from '../src/components/partenaire/IdleTimer';

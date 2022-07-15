@@ -8,6 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {session} from '../components/common/utilitySession.js';
 import NotEnoughAccessRight from '../components/common/NotEnoughAccessRight';
 import Login from '../components/common/Authentification/Login.js';
+import RapportReservation from 'src/components/partenaire/rapportReservation/rapportReservation';
 
 import ResponsiveDrawer from "../components/partenaire/Navbar/responsive-drawer.js";
 import DashboardLayout from '../layouts/dashboard';

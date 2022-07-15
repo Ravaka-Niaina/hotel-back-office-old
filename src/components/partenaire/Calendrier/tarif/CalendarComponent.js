@@ -42,6 +42,9 @@ function getDate(date){
     return date;
 }
 
+let globalDates = [];
+let alldays = [];
+
 const CalendarComponent = () => {
 
     const hasARCalendar = session.getInstance().hasOneOfTheseAccessRights(["voirCalendrier", "superAdmin"]);
@@ -51,12 +54,13 @@ const CalendarComponent = () => {
     let oneMonth = new Date(today);
     oneMonth.setDate(oneMonth.getDate() + 30);
     const [value, setValue] = useState([moment(today), moment(oneMonth)]);
-    const [rateLine, setRateLine] = useState([]);
     const [openLoad, setOpenLoad] = useState(false);
     const [dateMin, setDateMin] = useState(null);
+    const [typeChambres, setTypeChambres] = useState([]);
     
     function getPrix(dates, startLoad, endLoad){
         startLoad ? startLoad() : setOpenLoad(true);
+        globalDates = dates;
         let data = {};
         
         try{
@@ -70,29 +74,8 @@ const CalendarComponent = () => {
             '/TCTarif/prix', 
             data, 
             (res) => {
-                const alldays = getDaysBetweenDates(dates[0],dates[1]);
-                let tmp = [];
-                for(var i = 0; i < res.typeChambre.length; i++) {
-                    tmp.push(
-                        <>
-                        <div className={styles.dividerline}></div>
-                        <RateLine 
-                            typechambre={res.typeChambre[i]} 
-                            indice={i} 
-                            fromto={dates} 
-                            daterange={alldays}
-                            getPrix={getPrix}
-                            dateMin={dateMin}
-                            openLoad={openLoad}
-                            setOpenLoad={setOpenLoad}
-                            value={value}
-                            setValue={setValue}
-                            alldays={alldays}
-                            customize={hasARCalendar} />
-                        </>
-                    );
-                }
-                setRateLine(tmp);
+                setTypeChambres(res.typeChambre);
+                alldays = getDaysBetweenDates(dates[0],dates[1]);
                 endLoad ? endLoad() : setOpenLoad(false);
             },
             (err) => {
@@ -101,6 +84,8 @@ const CalendarComponent = () => {
             }
         );
     }
+
+    console.log(typeChambres);
 
     useEffect(() => {
         if(!initialized){
@@ -126,7 +111,28 @@ const CalendarComponent = () => {
                         }
                     }}
                 />
-                {rateLine}
+                {
+                  typeChambres.map((typeChambre, i) => <>
+                    <div className={styles.dividerline}></div>
+                    <RateLine
+                      typeChambres={typeChambres}
+                      setTypeChambres={setTypeChambres}
+                      typechambre={typeChambre}
+                      indice={i}
+                      fromto={globalDates}
+                      daterange={alldays}
+                      getPrix={getPrix}
+                      dateMin={dateMin}
+                      openLoad={openLoad}
+                      setOpenLoad={setOpenLoad}
+                      value={value}
+                      setValue={setValue}
+                      alldays={alldays}
+                      customize={hasARCalendar}
+                    />
+                  </> )
+                }
+                
             </Container>
             <Backdrop
                 sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}

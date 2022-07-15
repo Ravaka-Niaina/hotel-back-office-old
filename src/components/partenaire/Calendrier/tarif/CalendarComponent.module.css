@@ -118,3 +118,8 @@ legend{
 .daycell{
     padding-top: 12px;
 }
+
+.loadingButton {
+  width: 59px;
+  height: 15px;
+}
