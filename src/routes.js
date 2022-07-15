@@ -4,6 +4,7 @@
 import ListeDroitAcces from "./components/partenaire/droitAcces/listeDroitAcces.js";
 import InsertDroitAcces from "./components/partenaire/droitAcces/InsertDroitAcces.js";
 import  Login  from "./components/common/Authentification/Login.js";
+import LoginVerifyCodeController from "./components/common/Authentification/LoginVerifyCodeController";
 import  LoginClient  from "./components/common/Authentification/loginClient";
 import  registerClient  from "./components/common/Authentification/registerClient";
 import  Register  from "./components/common/Authentification/Register.js";
@@ -88,6 +89,7 @@ import RapportReservation from "./components/partenaire/rapportReservation/rappo
 import  TestFeuille  from "./components/client/testFeuille";
 
 import IdleTimer from '../src/components/partenaire/IdleTimer';
+import LoginVerifyNewBrowserController from "./components/common/Authentification/LoginVerifyNewBrowserController.js";
 
 // ---------------------------------------------------------------------------------
 
@@ -130,6 +132,8 @@ export default function Routes() {
 
               <Route path="/back" exact component={home} />
               <Route path="/back/login" exact component={Login} />
+              <Route path="/back/login/verifyCode/:idPartner" exact component = { LoginVerifyCodeController } />
+              < Route path="/back/login/verifyNewBrowser" exact component={LoginVerifyNewBrowserController} />
               <Route path="/back/Register" exact component={Register} />
               <Route path="/back/user" exact component={listeUser} />
               <Route path="/back/user/details/:_id" exact component={DetailsUser} />
