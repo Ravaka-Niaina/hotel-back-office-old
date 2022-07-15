@@ -11,23 +11,8 @@ import RateCells from './RateCells';
 
 import { useEffect } from 'react';
 
-<<<<<<< HEAD
 const DayLine = (props) => {
     const { typeChambres, setTypeChambres, indice } = props;
-=======
-const heightAvailabilityCell = 22;
-const heightPriceCell = 50;
-
-const DayLine = ({
-  typechambre,
-  daterange,
-  indice,
-  setOpenLoad,
-  getPrix,
-  alldays,
-  value
-}) => {
->>>>>>> fix/insertTypeChambre
     const [anchorEl, setAnchorEl] = useState(null);
     const [min,setMin] = useState(0);
     const [max,setMax] = useState(0);
