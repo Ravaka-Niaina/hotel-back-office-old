@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, } from "react";
 import { useHistory } from 'react-router-dom'
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
@@ -27,21 +27,23 @@ const CustomBox = ({content}) => {
 };
 
 const Register = () => {
-    const [isPartner, setIsPartner] = React.useState(false);
-    const [nom, setNom] = React.useState("");
-    const [errorNom, setErrorNom] = React.useState(null);
-    const [prenom, setPrenom] = React.useState("");
-    const [errorPrenom, setErrorPrenom] = React.useState(null);
-    const [email, setEmail] = React.useState("");
-    const [errorEmail, setErrorEmail] = React.useState(null);
-    const [mdp, setMdp] = React.useState("");
-    const [errorMdp, setErrorMdp] = React.useState(null);
-    const [confirmMdp, setConfirmMdp] = React.useState("");
-    const [errorConfirmMdp, setErrorConfirmMdp] = React.useState(null);
-    const [companies, setCompanies] = React.useState([
+    const [isPartner, setIsPartner] = useState(false);
+    const [nom, setNom] = useState('');
+    const [errorNom, setErrorNom] = useState(null);
+    const [prenom, setPrenom] = useState('');
+    const [errorPrenom, setErrorPrenom] = useState(null);
+    const [email, setEmail] = useState('');
+    const [errorEmail, setErrorEmail] = useState(null);
+    const [backupEmail, setBackupEmail] = useState('');
+    const [errorBackupEmail, setErrorBackupEmail] = useState(null);
+    const [mdp, setMdp] = useState('');
+    const [errorMdp, setErrorMdp] = useState(null);
+    const [confirmMdp, setConfirmMdp] = useState('');
+    const [errorConfirmMdp, setErrorConfirmMdp] = useState(null);
+    const [companies, setCompanies] = useState([
         {
-            value: "",
-            label: ""
+            value: '',
+            label: ''
         }, 
         {
             value: "h1",
@@ -60,11 +62,11 @@ const Register = () => {
             label: "Carliton 2"
         }
     ]);
-    const [companie, setCompanie] = React.useState(null);
-    const [errorCompanie, setErrorCompanie] = React.useState(null);
-    const [loading, setLoading] = React.useState(false);
-    const [errorTel, setErrorTelephone] = React.useState(null);
-    const [telephone, setTelephone] = React.useState("");
+    const [companie, setCompanie] = useState(null);
+    const [errorCompanie, setErrorCompanie] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const [errorTel, setErrorTelephone] = useState(null);
+    const [telephone, setTelephone] = useState('');
 
 
     const history = useHistory();
@@ -84,6 +86,7 @@ const Register = () => {
                 {field: "nom", setter: setErrorNom},
                 {field: "prenom", setter: setErrorPrenom},
                 {field: "email", setter: setErrorEmail},
+                { field: "backupEmail", setter: setErrorBackupEmail },
                 {field: "mdp", setter: setErrorMdp},
                 {field: "confirmMdp", setter: setErrorConfirmMdp},
                 {field: "companie", setter: setErrorCompanie},
@@ -109,6 +112,7 @@ const Register = () => {
             name: nom.trim(),
             first_name: prenom.trim(),
             email: email.trim(),
+            backupEmail: backupEmail.trim(),
             password: mdp.trim(),
             confirmed_password: confirmMdp.trim(),
             phone:telephone.trim()
@@ -169,6 +173,23 @@ const Register = () => {
                                 helperText={errorEmail === null ? null : errorEmail}
                                 onKeyDown={keyPress}
                             /> } />
+                        {
+                            isPartner
+                            ? <CustomBox 
+                                content={<TextField 
+                                    id="outlined-basic"
+                                    variant="outlined"
+                                    size='small'
+                                    label={<p>Email de secours</p>}
+                                    type="email"
+                                    value={backupEmail} onChange={(e) => {setErrorBackupEmail(null); setBackupEmail(e.target.value)}}
+                                    error={errorBackupEmail === null ? false : true}
+                                    helperText={errorBackupEmail === null ? null : errorBackupEmail}
+                                    onKeyDown={keyPress}
+                                /> }
+                            />
+                            :  null
+                        }
                         <CustomBox 
                             content={<TextField 
                                 id="outlined-basic"
