@@ -116,13 +116,13 @@ const CompteOublier = () => {
 
     function Envoyer(e){
         setLoading(true);
-        let data = {email :email}
+        let data = { is_partner: true, email :email, };
         axios({
             method: "post",      
             url: process.env.REACT_APP_BACK_URL + '/user/SendEmailUpdateCompte',
             withCredentials: true,
             data: data
-        })
+        }) 
         .then(res => interpretResponse(res))
         .catch(err =>{console.log(err); console.log("erreur");} );
     }
