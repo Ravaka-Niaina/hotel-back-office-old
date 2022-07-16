@@ -7,7 +7,7 @@ import { LoadingButton } from '@mui/lab';
 import { styled } from '@mui/material/styles';
 import { Container, Typography } from '@mui/material';
 
-import { Form, } from 'formik';
+import BtnSendCodeBySMS from './BtnSendCodeBySMS';
 
 const ContentStyle = styled('div')(({ theme }) => ({
   maxWidth: 480,
@@ -69,17 +69,10 @@ const LoginVerifyNewBrowserComponent = ({
                         </LoadingButton>
                         <br/>
 
-                        <LoadingButton
-                            fullWidth
-                            loading={isSendingSMSBtnLoading}
-                            loadingPosition="start"
-                            startIcon={<SmsIcon />}
-                            variant="outlined"
-                            color
-                            onClick={(e) => resendSMS(e)}
-                        >
-                            <span style={{color:'white'}}>Renvoyer code</span>
-                        </LoadingButton>
+                        <BtnSendCodeBySMS
+                            isSendingSMSBtnLoading={isSendingSMSBtnLoading}
+                            resendSMS={resendSMS}
+                        />
 
                     </ContentStyle>
                 </Container>
