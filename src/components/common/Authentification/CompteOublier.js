@@ -98,6 +98,7 @@ const CompteOublier = () => {
     const [code, setCode] = React.useState(null);
     const [errorCode,setErrorCode] = React.useState(false);
     const [ResultBodyEmail , setResultBodyEmail] = React.useState(null);
+    const [user_id, setUser_id] = React.useState(null);
     
     function handleChangeEmail(e){
         setEmail(e.target.value);
@@ -128,14 +129,14 @@ const CompteOublier = () => {
     }
 
     function interpretResponse(res){
-        console.log(res);
         setLoading(false);
         const data = res.data;
 
-        if(data.status == 200){
+        if(data.status === 200){
             setAffichage(data.message);
             setEmail(null)
             setResultBodyEmail(data.body);
+            setUser_id(res.data.user_id);
         }else{
             setError(data.message);
             setErrorEmail(true);
@@ -145,11 +146,12 @@ const CompteOublier = () => {
     function getChiffre(e){
         localStorage.setItem('access' , 23);
         e.preventDefault();
-        setLoading(true); 
-        const data = {code : code , data : ResultBodyEmail};
+        setLoading(true);
+        console.log(ResultBodyEmail);
+        const data = {code : code , _id: user_id, isPartner: true, };
         axios({
             method: "post",      
-            url: process.env.REACT_APP_BACK_URL + '/user/compareCode',
+            url: process.env.REACT_APP_BACK_URL + '/user/verifyPartnerPasswordResetCode',
             withCredentials: true,
             data: data
         })
@@ -160,8 +162,9 @@ const CompteOublier = () => {
     function ResponseCode(res){
         setLoading(false);
         const data = res.data;
+        console.log(res.data);
         if(data.status === 200){
-            history.push("/back/verifier/"+data.id);
+            history.push("/back/verifier/" + user_id);
         }else{
             setError(data.message);
             setErrorCode(true); 
