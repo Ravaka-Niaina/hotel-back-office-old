@@ -59,7 +59,7 @@ export default function IdleTimer ({ children }) {
     onIdle,
     onActive,
     onAction,
-    timeout: 1000 * 60 * 15,// milliseconds * seconds * minutes,
+    timeout: 1000 * 60 * (process.env.ENV === 'dev' ? 9999 : 15),// milliseconds * seconds * minutes,
     events: [
       'mousemove',
       'keydown',
