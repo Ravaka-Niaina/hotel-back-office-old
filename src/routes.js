@@ -15,7 +15,8 @@ import  DetailsUser from "./components/partenaire/User/DetailsUser.js";
 import  InsertTypeChambre  from "./components/partenaire/chambre/InsertTypeChambre.js";
 import  ListTypeChambre  from "./components/partenaire/chambre/ListTChambre.js";
 
-import  InsertHotel  from "./components/partenaire/hotel/createHotel.js";
+// import  InsertHotel  from "./components/partenaire/hotel/createHotel.js";
+import  InsertHotel  from "./components/partenaire/hotel/insert";
 import  HotelList  from "./components/partenaire/hotel/listHotel.js";
 import  GetOneHotel  from "./components/partenaire/hotel/getOneHotel";
 import  Localisation  from "./components/partenaire/hotel/localisation";

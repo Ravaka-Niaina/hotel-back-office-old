@@ -688,7 +688,7 @@ function InsertHotel() {
   );
 }
 
-export default function recherche_() {
+export default function InsertHotel_() {
   const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
 
   let titre = "";
