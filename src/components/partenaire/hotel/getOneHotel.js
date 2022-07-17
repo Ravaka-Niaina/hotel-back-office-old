@@ -19,7 +19,7 @@ import callAPI from '../../../utility.js';
 import ButtonLoading from "../buttonLoading.js";
 import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
 import  ResponsiveDrawer  from "../Navbar/responsive-drawer.js";
-import PhotoHotel from './insertHotel/Photo/PhotoHotel.js';
+import PhotoHotel from './insert/Photo/PhotoHotel.js';
 
 import MapPicker from "react-google-map-picker";
 

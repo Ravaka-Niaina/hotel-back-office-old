@@ -12,16 +12,16 @@ import {Link} from 'react-router-dom';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 
-import {session} from '../../common/utilitySession.js';
+import {session} from '../../../common/utilitySession.js';
 
-import callAPI from '../../../utility.js';
-import ButtonLoading from "../buttonLoading.js";
-import SkelettonForm from '../../../SkeletonListe/SkeletonFormulaire.js';
-import  ResponsiveDrawer  from "../Navbar/responsive-drawer.js";
-import PhotoHotel from './insertHotel/Photo/PhotoHotel.js';
+import callAPI from '../../../../utility.js';
+import ButtonLoading from "../../Galerie/Galerie";
+import SkelettonForm from '../../../../SkeletonListe/SkeletonFormulaire.js';
+import  ResponsiveDrawer  from "../../Navbar/responsive-drawer.js";
+import PhotoHotel from './Photo/PhotoHotel.js';
 
 import MapPicker from "react-google-map-picker";
-import NotEnoughAccessRight from '../../common/NotEnoughAccessRight';
+import NotEnoughAccessRight from '../../../common/NotEnoughAccessRight';
 
 const DefaultLocation = { lat: -18.903233, lng: 47.520430 };
 const DefaultZoom = 17;
