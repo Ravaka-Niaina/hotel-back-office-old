@@ -1,29 +1,33 @@
-import { useState, useEffect, } from 'react';
+import { useState, useEffect, cloneElement } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom'
+
+import {session} from '../../../common/utilitySession.js';
+import callAPI from '../../../../utility.js';
+import  ResponsiveDrawer  from "../../Navbar/responsive-drawer.js";
+import NotEnoughAccessRight from '../../../common/NotEnoughAccessRight';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { useHistory } from 'react-router-dom'
 import FormControlLabel from '@mui/material/FormControlLabel';
-import { useParams } from 'react-router-dom'
-import {Link} from 'react-router-dom';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 
-import {session} from '../../../common/utilitySession.js';
-
-import callAPI from '../../../../utility.js';
 import ButtonLoading from "../../Galerie/Galerie";
 import SkelettonForm from '../../../../SkeletonListe/SkeletonFormulaire.js';
-import  ResponsiveDrawer  from "../../Navbar/responsive-drawer.js";
 import PhotoHotel from './Photo/PhotoHotel.js';
-
-import NotEnoughAccessRight from '../../../common/NotEnoughAccessRight';
 import CustomMapPicker from './CustomMapPicker';
 import GenericInfo from './GenericInfo';
 import Coordinates from './Coordinates';
 
 const DefaultLocation = { lat: -18.903233, lng: 47.520430 };
 const DefaultZoom = 17;
+let isInsert = false;
+let hasARInsert = false;
+let hasARUpdate = false;
+let hasARGet = false;
 
 export default function InsertHotel_() {
   const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
@@ -36,6 +40,8 @@ export default function InsertHotel_() {
 
   );
 }
+
+const noImage = '/no-image.jpg';
 
 function InsertHotel() {
   
@@ -69,6 +75,7 @@ function InsertHotel() {
   const [addressError, setAddressError] = useState(null);
   const [photoError, setPhotoError] = useState(null);
   const [nameError, setNameError] = useState(null);
+  const [TVAError, setTVAError] = useState(null);
 
   const [defaultLocation, setDefaultLocation] = useState(DefaultLocation);
   const [location, setLocation] = useState({lat: '', lng: ''});
@@ -79,119 +86,105 @@ function InsertHotel() {
   const [isMapPickerToDisplay, setIsMapPickerToDisplay] = useState(false);
   const [isModifImg, setIsModifImg]= useState(false);
 
-  const noImage = '/no-image.jpg';
+  const { _id } = useParams();
+  const history = useHistory();
 
   function resetLocation() {
     setDefaultLocation({ ...DefaultLocation });
     setZoom(DefaultZoom);
   }
 
-  const isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
-  const hasARInsert = session.getInstance().hasOneOfTheseAccessRights(["insertHotel", "superAdmin"]);
-  const hasARGet = session.getInstance().hasOneOfTheseAccessRights(["getHotel", "superAdmin"]);
-  const hasARUpdate = session.getInstance().hasOneOfTheseAccessRights(["updateHotel", "superAdmin"]);
-
-  const history = useHistory();
-
-  const { _id } = useParams();
-
-  
-
-  function setDetailsHotel(data){
-    // let error = {...state.error};
-    // let current = JSON.parse(JSON.stringify(state));
-
-    // if(data.status === 401){//Unauthorized
-    //   history.push('/back/login');
-    // }else if(data.status === 403){
-    //   history.push('/notEnoughAccessRight');
-    // }
-
-//     current = data.hotel;
-//     current.error = error;
-    
-//     setLocation(data.hotel.location);
-
-    
-//     if(current.photo != '' || 
-//     current.photo != undefined ||
-//     current.photo != null){
-//       current.preview = [];
-//             for(let i = 0; i < current.photo.length; i++){
-//               console.log(current.photo[i]);
-//               current.preview[i] = process.env.REACT_APP_BACK_URL + "/" + current.photo[i];
-//             }
-//         }
-
-//     setState(current);
-//     setSkeleton(false);
+  function setHotelDetails(data){
+    console.log(data);
+    const { hotel } = data;
+    const setters = [
+      ['link', setLink],
+      ['phonenum', setPhoneNum, setPhoneNumError],
+      ['emailAddress', setEmailAddress, setEmailAddressError],
+      ['vignette', setVignette, setVignetteError],
+      [photo, setPhoto],
+      ['isTVAIncluded', setIsTVAIncluded],
+      ['TVA', setTVA, setTVAError],
+      ['checkIn', setCheckIn, setCheckInError],
+      ['checkOut', setCheckOut, setCheckOutError],
+      ['address', setAddress, setAddressError],
+      ['name', setName, setNameError],
+      ['minBabyAge', setMinBabyAge, setMinBabyAgeError],
+      ['maxBabyAge', setMaxBabyAge, setMaxBabyAgeError],
+      ['minKidAge', setMinKidAge, setMinKidAgeError],
+      ['maxKidAge', setMaxKidAge, setMaxKidAgeError],
+    ];
+    setters.forEach((setter) => {
+      setter[1](hotel[setter[0]]);
+    });
   }
 
-
   useEffect(() => {
+    isInsert = new RegExp("/insert", "i").exec(window.location.href) === null ? false : true;
+    hasARInsert = session.getInstance().hasOneOfTheseAccessRights(["insertHotel", "superAdmin"]);
+    hasARUpdate = session.getInstance().hasOneOfTheseAccessRights(["updateHotel", "superAdmin"]);
+    hasARGet = session.getInstance().hasOneOfTheseAccessRights(["getOneHotel", "superAdmin"]);
     if(isInsert && hasARInsert){
       setSkeleton(false);
     }else if(hasARGet || hasARUpdate){
-      // callAPI('get', '/hotel/details/' + _id, {}, setHotelDetails);
+      callAPI('get', '/hotel/details/' + _id, {}, setHotelDetails);
     }
   }, [])
 
-//   if(isInsert && !hasARInsert){
-//     return(
-//       <NotEnoughAccessRight />
-//     );
-//   }
-//   if(!isInsert && !hasARGet && !hasARUpdate){
-//     return(
-//       <NotEnoughAccessRight />
-//     );
-//   }
-
-
-  function tryRedirect(res) {
-    // let keys = Object.keys(currentState.error)
-    // keys.map((k) => {
-    //   currentState.error[k] = null
-    // })
-    // if (res.status === 200) {
-    //   history.push('/back/hotel')
-    // } else if (res.status === 401) {
-    //   //Unauthorized
-    //   history.push('/back/login')
-    // } else {
-    //   setIsBtnLoading(false)
-    //   console.log(res.errors);
-    //   let keys = Object.keys(res.errors)
-    //   keys.map((k) => {
-    //     currentState.error[k] = res.errors[k]
-    //   })
-    // }
-    // setState(currentState)
-    // setIsBtnLoading(false);
+  function callbackInsert (res) {
+    const { status, errors } = res;
+    const callback = {
+      200: () => { history.push('/back/hotel') },
+      400: () => {
+        const setterErrors = {
+          link: setLinkError,
+          phoneNum: setPhoneNumError,
+          emailAddress: setEmailAddressError,
+          vignette: setVignetteError,
+          photo: setPhotoError,
+          TVA: setTVAError,
+          checkIn: setCheckInError,
+          checkOut: setCheckOutError,
+          address: setAddressError,
+          name: setNameError,
+          minBabyAge: setMinBabyAgeError,
+          maxBabyAge: setMaxBabyAgeError,
+          minKidAge: setMinKidAgeError,
+          maxKidAge: setMaxKidAgeError,
+        };
+        Object.keys(errors).forEach((errorName) => {
+          setterErrors[errorName](errors[errorName]);
+        });
+      },
+    }
+    callback[res.status]();
   }
 
   function insert(e) {
     e.preventDefault()
     // setIsBtnLoading(true)
     const payload = {
-      link, phoneNum,
+      link,
+      phoneNum,
       emailAddress,
-      vignette,
+      vignette: Number.parseFloat(vignette),
       photo,
       isTVAIncluded,
-      TVA,
+      TVA: Number.parseFloat(TVA),
       checkIn,
       checkOut,
       address,
       name,
-      minBabyAge,
-      maxBabyAge,
-      minKidAge,
-      maxKidAge,
+      minBabyAge: Number.parseInt(minBabyAge),
+      maxBabyAge: Number.parseInt(maxBabyAge),
+      minKidAge: Number.parseInt(minKidAge),
+      maxKidAge: Number.parseInt(maxKidAge),
       location,
     };
 
-    callAPI('post', '/hotel/create', payload , tryRedirect);
+    console.log(payload);
+
+    callAPI('post', '/hotel/insert', payload , callbackInsert);
   }
 
   function update(e){
@@ -216,7 +209,7 @@ function InsertHotel() {
       isModifImg,
     };
 
-    callAPI('post', '/hotel/update', payload, tryRedirect);
+    callAPI('post', '/hotel/update', payload, () => {});
   }
 
   const displayMapPicker = {
@@ -265,7 +258,6 @@ function InsertHotel() {
           
           <div className="photoHotel">
             <PhotoHotel
-              photo = { photo }
               setPhoto = { setPhoto }
               photoError = { photoError }
               setPhotoError = { setPhotoError }
@@ -332,7 +324,7 @@ function InsertHotel() {
             name="radio-buttons-group"
           >
             <div className ="form-group" style={{marginTop:'15px'}}>
-              <label style={{textDecoration:'underline'}} id='bigLabel'>Votre tarifs inclus déjà la TVA ?</label>
+              <label style={{textDecoration:'underline'}} id='bigLabel'>Votre tarif inclus déjà la TVA ?</label>
               <div className="">
                 <FormControlLabel
                   value="oui"
@@ -356,7 +348,7 @@ function InsertHotel() {
 
           <div className ="form-group" style={{marginTop:'15px'}}>
             {
-              isTVAIncluded
+              !isTVAIncluded
               ? <TextField
                 id="outlined-basic"
                 label="taxes communale"
@@ -489,11 +481,9 @@ function InsertHotel() {
               }
             </div>
             <div class="bouton-aligne">
-              <Link to={'/back/hotel'} style={{textDecoration:'none'}}>
-                <Button variant="outlined" id="btn2">
-                  <span style={{color:'#1976d2'}}>Retour</span>
-                </Button>
-              </Link>
+              <Button variant="outlined" id="btn2">
+                <span style={{color:'#1976d2'}}>Retour</span>
+              </Button>
             </div>
           </div>
         </div>

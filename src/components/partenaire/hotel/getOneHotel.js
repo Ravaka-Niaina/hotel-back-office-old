@@ -26,6 +26,7 @@ import MapPicker from "react-google-map-picker";
 const DefaultLocation = { lat: -18.903233, lng: 47.520430 };
 const DefaultZoom = 17;
 let isFirstRender = true;
+let hasARGet= false;
 function InsertHotel() {
 
   const noImage = '/no-image.jpg';
@@ -73,8 +74,6 @@ function InsertHotel() {
   const [location, setLocation] = useState({lat: '', lng: ''});
   const [zoom, setZoom] = useState(DefaultZoom);
   const { _id } = useParams();
-
-  const hasARGet = session.getInstance().hasOneOfTheseAccessRights(["getOneHotel", "superAdmin"]);
 
   function handleChangeLocation(lat, lng) {
     setLocation({ lat: lat, lng: lng });
@@ -131,25 +130,20 @@ function InsertHotel() {
   }
 
   useEffect(() => {
+    hasARGet = session.getInstance().hasOneOfTheseAccessRights(["getOneHotel", "superAdmin"]);
     if(isFirstRender){
-    let access = localStorage.getItem('user_session');
-    let variable=JSON.parse(access);
-     isFirstRender = false;
-     if(variable !== null){
-    if(variable.id !== null && variable.isPartner == true && hasARGet){
-    callAPI('get', '/hotel/details/' + _id, {}, setDetailsHotel);
-      }
-     }else{
+      let access = localStorage.getItem('user_session');
+      let variable=JSON.parse(access);
+      isFirstRender = false;
+      if(variable !== null){
+        if(variable.id !== null && variable.isPartner == true && hasARGet){
+          callAPI('get', '/hotel/details/' + _id, {}, setDetailsHotel);
+        }
+    }else{
       history.push('/back/login');
-      }
     }
+  }
 
-  }, [])
-
-  useEffect(() => {
-    return () => {
-      isFirstRender = true;
-    }
   }, []);
 
   if( !hasARGet ){

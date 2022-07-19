@@ -49,7 +49,7 @@ export default function GenericInfo ({
 
         <TextField
           id="outlined-basic"
-          label="lien"
+          label="Lien site-web hotel"
           variant="outlined"
           className="form-control"
           style={{width:"400px",marginTop:"15px"}}
@@ -67,7 +67,7 @@ export default function GenericInfo ({
 
         <TextField
           id="outlined-basic"
-          label="telephone"
+          label="Téléphone"
           variant="outlined"
           className="form-control"
           style={{width:"400px",marginTop:"15px"}}
@@ -86,7 +86,7 @@ export default function GenericInfo ({
       <div className="form-group">
         <TextField
           id="outlined-basic"
-          label="email"
+          label="E-mail"
           variant="outlined"
           className="form-control"
           style={{width:"400px",marginTop:"15px"}}
@@ -106,7 +106,7 @@ export default function GenericInfo ({
       <div className="form-group">
         <TextField
           id="outlined-basic"
-          label="adresse"
+          label="Adresse"
           variant="outlined"
           className="form-control"
           style={{width:"400px",marginTop:"15px"}}

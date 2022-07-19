@@ -25,8 +25,7 @@ class HotelList extends React.Component {
   componentDidMount() {
     axios.get('http://localhost:3000/hotel')
       .then(res => {
-        const hotels = res.data.hotel[0];
-        console.log(hotels);
+        const hotels = res.data.hotel;
         this.setState( {hotels : hotels} );
       })
   }

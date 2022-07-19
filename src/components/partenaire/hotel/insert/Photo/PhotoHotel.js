@@ -35,7 +35,7 @@ export default function Photo({
                 setNbImage(finished);
 
                 if(finished === e.target.files.length){
-                    setPhoto(tmpPhoto);
+                    setPhoto(tmpPreview);
                     setPreview(tmpPreview);
                 }
             }
