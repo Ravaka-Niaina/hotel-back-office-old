@@ -1,5 +1,4 @@
 import React from 'react'
-import 'bootstrap/dist/css/bootstrap.min.css';
 
 import FormLabel from '@mui/material/FormLabel'
 import DateRangePicker from '@mui/lab/DateRangePicker';
